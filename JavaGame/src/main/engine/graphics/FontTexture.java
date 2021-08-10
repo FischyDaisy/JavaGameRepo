@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 
+import main.engine.graphics.opengl.Texture;
+
 public class FontTexture {
 
     private static final String IMAGE_FORMAT = "png";

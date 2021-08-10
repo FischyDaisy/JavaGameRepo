@@ -6,7 +6,7 @@ import java.util.List;
 
 import main.engine.graphics.FontTexture;
 import main.engine.graphics.Material;
-import main.engine.graphics.Mesh;
+import main.engine.graphics.opengl.Mesh;
 import main.engine.utility.Utils;
 
 public class TextItem extends GameItem {

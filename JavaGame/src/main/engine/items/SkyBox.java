@@ -1,9 +1,9 @@
 package main.engine.items;
 
 import main.engine.graphics.Material;
-import main.engine.graphics.Mesh;
-import main.engine.graphics.OBJLoader;
-import main.engine.graphics.Texture;
+import main.engine.graphics.opengl.Mesh;
+import main.engine.graphics.opengl.Texture;
+import main.engine.loaders.obj.OBJLoader;
 
 public class SkyBox extends GameItem {
 

@@ -1,14 +1,16 @@
 package main.engine;
 
+import main.engine.graphics.IRenderer;
+
 public interface IGameLogic {
 
-    void init(Window window) throws Exception;
+    void init(Window window, Scene scene, IRenderer render) throws Exception;
     
-    void input(Window window, MouseInput mouseInput);
+    void input(Window window, Scene scene, long diffTimeMillis);
 
     void update(float interval, MouseInput mouseInput);
     
-    void render(Window window);
+    void render(Window window, Scene scene, IRenderer renderer);
     
-    void cleanup();
+    void cleanup(IRenderer renderer);
 }

@@ -2,6 +2,8 @@ package main.engine.graphics;
 
 import org.joml.Vector4f;
 
+import main.engine.graphics.opengl.Texture;
+
 public class Material {
 
     private static final Vector4f DEFAULT_COLOR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -15,6 +17,8 @@ public class Material {
     private float reflectance;
 
     private Texture texture;
+    
+    private Texture normalMap;
 
     public Material() {
         this.ambientColor = DEFAULT_COLOR;
@@ -87,5 +91,16 @@ public class Material {
     public void setTexture(Texture texture) {
         this.texture = texture;
     }
+    
+    public boolean hasNormalMap() {
+        return this.normalMap != null;
+    }
 
+    public Texture getNormalMap() {
+        return normalMap;
+    }
+
+    public void setNormalMap(Texture normalMap) {
+        this.normalMap = normalMap;
+    }
 }

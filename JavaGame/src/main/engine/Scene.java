@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import main.engine.graphics.Mesh;
+import main.engine.graphics.opengl.Mesh;
+import main.engine.graphics.particles.IParticleEmitter;
 import main.engine.graphics.weather.Fog;
 import main.engine.items.GameItem;
 import main.engine.items.SkyBox;
@@ -19,6 +20,8 @@ public class Scene {
     private SceneLight sceneLight;
     
     private Fog fog;
+    
+    private IParticleEmitter[] particleEmitters;
     
     public Scene() {
         meshMap = new HashMap<Mesh, List<GameItem>>();
@@ -77,5 +80,13 @@ public class Scene {
      */
     public void setFog(Fog fog) {
         this.fog = fog;
+    }
+    
+    public IParticleEmitter[] getParticleEmitters() {
+        return particleEmitters;
+    }
+
+    public void setParticleEmitters(IParticleEmitter[] particleEmitters) {
+        this.particleEmitters = particleEmitters;
     }
 }

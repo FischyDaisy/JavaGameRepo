@@ -1,98 +1,132 @@
 package main.engine;
 
+import main.engine.graphics.IRenderer;
+import main.engine.graphics.opengl.GLRenderer;
+import main.engine.graphics.vulkan.VKRenderer;
+import main.engine.items.GameItem;
 import main.engine.utility.Timer;
 
 public class GameEngine implements Runnable {
-
-    public static final int TARGET_FPS = 75;
-
-    public static final int TARGET_UPS = 30;
+    
+    private boolean running;
+    
+    private Scene scene;
+    
+    private static final EngineProperties engineProperties = EngineProperties.getInstance();
 
     private final Window window;
 
-    private final Timer timer;
-
     private final IGameLogic gameLogic;
     
-    private final MouseInput mouseInput;
+    private final IRenderer renderer;
+    
+    private double lastFps;
+    
+    private int fps;
+    
+    private long updateTime;
+    
+    private String windowTitle;
 
-    public GameEngine(String windowTitle, int width, int height, boolean vSync, IGameLogic gameLogic) throws Exception {
-        window = new Window(windowTitle, width, height, vSync);
-        mouseInput = new MouseInput();
+    public GameEngine(String windowTitle, boolean vSync, Window.WindowOptions opts, IGameLogic gameLogic) throws Exception {
+        this(windowTitle, 0, 0, vSync, opts, gameLogic);
+    }
+    
+    public GameEngine(String windowTitle, Window.WindowOptions opts, IGameLogic gameLogic) throws Exception {
+        this(windowTitle, 0, 0, engineProperties.isvSync(), opts, gameLogic);
+    }
+    
+    public GameEngine(String windowTitle, int width, int height, boolean vSync, Window.WindowOptions opts, IGameLogic gameLogic) throws Exception {
+    	this.windowTitle = windowTitle;
+    	opts.useVulkan = engineProperties.useVulkan();
+    	window = new Window(windowTitle, width, height, vSync, opts);
+    	window.init(null);
         this.gameLogic = gameLogic;
-        timer = new Timer();
+        scene = new Scene();
+        this.renderer = opts.useVulkan == false ? new GLRenderer() : new VKRenderer(window, scene);
+        gameLogic.init(window, scene, renderer);
+        lastFps = System.nanoTime();
+        fps = 0;
     }
 
     @Override
     public void run() {
-        try {
-            init();
-            gameLoop();
-        } catch (Exception excp) {
-            excp.printStackTrace();
-        } finally {
-            cleanup();
-        }
-    }
+        long initialTime = System.nanoTime();
+        double timeU = 1000000000d / engineProperties.getUps();
+        double deltaU = 0;
 
-    protected void init() throws Exception {
-        window.init();
-        timer.init();
-        mouseInput.init(window);
-        gameLogic.init(window);
-    }
-
-    protected void gameLoop() {
-        float elapsedTime;
-        float accumulator = 0f;
-        float interval = 1f / TARGET_UPS;
-
-        boolean running = true;
+        updateTime = initialTime;
         while (running && !window.windowShouldClose()) {
-            elapsedTime = timer.getElapsedTime();
-            accumulator += elapsedTime;
 
-            input();
+            window.pollEvents();
 
-            while (accumulator >= interval) {
-                update(interval);
-                accumulator -= interval;
+            long currentTime = System.nanoTime();
+            deltaU += (currentTime - initialTime) / timeU;
+            initialTime = currentTime;
+
+            if (deltaU >= 1) {
+                long diffTimeNanos = currentTime - updateTime;
+                gameLogic.input(window, scene, diffTimeNanos);
+                gameLogic.update((float)timeU, window.getMouseInput());
+                updateTime = currentTime;
+                deltaU--;
             }
 
-            render();
-
+            if ( window.getWindowOptions().showFps && updateTime - lastFps > 1000000000 ) {
+                lastFps = updateTime;
+                window.setWindowTitle(windowTitle + " - " + fps + " FPS");
+                fps = 0;
+            }
+            fps++;
+            gameLogic.render(window, scene, renderer);
+            if (!engineProperties.useVulkan()) {
+            	window.swapBuffers();
+            }
+            
             if ( !window.isvSync() ) {
                 sync();
             }
         }
+
+        cleanup();
     }
 
     protected void cleanup() {
-        gameLogic.cleanup();                
+        gameLogic.cleanup(renderer);
+        window.cleanup();
     }
     
     private void sync() {
-        float loopSlot = 1f / TARGET_FPS;
-        double endTime = timer.getLastLoopTime() + loopSlot;
-        while (timer.getTime() < endTime) {
+        double loopSlot = 1000000000d / engineProperties.getFps();
+        double endTime = updateTime + loopSlot;
+        while (System.nanoTime() < endTime) {
             try {
                 Thread.sleep(1);
             } catch (InterruptedException ie) {
+            	System.out.println("Failed to sync");
             }
         }
     }
 
-    protected void input() {
-    	mouseInput.input(window);
-        gameLogic.input(window, mouseInput);
-    }
-
     protected void update(float interval) {
-    	gameLogic.update(interval, mouseInput);
+    	gameLogic.update(interval, window.getMouseInput());
     }
 
     protected void render() {
-        gameLogic.render(window);
+        gameLogic.render(window, scene, renderer);
         window.update();
+    }
+    
+    protected void load(GameItem[] items) {
+    	scene.setGameItems(items);
+    }
+    
+    public void start() {
+        running = true;
+        run();
+    }
+
+    public void stop() {
+        running = false;
     }
 }

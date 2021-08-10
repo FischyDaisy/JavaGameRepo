@@ -1,22 +1,15 @@
 package main.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_FALSE;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glCullFace;
+import org.lwjgl.system.MemoryUtil;
+
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+
+import static org.lwjgl.glfw.GLFWVulkan.glfwVulkanSupported;
 
 public class Window {
 
@@ -31,101 +24,150 @@ public class Window {
     private boolean resized;
 
     private boolean vSync;
+    
+    private MouseInput mouseInput;
+    
+    private WindowOptions opts;
 
-    public Window(String title, int width, int height, boolean vSync) {
+    public Window(String title, int width, int height, boolean vSync, WindowOptions opts) {
         this.title = title;
         this.width = width;
         this.height = height;
         this.vSync = vSync;
         this.resized = false;
+        this.opts = opts;
     }
 
-    public void init() {
-        // Setup an error callback. The default implementation
-        // will print the error message in System.err.
-        GLFWErrorCallback.createPrint(System.err).set();
-
-        // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if (!glfwInit()) {
-            throw new IllegalStateException("Unable to initialize GLFW");
-        }
-
-        glfwDefaultWindowHints(); // optional, the current window hints are already the default
-        glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        
-        boolean maximized = false;
-        // If no size has been specified set it to maximized state
-        if (width == 0 || height == 0) {
-            // Set up a fixed width and height so window initialization does not fail
-            width = 100;
-            height = 100;
-            glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
-            maximized = true;
-        }
-
-        // Create the window
-        windowHandle = glfwCreateWindow(width, height, title, NULL, NULL);
-        if (windowHandle == NULL) {
-            throw new RuntimeException("Failed to create the GLFW window");
-        }
-
-        // Setup resize callback
-        glfwSetFramebufferSizeCallback(windowHandle, (window, width, height) -> {
-            this.width = width;
-            this.height = height;
-            this.setResized(true);
-        });
-
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+    public void init(GLFWKeyCallbackI keyCallback) {
+        if(opts.useVulkan) { // Use Vulkan
+        	if (!glfwInit()) {
+                throw new IllegalStateException("Unable to initialize GLFW");
             }
-        });
 
-        if (maximized) {
-            glfwMaximizeWindow(windowHandle);
-        } else {
-            // Get the resolution of the primary monitor
-            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            // Center our window
-            glfwSetWindowPos(
-                    windowHandle,
-                    (vidmode.width() - width) / 2,
-                    (vidmode.height() - height) / 2
-            );
+            if (!glfwVulkanSupported()) {
+                throw new IllegalStateException("Cannot find a compatible Vulkan installable client driver (ICD)");
+            }
+
+            GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            width = vidMode.width();
+            height = vidMode.height();
+
+            glfwDefaultWindowHints();
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+            glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
+
+            // Create the window
+            windowHandle = glfwCreateWindow(width, height, title + ": Vulkan", MemoryUtil.NULL, MemoryUtil.NULL);
+            if (windowHandle == MemoryUtil.NULL) {
+                throw new RuntimeException("Failed to create the GLFW window");
+            }
+
+            glfwSetFramebufferSizeCallback(windowHandle, (window, width, height) -> resize(width, height));
+
+            glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
+                if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+                    glfwSetWindowShouldClose(window, true);
+                }
+                if (keyCallback != null) {
+                    keyCallback.invoke(window, key, scancode, action, mods);
+                }
+            });
+        } else { // Use OpenGL
+        	// Setup an error callback. The default implementation
+            // will print the error message in System.err.
+            GLFWErrorCallback.createPrint(System.err).set();
+
+            // Initialize GLFW. Most GLFW functions will not work before doing this.
+            if (!glfwInit()) {
+                throw new IllegalStateException("Unable to initialize GLFW");
+            }
+
+            glfwDefaultWindowHints(); // optional, the current window hints are already the default
+            glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden after creation
+            glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+            
+            boolean maximized = false;
+            // If no size has been specified set it to maximized state
+            if (width == 0 || height == 0) {
+                // Set up a fixed width and height so window initialization does not fail
+                width = 100;
+                height = 100;
+                glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+                maximized = true;
+            }
+
+            // Create the window
+            windowHandle = glfwCreateWindow(width, height, title + ": OpenGL", NULL, NULL);
+            if (windowHandle == NULL) {
+                throw new RuntimeException("Failed to create the GLFW window");
+            }
+
+            // Setup resize callback
+            glfwSetFramebufferSizeCallback(windowHandle, (window, width, height) -> {
+                this.width = width;
+                this.height = height;
+                this.setResized(true);
+            });
+
+            // Setup a key callback. It will be called every time a key is pressed, repeated or released.
+            glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
+                if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+                    glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+                }
+                if (keyCallback != null) {
+                    keyCallback.invoke(window, key, scancode, action, mods);
+                }
+            });
+
+            if (maximized) {
+                glfwMaximizeWindow(windowHandle);
+            } else {
+                // Get the resolution of the primary monitor
+                GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+                // Center our window
+                glfwSetWindowPos(
+                        windowHandle,
+                        (vidmode.width() - width) / 2,
+                        (vidmode.height() - height) / 2
+                );
+            }
+
+            // Make the OpenGL context current
+            glfwMakeContextCurrent(windowHandle);
+
+            if (isvSync()) {
+                // Enable v-sync
+                glfwSwapInterval(1);
+            }
+
+            // Make the window visible
+            glfwShowWindow(windowHandle);
+
+            GL.createCapabilities();
+
+            // Set the clear color
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            
+            //	Test For Depth
+            glEnable(GL_DEPTH_TEST);
+            if (opts.showTriangles) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            }
+            
+            // Support for transparencies
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            
+            if (opts.cullFace) {
+                glEnable(GL_CULL_FACE);
+                glCullFace(GL_BACK);
+            }
         }
-
-        // Make the OpenGL context current
-        glfwMakeContextCurrent(windowHandle);
-
-        if (isvSync()) {
-            // Enable v-sync
-            glfwSwapInterval(1);
-        }
-
-        // Make the window visible
-        glfwShowWindow(windowHandle);
-
-        GL.createCapabilities();
-
-        // Set the clear color
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        
-        //	Test For Depth
-        glEnable(GL_DEPTH_TEST);
-        
-        // Support for transparencies
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
+        mouseInput = new MouseInput(windowHandle);
     }
     
     public long getWindowHandle() {
@@ -147,6 +189,10 @@ public class Window {
     public String getTitle() {
         return title;
     }
+    
+    public void setWindowTitle(String title) {
+        glfwSetWindowTitle(windowHandle, title);
+    }
 
     public int getWidth() {
         return width;
@@ -155,6 +201,19 @@ public class Window {
     public int getHeight() {
         return height;
     }
+    
+    public MouseInput getMouseInput() {
+        return mouseInput;
+    }
+    
+    public void pollEvents() {
+        glfwPollEvents();
+        mouseInput.input();
+    }
+    
+    public void swapBuffers() {
+    	glfwSwapBuffers(windowHandle);
+    }
 
     public boolean isResized() {
         return resized;
@@ -162,6 +221,12 @@ public class Window {
 
     public void setResized(boolean resized) {
         this.resized = resized;
+    }
+    
+    public void resize(int width, int height) {
+        resized = true;
+        this.width = width;
+        this.height = height;
     }
 
     public boolean isvSync() {
@@ -175,5 +240,26 @@ public class Window {
     public void update() {
         glfwSwapBuffers(windowHandle);
         glfwPollEvents();
+    }
+    
+    public void cleanup() {
+        glfwFreeCallbacks(windowHandle);
+        glfwDestroyWindow(windowHandle);
+        glfwTerminate();
+    }
+    
+    public WindowOptions getWindowOptions() {
+        return opts;
+    }
+    
+    public static class WindowOptions {
+
+        public boolean cullFace;
+
+        public boolean showTriangles;
+        
+        public boolean showFps;
+
+        public boolean useVulkan;
     }
 }

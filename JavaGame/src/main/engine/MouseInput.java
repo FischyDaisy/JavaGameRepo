@@ -1,48 +1,56 @@
 package main.engine;
 
-import org.joml.Vector2d;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_2;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorEnterCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
+
 import org.joml.Vector2f;
-import static org.lwjgl.glfw.GLFW.*;
 
 public class MouseInput {
 
-    private final Vector2d previousPos;
-
-    private final Vector2d currentPos;
-
-    private final Vector2f displVec;
-
-    private boolean inWindow = false;
-
-    private boolean leftButtonPressed = false;
-
-    private boolean rightButtonPressed = false;
-
-    public MouseInput() {
-        previousPos = new Vector2d(-1, -1);
-        currentPos = new Vector2d(0, 0);
+	private Vector2f currentPos;
+	
+    private Vector2f displVec;
+    
+    private boolean inWindow;
+    
+    private Vector2f previousPos;
+    
+    private boolean leftButtonPressed;
+    
+    private boolean rightButtonPressed;
+    
+    public MouseInput(long windowHandle) {
+        previousPos = new Vector2f(-1, -1);
+        currentPos = new Vector2f();
         displVec = new Vector2f();
-    }
+        leftButtonPressed = false;
+        rightButtonPressed = false;
+        inWindow = false;
 
-    public void init(Window window) {
-        glfwSetCursorPosCallback(window.getWindowHandle(), (windowHandle, xpos, ypos) -> {
-            currentPos.x = xpos;
-            currentPos.y = ypos;
+        glfwSetCursorPosCallback(windowHandle, (handle, xpos, ypos) -> {
+            currentPos.x = (float) xpos;
+            currentPos.y = (float) ypos;
         });
-        glfwSetCursorEnterCallback(window.getWindowHandle(), (windowHandle, entered) -> {
-            inWindow = entered;
-        });
-        glfwSetMouseButtonCallback(window.getWindowHandle(), (windowHandle, button, action, mode) -> {
+        glfwSetCursorEnterCallback(windowHandle, (handle, entered) -> inWindow = entered);
+        glfwSetMouseButtonCallback(windowHandle, (handle, button, action, mode) -> {
             leftButtonPressed = button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS;
             rightButtonPressed = button == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS;
         });
+    }
+    
+    public Vector2f getCurrentPos() {
+        return currentPos;
     }
 
     public Vector2f getDisplVec() {
         return displVec;
     }
 
-    public void input(Window window) {
+    public void input() {
         displVec.x = 0;
         displVec.y = 0;
         if (previousPos.x > 0 && previousPos.y > 0 && inWindow) {
