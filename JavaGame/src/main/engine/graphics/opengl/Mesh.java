@@ -33,15 +33,16 @@ import java.util.function.Consumer;
 import org.lwjgl.system.MemoryUtil;
 
 import main.engine.graphics.Material;
+import main.engine.graphics.particles.Particle;
 import main.engine.items.GameItem;
 
 public class Mesh {
 	
 	public static final int MAX_WEIGHTS = 4;
 
-	private final int vaoId;
+	protected final int vaoId;
 
-    private final List<Integer> vboIdList;
+    protected final List<Integer> vboIdList;
 
     private final int vertexCount;
 
@@ -168,10 +169,10 @@ public class Mesh {
         return vertexCount;
     }
     
-    private void initRender() {
+    protected void initRender() {
         Texture texture = material.getTexture();
         if (texture != null) {
-            // Activate firs texture bank
+            // Activate first texture bank
             glActiveTexture(GL_TEXTURE0);
             // Bind the texture
             glBindTexture(GL_TEXTURE_2D, texture.getId());
@@ -188,7 +189,7 @@ public class Mesh {
         glBindVertexArray(getVaoId());
     }
     
-    private void endRender() {
+    protected void endRender() {
         // Restore state
         glBindVertexArray(0);
 
@@ -250,13 +251,13 @@ public class Mesh {
         glDeleteVertexArrays(vaoId);
     }
     
-    private static float[] createEmptyFloatArray(int length, float defaultValue) {
+    protected static float[] createEmptyFloatArray(int length, float defaultValue) {
         float[] result = new float[length];
         Arrays.fill(result, defaultValue);
         return result;
     }
 
-    private static int[] createEmptyIntArray(int length, int defaultValue) {
+    protected static int[] createEmptyIntArray(int length, int defaultValue) {
         int[] result = new int[length];
         Arrays.fill(result, defaultValue);
         return result;

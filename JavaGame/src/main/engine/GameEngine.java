@@ -24,7 +24,7 @@ public class GameEngine implements Runnable {
     
     private int fps;
     
-    private long updateTime;
+    private long initialTime;
     
     private String windowTitle;
 
@@ -51,11 +51,11 @@ public class GameEngine implements Runnable {
 
     @Override
     public void run() {
-        long initialTime = System.nanoTime();
+        initialTime = System.nanoTime();
         double timeU = 1000000000d / engineProperties.getUps();
         double deltaU = 0;
 
-        updateTime = initialTime;
+        long updateTime = initialTime;
         while (running && !window.windowShouldClose()) {
 
             window.pollEvents();
@@ -67,7 +67,7 @@ public class GameEngine implements Runnable {
             if (deltaU >= 1) {
                 long diffTimeNanos = currentTime - updateTime;
                 gameLogic.input(window, scene, diffTimeNanos);
-                gameLogic.update((float)timeU, window.getMouseInput());
+                gameLogic.update(timeU, window.getMouseInput());
                 updateTime = currentTime;
                 deltaU--;
             }
@@ -98,7 +98,7 @@ public class GameEngine implements Runnable {
     
     private void sync() {
         double loopSlot = 1000000000d / engineProperties.getFps();
-        double endTime = updateTime + loopSlot;
+        double endTime = initialTime + loopSlot;
         while (System.nanoTime() < endTime) {
             try {
                 Thread.sleep(1);

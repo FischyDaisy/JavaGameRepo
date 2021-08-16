@@ -14,10 +14,13 @@ public class GameItem {
 
     private final Vector3f rotation;
     
+    private int textPos;
+    
     public GameItem() {
         position = new Vector3f();
         scale = 1;
         rotation = new Vector3f();
+        textPos = 0;
     }
 
     public GameItem(Mesh mesh) {
@@ -32,6 +35,14 @@ public class GameItem {
 
     public Vector3f getPosition() {
         return position;
+    }
+    
+    public int getTextPos() {
+        return textPos;
+    }
+    
+    public void setTextPos(int textPos) {
+        this.textPos = textPos;
     }
 
     public void setPosition(float x, float y, float z) {

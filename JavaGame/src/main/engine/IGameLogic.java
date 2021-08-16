@@ -8,7 +8,7 @@ public interface IGameLogic {
     
     void input(Window window, Scene scene, long diffTimeMillis);
 
-    void update(float interval, MouseInput mouseInput);
+    void update(double interval, MouseInput mouseInput);
     
     void render(Window window, Scene scene, IRenderer renderer);
     

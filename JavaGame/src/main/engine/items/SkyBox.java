@@ -1,5 +1,7 @@
 package main.engine.items;
 
+import org.joml.Vector4f;
+
 import main.engine.graphics.Material;
 import main.engine.graphics.opengl.Mesh;
 import main.engine.graphics.opengl.Texture;
@@ -12,6 +14,15 @@ public class SkyBox extends GameItem {
         Mesh skyBoxMesh = OBJLoader.loadMesh(objModel);
         Texture skyBoxtexture = new Texture(textureFile);
         skyBoxMesh.setMaterial(new Material(skyBoxtexture, 0.0f));
+        setMesh(skyBoxMesh);
+        setPosition(0, 0, 0);
+    }
+    
+    public SkyBox(String objModel, Vector4f color) throws Exception {
+        super();
+        Mesh skyBoxMesh = OBJLoader.loadMesh(objModel);
+        Material material = new Material(color, 0);
+        skyBoxMesh.setMaterial(material);
         setMesh(skyBoxMesh);
         setPosition(0, 0, 0);
     }

@@ -17,6 +17,10 @@ public class Texture {
 
     private final int height;
     
+    private int numRows = 1;
+
+    private int numCols = 1;
+    
     /**
      * Creates an empty texture.
      *
@@ -57,6 +61,12 @@ public class Texture {
         this.id = createTexture(buf);
 
         stbi_image_free(buf);
+    }
+    
+    public Texture(String fileName, int numCols, int numRows) throws Exception  {
+        this(fileName);
+        this.numCols = numCols;
+        this.numRows = numRows;
     }
     
     public Texture(ByteBuffer imageBuffer) throws Exception {
@@ -116,6 +126,14 @@ public class Texture {
 
     public int getHeight() {
         return this.height;
+    }
+    
+    public int getNumCols() {
+        return numCols;
+    }
+
+    public int getNumRows() {
+        return numRows;
     }
 	
 	public void cleanup() {

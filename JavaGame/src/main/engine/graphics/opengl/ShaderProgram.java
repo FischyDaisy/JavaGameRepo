@@ -23,6 +23,8 @@ public class ShaderProgram {
     private int vertexShaderId;
 
     private int fragmentShaderId;
+    
+    private int geometryShaderId;
 
     private final Map<String, Integer> uniforms;
 
@@ -191,6 +193,10 @@ public class ShaderProgram {
     public void createFragmentShader(String shaderCode) throws Exception {
         fragmentShaderId = createShader(shaderCode, GL_FRAGMENT_SHADER);
     }
+    
+    public void createGeometryShader(String shaderCode) throws Exception {
+        //geometryShaderId = createShader(shaderCode, GL_GEOMETRY_SHADER);
+    }
 
     protected int createShader(String shaderCode, int shaderType) throws Exception {
         int shaderId = glCreateShader(shaderType);
@@ -218,6 +224,9 @@ public class ShaderProgram {
 
         if (vertexShaderId != 0) {
             glDetachShader(programId, vertexShaderId);
+        }
+        if (geometryShaderId != 0) {
+            glDetachShader(programId, geometryShaderId);
         }
         if (fragmentShaderId != 0) {
             glDetachShader(programId, fragmentShaderId);

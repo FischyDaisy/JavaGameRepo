@@ -1,11 +1,16 @@
 package main.game;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.stb.STBImage.*;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.Version;
+import org.lwjgl.system.MemoryStack;
 
 import main.engine.EngineProperties;
 import main.engine.IGameLogic;
@@ -14,6 +19,7 @@ import main.engine.Scene;
 import main.engine.SceneLight;
 import main.engine.Window;
 import main.engine.graphics.Camera;
+import main.engine.graphics.HeightMapMesh;
 import main.engine.graphics.IRenderer;
 import main.engine.graphics.Material;
 import main.engine.graphics.animation.AnimGameItem;
@@ -22,8 +28,10 @@ import main.engine.graphics.opengl.Mesh;
 import main.engine.graphics.opengl.Texture;
 import main.engine.graphics.particles.FlowParticleEmitter;
 import main.engine.graphics.particles.Particle;
+import main.engine.graphics.weather.Fog;
 import main.engine.graphics.opengl.GLRenderer;
 import main.engine.items.GameItem;
+import main.engine.items.SkyBox;
 import main.engine.items.Terrain;
 import main.engine.loaders.md5.MD5AnimModel;
 import main.engine.loaders.md5.MD5Loader;
@@ -70,47 +78,94 @@ public class Game implements IGameLogic {
         this.scene = scene;
         
         if (!engineProperties.useVulkan()) {
-        	// Setup  GameItems
-            float reflectance = 1f;
-            
-            Mesh quadMesh = OBJLoader.loadMesh("/main/resources/models/plane.obj");
-            Material quadMaterial = new Material(new Vector4f(0.0f, 0.0f, 1.0f, 1.0f), reflectance);
-            quadMesh.setMaterial(quadMaterial);
-            GameItem quadGameItem = new GameItem(quadMesh);
-            quadGameItem.setPosition(0, 0, 0);
-            quadGameItem.setScale(2.5f);
-            
-            // Setup  GameItems
-            MD5Model md5Meshodel = MD5Model.parse("/main/resources/models/monster.md5mesh");
-            MD5AnimModel md5AnimModel = MD5AnimModel.parse("/main/resources/models/monster.md5anim");
-            //MD5Model md5Meshodel = MD5Model.parse("/models/boblamp.md5mesh");
-            //MD5AnimModel md5AnimModel = MD5AnimModel.parse("/models/boblamp.md5anim");
-            
-            monster = MD5Loader.process(md5Meshodel, md5AnimModel, new Vector4f(1, 1, 1, 1));
-            monster.setScale(0.05f);
-            monster.setRotation(90, 0, 90);
-            //monster.setRotation(90, 0, 0);
+        	float reflectance = 1f;
 
-            scene.setGameItems(new GameItem[] { quadGameItem} );
+            float blockScale = 0.5f;
+            float skyBoxScale = 100.0f;
+            float extension = 2.0f;
+
+            float startx = extension * (-skyBoxScale + blockScale);
+            float startz = extension * (skyBoxScale - blockScale);
+            float starty = -1.0f;
+            float inc = blockScale * 2;
+
+            float posx = startx;
+            float posz = startz;
+            float incy = 0.0f;
+
+            ByteBuffer buf;
+            int width;
+            int height;
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                IntBuffer w = stack.mallocInt(1);
+                IntBuffer h = stack.mallocInt(1);
+                IntBuffer channels = stack.mallocInt(1);
+
+                buf = stbi_load(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\heightmap.png", w, h, channels, 4);
+                if (buf == null) {
+                    throw new Exception("Image file not loaded: " + stbi_failure_reason());
+                }
+
+                width = w.get();
+                height = h.get();
+            }
+
+            int instances = height * width;
+            Mesh mesh = OBJLoader.loadMesh("/main/resources/models/cube.obj", instances);
+            Texture texture = new Texture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\terrain_textures.png", 2, 1);
+            Material material = new Material(texture, reflectance);
+            mesh.setMaterial(material);
+            GameItem[] gameItems = new GameItem[instances];
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    GameItem gameItem = new GameItem(mesh);
+                    gameItem.setScale(blockScale);
+                    int rgb = HeightMapMesh.getRGB(i, j, width, buf);
+                    incy = rgb / (10 * 255 * 255);
+                    gameItem.setPosition(posx, starty + incy, posz);
+                    int textPos = Math.random() > 0.5f ? 0 : 1;
+                    gameItem.setTextPos(textPos);
+                    gameItems[i * width + j] = gameItem;
+
+                    posx += inc;
+                }
+                posx = startx;
+                posz -= inc;
+            }
+            scene.setGameItems(gameItems);
             
+            // Particles
+            int maxParticles = 200;
             Vector3f particleSpeed = new Vector3f(0, 1, 0);
             particleSpeed.mul(2.5f);
-            long ttl = 4000000000L;
-            int maxParticles = 200;
-            long creationPeriodMillis = 300000000L;
+            long ttl = (long) 4e9;
+            long creationPeriodNanos = (long) 3e8;
             float range = 0.2f;
             float scale = 1.0f;
-            Mesh partMesh = OBJLoader.loadMesh("/main/resources/models/particle.obj");
-            Texture texture = new Texture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\particle_tmp.png");
-            Material partMaterial = new Material(texture, reflectance);
+            Mesh partMesh = OBJLoader.loadMesh("/main/resources/models/particle.obj", maxParticles);
+            Texture particleTexture = new Texture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\particle_anim.png", 4, 4);
+            Material partMaterial = new Material(particleTexture, reflectance);
             partMesh.setMaterial(partMaterial);
-            Particle particle = new Particle(partMesh, particleSpeed, ttl);
+            Particle particle = new Particle(partMesh, particleSpeed, ttl, 100);
             particle.setScale(scale);
-            particleEmitter = new FlowParticleEmitter(particle, maxParticles, creationPeriodMillis);
+            particleEmitter = new FlowParticleEmitter(particle, maxParticles, creationPeriodNanos);
             particleEmitter.setActive(true);
-            particleEmitter.setPositionRndRange(range);
+            particleEmitter.setPositionAndRange(range);
             particleEmitter.setSpeedAndRange(range);
-            this.scene.setParticleEmitters(new FlowParticleEmitter[] {particleEmitter});
+            particleEmitter.setAnimRange(10);
+            this.scene.setParticleEmitters(new FlowParticleEmitter[]{particleEmitter});
+            
+            // Shadows
+            scene.setRenderShadows(false);
+            
+            // Fog
+            Vector3f fogColour = new Vector3f(0.5f, 0.5f, 0.5f);
+            scene.setFog(new Fog(true, fogColour, 0.02f));
+            
+            // Setup  SkyBox
+            SkyBox skyBox = new SkyBox("/main/resources/models/skybox.obj", new Vector4f(0.65f, 0.65f, 0.65f, 1.0f));
+            skyBox.setScale(skyBoxScale);
+            scene.setSkyBox(skyBox);
             
             // Setup Lights
             setupLights();
@@ -174,14 +229,11 @@ public class Game implements IGameLogic {
             } else {
                 angleInc = 0;
             }
-            if (window.isKeyPressed(GLFW_KEY_SPACE) ) {
-                monster.nextFrame();
-            }
         }
     }
 
     @Override
-    public void update(float interval, MouseInput mouseInput) {
+    public void update(double interval, MouseInput mouseInput) {
         if (!engineProperties.useVulkan()) {
         	// Update camera based on mouse            
             if (mouseInput.isRightButtonPressed()) {
@@ -213,7 +265,7 @@ public class Game implements IGameLogic {
             lightDirection.z = zValue;
             lightDirection.normalize();
             
-            particleEmitter.update((long)(interval));
+            particleEmitter.update(Double.valueOf(interval).longValue());
         }
     }
 
