@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.lwjgl.BufferUtils;
+
 import static org.lwjgl.BufferUtils.*;
 
 public class Utils {

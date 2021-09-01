@@ -3,17 +3,72 @@ package main.engine;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import org.lwjgl.glfw.*;
+import org.lwjgl.nuklear.NkAllocator;
+import org.lwjgl.nuklear.NkContext;
+import org.lwjgl.nuklear.NkDrawVertexLayoutElement;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.nmemAllocChecked;
+import static org.lwjgl.system.MemoryUtil.nmemFree;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.joml.Matrix4f;
 
 import static org.lwjgl.glfw.GLFWVulkan.glfwVulkanSupported;
+import static org.lwjgl.nuklear.Nuklear.NK_FORMAT_COUNT;
+import static org.lwjgl.nuklear.Nuklear.NK_FORMAT_FLOAT;
+import static org.lwjgl.nuklear.Nuklear.NK_FORMAT_R8G8B8A8;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_BACKSPACE;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_COPY;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_CUT;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_DEL;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_DOWN;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_ENTER;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_LEFT;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_PASTE;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_RIGHT;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_DOWN;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_END;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_START;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_UP;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_SHIFT;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_TAB;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_END;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_LINE_END;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_LINE_START;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_REDO;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_START;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_UNDO;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_WORD_LEFT;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_WORD_RIGHT;
+import static org.lwjgl.nuklear.Nuklear.NK_KEY_UP;
+import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_ATTRIBUTE_COUNT;
+import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_COLOR;
+import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_POSITION;
+import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_TEXCOORD;
+import static org.lwjgl.nuklear.Nuklear.nk_input_key;
+import static org.lwjgl.nuklear.Nuklear.nk_input_unicode;
 
 public class Window {
+	
+	private static final float FOV = (float) Math.toRadians(60.0f);
+
+    private static final float Z_NEAR = 0.01f;
+
+    private static final float Z_FAR = 1000.f;
 
     private final String title;
+    
+    private final List<Integer> codePointList;
+    
+    private final Map<Integer, Integer> keyMap;
 
     private int width;
 
@@ -28,6 +83,8 @@ public class Window {
     private MouseInput mouseInput;
     
     private WindowOptions opts;
+    
+    private Matrix4f projectionMatrix;
 
     public Window(String title, int width, int height, boolean vSync, WindowOptions opts) {
         this.title = title;
@@ -36,6 +93,9 @@ public class Window {
         this.vSync = vSync;
         this.resized = false;
         this.opts = opts;
+        projectionMatrix = new Matrix4f();
+        codePointList = new ArrayList<Integer>();
+        keyMap = new HashMap<Integer, Integer>();
     }
 
     public void init(GLFWKeyCallbackI keyCallback) {
@@ -113,6 +173,9 @@ public class Window {
                 this.setResized(true);
             });
 
+            glfwSetCharCallback(windowHandle, (window, codepoint) -> {
+            		codePointList.add(codepoint);
+            	});
             // Setup a key callback. It will be called every time a key is pressed, repeated or released.
             glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
                 if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
@@ -121,6 +184,7 @@ public class Window {
                 if (keyCallback != null) {
                     keyCallback.invoke(window, key, scancode, action, mods);
                 }
+                keyMap.put(key, action);
             });
 
             if (maximized) {
@@ -154,6 +218,7 @@ public class Window {
             
             //	Test For Depth
             glEnable(GL_DEPTH_TEST);
+            glEnable(GL_STENCIL_TEST);
             if (opts.showTriangles) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             }
@@ -170,12 +235,43 @@ public class Window {
         mouseInput = new MouseInput(windowHandle);
     }
     
+    public void restoreState() {
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_STENCIL_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        if (opts.cullFace) {
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+        }
+    }
+    
     public long getWindowHandle() {
         return windowHandle;
     }
 
     public void setClearColor(float r, float g, float b, float alpha) {
         glClearColor(r, g, b, alpha);
+    }
+    
+    public List<Integer> getCodepointList() {
+    	return codePointList;
+    }
+    
+    public Map<Integer, Integer> getKeyMap() {
+    	return keyMap;
+    }
+    
+    public void clearCodepointList() {
+    	codePointList.clear();
+    }
+    
+    public void clearKeyMap() {
+    	keyMap.clear();
+    }
+    
+    public int getKey(int keyCode) {
+    	return glfwGetKey(windowHandle, keyCode);
     }
 
     public boolean isKeyPressed(int keyCode) {
@@ -184,6 +280,15 @@ public class Window {
 
     public boolean windowShouldClose() {
         return glfwWindowShouldClose(windowHandle);
+    }
+    
+    public Matrix4f getProjectionMatrix() {
+        return projectionMatrix;
+    }
+
+    public Matrix4f updateProjectionMatrix() {
+        float aspectRatio = (float) width / (float) height;
+        return projectionMatrix.setPerspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
     }
 
     public String getTitle() {

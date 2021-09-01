@@ -64,9 +64,8 @@ public class GameEngine implements Runnable {
             deltaU += (currentTime - initialTime) / timeU;
             initialTime = currentTime;
 
+            gameLogic.input(window, scene, currentTime - updateTime);
             if (deltaU >= 1) {
-                long diffTimeNanos = currentTime - updateTime;
-                gameLogic.input(window, scene, diffTimeNanos);
                 gameLogic.update(timeU, window.getMouseInput());
                 updateTime = currentTime;
                 deltaU--;

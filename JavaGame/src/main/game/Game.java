@@ -1,6 +1,7 @@
 package main.game;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.nuklear.Nuklear.NK_ANTI_ALIASING_ON;
 import static org.lwjgl.stb.STBImage.*;
 
 import java.nio.ByteBuffer;
@@ -11,6 +12,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.Version;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.openal.AL11;
 
 import main.engine.EngineProperties;
 import main.engine.IGameLogic;
@@ -20,9 +22,14 @@ import main.engine.SceneLight;
 import main.engine.Window;
 import main.engine.graphics.Camera;
 import main.engine.graphics.HeightMapMesh;
+import main.engine.graphics.IHud;
+import main.engine.graphics.IHudElement;
 import main.engine.graphics.IRenderer;
 import main.engine.graphics.Material;
 import main.engine.graphics.animation.AnimGameItem;
+import main.engine.graphics.hud.Calculator;
+import main.engine.graphics.hud.Demo;
+import main.engine.graphics.hud.Hud;
 import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.opengl.Mesh;
 import main.engine.graphics.opengl.Texture;
@@ -37,6 +44,10 @@ import main.engine.loaders.md5.MD5AnimModel;
 import main.engine.loaders.md5.MD5Loader;
 import main.engine.loaders.md5.MD5Model;
 import main.engine.loaders.obj.OBJLoader;
+import main.engine.sound.SoundBuffer;
+import main.engine.sound.SoundListener;
+import main.engine.sound.SoundManager;
+import main.engine.sound.SoundSource;
 
 public class Game implements IGameLogic {
 	
@@ -60,20 +71,26 @@ public class Game implements IGameLogic {
     
     private float angleInc;
     
+    private final SoundManager soundMgr;
+    
     private FlowParticleEmitter particleEmitter;
+    
+    private enum Sounds { MUSIC, BEEP, FIRE };
     
     private AnimGameItem monster;
     
     public Game() {
         camera = new Camera();
+        soundMgr = new SoundManager();
         cameraInc = new Vector3f(0.0f, 0.0f, 0.0f);
         angleInc = 0;
-        lightAngle = 45;;
+        lightAngle = 45;
     }
     
     @Override
     public void init(Window window, Scene scene, IRenderer renderer) throws Exception {
         renderer.init(window, scene);
+        soundMgr.init();
         
         this.scene = scene;
         
@@ -174,16 +191,52 @@ public class Game implements IGameLogic {
             Runtime.Version runtimeVersion = Runtime.version();
             String version = String.valueOf(runtimeVersion.version().get(0) + "." + runtimeVersion.version().get(1) + "." 
             		+ runtimeVersion.version().get(2));
-            hud = new Hud("Java Runtime Version: " + version + " | LWJGL Version: " + Version.getVersion());
+            //hud = new Hud("Java Runtime Version: " + version + " | LWJGL Version: " + Version.getVersion());
             //hud = new Hud(System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
+            hud = new Hud(window);
+            hud.setElements(new IHudElement[] {new Demo(), new Calculator()});
             
             camera.getPosition().x = 0.25f;
             camera.getPosition().y = 6.5f;
             camera.getPosition().z = 6.5f;
             camera.getRotation().x = 25;
             camera.getRotation().y = -1;
+            
+            stbi_image_free(buf);
+            
+            // Sounds
+            this.soundMgr.init();
+            this.soundMgr.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
+            setupSounds();
         }
         
+    }
+    
+    private void setupSounds() throws Exception {
+        SoundBuffer buffBack = new SoundBuffer("/main/resources/sounds/background.ogg");
+        soundMgr.addSoundBuffer(buffBack);
+        SoundSource sourceBack = new SoundSource(true, true);
+        sourceBack.setBuffer(buffBack.getBufferId());
+        soundMgr.addSoundSource(Sounds.MUSIC.toString(), sourceBack);
+        
+        SoundBuffer buffBeep = new SoundBuffer("/main/resources/sounds/beep.ogg");
+        soundMgr.addSoundBuffer(buffBeep);
+        SoundSource sourceBeep = new SoundSource(false, true);
+        sourceBeep.setBuffer(buffBeep.getBufferId());
+        soundMgr.addSoundSource(Sounds.BEEP.toString(), sourceBeep);
+        
+        SoundBuffer buffFire = new SoundBuffer("/main/resources/sounds/fire.ogg");
+        soundMgr.addSoundBuffer(buffFire);
+        SoundSource sourceFire = new SoundSource(true, false);
+        Vector3f pos = particleEmitter.getBaseParticle().getPosition();
+        sourceFire.setPosition(pos);
+        sourceFire.setBuffer(buffFire.getBufferId());
+        soundMgr.addSoundSource(Sounds.FIRE.toString(), sourceFire);
+        sourceFire.play();
+        
+        soundMgr.setListener(new SoundListener(new Vector3f()));
+
+        sourceBack.play();        
     }
     
     private void setupLights() {
@@ -206,6 +259,7 @@ public class Game implements IGameLogic {
     @Override
     public void input(Window window, Scene scene, long diffTimeMillis) {
         if (!engineProperties.useVulkan()) {
+        	hud.input(window);
         	cameraInc.set(0, 0, 0);
             if (window.isKeyPressed(GLFW_KEY_W)) {
                 cameraInc.z = -1;
@@ -224,8 +278,10 @@ public class Game implements IGameLogic {
             }
             if (window.isKeyPressed(GLFW_KEY_LEFT)) {
                 angleInc -= 0.05f;
+                soundMgr.playSoundSource(Sounds.BEEP.toString());
             } else if (window.isKeyPressed(GLFW_KEY_RIGHT)) {
                 angleInc += 0.05f;
+                soundMgr.playSoundSource(Sounds.BEEP.toString());
             } else {
                 angleInc = 0;
             }
@@ -266,21 +322,23 @@ public class Game implements IGameLogic {
             lightDirection.normalize();
             
             particleEmitter.update(Double.valueOf(interval).longValue());
+            
+            // Update sound listener position;
+            soundMgr.updateListenerPosition(camera);
         }
     }
 
     @Override
     public void render(Window window, Scene scene, IRenderer renderer) {
     	this.scene = scene;
-    	if (hud != null) {
-            hud.updateSize(window);
-        }
-        renderer.render(window, camera, scene, hud);
+        renderer.render(window, camera, scene);
+        hud.render(window, NK_ANTI_ALIASING_ON, IHud.MAX_VERTEX_BUFFER, IHud.MAX_ELEMENT_BUFFER);
     }
 
     @Override
     public void cleanup(IRenderer renderer) {
     	renderer.cleanup();
+    	soundMgr.cleanup();
         scene.cleanup();
         if ( hud != null ) {
             hud.cleanup();

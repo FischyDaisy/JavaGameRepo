@@ -34,7 +34,7 @@ public class SoundManager {
     private final Matrix4f cameraMatrix;
 
     public SoundManager() {
-        soundBufferList = new ArrayList<>();
+        soundBufferList = new ArrayList<SoundBuffer>();
         soundSourceMap = new HashMap<>();
         cameraMatrix = new Matrix4f();
     }

@@ -1,8 +1,22 @@
 package main.engine.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11C.GL_BLEND;
+import static org.lwjgl.opengl.GL11C.GL_CULL_FACE;
+import static org.lwjgl.opengl.GL11C.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11C.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11C.GL_SCISSOR_TEST;
+import static org.lwjgl.opengl.GL11C.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11C.glBlendFunc;
+import static org.lwjgl.opengl.GL11C.glDisable;
+import static org.lwjgl.opengl.GL11C.glEnable;
 import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13C.glActiveTexture;
+import static org.lwjgl.opengl.GL14C.GL_FUNC_ADD;
+import static org.lwjgl.opengl.GL14C.glBlendEquation;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.nuklear.Nuklear.NK_ANTI_ALIASING_ON;
 
 import java.util.List;
 import java.util.Map;
@@ -11,15 +25,16 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import main.engine.IHud;
 import main.engine.Scene;
 import main.engine.SceneLight;
 import main.engine.Window;
 import main.engine.graphics.Camera;
+import main.engine.graphics.IHud;
 import main.engine.graphics.IRenderer;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.animation.AnimatedFrame;
+import main.engine.graphics.hud.Hud;
 import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.lights.PointLight;
 import main.engine.graphics.lights.SpotLight;
@@ -49,8 +64,6 @@ public class GLRenderer implements IRenderer {
 
     private ShaderProgram sceneShaderProgram;
     
-    private ShaderProgram hudShaderProgram;
-    
     private ShaderProgram skyBoxShaderProgram;
     
     private ShaderProgram particlesShaderProgram;
@@ -72,11 +85,10 @@ public class GLRenderer implements IRenderer {
     	setupSkyBoxShader();
     	setupSceneShader();
     	setupParticlesShader();
-    	setupHudShader();
     }
     
     @Override
-    public void render(Window window, Camera camera, Scene scene, IHud hud) {
+    public void render(Window window, Camera camera, Scene scene) {
         clear();
         
         // Render depth map before view ports has been set up
@@ -93,8 +105,6 @@ public class GLRenderer implements IRenderer {
         renderSkyBox(window, camera, scene);
         
         renderParticles(window, camera, scene);
-        
-        renderHud(window, hud);
     }
     
     private void setupParticlesShader() throws Exception {
@@ -174,21 +184,9 @@ public class GLRenderer implements IRenderer {
         sceneShaderProgram.createUniform("numCols");
         sceneShaderProgram.createUniform("numRows");
     }
-    
-    private void setupHudShader() throws Exception {
-        hudShaderProgram = new ShaderProgram();
-        hudShaderProgram.createVertexShader(Utils.loadResource("/main/resources/shaders/hud_vertex.vs"));
-        hudShaderProgram.createFragmentShader(Utils.loadResource("/main/resources/shaders/hud_fragment.fs"));
-        hudShaderProgram.link();
-
-        // Create uniforms for Ortographic-model projection matrix and base colour
-        hudShaderProgram.createUniform("projModelMatrix");
-        hudShaderProgram.createUniform("color");
-        hudShaderProgram.createUniform("hasTexture");
-    }
 
     public void clear() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
     
     private void renderParticles(Window window, Camera camera, Scene scene) {
@@ -424,24 +422,6 @@ public class GLRenderer implements IRenderer {
 
     }
     
-    private void renderHud(Window window, IHud hud) {
-        hudShaderProgram.bind();
-
-        Matrix4f ortho = transformation.getOrtho2DProjectionMatrix(0, window.getWidth(), window.getHeight(), 0);
-        for (GameItem gameItem : hud.getGameItems()) {
-            Mesh mesh = gameItem.getMesh();
-            // Set ortohtaphic and model matrix for this HUD item
-            Matrix4f projModelMatrix = transformation.buildOrthoProjModelMatrix(gameItem, ortho);
-            hudShaderProgram.setUniform("projModelMatrix", projModelMatrix);
-            hudShaderProgram.setUniform("color", gameItem.getMesh().getMaterial().getAmbientColor());
-            hudShaderProgram.setUniform("hasTexture", gameItem.getMesh().getMaterial().isTextured() ? 1 : 0);
-            // Render the mesh for this HUD item
-            mesh.render();
-        }
-
-        hudShaderProgram.unbind();
-    }
-    
     /**
      * Renders the three axis in space (For debugging purposes only
      * @param camera 
@@ -492,9 +472,6 @@ public class GLRenderer implements IRenderer {
         }
         if (sceneShaderProgram != null) {
             sceneShaderProgram.cleanup();
-        }
-        if (hudShaderProgram != null) {
-            hudShaderProgram.cleanup();
         }
         if (particlesShaderProgram != null) {
             particlesShaderProgram.cleanup();

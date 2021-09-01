@@ -1,10 +1,10 @@
 package main.engine.graphics.vulkan;
 
 import main.engine.EngineProperties;
-import main.engine.IHud;
 import main.engine.Scene;
 import main.engine.Window;
 import main.engine.graphics.Camera;
+import main.engine.graphics.IHud;
 import main.engine.graphics.IRenderer;
 
 public class VKRenderer implements IRenderer {
@@ -39,7 +39,7 @@ public class VKRenderer implements IRenderer {
 	}
 
 	@Override
-	public void render(Window window, Camera camera, Scene scene, IHud hud) {
+	public void render(Window window, Camera camera, Scene scene) {
 		swapChain.acquireNextImage();
 
         fwdRenderActivity.submit(presentQueue);
