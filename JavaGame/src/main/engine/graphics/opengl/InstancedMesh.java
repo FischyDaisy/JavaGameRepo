@@ -33,9 +33,9 @@ public class InstancedMesh extends Mesh {
 
     private static final int MATRIX_SIZE_BYTES = InstancedMesh.MATRIX_SIZE_FLOATS * InstancedMesh.FLOAT_SIZE_BYTES;
 
-    private static final int INSTANCE_SIZE_BYTES = InstancedMesh.MATRIX_SIZE_BYTES * 2 + InstancedMesh.FLOAT_SIZE_BYTES * 2;
+    private static final int INSTANCE_SIZE_BYTES = InstancedMesh.MATRIX_SIZE_BYTES * 2 + InstancedMesh.FLOAT_SIZE_BYTES * 2 + InstancedMesh.FLOAT_SIZE_BYTES;
 
-    private static final int INSTANCE_SIZE_FLOATS = InstancedMesh.MATRIX_SIZE_FLOATS * 2 + 2;
+    private static final int INSTANCE_SIZE_FLOATS = InstancedMesh.MATRIX_SIZE_FLOATS * 2 + 3;
 
     private final int numInstances;
 
@@ -78,6 +78,14 @@ public class InstancedMesh extends Mesh {
         glVertexAttribPointer(start, 2, GL_FLOAT, false, InstancedMesh.INSTANCE_SIZE_BYTES, strideStart);
         glVertexAttribDivisor(start, 1);
         glEnableVertexAttribArray(start);
+        strideStart += InstancedMesh.FLOAT_SIZE_BYTES * 2;
+        start++;
+        
+        // Selected
+        glVertexAttribPointer(start, 1, GL_FLOAT, false, InstancedMesh.INSTANCE_SIZE_BYTES, strideStart);
+        glVertexAttribDivisor(start, 1);
+        glEnableVertexAttribArray(start);
+        start++;
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -141,6 +149,10 @@ public class InstancedMesh extends Mesh {
                 this.instanceDataBuffer.put(buffPos, textXOffset);
                 this.instanceDataBuffer.put(buffPos + 1, textYOffset);
             }
+            
+            // Selected data
+            int buffPos = InstancedMesh.INSTANCE_SIZE_FLOATS * i + InstancedMesh.MATRIX_SIZE_FLOATS * 2 + 2;
+            this.instanceDataBuffer.put(buffPos, gameItem.isSelected() ? 1 : 0);
 
             i++;
         }

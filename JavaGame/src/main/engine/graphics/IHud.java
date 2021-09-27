@@ -10,7 +10,7 @@ public interface IHud {
     
     public void input(Window window);
     
-    public void render(Window window, int AA, int max_vertex_buffer, int max_element_buffer);
+    public void render(Window window);
 
     public void cleanup();
 }

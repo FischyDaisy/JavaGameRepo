@@ -24,7 +24,7 @@ public class EngineProperties {
         try (InputStream stream = EngineProperties.class.getResourceAsStream("/main/resources/" + FILENAME)) {
             props.load(stream);
             ups = Integer.parseInt(props.getOrDefault("ups", DEFAULT_UPS).toString());
-            fps = Integer.parseInt(props.getOrDefault("ufps", DEFAULT_FPS).toString());
+            fps = Integer.parseInt(props.getOrDefault("fps", DEFAULT_FPS).toString());
             useVulkan = Boolean.parseBoolean(props.getOrDefault("useVulkan", false).toString());
             validate = Boolean.parseBoolean(props.getOrDefault("vkValidate", false).toString());
             physDeviceName = props.getProperty("physDeviceName");

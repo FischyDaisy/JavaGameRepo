@@ -3,9 +3,9 @@ package main.engine.graphics.vulkan;
 import main.engine.EngineProperties;
 import main.engine.Scene;
 import main.engine.Window;
-import main.engine.graphics.Camera;
 import main.engine.graphics.IHud;
 import main.engine.graphics.IRenderer;
+import main.engine.graphics.camera.Camera;
 
 public class VKRenderer implements IRenderer {
 	

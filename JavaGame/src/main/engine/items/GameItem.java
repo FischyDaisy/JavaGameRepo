@@ -1,10 +1,13 @@
 package main.engine.items;
 
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import main.engine.graphics.opengl.Mesh;
 
 public class GameItem {
+	
+	private boolean selected;
 
 	private Mesh[] meshes;
     
@@ -12,15 +15,22 @@ public class GameItem {
     
     private float scale;
 
-    private final Vector3f rotation;
+    private final Quaternionf rotation;
     
     private int textPos;
     
+    private boolean disableFrustumCulling;
+    
+    private boolean insideFrustum;
+    
     public GameItem() {
+    	selected = false;
         position = new Vector3f();
         scale = 1;
-        rotation = new Vector3f();
+        rotation = new Quaternionf();
         textPos = 0;
+        insideFrustum = true;
+        disableFrustumCulling = false;
     }
 
     public GameItem(Mesh mesh) {
@@ -50,23 +60,29 @@ public class GameItem {
         this.position.y = y;
         this.position.z = z;
     }
+    
+    public boolean isSelected() {
+        return selected;
+    }
+    
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 
     public float getScale() {
         return scale;
     }
 
-    public void setScale(float scale) {
+    public final void setScale(float scale) {
         this.scale = scale;
     }
 
-    public Vector3f getRotation() {
+    public Quaternionf getRotation() {
         return rotation;
     }
 
-    public void setRotation(float x, float y, float z) {
-        this.rotation.x = x;
-        this.rotation.y = y;
-        this.rotation.z = z;
+    public final void setRotation(Quaternionf q) {
+        this.rotation.set(q);
     }
     
     public Mesh getMesh() {
@@ -85,9 +101,25 @@ public class GameItem {
         this.meshes = new Mesh[]{mesh};
     }
     
+    public boolean isInsideFrustum() {
+        return insideFrustum;
+    }
+
+    public void setInsideFrustum(boolean insideFrustum) {
+        this.insideFrustum = insideFrustum;
+    }
+    
+    public boolean isDisableFrustumCulling() {
+        return disableFrustumCulling;
+    }
+
+    public void setDisableFrustumCulling(boolean disableFrustumCulling) {
+        this.disableFrustumCulling = disableFrustumCulling;
+    } 
+    
     public void cleanup() {
         int numMeshes = this.meshes != null ? this.meshes.length : 0;
-        for(int i=0; i<numMeshes; i++) {
+        for(int i = 0; i < numMeshes; i++) {
             this.meshes[i].cleanup();
         }
     }

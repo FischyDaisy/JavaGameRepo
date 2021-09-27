@@ -10,6 +10,7 @@ public class Main {
             IGameLogic gameLogic = new Game();
             Window.WindowOptions opts = new Window.WindowOptions();
             opts.showFps = true;
+            opts.compatibleProfile = true;
             GameEngine gameEng = new GameEngine("GAME", opts, gameLogic);
             gameEng.start();
         } catch (Exception excp) {

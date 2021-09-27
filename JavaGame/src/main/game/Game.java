@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nuklear.Nuklear.NK_ANTI_ALIASING_ON;
 import static org.lwjgl.stb.STBImage.*;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -20,16 +21,20 @@ import main.engine.MouseInput;
 import main.engine.Scene;
 import main.engine.SceneLight;
 import main.engine.Window;
-import main.engine.graphics.Camera;
 import main.engine.graphics.HeightMapMesh;
 import main.engine.graphics.IHud;
 import main.engine.graphics.IHudElement;
 import main.engine.graphics.IRenderer;
 import main.engine.graphics.Material;
+import main.engine.graphics.Transformation;
 import main.engine.graphics.animation.AnimGameItem;
+import main.engine.graphics.camera.Camera;
+import main.engine.graphics.camera.CameraBoxSelectionDetector;
+import main.engine.graphics.camera.MouseBoxSelectionDetector;
 import main.engine.graphics.hud.Calculator;
 import main.engine.graphics.hud.Demo;
-import main.engine.graphics.hud.Hud;
+import main.engine.graphics.hud.GameHud;
+import main.engine.graphics.hud.MenuHud;
 import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.opengl.Mesh;
 import main.engine.graphics.opengl.Texture;
@@ -38,6 +43,7 @@ import main.engine.graphics.particles.Particle;
 import main.engine.graphics.weather.Fog;
 import main.engine.graphics.opengl.GLRenderer;
 import main.engine.items.GameItem;
+import main.engine.items.Portal;
 import main.engine.items.SkyBox;
 import main.engine.items.Terrain;
 import main.engine.loaders.md5.MD5AnimModel;
@@ -61,7 +67,9 @@ public class Game implements IGameLogic {
 
     private Scene scene;
     
-    private Hud hud;
+    private MenuHud mHud;
+    
+    private GameHud gHud;
 
     private float lightAngle;
     
@@ -75,9 +83,13 @@ public class Game implements IGameLogic {
     
     private FlowParticleEmitter particleEmitter;
     
+    private MouseBoxSelectionDetector selectDetector;
+    
+    private boolean leftButtonPressed;
+    
     private enum Sounds { MUSIC, BEEP, FIRE };
     
-    private AnimGameItem monster;
+    private GameItem[] gameItems;
     
     public Game() {
         camera = new Camera();
@@ -91,6 +103,8 @@ public class Game implements IGameLogic {
     public void init(Window window, Scene scene, IRenderer renderer) throws Exception {
         renderer.init(window, scene);
         soundMgr.init();
+        
+        leftButtonPressed = false;
         
         this.scene = scene;
         
@@ -109,6 +123,8 @@ public class Game implements IGameLogic {
             float posx = startx;
             float posz = startz;
             float incy = 0.0f;
+            
+            selectDetector = new MouseBoxSelectionDetector();
 
             ByteBuffer buf;
             int width;
@@ -129,10 +145,11 @@ public class Game implements IGameLogic {
 
             int instances = height * width;
             Mesh mesh = OBJLoader.loadMesh("/main/resources/models/cube.obj", instances);
+            mesh.setBoundingRadius(2);
             Texture texture = new Texture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\terrain_textures.png", 2, 1);
             Material material = new Material(texture, reflectance);
             mesh.setMaterial(material);
-            GameItem[] gameItems = new GameItem[instances];
+            gameItems = new GameItem[instances];
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     GameItem gameItem = new GameItem(mesh);
@@ -149,7 +166,7 @@ public class Game implements IGameLogic {
                 posx = startx;
                 posz -= inc;
             }
-            scene.setGameItems(gameItems);
+            //scene.setGameItems(gameItems);
             
             // Particles
             int maxParticles = 200;
@@ -172,6 +189,21 @@ public class Game implements IGameLogic {
             particleEmitter.setAnimRange(10);
             this.scene.setParticleEmitters(new FlowParticleEmitter[]{particleEmitter});
             
+            // Portals
+            Mesh pMesh = OBJLoader.loadMesh("/main/resources/models/double_quad.obj");
+            Portal portalA = new Portal(pMesh);
+            Portal portalB = new Portal(pMesh);
+            portalA.setPosition(0f, 4f, 0f);
+            portalB.setPosition(5f, 4f, 0f);
+            GameItem[] fullList = new GameItem[gameItems.length + 1];
+            for (int i = 0; i < gameItems.length - 1; i++) {
+            	fullList[i] = gameItems[i];
+            }
+            fullList[fullList.length - 2] = portalA;
+            fullList[fullList.length - 1] = portalB;
+            Portal.connect(portalA, portalB, new Transformation());
+            scene.setGameItems(fullList);
+            
             // Shadows
             scene.setRenderShadows(false);
             
@@ -192,9 +224,9 @@ public class Game implements IGameLogic {
             String version = String.valueOf(runtimeVersion.version().get(0) + "." + runtimeVersion.version().get(1) + "." 
             		+ runtimeVersion.version().get(2));
             //hud = new Hud("Java Runtime Version: " + version + " | LWJGL Version: " + Version.getVersion());
-            //hud = new Hud(System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
-            hud = new Hud(window);
-            hud.setElements(new IHudElement[] {new Demo(), new Calculator()});
+            gHud = new GameHud(System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
+            //mHud = new MenuHud(window);
+            //mHud.setElements(new IHudElement[] {new Demo(), new Calculator()});
             
             camera.getPosition().x = 0.25f;
             camera.getPosition().y = 6.5f;
@@ -259,7 +291,9 @@ public class Game implements IGameLogic {
     @Override
     public void input(Window window, Scene scene, long diffTimeMillis) {
         if (!engineProperties.useVulkan()) {
-        	hud.input(window);
+        	if (mHud != null) {
+        		mHud.input(window);
+        	}
         	cameraInc.set(0, 0, 0);
             if (window.isKeyPressed(GLFW_KEY_W)) {
                 cameraInc.z = -1;
@@ -289,7 +323,8 @@ public class Game implements IGameLogic {
     }
 
     @Override
-    public void update(double interval, MouseInput mouseInput) {
+    public void update(double interval, Window window) {
+    	MouseInput mouseInput = window.getMouseInput();
         if (!engineProperties.useVulkan()) {
         	// Update camera based on mouse            
             if (mouseInput.isRightButtonPressed()) {
@@ -321,10 +356,24 @@ public class Game implements IGameLogic {
             lightDirection.z = zValue;
             lightDirection.normalize();
             
+            if (gHud != null) {
+            	gHud.updateSize(window);
+            	gHud.updateCrossHair(window);
+            }
+            
             particleEmitter.update(Double.valueOf(interval).longValue());
+            
+            // Update view matrix
+            camera.updateViewMatrix();
             
             // Update sound listener position;
             soundMgr.updateListenerPosition(camera);
+            
+            boolean aux = mouseInput.isLeftButtonPressed();        
+            if (aux && (!this.leftButtonPressed) && this.selectDetector.selectGameItem(gameItems, window, mouseInput.getCurrentPos(), camera)) {
+                //this.gHud.incCounter();
+            }
+            this.leftButtonPressed = aux;
         }
     }
 
@@ -332,7 +381,12 @@ public class Game implements IGameLogic {
     public void render(Window window, Scene scene, IRenderer renderer) {
     	this.scene = scene;
         renderer.render(window, camera, scene);
-        hud.render(window, NK_ANTI_ALIASING_ON, IHud.MAX_VERTEX_BUFFER, IHud.MAX_ELEMENT_BUFFER);
+        if (mHud != null) {
+        	mHud.render(window);
+        }
+        if (gHud != null) {
+        	gHud.render(window);
+        }
     }
 
     @Override
@@ -340,8 +394,11 @@ public class Game implements IGameLogic {
     	renderer.cleanup();
     	soundMgr.cleanup();
         scene.cleanup();
-        if ( hud != null ) {
-            hud.cleanup();
+        if ( mHud != null ) {
+            mHud.cleanup();
+        }
+        if ( gHud != null ) {
+            gHud.cleanup();
         }
     }
 }

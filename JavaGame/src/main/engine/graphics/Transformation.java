@@ -1,8 +1,10 @@
 package main.engine.graphics;
 
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import main.engine.graphics.camera.Camera;
 import main.engine.items.GameItem;
 
 public class Transformation {
@@ -15,8 +17,6 @@ public class Transformation {
     
     private final Matrix4f modelLightViewMatrix;
     
-    private final Matrix4f viewMatrix;
-    
     private final Matrix4f lightViewMatrix;
     
     private final Matrix4f orthoProjMatrix;
@@ -25,16 +25,21 @@ public class Transformation {
 
     private final Matrix4f orthoModelMatrix;
     
+    private final Matrix4f localModelMatrix;
+    
+    private final Matrix4f forwardMatrix;
+    
     public Transformation() {
     	projectionMatrix = new Matrix4f();
         modelMatrix = new Matrix4f();
         modelViewMatrix = new Matrix4f();
         modelLightViewMatrix = new Matrix4f();
-        viewMatrix = new Matrix4f();
         orthoProjMatrix = new Matrix4f();
         ortho2DMatrix = new Matrix4f();
         orthoModelMatrix = new Matrix4f();
         lightViewMatrix = new Matrix4f();
+        localModelMatrix = new Matrix4f();
+        forwardMatrix = new Matrix4f();
     }
     
     public Matrix4f getProjectionMatrix() {
@@ -54,14 +59,6 @@ public class Transformation {
         orthoProjMatrix.identity();
         orthoProjMatrix.setOrtho(left, right, bottom, top, zNear, zFar);
         return orthoProjMatrix;
-    }
-    
-    public Matrix4f getViewMatrix() {
-        return viewMatrix;
-    }
-    
-    public Matrix4f updateViewMatrix(Camera camera) {
-        return updateGenericViewMatrix(camera.getPosition(), camera.getRotation(), viewMatrix);
     }
     
     public Matrix4f getLightViewMatrix() {
@@ -89,14 +86,25 @@ public class Transformation {
         return ortho2DMatrix;
     }
     
+    public Vector3f forward(GameItem gameItem) {
+    	Vector3f forward = new Vector3f();
+    	return forwardMatrix.rotation(gameItem.getRotation()).positiveZ(forward).negate();
+    }
+    
+    public Matrix4f buildLocalModelMatrix(GameItem gameItem) {
+    	Quaternionf rotation = gameItem.getRotation();
+    	return localModelMatrix.translationRotateScaleInvert(
+    			gameItem.getPosition().x, gameItem.getPosition().y, gameItem.getPosition().z, 
+    			rotation.x, rotation.y, rotation.z, rotation.w, 
+    			gameItem.getScale(), gameItem.getScale(), gameItem.getScale());
+    }
+    
     public Matrix4f buildModelMatrix(GameItem gameItem) {
-        Vector3f rotation = gameItem.getRotation();
-        modelMatrix.identity().translate(gameItem.getPosition()).                
-                rotateX((float)Math.toRadians(-rotation.x)).
-                rotateY((float)Math.toRadians(-rotation.y)).
-                rotateZ((float)Math.toRadians(-rotation.z)).
-                scale(gameItem.getScale());
-        return modelMatrix;
+    	Quaternionf rotation = gameItem.getRotation();
+    	return modelMatrix.translationRotateScale(
+                gameItem.getPosition().x, gameItem.getPosition().y, gameItem.getPosition().z,
+                rotation.x, rotation.y, rotation.z, rotation.w,
+                gameItem.getScale(), gameItem.getScale(), gameItem.getScale());
     }
     
     public Matrix4f buildModelViewMatrix(GameItem gameItem, Matrix4f viewMatrix) {

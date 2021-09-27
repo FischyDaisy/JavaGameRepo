@@ -10,6 +10,7 @@ import main.engine.graphics.opengl.Mesh;
 import main.engine.graphics.particles.IParticleEmitter;
 import main.engine.graphics.weather.Fog;
 import main.engine.items.GameItem;
+import main.engine.items.Portal;
 import main.engine.items.SkyBox;
 
 public class Scene {
@@ -17,6 +18,8 @@ public class Scene {
 	private final Map<Mesh, List<GameItem>> meshMap;
 	
 	private final Map<InstancedMesh, List<GameItem>> instancedMeshMap;
+	
+	private final Map<Mesh, List<GameItem>> portalMap;
     
     private SkyBox skyBox;
     
@@ -31,6 +34,7 @@ public class Scene {
     public Scene() {
         meshMap = new HashMap<Mesh, List<GameItem>>();
         instancedMeshMap = new HashMap<InstancedMesh, List<GameItem>>();
+        portalMap = new HashMap<Mesh, List<GameItem>>();
         fog = Fog.NOFOG;
         renderShadows = true;
     }
@@ -43,8 +47,24 @@ public class Scene {
         return instancedMeshMap;
     }
     
+    public Map<Mesh, List<GameItem>> getPortalMeshes() {
+        return portalMap;
+    }
+    
     public boolean isRenderShadows() {
         return renderShadows;
+    }
+    
+    public boolean containsPortals() {
+    	for (Map.Entry<? extends Mesh, List<GameItem>> entry : portalMap.entrySet()) {
+    		List<GameItem> gameItems = entry.getValue();
+    		for (GameItem item : gameItems) {
+    			if (item.isInsideFrustum()) {
+    				return true;
+    			}
+    		}
+    	}
+    	return false;
     }
 
     public void setGameItems(GameItem[] gameItems) {
@@ -52,16 +72,22 @@ public class Scene {
         int numGameItems = gameItems != null ? gameItems.length : 0;
         for (int i = 0; i < numGameItems; i++) {
             GameItem gameItem = gameItems[i];
+            boolean isPortal = gameItem instanceof Portal;
             Mesh[] meshes = gameItem.getMeshes();
             for (Mesh mesh : meshes) {
                 boolean instancedMesh = mesh instanceof InstancedMesh;
                 List<GameItem> list = instancedMesh ? instancedMeshMap.get(mesh) : meshMap.get(mesh);
+                list = isPortal ? portalMap.get(mesh) : list;
                 if (list == null) {
                     list = new ArrayList<>();
                     if (instancedMesh) {
                         instancedMeshMap.put((InstancedMesh)mesh, list);
                     } else {
-                        meshMap.put(mesh, list);
+                    	if (isPortal) {
+                    		portalMap.put(mesh, list);
+                    	} else {
+                    		meshMap.put(mesh, list);
+                    	}
                     }
                 }
                 list.add(gameItem);

@@ -48,6 +48,8 @@ public class Mesh {
 
     private Material material;
     
+    private float boundingRadius;
+    
     public Mesh(float[] positions, float[] textCoords, float[] normals, int[] indices) {
         this(positions, textCoords, normals, indices, Mesh.createEmptyIntArray(Mesh.MAX_WEIGHTS * positions.length / 3, 0), Mesh.createEmptyFloatArray(Mesh.MAX_WEIGHTS * positions.length / 3, 0));
     }
@@ -167,6 +169,14 @@ public class Mesh {
 
     public int getVertexCount() {
         return vertexCount;
+    }
+    
+    public float getBoundingRadius() {
+        return boundingRadius;
+    }
+
+    public void setBoundingRadius(float boundingRadius) {
+        this.boundingRadius = boundingRadius;
     }
     
     protected void initRender() {

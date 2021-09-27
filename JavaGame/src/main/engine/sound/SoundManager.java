@@ -14,8 +14,8 @@ import org.lwjgl.openal.ALC;
 import static org.lwjgl.openal.ALC10.*;
 import org.lwjgl.openal.ALCCapabilities;
 
-import main.engine.graphics.Camera;
 import main.engine.graphics.Transformation;
+import main.engine.graphics.camera.Camera;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
 

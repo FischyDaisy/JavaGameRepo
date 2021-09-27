@@ -1,6 +1,9 @@
-package main.engine.graphics;
+package main.engine.graphics.camera;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
+
+import main.engine.graphics.Transformation;
 
 public class Camera {
 
@@ -8,14 +11,19 @@ public class Camera {
     
     private final Vector3f rotation;
     
+    private Matrix4f viewMatrix;
+    
     public Camera() {
         position = new Vector3f();
         rotation = new Vector3f();
+        viewMatrix = new Matrix4f();
     }
     
     public Camera(Vector3f position, Vector3f rotation) {
+    	//super();
         this.position = position;
         this.rotation = rotation;
+        viewMatrix = new Matrix4f();
     }
 
     public Vector3f getPosition() {
@@ -26,6 +34,18 @@ public class Camera {
         position.x = x;
         position.y = y;
         position.z = z;
+    }
+    
+    public Matrix4f getViewMatrix() {
+        return viewMatrix;
+    }
+    
+    public void setViewMatrix(Matrix4f m) {
+    	viewMatrix = m;
+    }
+    
+    public Matrix4f updateViewMatrix() {
+        return Transformation.updateGenericViewMatrix(position, rotation, viewMatrix);
     }
     
     public void movePosition(float offsetX, float offsetY, float offsetZ) {

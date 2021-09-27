@@ -34,61 +34,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetClipboardString;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.glfw.GLFW.nglfwGetClipboardString;
-import static org.lwjgl.nuklear.Nuklear.NK_BUTTON_LEFT;
-import static org.lwjgl.nuklear.Nuklear.NK_BUTTON_MIDDLE;
-import static org.lwjgl.nuklear.Nuklear.NK_BUTTON_RIGHT;
-import static org.lwjgl.nuklear.Nuklear.NK_FORMAT_COUNT;
-import static org.lwjgl.nuklear.Nuklear.NK_FORMAT_FLOAT;
-import static org.lwjgl.nuklear.Nuklear.NK_FORMAT_R8G8B8A8;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_BACKSPACE;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_COPY;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_CUT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_DEL;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_DOWN;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_ENTER;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_LEFT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_PASTE;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_RIGHT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_DOWN;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_END;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_START;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_UP;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_SHIFT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TAB;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_END;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_LINE_END;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_LINE_START;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_REDO;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_START;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_UNDO;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_WORD_LEFT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_WORD_RIGHT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_UP;
-import static org.lwjgl.nuklear.Nuklear.NK_UTF_INVALID;
-import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_ATTRIBUTE_COUNT;
-import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_COLOR;
-import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_POSITION;
-import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_TEXCOORD;
-import static org.lwjgl.nuklear.Nuklear.nk__draw_begin;
-import static org.lwjgl.nuklear.Nuklear.nk__draw_next;
-import static org.lwjgl.nuklear.Nuklear.nk_buffer_free;
-import static org.lwjgl.nuklear.Nuklear.nk_buffer_init;
-import static org.lwjgl.nuklear.Nuklear.nk_buffer_init_fixed;
-import static org.lwjgl.nuklear.Nuklear.nk_clear;
-import static org.lwjgl.nuklear.Nuklear.nk_convert;
-import static org.lwjgl.nuklear.Nuklear.nk_free;
-import static org.lwjgl.nuklear.Nuklear.nk_init;
-import static org.lwjgl.nuklear.Nuklear.nk_input_begin;
-import static org.lwjgl.nuklear.Nuklear.nk_input_button;
-import static org.lwjgl.nuklear.Nuklear.nk_input_end;
-import static org.lwjgl.nuklear.Nuklear.nk_input_key;
-import static org.lwjgl.nuklear.Nuklear.nk_input_motion;
-import static org.lwjgl.nuklear.Nuklear.nk_input_scroll;
-import static org.lwjgl.nuklear.Nuklear.nk_input_unicode;
-import static org.lwjgl.nuklear.Nuklear.nk_style_set_font;
-import static org.lwjgl.nuklear.Nuklear.nnk_strlen;
-import static org.lwjgl.nuklear.Nuklear.nnk_textedit_paste;
-import static org.lwjgl.nuklear.Nuklear.nnk_utf_decode;
+import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11C.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_TEST;
@@ -183,7 +129,7 @@ import main.engine.graphics.Transformation;
 import main.engine.graphics.opengl.ShaderProgram;
 import main.engine.utility.Utils;
 
-public class Hud implements IHud {
+public class MenuHud implements IHud {
 	
 	public static final int MAX_ELEMENTS = 10;
 	
@@ -217,6 +163,8 @@ public class Hud implements IHud {
     
     private IHudElement[] elements;
     
+    private boolean AA;
+    
     private final ShaderProgram shader;
     
     private final Demo       demo = new Demo();
@@ -227,9 +175,10 @@ public class Hud implements IHud {
     /*public Hud(String statusText) throws Exception {
     }*/
     
-    public Hud(Window window) throws Exception {
+    public MenuHud(Window window) throws Exception {
     	transformation = new Transformation();
     	elements = new IHudElement[MAX_ELEMENTS];
+    	AA = true;
     	try {
             this.ttf = Utils.ioResourceToByteBuffer(System.getProperty("user.dir") + "\\src\\main\\resources\\fonts\\FiraSans-Regular.ttf", 512 * 1024);
         } catch (IOException e) {
@@ -378,6 +327,14 @@ public class Hud implements IHud {
         nk_style_set_font(ctx, default_font);
     }
     
+    public boolean getAA() {
+    	return AA;
+    }
+    
+    public void setAA(boolean AA) {
+    	this.AA = AA;
+    }
+    
     private void setupShader() throws Exception {
         shader.createVertexShader(Utils.loadResource("/main/resources/shaders/hud_vertex.vs"));
         shader.createFragmentShader(Utils.loadResource("/main/resources/shaders/hud_fragment.fs"));
@@ -387,6 +344,7 @@ public class Hud implements IHud {
         shader.createUniform("projModelMatrix");
         shader.createUniform("texture_sampler");
         shader.createUniform("hasTexture");
+        shader.createUniform("inGame");
     }
     
     private NkContext setupWindow(long win) {
@@ -555,8 +513,13 @@ public class Hud implements IHud {
 	}
 	
 	@Override
-	public void render(Window window, int AA, int max_vertex_buffer, int max_element_buffer) {
-        for (IHudElement e : elements) {
+	public void render(Window window) {
+		int aa = AA ? NK_ANTI_ALIASING_ON : NK_ANTI_ALIASING_OFF;
+        render(window, aa, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
+	}
+	
+	private void render(Window window, int AA, int max_vertex_buffer, int max_element_buffer) {
+		for (IHudElement e : elements) {
         	e.layout(ctx);
         }
         
@@ -578,6 +541,8 @@ public class Hud implements IHud {
         shader.setUniform("texture_sampler", 0);
         
         shader.setUniform("hasTexture", 1);
+        
+        shader.setUniform("inGame", 0);
         
         //glBlendEquation(GL_FUNC_ADD);
         if (window.getWindowOptions().cullFace) {

@@ -18,6 +18,7 @@ import static org.lwjgl.opengl.GL14C.glBlendEquation;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.nuklear.Nuklear.NK_ANTI_ALIASING_ON;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,18 +29,20 @@ import org.joml.Vector4f;
 import main.engine.Scene;
 import main.engine.SceneLight;
 import main.engine.Window;
-import main.engine.graphics.Camera;
+import main.engine.graphics.FrustumCullingFilter;
 import main.engine.graphics.IHud;
 import main.engine.graphics.IRenderer;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.animation.AnimatedFrame;
-import main.engine.graphics.hud.Hud;
+import main.engine.graphics.camera.Camera;
+import main.engine.graphics.hud.MenuHud;
 import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.lights.PointLight;
 import main.engine.graphics.lights.SpotLight;
 import main.engine.graphics.particles.IParticleEmitter;
 import main.engine.items.GameItem;
+import main.engine.items.Portal;
 import main.engine.items.SkyBox;
 import main.engine.utility.Utils;
 
@@ -68,13 +71,23 @@ public class GLRenderer implements IRenderer {
     
     private ShaderProgram particlesShaderProgram;
     
+    private ShaderProgram portalErrShaderProgram;
+    
+    private ShaderProgram portalShaderProgram;
+    
     private final Transformation transformation;
     
     private final float specularPower;
+    
+    private final FrustumCullingFilter frustumFilter;
+
+    private final List<GameItem> filteredItems;
 
     public GLRenderer() {
     	transformation = new Transformation();
     	specularPower = 10f;
+    	frustumFilter = new FrustumCullingFilter();
+        filteredItems = new ArrayList<GameItem>();
     }
 
     @Override
@@ -85,26 +98,59 @@ public class GLRenderer implements IRenderer {
     	setupSkyBoxShader();
     	setupSceneShader();
     	setupParticlesShader();
+    	setupPortalErrShader();
+    	setupPortalShader();
     }
     
     @Override
     public void render(Window window, Camera camera, Scene scene) {
         clear();
         
+        frustumFilter.updateFrustum(window.getProjectionMatrix(), camera.getViewMatrix());
+        frustumFilter.filter(scene.getGameMeshes());
+        frustumFilter.filter(scene.getGameInstancedMeshes());
+        
         // Render depth map before view ports has been set up
         renderDepthMap(window, camera, scene);
 
         glViewport(0, 0, window.getWidth(), window.getHeight());
         
-        // Update projection and view atrices once per render cycle
-        transformation.updateProjectionMatrix(FOV, window.getWidth(), window.getHeight(), Z_NEAR, Z_FAR);
-        transformation.updateViewMatrix(camera);
+        // Update projection matrix once per render cycle
+        window.updateProjectionMatrix();
 
         renderScene(window, camera, scene);
-        
         renderSkyBox(window, camera, scene);
-        
         renderParticles(window, camera, scene);
+        
+        renderPortalsPink(window, camera, scene);
+        renderPortals(window, camera, scene, null);
+        
+        //renderAxes(camera);
+        //renderCrossHair(window);
+    }
+    
+    private void setupPortalErrShader() throws Exception {
+    	portalErrShaderProgram = new ShaderProgram();
+    	portalErrShaderProgram.createVertexShader(Utils.loadResource("/main/resources/shaders/pink_vertex.vs"));
+    	portalErrShaderProgram.createFragmentShader(Utils.loadResource("/main/resources/shaders/pink_fragment.fs"));
+    	portalErrShaderProgram.link();
+    	
+    	portalErrShaderProgram.createUniform("modelViewMatrix");
+    	portalErrShaderProgram.createUniform("projectionMatrix");
+    	
+    	//portalErrShaderProgram.createUniform("texture_sampler");
+    }
+    
+    private void setupPortalShader() throws Exception {
+    	portalShaderProgram = new ShaderProgram();
+    	portalShaderProgram.createVertexShader(Utils.loadResource("/main/resources/shaders/portal_vertex.vs"));
+    	portalShaderProgram.createFragmentShader(Utils.loadResource("/main/resources/shaders/portal_fragment.fs"));
+    	portalShaderProgram.link();
+    	
+    	portalShaderProgram.createUniform("modelViewMatrix");
+    	portalShaderProgram.createUniform("projectionMatrix");
+    	
+    	portalShaderProgram.createUniform("texture_sampler");
     }
     
     private void setupParticlesShader() throws Exception {
@@ -194,10 +240,10 @@ public class GLRenderer implements IRenderer {
         	particlesShaderProgram.bind();
 
             particlesShaderProgram.setUniform("texture_sampler", 0);
-            Matrix4f projectionMatrix = transformation.getProjectionMatrix();
+            Matrix4f projectionMatrix = window.getProjectionMatrix();
             particlesShaderProgram.setUniform("projectionMatrix", projectionMatrix);
 
-            Matrix4f viewMatrix = transformation.getViewMatrix();
+            Matrix4f viewMatrix = camera.getViewMatrix();
             IParticleEmitter[] emitters = scene.getParticleEmitters();
             int numEmitters = emitters != null ? emitters.length : 0;
 
@@ -260,9 +306,9 @@ public class GLRenderer implements IRenderer {
 
             skyBoxShaderProgram.setUniform("texture_sampler", 0);
 
-            Matrix4f projectionMatrix = transformation.getProjectionMatrix();
+            Matrix4f projectionMatrix = window.getProjectionMatrix();
             skyBoxShaderProgram.setUniform("projectionMatrix", projectionMatrix);
-            Matrix4f viewMatrix = transformation.getViewMatrix();
+            Matrix4f viewMatrix = camera.getViewMatrix();
             float m30 = viewMatrix.m30();
             viewMatrix.m30(0);
             float m31 = viewMatrix.m31();
@@ -292,12 +338,12 @@ public class GLRenderer implements IRenderer {
         sceneShaderProgram.bind();
 
         // Update projection Matrix
-        Matrix4f projectionMatrix = transformation.getProjectionMatrix();
+        Matrix4f projectionMatrix = window.getProjectionMatrix();
         sceneShaderProgram.setUniform("projectionMatrix", projectionMatrix);
         Matrix4f orthoProjMatrix = transformation.getOrthoProjectionMatrix();
         sceneShaderProgram.setUniform("orthoProjectionMatrix", orthoProjMatrix);
         Matrix4f lightViewMatrix = transformation.getLightViewMatrix();
-        Matrix4f viewMatrix = transformation.getViewMatrix();
+        Matrix4f viewMatrix = camera.getViewMatrix();
 
         SceneLight sceneLight = scene.getSceneLight();
         renderLights(viewMatrix, sceneLight);
@@ -334,6 +380,7 @@ public class GLRenderer implements IRenderer {
             }
 
             mesh.renderList(mapMeshes.get(mesh), (GameItem gameItem) -> {
+            	sceneShaderProgram.setUniform("selectedNonInstanced", gameItem.isSelected() ? 1.0f : 0.0f);
                 Matrix4f modelMatrix = transformation.buildModelMatrix(gameItem);
                 if (viewMatrix != null) {
                     Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
@@ -369,7 +416,14 @@ public class GLRenderer implements IRenderer {
                 glActiveTexture(GL_TEXTURE2);
                 glBindTexture(GL_TEXTURE_2D, shadowMap.getDepthMapTexture().getId());
             }
-            mesh.renderListInstanced(mapMeshes.get(mesh), transformation, viewMatrix, lightViewMatrix);
+
+            filteredItems.clear();
+            for(GameItem gameItem : mapMeshes.get(mesh)) {
+                if ( gameItem.isInsideFrustum() ) {
+                    filteredItems.add(gameItem);
+                }
+            }
+            mesh.renderListInstanced(filteredItems, transformation, viewMatrix, lightViewMatrix);
         }
     }
     
@@ -422,37 +476,112 @@ public class GLRenderer implements IRenderer {
 
     }
     
-    /**
-     * Renders the three axis in space (For debugging purposes only
-     * @param camera 
-     */
-    private void renderAxes(Camera camera) {
-        glPushMatrix();
-        glLoadIdentity();
-        float rotX = camera.getRotation().x;
-        float rotY = camera.getRotation().y;
-        float rotZ = 0;
-        glRotatef(rotX, 1.0f, 0.0f, 0.0f);
-        glRotatef(rotY, 0.0f, 1.0f, 0.0f);
-        glRotatef(rotZ, 0.0f, 0.0f, 1.0f);
-        glLineWidth(2.0f);
-
-        glBegin(GL_LINES);
-        // X Axis
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex3f(0.0f, 0.0f, 0.0f);
-        glVertex3f(1.0f, 0.0f, 0.0f);
-        // Y Axis
-        glColor3f(0.0f, 1.0f, 0.0f);
-        glVertex3f(0.0f, 0.0f, 0.0f);
-        glVertex3f(0.0f, 1.0f, 0.0f);
-        // Z Axis
-        glColor3f(1.0f, 1.0f, 1.0f);
-        glVertex3f(0.0f, 0.0f, 0.0f);
-        glVertex3f(0.0f, 0.0f, 1.0f);
-        glEnd();
-
-        glPopMatrix();
+    private void renderPortalsPink(Window window, Camera camera, Scene scene) {
+    	portalErrShaderProgram.bind();
+    	
+    	Matrix4f projectionMatrix = window.getProjectionMatrix();
+    	portalErrShaderProgram.setUniform("projectionMatrix", projectionMatrix);
+        Matrix4f viewMatrix = camera.getViewMatrix();
+        
+        Map<Mesh, List<GameItem>> portalMap = scene.getPortalMeshes();
+        for (Mesh mesh : portalMap.keySet()) {
+        	mesh.renderList(portalMap.get(mesh), (GameItem gameItem) -> {
+        		Matrix4f modelMatrix = transformation.buildModelMatrix(gameItem);
+        		Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
+        		portalErrShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+        	});
+        }
+        portalErrShaderProgram.unbind();
+    }
+    
+    private void renderPortals(Window window, Camera camera, Scene scene, Portal skipPortal) {
+    	//portalShaderProgram.bind();
+    	//renderPortalList(window, camera, scene, skipPortal, 0);
+    	//portalShaderProgram.unbind();
+    	
+    	
+    }
+    
+    private void renderPortalList(Window window, Camera camera, Scene scene, Portal skipPortal, int curFBO) {
+    	FrameBuffer frameBuf = skipPortal != null ? skipPortal.getFrameBuffer() : null;
+    	if (skipPortal != null) {
+        	glBindFramebuffer(GL_FRAMEBUFFER, frameBuf.getFrameBufferId());
+        	glViewport(0, 0, FrameBuffer.FBO_SIZE, FrameBuffer.FBO_SIZE);
+        	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    	} else {
+    		glBindFramebuffer(GL_FRAMEBUFFER, curFBO);
+    	}
+    	portalShaderProgram.bind();
+    	List<GameItem> filteredPortals = new ArrayList<GameItem>();
+    	float aspectRatio = (float) window.getWidth() / (float) window.getHeight();
+    	Matrix4f projectionMatrix = skipPortal != null ? new Matrix4f().setPerspective(Window.FOV, aspectRatio, Window.Z_NEAR, Window.Z_FAR) : window.getProjectionMatrix();
+    	portalShaderProgram.setUniform("projectionMatrix", projectionMatrix);
+    	portalShaderProgram.setUniform("texture_sampler", 0);
+    	Matrix4f viewMatrix = camera.getViewMatrix();
+    	Matrix4f lightViewMatrix = transformation.getLightViewMatrix();
+    	
+    	frustumFilter.updateFrustum(window.getProjectionMatrix(), camera.getViewMatrix());
+        frustumFilter.filter(scene.getPortalMeshes());
+        frustumFilter.filter(scene.getGameMeshes());
+        frustumFilter.filter(scene.getGameInstancedMeshes());
+        
+        if (!scene.containsPortals()) {
+        	if (skipPortal == null) {
+        		portalShaderProgram.unbind();
+        		glBindFramebuffer(GL_FRAMEBUFFER, curFBO);
+        		return;
+        	} else {
+        		//portalShaderProgram.bind();
+        		renderNonInstancedMeshes(scene, sceneShaderProgram, viewMatrix, lightViewMatrix);
+                renderInstancedMeshes(scene, sceneShaderProgram, viewMatrix, lightViewMatrix);
+                portalShaderProgram.unbind();
+                glBindFramebuffer(GL_FRAMEBUFFER, curFBO);
+        		return;
+        	}
+        } else {
+        	Map<Mesh, List<GameItem>> portalMap = scene.getPortalMeshes();
+        	for (Mesh mesh : portalMap.keySet()) {
+        		filteredPortals.clear();
+                for(GameItem portal : portalMap.get(mesh)) {
+                    if ( portal.isInsideFrustum() ) {
+                    	filteredPortals.add(portal);
+                    }
+                }
+        		mesh.renderList(filteredPortals, (GameItem portal) -> {
+        			/**/
+        			Vector3f normal = transformation.forward(portal);
+        	    	Vector3f camPos = new Vector3f(camera.getPosition());
+        	    	boolean frontDirection = camPos.sub(((Portal) portal).getPosition()).dot(normal) > 0f;
+        	    	Portal.Warp warp = frontDirection ? ((Portal) portal).getFront() : ((Portal) portal).getBack();
+        	    	if (frontDirection) {
+        	    		normal = normal.negate();
+        	    	}
+        	    	
+        	    	Matrix4f modelMatrix = transformation.buildModelMatrix(portal);
+        	    	Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
+        	    	portalShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+        	    	
+        	    	Vector3f pRotation = new Vector3f();
+        	    	pRotation = portal.getRotation().getEulerAnglesXYZ(pRotation);
+        	    	pRotation.x = (float) Math.toDegrees(pRotation.x);
+        	    	pRotation.y = (float) Math.toDegrees(pRotation.y);
+        	    	pRotation.z = (float) Math.toDegrees(pRotation.z);
+        	    	
+        			Camera pCam = Portal.createCamera(portal.getPosition(), pRotation);
+        			pCam.setViewMatrix(Portal.updateCameraViewMatrix(camera, warp));
+        			
+        			renderPortalList(window, pCam, scene, warp.getToPortal(), ((Portal) portal).getFrameBuffer().getFrameBufferId());
+        			
+        			glActiveTexture(GL_TEXTURE0);
+        			glBindTexture(GL_TEXTURE_2D, ((Portal) portal).getFrameBuffer().getTexture().getId());
+        			
+        		});
+        	}
+        	portalShaderProgram.unbind();
+        	glBindFramebuffer(GL_FRAMEBUFFER, curFBO);
+        	return;
+        	
+        }
     }
     
     public Texture getShadowMapTexture() {

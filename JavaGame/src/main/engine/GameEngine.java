@@ -66,7 +66,7 @@ public class GameEngine implements Runnable {
 
             gameLogic.input(window, scene, currentTime - updateTime);
             if (deltaU >= 1) {
-                gameLogic.update(timeU, window.getMouseInput());
+                gameLogic.update(timeU, window);
                 updateTime = currentTime;
                 deltaU--;
             }
@@ -108,7 +108,7 @@ public class GameEngine implements Runnable {
     }
 
     protected void update(float interval) {
-    	gameLogic.update(interval, window.getMouseInput());
+    	gameLogic.update(interval, window);
     }
 
     protected void render() {
