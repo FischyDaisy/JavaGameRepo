@@ -231,8 +231,8 @@ public class Game implements IGameLogic {
             camera.getPosition().x = 0.25f;
             camera.getPosition().y = 6.5f;
             camera.getPosition().z = 6.5f;
-            camera.getRotation().x = 25;
-            camera.getRotation().y = -1;
+            camera.getRotationEuler().x = 25;
+            camera.getRotationEuler().y = -1;
             
             stbi_image_free(buf);
             
@@ -364,7 +364,8 @@ public class Game implements IGameLogic {
             particleEmitter.update(Double.valueOf(interval).longValue());
             
             // Update view matrix
-            camera.updateViewMatrix();
+            //camera.updateViewMatrixEuler();
+            camera.updateViewMatrixQuat();
             
             // Update sound listener position;
             soundMgr.updateListenerPosition(camera);

@@ -38,7 +38,7 @@ public class Portal extends GameItem {
 	}
 	
 	public static Matrix4f updateCameraViewMatrix(Camera pCam, Warp warp) {
-		return pCam.updateViewMatrix().mul(warp.getDelta());
+		return pCam.updateViewMatrixEuler().mul(warp.getDelta());
 	}
 	
 	public Warp getFront() {

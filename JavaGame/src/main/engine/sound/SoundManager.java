@@ -86,7 +86,7 @@ public class SoundManager {
 
     public void updateListenerPosition(Camera camera) {
         // Update camera matrix with camera data
-        Transformation.updateGenericViewMatrix(camera.getPosition(), camera.getRotation(), cameraMatrix);
+        Transformation.updateGenericViewMatrix(camera.getPosition(), camera.getRotationEuler(), cameraMatrix);
         
         listener.setPosition(camera.getPosition());
         Vector3f at = new Vector3f();

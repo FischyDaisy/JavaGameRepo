@@ -80,6 +80,11 @@ public class Transformation {
                      .translate(-position.x, -position.y, -position.z);
     }
     
+    public static Matrix4f updateGenericViewMatrix(Vector3f position, Quaternionf rotation, Matrix4f matrix) {
+    	return matrix.rotation(rotation)
+    				 .translate(-position.x, -position.y, -position.z);
+    }
+    
     public final Matrix4f getOrtho2DProjectionMatrix(float left, float right, float bottom, float top) {
         ortho2DMatrix.identity();
         ortho2DMatrix.setOrtho2D(left, right, bottom, top);

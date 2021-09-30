@@ -107,6 +107,7 @@ public class GLRenderer implements IRenderer {
         clear();
         
         frustumFilter.updateFrustum(window.getProjectionMatrix(), camera.getViewMatrix());
+        frustumFilter.filter(scene.getPortalMeshes());
         frustumFilter.filter(scene.getGameMeshes());
         frustumFilter.filter(scene.getGameInstancedMeshes());
         
@@ -122,8 +123,8 @@ public class GLRenderer implements IRenderer {
         renderSkyBox(window, camera, scene);
         renderParticles(window, camera, scene);
         
-        renderPortalsPink(window, camera, scene);
-        renderPortals(window, camera, scene, null);
+        //renderPortalsPink(window, camera, scene);
+        //renderPortals(window, camera, scene, null);
         
         //renderAxes(camera);
         //renderCrossHair(window);
@@ -494,12 +495,159 @@ public class GLRenderer implements IRenderer {
         portalErrShaderProgram.unbind();
     }
     
-    private void renderPortals(Window window, Camera camera, Scene scene, Portal skipPortal) {
+    private void renderPortalPink(Window window, Camera camera, Scene scene, Portal rPortal) {
+    	portalErrShaderProgram.bind();
+    	
+    	Matrix4f projectionMatrix = window.getProjectionMatrix();
+    	portalErrShaderProgram.setUniform("projectionMatrix", projectionMatrix);
+        Matrix4f viewMatrix = camera.getViewMatrix();
+        
+        Matrix4f modelMatrix = transformation.buildModelMatrix(rPortal);
+		Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
+		portalErrShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+		
+		rPortal.getMesh().render();
+		
+        portalErrShaderProgram.unbind();
+    }
+    
+    private void renderPortals(Window window, Camera camera, Scene scene, int recursionLevel, int maxRecursion) {
     	//portalShaderProgram.bind();
     	//renderPortalList(window, camera, scene, skipPortal, 0);
     	//portalShaderProgram.unbind();
     	
-    	
+    	List<GameItem> filteredPortals = new ArrayList<GameItem>();
+    	frustumFilter.updateFrustum(window.getProjectionMatrix(), camera.getViewMatrix());
+        frustumFilter.filter(scene.getPortalMeshes());
+        frustumFilter.filter(scene.getGameMeshes());
+        frustumFilter.filter(scene.getGameInstancedMeshes());
+        
+        Map<Mesh, List<GameItem>> portalMap = scene.getPortalMeshes();
+    	for (Mesh mesh : portalMap.keySet()) {
+    		filteredPortals.clear();
+            for(GameItem portal : portalMap.get(mesh)) {
+                if ( portal.isInsideFrustum() ) {
+                	filteredPortals.add(portal);
+                }
+            }
+    		mesh.renderList(filteredPortals, (GameItem portal) -> {
+    			Portal p = (Portal) portal;
+    			
+    			// Disable color and depth drawing
+    			glColorMask(false, false, false, false);
+    			glDepthMask(false);
+
+    			// Disable depth test
+    			glDisable(GL_DEPTH_TEST);
+    			
+    			// Enable stencil test, to prevent drawing outside
+    			// region of current portal depth
+    			glEnable(GL_STENCIL_TEST);
+    			
+    			// Fail stencil test when inside of outer portal
+    			// (fail where we should be drawing the inner portal)
+    			glStencilFunc(GL_NOTEQUAL, recursionLevel, 0xFF);
+    			
+    			// Increment stencil value on stencil fail
+    			// (on area of inner portal)
+    			glStencilOp(GL_INCR, GL_KEEP, GL_KEEP);
+    			
+    			// Enable (writing into) all stencil bits
+    			glStencilMask(0xFF);
+    			
+    			renderPortalPink(window, camera, scene, p);
+    			
+    			//Make pCam
+    			
+    			if (recursionLevel == maxRecursion) {
+    				// Enable color and depth drawing
+    				glColorMask(true, true, true, true);
+    				glDepthMask(true);
+    				
+    				// Clear the depth buffer so we don't interfere with stuff
+    				// outside of this inner portal
+    				glClear(GL_DEPTH_BUFFER_BIT);
+
+    				// Enable the depth test
+    				// So the stuff we render here is rendered correctly
+    				glEnable(GL_DEPTH_TEST);
+
+    				// Enable stencil test
+    				// So we can limit drawing inside of the inner portal
+    				glEnable(GL_STENCIL_TEST);
+
+    				// Disable drawing into stencil buffer
+    				glStencilMask(0x00);
+
+    				// Draw only where stencil value == recursionLevel + 1
+    				// which is where we just drew the new portal
+    				glStencilFunc(GL_EQUAL, recursionLevel + 1, 0xFF);
+    				
+    				//renderNonInstancedMeshes(scene, sceneShaderProgram, viewMatrix, lightViewMatrix);
+                    //renderInstancedMeshes(scene, sceneShaderProgram, viewMatrix, lightViewMatrix);
+    			} else {
+    				//renderPortals
+    			}
+    			
+    			// Disable color and depth drawing
+    			glColorMask(false, false, false, false);
+    			glDepthMask(false);
+
+    			// Enable stencil test and stencil drawing
+    			glEnable(GL_STENCIL_TEST);
+    			glStencilMask(0xFF);
+
+    			// Fail stencil test when inside of our newly rendered
+    			// inner portal
+    			glStencilFunc(GL_NOTEQUAL, recursionLevel + 1, 0xFF);
+
+    			// Decrement stencil value on stencil fail
+    			// This resets the incremented values to what they were before,
+    			// eventually ending up with a stencil buffer full of zero's again
+    			// after the last (outer) step.
+    			glStencilOp(GL_DECR, GL_KEEP, GL_KEEP);
+    			
+    			renderPortalPink(window, camera, scene, p);
+    		});
+    		
+    		// Disable the stencil test and stencil writing
+    		glDisable(GL_STENCIL_TEST);
+    		glStencilMask(0x00);
+
+    		// Disable color writing
+    		glColorMask(false, false, false, false);
+
+    		// Enable the depth test, and depth writing.
+    		glEnable(GL_DEPTH_TEST);
+    		glDepthMask(true);
+
+    		// Make sure we always write the data into the buffer
+    		glDepthFunc(GL_ALWAYS);
+
+    		// Clear the depth buffer
+    		glClear(GL_DEPTH_BUFFER_BIT);
+    		
+    		renderPortalsPink(window, camera, scene);
+    		
+    		// Reset the depth function to the default
+    		glDepthFunc(GL_LESS);
+
+    		// Enable stencil test and disable writing to stencil buffer
+    		glEnable(GL_STENCIL_TEST);
+    		glStencilMask(0x00);
+
+    		// Draw at stencil >= recursionlevel
+    		// which is at the current level or higher (more to the inside)
+    		// This basically prevents drawing on the outside of this level.
+    		glStencilFunc(GL_LEQUAL, recursionLevel, 0xFF);
+
+    		// Enable color and depth drawing again
+    		glColorMask(true, true, true, true);
+    		glDepthMask(true);
+
+    		// And enable the depth test
+    		glEnable(GL_DEPTH_TEST);
+    	}
     }
     
     private void renderPortalList(Window window, Camera camera, Scene scene, Portal skipPortal, int curFBO) {
