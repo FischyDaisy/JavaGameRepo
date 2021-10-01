@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.joml.AxisAngle4f;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -118,6 +120,13 @@ public class GLRenderer implements IRenderer {
         
         // Update projection matrix once per render cycle
         window.updateProjectionMatrix();
+        
+        renderPortals(window, camera, scene, 0, 20);
+        
+        frustumFilter.updateFrustum(window.getProjectionMatrix(), camera.getViewMatrix());
+        frustumFilter.filter(scene.getPortalMeshes());
+        frustumFilter.filter(scene.getGameMeshes());
+        frustumFilter.filter(scene.getGameInstancedMeshes());
 
         renderScene(window, camera, scene);
         renderSkyBox(window, camera, scene);
@@ -362,6 +371,34 @@ public class GLRenderer implements IRenderer {
         sceneShaderProgram.unbind();
     }
     
+    private void renderScene(Matrix4f projMatrix, Camera camera, Scene scene) {
+
+        sceneShaderProgram.bind();
+
+        // Update projection Matrix
+        Matrix4f projectionMatrix = projMatrix;
+        sceneShaderProgram.setUniform("projectionMatrix", projectionMatrix);
+        Matrix4f orthoProjMatrix = transformation.getOrthoProjectionMatrix();
+        sceneShaderProgram.setUniform("orthoProjectionMatrix", orthoProjMatrix);
+        Matrix4f lightViewMatrix = transformation.getLightViewMatrix();
+        Matrix4f viewMatrix = camera.getViewMatrix();
+
+        SceneLight sceneLight = scene.getSceneLight();
+        renderLights(viewMatrix, sceneLight);
+
+        sceneShaderProgram.setUniform("fog", scene.getFog());
+        sceneShaderProgram.setUniform("texture_sampler", 0);
+        sceneShaderProgram.setUniform("normalMap", 1);
+        sceneShaderProgram.setUniform("shadowMap", 2);
+        sceneShaderProgram.setUniform("renderShadow", scene.isRenderShadows() ? 1 : 0);
+        
+        renderNonInstancedMeshes(scene, sceneShaderProgram, viewMatrix, lightViewMatrix);
+
+        renderInstancedMeshes(scene, sceneShaderProgram, viewMatrix, lightViewMatrix);
+
+        sceneShaderProgram.unbind();
+    }
+    
     private void renderNonInstancedMeshes(Scene scene, ShaderProgram shader, Matrix4f viewMatrix, Matrix4f lightViewMatrix) {
         sceneShaderProgram.setUniform("isInstanced", 0);
 
@@ -558,8 +595,10 @@ public class GLRenderer implements IRenderer {
     			renderPortalPink(window, camera, scene, p);
     			
     			//Make pCam
+    			Camera pCam = camera.createPortalCam(p, p.getWarp().toPortal(), transformation);
+    			pCam.updateViewMatrixQuat();
     			
-    			if (recursionLevel == maxRecursion) {
+    			if (recursionLevel == maxRecursion || (!scene.containsPortals())) {
     				// Enable color and depth drawing
     				glColorMask(true, true, true, true);
     				glDepthMask(true);
@@ -583,10 +622,10 @@ public class GLRenderer implements IRenderer {
     				// which is where we just drew the new portal
     				glStencilFunc(GL_EQUAL, recursionLevel + 1, 0xFF);
     				
-    				//renderNonInstancedMeshes(scene, sceneShaderProgram, viewMatrix, lightViewMatrix);
-                    //renderInstancedMeshes(scene, sceneShaderProgram, viewMatrix, lightViewMatrix);
+    				renderScene(pCam.clipOblique(window, p), pCam, scene);
     			} else {
     				//renderPortals
+    				renderPortals(window, pCam, scene, recursionLevel + 1, maxRecursion);
     			}
     			
     			// Disable color and depth drawing
@@ -647,6 +686,10 @@ public class GLRenderer implements IRenderer {
 
     		// And enable the depth test
     		glEnable(GL_DEPTH_TEST);
+    		
+    		if (recursionLevel != 0) {
+    			renderScene(window, camera, scene);
+    		}
     	}
     }
     
@@ -700,7 +743,7 @@ public class GLRenderer implements IRenderer {
         			Vector3f normal = transformation.forward(portal);
         	    	Vector3f camPos = new Vector3f(camera.getPosition());
         	    	boolean frontDirection = camPos.sub(((Portal) portal).getPosition()).dot(normal) > 0f;
-        	    	Portal.Warp warp = frontDirection ? ((Portal) portal).getFront() : ((Portal) portal).getBack();
+        	    	//Portal.Warp warp = frontDirection ? ((Portal) portal).getFront() : ((Portal) portal).getBack();
         	    	if (frontDirection) {
         	    		normal = normal.negate();
         	    	}
@@ -716,9 +759,9 @@ public class GLRenderer implements IRenderer {
         	    	pRotation.z = (float) Math.toDegrees(pRotation.z);
         	    	
         			Camera pCam = Portal.createCamera(portal.getPosition(), pRotation);
-        			pCam.setViewMatrix(Portal.updateCameraViewMatrix(camera, warp));
+        			//pCam.setViewMatrix(Portal.updateCameraViewMatrix(camera, warp));
         			
-        			renderPortalList(window, pCam, scene, warp.getToPortal(), ((Portal) portal).getFrameBuffer().getFrameBufferId());
+        			//renderPortalList(window, pCam, scene, warp.getToPortal(), ((Portal) portal).getFrameBuffer().getFrameBufferId());
         			
         			glActiveTexture(GL_TEXTURE0);
         			glBindTexture(GL_TEXTURE_2D, ((Portal) portal).getFrameBuffer().getTexture().getId());

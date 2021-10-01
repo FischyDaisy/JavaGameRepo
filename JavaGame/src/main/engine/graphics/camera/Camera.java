@@ -9,6 +9,8 @@ import org.joml.Vector4f;
 import main.engine.Window;
 import main.engine.graphics.Transformation;
 import main.engine.items.GameItem;
+import main.engine.items.Portal;
+import main.engine.utility.engineMath.AxisRotation;
 
 public class Camera {
 
@@ -29,8 +31,14 @@ public class Camera {
     
     public Camera(Vector3f position, Vector3f rotation) {
     	this();
-        position.set(position);
-        rotation.set(rotation);
+        this.position.set(position);
+        this.rotationEuler.set(rotation);
+    }
+    
+    public Camera(Vector3f position, Quaternionf rotation) {
+    	this();
+        this.position.set(position);
+        this.rotationQ.set(rotation);
     }
 
     public Vector3f getPosition() {
@@ -41,6 +49,10 @@ public class Camera {
         position.x = x;
         position.y = y;
         position.z = z;
+    }
+    
+    public void setPosition(Vector3f v) {
+    	position.set(v);
     }
     
     public Matrix4f getViewMatrix() {
@@ -62,28 +74,30 @@ public class Camera {
     public Matrix4f clipOblique(Window window, GameItem gameItem) {
     	float distance = gameItem.getPosition().length();
     	Quaternionf rotation = gameItem.getRotation();
-    	Vector4f clipPlane = new Vector4f();
+    	Vector4f clipPlane = new Vector4f(new Vector3f(0.0f, 0.0f, -1.0f).rotate(rotation), distance);
+    	Matrix4f vClipMatrix = new Matrix4f();
+    	vClipMatrix = this.viewMatrix.transpose(vClipMatrix).invert();
+    	clipPlane = clipPlane.mul(vClipMatrix);
+    	
+    	if (clipPlane.w > 0.0f) {
+    		return window.getProjectionMatrix();
+    	}
     	
     	Matrix4f projMatrix = window.getProjectionMatrix();
-    	Vector4f q = new Vector4f();
-    	
-    	q.x = (sgn(clipPlane.x) + projMatrix.m02()) / projMatrix.m00();
-    	q.y = (sgn(clipPlane.y) + projMatrix.m12()) / projMatrix.m11();
-    	q.z = -1.0f;
-    	q.w = (1.0f + projMatrix.m22()) / projMatrix.m23();
+    	Matrix4f tempProj = new Matrix4f();
+    	Vector4f q = new Vector4f(sign(clipPlane.x), sign(clipPlane.y), 1.0f, 1.0f)
+    			.mul(projMatrix.invert(tempProj));
     	
     	Vector4f c = clipPlane.mul(2.0f / clipPlane.dot(q));
     	
     	Matrix4f clipMatrix = new Matrix4f(projMatrix);
-    	clipMatrix.m20(c.x);
-    	clipMatrix.m21(c.y);
-    	clipMatrix.m22(c.z + 1.0f);
-    	clipMatrix.m23(c.w);
+    	Vector4f temp = new Vector4f();
+    	clipMatrix.setRow(2, c.sub(clipMatrix.getRow(3, temp)));
     	
     	return clipMatrix;
     }
     
-    public float sgn(float a) {
+    public float sign(float a) {
     	if (a > 0.0f) return (1.0f);
         if (a < 0.0f) return (-1.0f);
         return (0.0f);
@@ -118,19 +132,49 @@ public class Camera {
     public void setRotationQ(Quaternionf q) {
     	rotationQ.set(q);
     }
+    
+    public void updateQuat() {
+    	updateQuat(this.rotationEuler);
+    }
+    
+    public void updateQuat(Vector3f euler) {
+    	AxisRotation rot = AxisRotation.LEFT;
+    	rot.setRotation((float) Math.toRadians(euler.x));
+    	Quaternionf pPitch = rot.getQuatRotation();
+    	rot = AxisRotation.UP;
+    	rot.setRotation((float) Math.toRadians(euler.y));
+        Quaternionf pYaw = rot.getQuatRotation();
+        pPitch.mul(pYaw);
+        rotationQ.set(pPitch);
+    }
 
     public void moveRotation(float offsetX, float offsetY, float offsetZ) {
         rotationEuler.x += offsetX;
         rotationEuler.y += offsetY;
         rotationEuler.z += offsetZ;
         
-        AxisAngle4f pitch = new AxisAngle4f((float) Math.toRadians(rotationEuler.x), new Vector3f(1.0f, 0.0f, 0.0f));
-        AxisAngle4f yaw = new AxisAngle4f((float) Math.toRadians(rotationEuler.y), new Vector3f(0.0f, 1.0f, 0.0f));
-        Quaternionf pPitch = new Quaternionf(pitch);
-        Quaternionf pYaw = new Quaternionf(yaw);
-        pPitch.mul(pYaw);
-        rotationQ.set(pPitch);
+        updateQuat();
         
         //rotationQ.rotateXYZ((float) Math.toRadians(offsetX), (float) Math.toRadians(offsetY), (float) Math.toRadians(offsetZ));
+    }
+    
+    public Camera createPortalCam(Portal fromPortal, Portal toPortal, Transformation trans) {
+    	Matrix4f fromPMat = trans.buildModelMatrix(fromPortal).invert();
+    	Matrix4f toPMat = trans.buildModelMatrix(toPortal);
+    	
+    	// Position
+    	Vector3f relativePos = new Vector3f();
+    	AxisRotation rot = AxisRotation.UP;
+    	rot.setRotation((float) Math.toRadians(180.0));
+    	relativePos = fromPMat.transformPosition(this.getPosition(), relativePos);
+    	relativePos = relativePos.rotate(rot.getQuatRotation());
+    	Vector3f finalPos = new Vector3f(toPMat.transformPosition(relativePos));
+    	
+    	// Rotation
+    	Quaternionf relativeRot = new Quaternionf();
+    	relativeRot = this.getRotationQ().mul(fromPortal.getRotation().invert(), relativeRot);
+    	relativeRot = relativeRot.mul(rot.getQuatRotation());
+    	Quaternionf finalRot = new Quaternionf(relativeRot.mul(toPortal.getRotation()));
+    	return new Camera(finalPos, finalRot);
     }
 }

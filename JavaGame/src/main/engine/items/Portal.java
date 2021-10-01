@@ -15,38 +15,32 @@ public class Portal extends GameItem {
 	
 	private final FrameBuffer frameBuffer;
 	
-	private Warp front, back;
+	private Warp dest;
 	
 	public Portal(Mesh mesh) throws Exception {
 		super(mesh);
 		frameBuffer = new FrameBuffer();
 		Material pMat = new Material(frameBuffer.getTexture());
 		this.getMesh().setMaterial(pMat);
-		front = new Warp(this);
-		back = new Warp(this);
+		dest = null;
 	}
 	
 	public Portal(Mesh[] meshes) throws Exception {
 		super(meshes);
 		frameBuffer = new FrameBuffer();
-		front = new Warp(this);
-		back = new Warp(this);
+		dest = null;
 	}
 	
 	public static Camera createCamera(Vector3f position, Vector3f rotation) {
 		return new Camera(position, rotation);
 	}
 	
-	public static Matrix4f updateCameraViewMatrix(Camera pCam, Warp warp) {
-		return pCam.updateViewMatrixEuler().mul(warp.getDelta());
+	public Warp getWarp() {
+		return dest;
 	}
 	
-	public Warp getFront() {
-		return front;
-	}
-	
-	public Warp getBack() {
-		return back;
+	public void setWarp(Warp w) {
+		dest = w;
 	}
 	
 	public FrameBuffer getFrameBuffer() {
@@ -54,63 +48,9 @@ public class Portal extends GameItem {
 	}
 	
 	public static void connect(Portal a, Portal b, Transformation transformation) {
-		connect(a.getFront(), b.getBack(), transformation);
-		connect(b.getFront(), a.getBack(), transformation);
+		a.setWarp(new Warp(a, b));
+		b.setWarp(new Warp(b, a));
 	}
 	
-	protected static void connect(Warp a, Warp b, Transformation transformation) {
-		a.setToPortal(b.getFromPortal());
-		b.setToPortal(a.getFromPortal());
-		
-		a.setDelta(transformation.buildModelMatrix(a.getFromPortal()).mul(transformation.buildLocalModelMatrix(b.getFromPortal())));
-		b.setDelta(transformation.buildModelMatrix(b.getFromPortal()).mul(transformation.buildLocalModelMatrix(a.getFromPortal())));
-		
-		a.setDeltaInv(b.getDelta());
-		b.setDeltaInv(a.getDelta());
-	}
-	
-	public class Warp {
-		private Matrix4f delta, deltaInv;
-		private Portal fromPortal, toPortal;
-		
-		public Warp(Portal fromPortal) {
-			delta = new Matrix4f();
-			deltaInv = new Matrix4f();
-			this.fromPortal = fromPortal;
-			toPortal = null;
-		}
-		
-		public Portal getFromPortal() {
-			return fromPortal;
-		}
-		
-		public void setFromPortal(Portal p) {
-			fromPortal = p;
-		}
-		
-		public Portal getToPortal() {
-			return toPortal;
-		}
-		
-		public void setToPortal(Portal p) {
-			toPortal = p;
-		}
-		
-		public Matrix4f getDelta() {
-			return delta;
-		}
-		
-		public Matrix4f getInvDelta() {
-			return deltaInv;
-		}
-		
-		public void setDelta(Matrix4f m) {
-			delta = m;
-			//deltaInv = delta.invert();
-		}
-		
-		public void setDeltaInv(Matrix4f m) {
-			deltaInv = m;
-		}
-	}
+	public record Warp(Portal fromPortal, Portal toPortal) {}
 }
