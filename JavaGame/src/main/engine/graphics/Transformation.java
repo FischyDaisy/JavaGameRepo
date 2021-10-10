@@ -112,6 +112,13 @@ public class Transformation {
                 gameItem.getScale(), gameItem.getScale(), gameItem.getScale());
     }
     
+    public Matrix4f buildModelMatrix(Vector3f position, Quaternionf rotation, Vector3f scale) {
+    	return modelMatrix.translationRotateScale(
+                position.x, position.y, position.z,
+                rotation.x, rotation.y, rotation.z, rotation.w,
+                scale.x, scale.y, scale.z);
+    }
+    
     public Matrix4f buildModelViewMatrix(GameItem gameItem, Matrix4f viewMatrix) {
         return buildModelViewMatrix(buildModelMatrix(gameItem), viewMatrix);
     }

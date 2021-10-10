@@ -4,6 +4,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import main.engine.graphics.opengl.Mesh;
+import main.engine.utility.physUtils.Transform;
 
 public class GameItem {
 	
@@ -11,11 +12,9 @@ public class GameItem {
 
 	private Mesh[] meshes;
     
-    private final Vector3f position;
-    
     private float scale;
-
-    private final Quaternionf rotation;
+    
+    private final Transform transform;
     
     private int textPos;
     
@@ -25,9 +24,8 @@ public class GameItem {
     
     public GameItem() {
     	selected = false;
-        position = new Vector3f();
+        transform = new Transform();
         scale = 1;
-        rotation = new Quaternionf();
         textPos = 0;
         insideFrustum = true;
         disableFrustumCulling = false;
@@ -44,7 +42,7 @@ public class GameItem {
     }
 
     public Vector3f getPosition() {
-        return position;
+        return transform.position;
     }
     
     public int getTextPos() {
@@ -56,9 +54,9 @@ public class GameItem {
     }
 
     public void setPosition(float x, float y, float z) {
-        this.position.x = x;
-        this.position.y = y;
-        this.position.z = z;
+        this.transform.position.x = x;
+        this.transform.position.y = y;
+        this.transform.position.z = z;
     }
     
     public boolean isSelected() {
@@ -78,11 +76,11 @@ public class GameItem {
     }
 
     public Quaternionf getRotation() {
-        return rotation;
+        return transform.rotation;
     }
 
     public final void setRotation(Quaternionf q) {
-        this.rotation.set(q);
+        this.transform.rotation.set(q);
     }
     
     public Mesh getMesh() {

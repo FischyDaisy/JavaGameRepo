@@ -10,7 +10,7 @@ import main.engine.Window;
 import main.engine.graphics.Transformation;
 import main.engine.items.GameItem;
 import main.engine.items.Portal;
-import main.engine.utility.engineMath.AxisRotation;
+import main.engine.utility.physUtils.AxisRotation;
 
 public class Camera {
 

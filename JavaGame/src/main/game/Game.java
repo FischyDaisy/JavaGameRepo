@@ -191,6 +191,7 @@ public class Game implements IGameLogic {
             
             // Portals
             Mesh pMesh = OBJLoader.loadMesh("/main/resources/models/double_quad.obj");
+            pMesh.setBoundingRadius(1.0f);
             Portal portalA = new Portal(pMesh);
             Portal portalB = new Portal(pMesh);
             portalA.setPosition(0f, 4f, 0f);

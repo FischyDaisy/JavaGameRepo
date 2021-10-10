@@ -132,9 +132,6 @@ public class GLRenderer implements IRenderer {
         renderSkyBox(window, camera, scene);
         renderParticles(window, camera, scene);
         
-        //renderPortalsPink(window, camera, scene);
-        //renderPortals(window, camera, scene, null);
-        
         //renderAxes(camera);
         //renderCrossHair(window);
     }
@@ -317,6 +314,40 @@ public class GLRenderer implements IRenderer {
             skyBoxShaderProgram.setUniform("texture_sampler", 0);
 
             Matrix4f projectionMatrix = window.getProjectionMatrix();
+            skyBoxShaderProgram.setUniform("projectionMatrix", projectionMatrix);
+            Matrix4f viewMatrix = camera.getViewMatrix();
+            float m30 = viewMatrix.m30();
+            viewMatrix.m30(0);
+            float m31 = viewMatrix.m31();
+            viewMatrix.m31(0);
+            float m32 = viewMatrix.m32();
+            viewMatrix.m32(0);
+            
+            Mesh mesh = skyBox.getMesh();
+            Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(skyBox, viewMatrix);
+            skyBoxShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+            skyBoxShaderProgram.setUniform("ambientLight", scene.getSceneLight().getSkyBoxLight());
+            skyBoxShaderProgram.setUniform("color", mesh.getMaterial().getAmbientColor());
+            skyBoxShaderProgram.setUniform("hasTexture", mesh.getMaterial().isTextured() ? 1 : 0);
+
+            mesh.render();
+
+            viewMatrix.m30(m30);
+            viewMatrix.m31(m31);
+            viewMatrix.m32(m32);
+            
+            skyBoxShaderProgram.unbind();
+        }
+    }
+    
+    private void renderSkyBox(Matrix4f projMat, Camera camera, Scene scene) {
+    	SkyBox skyBox = scene.getSkyBox();
+        if (skyBox != null) {
+            skyBoxShaderProgram.bind();
+
+            skyBoxShaderProgram.setUniform("texture_sampler", 0);
+
+            Matrix4f projectionMatrix = projMat;
             skyBoxShaderProgram.setUniform("projectionMatrix", projectionMatrix);
             Matrix4f viewMatrix = camera.getViewMatrix();
             float m30 = viewMatrix.m30();
@@ -623,6 +654,7 @@ public class GLRenderer implements IRenderer {
     				glStencilFunc(GL_EQUAL, recursionLevel + 1, 0xFF);
     				
     				renderScene(pCam.clipOblique(window, p), pCam, scene);
+    				renderSkyBox(pCam.clipOblique(window, p), pCam, scene);
     			} else {
     				//renderPortals
     				renderPortals(window, pCam, scene, recursionLevel + 1, maxRecursion);
@@ -689,90 +721,9 @@ public class GLRenderer implements IRenderer {
     		
     		if (recursionLevel != 0) {
     			renderScene(window, camera, scene);
+    			renderSkyBox(window, camera, scene);
     		}
     	}
-    }
-    
-    private void renderPortalList(Window window, Camera camera, Scene scene, Portal skipPortal, int curFBO) {
-    	FrameBuffer frameBuf = skipPortal != null ? skipPortal.getFrameBuffer() : null;
-    	if (skipPortal != null) {
-        	glBindFramebuffer(GL_FRAMEBUFFER, frameBuf.getFrameBufferId());
-        	glViewport(0, 0, FrameBuffer.FBO_SIZE, FrameBuffer.FBO_SIZE);
-        	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    	} else {
-    		glBindFramebuffer(GL_FRAMEBUFFER, curFBO);
-    	}
-    	portalShaderProgram.bind();
-    	List<GameItem> filteredPortals = new ArrayList<GameItem>();
-    	float aspectRatio = (float) window.getWidth() / (float) window.getHeight();
-    	Matrix4f projectionMatrix = skipPortal != null ? new Matrix4f().setPerspective(Window.FOV, aspectRatio, Window.Z_NEAR, Window.Z_FAR) : window.getProjectionMatrix();
-    	portalShaderProgram.setUniform("projectionMatrix", projectionMatrix);
-    	portalShaderProgram.setUniform("texture_sampler", 0);
-    	Matrix4f viewMatrix = camera.getViewMatrix();
-    	Matrix4f lightViewMatrix = transformation.getLightViewMatrix();
-    	
-    	frustumFilter.updateFrustum(window.getProjectionMatrix(), camera.getViewMatrix());
-        frustumFilter.filter(scene.getPortalMeshes());
-        frustumFilter.filter(scene.getGameMeshes());
-        frustumFilter.filter(scene.getGameInstancedMeshes());
-        
-        if (!scene.containsPortals()) {
-        	if (skipPortal == null) {
-        		portalShaderProgram.unbind();
-        		glBindFramebuffer(GL_FRAMEBUFFER, curFBO);
-        		return;
-        	} else {
-        		//portalShaderProgram.bind();
-        		renderNonInstancedMeshes(scene, sceneShaderProgram, viewMatrix, lightViewMatrix);
-                renderInstancedMeshes(scene, sceneShaderProgram, viewMatrix, lightViewMatrix);
-                portalShaderProgram.unbind();
-                glBindFramebuffer(GL_FRAMEBUFFER, curFBO);
-        		return;
-        	}
-        } else {
-        	Map<Mesh, List<GameItem>> portalMap = scene.getPortalMeshes();
-        	for (Mesh mesh : portalMap.keySet()) {
-        		filteredPortals.clear();
-                for(GameItem portal : portalMap.get(mesh)) {
-                    if ( portal.isInsideFrustum() ) {
-                    	filteredPortals.add(portal);
-                    }
-                }
-        		mesh.renderList(filteredPortals, (GameItem portal) -> {
-        			/**/
-        			Vector3f normal = transformation.forward(portal);
-        	    	Vector3f camPos = new Vector3f(camera.getPosition());
-        	    	boolean frontDirection = camPos.sub(((Portal) portal).getPosition()).dot(normal) > 0f;
-        	    	//Portal.Warp warp = frontDirection ? ((Portal) portal).getFront() : ((Portal) portal).getBack();
-        	    	if (frontDirection) {
-        	    		normal = normal.negate();
-        	    	}
-        	    	
-        	    	Matrix4f modelMatrix = transformation.buildModelMatrix(portal);
-        	    	Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
-        	    	portalShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-        	    	
-        	    	Vector3f pRotation = new Vector3f();
-        	    	pRotation = portal.getRotation().getEulerAnglesXYZ(pRotation);
-        	    	pRotation.x = (float) Math.toDegrees(pRotation.x);
-        	    	pRotation.y = (float) Math.toDegrees(pRotation.y);
-        	    	pRotation.z = (float) Math.toDegrees(pRotation.z);
-        	    	
-        			Camera pCam = Portal.createCamera(portal.getPosition(), pRotation);
-        			//pCam.setViewMatrix(Portal.updateCameraViewMatrix(camera, warp));
-        			
-        			//renderPortalList(window, pCam, scene, warp.getToPortal(), ((Portal) portal).getFrameBuffer().getFrameBufferId());
-        			
-        			glActiveTexture(GL_TEXTURE0);
-        			glBindTexture(GL_TEXTURE_2D, ((Portal) portal).getFrameBuffer().getTexture().getId());
-        			
-        		});
-        	}
-        	portalShaderProgram.unbind();
-        	glBindFramebuffer(GL_FRAMEBUFFER, curFBO);
-        	return;
-        	
-        }
     }
     
     public Texture getShadowMapTexture() {

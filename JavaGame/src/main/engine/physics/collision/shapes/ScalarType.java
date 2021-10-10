@@ -1,0 +1,14 @@
+package main.engine.physics.collision.shapes;
+
+/**
+ * Scalar type, used when accessing triangle mesh data.
+ * 
+ * @author jezek2
+ */
+public enum ScalarType {
+	FLOAT,
+	DOUBLE,
+	INTEGER,
+	SHORT,
+	FIXEDPOINT88
+}
