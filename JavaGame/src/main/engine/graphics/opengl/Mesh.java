@@ -32,6 +32,8 @@ import java.util.function.Consumer;
 
 import org.lwjgl.system.MemoryUtil;
 
+import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+
 import main.engine.graphics.Material;
 import main.engine.graphics.particles.Particle;
 import main.engine.items.GameItem;

@@ -5,8 +5,11 @@ import static org.lwjgl.nuklear.Nuklear.NK_ANTI_ALIASING_ON;
 import static org.lwjgl.stb.STBImage.*;
 
 import java.io.File;
+import java.lang.invoke.MethodHandle;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -50,10 +53,16 @@ import main.engine.loaders.md5.MD5AnimModel;
 import main.engine.loaders.md5.MD5Loader;
 import main.engine.loaders.md5.MD5Model;
 import main.engine.loaders.obj.OBJLoader;
+import main.engine.physics.NewtonLoader;
 import main.engine.sound.SoundBuffer;
 import main.engine.sound.SoundListener;
 import main.engine.sound.SoundManager;
 import main.engine.sound.SoundSource;
+
+import com.badlogic.gdx.physics.bullet.*;
+
+import com.newton.*;
+import jdk.incubator.foreign.SymbolLookup;
 
 public class Game implements IGameLogic {
 	
@@ -103,6 +112,16 @@ public class Game implements IGameLogic {
     public void init(Window window, Scene scene, IRenderer renderer) throws Exception {
         renderer.init(window, scene);
         soundMgr.init();
+        Bullet.init();
+        
+        MethodHandle hand = Newton_h.NewtonGetBroadphaseAlgorithm$MH();
+        
+        try {
+			hand.invokeExact();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         leftButtonPressed = false;
         
@@ -243,6 +262,10 @@ public class Game implements IGameLogic {
             setupSounds();
         }
         
+    }
+    
+    private void setupPhysics() {
+    	Bullet.init();
     }
     
     private void setupSounds() throws Exception {

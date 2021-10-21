@@ -121,7 +121,7 @@ public class GLRenderer implements IRenderer {
         // Update projection matrix once per render cycle
         window.updateProjectionMatrix();
         
-        renderPortals(window, camera, scene, 0, 20);
+        //renderPortals(window, camera, scene, 0, 20);
         
         frustumFilter.updateFrustum(window.getProjectionMatrix(), camera.getViewMatrix());
         frustumFilter.filter(scene.getPortalMeshes());
