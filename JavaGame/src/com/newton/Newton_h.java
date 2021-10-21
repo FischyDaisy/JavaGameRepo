@@ -10,7 +10,7 @@ import static jdk.incubator.foreign.CLinker.*;
 public class Newton_h  {
 
     static {
-    	System.load(System.getProperty("user.dir") + "\\src\\com\\newtondll\\newton_d.dll");
+    	System.load(System.getProperty("user.dir") + "\\src\\com\\newtondll\\newton.dll");
     }
 
     static final SymbolLookup LIBRARIES = RuntimeHelper.lookup();    /* package-private */ Newton_h() {}

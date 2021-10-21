@@ -62,7 +62,7 @@ import main.engine.sound.SoundSource;
 import com.badlogic.gdx.physics.bullet.*;
 
 import com.newton.*;
-import jdk.incubator.foreign.SymbolLookup;
+import jdk.incubator.foreign.*;
 
 public class Game implements IGameLogic {
 	
@@ -114,14 +114,11 @@ public class Game implements IGameLogic {
         soundMgr.init();
         Bullet.init();
         
-        MethodHandle hand = Newton_h.NewtonGetBroadphaseAlgorithm$MH();
+        MemoryAddress newtonWorld = Newton_h.NewtonCreate(new Object[] {});
         
-        try {
-			hand.invokeExact();
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        System.out.println(newtonWorld.toString());
+        
+        Newton_h.NewtonFree(newtonWorld);
         
         leftButtonPressed = false;
         
