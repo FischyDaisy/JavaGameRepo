@@ -62,6 +62,8 @@ import main.engine.sound.SoundSource;
 import com.badlogic.gdx.physics.bullet.*;
 
 import com.newton.*;
+import com.newton.generated.Newton_h;
+
 import jdk.incubator.foreign.*;
 
 public class Game implements IGameLogic {
@@ -112,13 +114,6 @@ public class Game implements IGameLogic {
     public void init(Window window, Scene scene, IRenderer renderer) throws Exception {
         renderer.init(window, scene);
         soundMgr.init();
-        Bullet.init();
-        
-        MemoryAddress newtonWorld = Newton_h.NewtonCreate(new Object[] {});
-        
-        System.out.println(newtonWorld.toString());
-        
-        Newton_h.NewtonFree(newtonWorld);
         
         leftButtonPressed = false;
         
@@ -258,11 +253,6 @@ public class Game implements IGameLogic {
             this.soundMgr.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
             setupSounds();
         }
-        
-    }
-    
-    private void setupPhysics() {
-    	Bullet.init();
     }
     
     private void setupSounds() throws Exception {
