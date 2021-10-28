@@ -28,7 +28,7 @@ public class SwapChain {
             PhysicalDevice physicalDevice = device.getPhysicalDevice();
 
             // Get surface capabilities
-            VkSurfaceCapabilitiesKHR surfCapabilities = VkSurfaceCapabilitiesKHR.callocStack(stack);
+            VkSurfaceCapabilitiesKHR surfCapabilities = VkSurfaceCapabilitiesKHR.calloc(stack);
             VulkanUtils.vkCheck(KHRSurface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device.getPhysicalDevice().getVkPhysicalDevice(),
                     surface.getVkSurface(), surfCapabilities), "Failed to get surface capabilities");
 
@@ -38,7 +38,7 @@ public class SwapChain {
 
             swapChainExtent = calcSwapChainExtent(window, surfCapabilities);
 
-            VkSwapchainCreateInfoKHR vkSwapchainCreateInfo = VkSwapchainCreateInfoKHR.callocStack(stack)
+            VkSwapchainCreateInfoKHR vkSwapchainCreateInfo = VkSwapchainCreateInfoKHR.calloc(stack)
                     .sType(KHRSwapchain.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR)
                     .surface(surface.getVkSurface())
                     .minImageCount(numImages)
@@ -116,7 +116,7 @@ public class SwapChain {
                 throw new RuntimeException("No surface formats retrieved");
             }
 
-            VkSurfaceFormatKHR.Buffer surfaceFormats = VkSurfaceFormatKHR.callocStack(numFormats, stack);
+            VkSurfaceFormatKHR.Buffer surfaceFormats = VkSurfaceFormatKHR.calloc(numFormats, stack);
             VulkanUtils.vkCheck(KHRSurface.vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice.getVkPhysicalDevice(),
                     surface.getVkSurface(), ip, surfaceFormats), "Failed to get surface formats");
 
@@ -216,7 +216,7 @@ public class SwapChain {
     public boolean presentImage(Queue queue) {
         boolean resize = false;
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            VkPresentInfoKHR present = VkPresentInfoKHR.callocStack(stack)
+            VkPresentInfoKHR present = VkPresentInfoKHR.calloc(stack)
                     .sType(KHRSwapchain.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR)
                     .pWaitSemaphores(stack.longs(
                             syncSemaphoresList[currentFrame].renderCompleteSemaphore().getVkSemaphore()))

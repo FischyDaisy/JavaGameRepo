@@ -1,11 +1,29 @@
 package main.engine.graphics.vulkan;
 
-import static org.lwjgl.vulkan.VK11.VK_SUCCESS;
+import static org.lwjgl.vulkan.VK11.*;
+
+import org.lwjgl.vulkan.VkMemoryType;
 
 public class VulkanUtils {
 
     private VulkanUtils() {
         // Utility class
+    }
+    
+    public static int memoryTypeFromProperties(PhysicalDevice physDevice, int typeBits, int reqsMask) {
+        int result = -1;
+        VkMemoryType.Buffer memoryTypes = physDevice.getVkMemoryProperties().memoryTypes();
+        for (int i = 0; i < VK_MAX_MEMORY_TYPES; i++) {
+            if ((typeBits & 1) == 1 && (memoryTypes.get(i).propertyFlags() & reqsMask) == reqsMask) {
+                result = i;
+                break;
+            }
+            typeBits >>= 1;
+        }
+        if (result < 0) {
+            throw new RuntimeException("Failed to find memoryType");
+        }
+        return result;
     }
 
     public static void vkCheck(int err, String errMsg) {

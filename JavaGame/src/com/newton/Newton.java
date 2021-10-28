@@ -13,6 +13,10 @@ public class Newton {
 		Newton_h.NewtonDestroy(world.getAddress());
 	}
 	
+	public static void NewtonUpdate(NewtonWorld world, float timestep) {
+		Newton_h.NewtonUpdate(world.getAddress(), timestep);
+	}
+	
 	public static void NewtonDestroyAllBodies(NewtonWorld world) {
 		Newton_h.NewtonDestroyAllBodies(world.getAddress());
 	}

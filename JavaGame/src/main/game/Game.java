@@ -59,8 +59,6 @@ import main.engine.sound.SoundListener;
 import main.engine.sound.SoundManager;
 import main.engine.sound.SoundSource;
 
-import com.badlogic.gdx.physics.bullet.*;
-
 import com.newton.*;
 import com.newton.generated.Newton_h;
 

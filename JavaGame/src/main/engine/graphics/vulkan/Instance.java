@@ -15,7 +15,6 @@ import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFWVulkan;
@@ -39,7 +38,7 @@ public class Instance {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             // Create application information
             ByteBuffer appShortName = stack.UTF8("Game");
-            VkApplicationInfo appInfo = VkApplicationInfo.callocStack(stack)
+            VkApplicationInfo appInfo = VkApplicationInfo.calloc(stack)
                     .sType(VK_STRUCTURE_TYPE_APPLICATION_INFO)
                     .pApplicationName(appShortName)
                     .applicationVersion(1)
@@ -91,7 +90,7 @@ public class Instance {
             }
 
             // Create instance info
-            VkInstanceCreateInfo instanceInfo = VkInstanceCreateInfo.callocStack(stack)
+            VkInstanceCreateInfo instanceInfo = VkInstanceCreateInfo.calloc(stack)
                     .sType(VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO)
                     .pNext(extension)
                     .pApplicationInfo(appInfo)
@@ -151,7 +150,7 @@ public class Instance {
             int numLayers = numLayersArr.get(0);
             System.out.println("Instance supports [" + numLayers + "] layers");
 
-            VkLayerProperties.Buffer propsBuf = VkLayerProperties.callocStack(numLayers, stack);
+            VkLayerProperties.Buffer propsBuf = VkLayerProperties.calloc(numLayers, stack);
             vkEnumerateInstanceLayerProperties(numLayersArr, propsBuf);
             List<String> supportedLayers = new ArrayList<>();
             for (int i = 0; i < numLayers; i++) {
