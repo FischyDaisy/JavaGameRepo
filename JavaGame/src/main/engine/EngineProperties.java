@@ -11,6 +11,7 @@ public class EngineProperties {
     private static EngineProperties instance;
     private String physDeviceName;
     private int requestedImages;
+    private boolean shaderRecompilation;
     private int ups;
     private int fps;
     private boolean useVulkan;
@@ -30,6 +31,7 @@ public class EngineProperties {
             physDeviceName = props.getProperty("physDeviceName");
             requestedImages = Integer.parseInt(props.getOrDefault("requestedImages", DEFAULT_REQUESTED_IMAGES).toString());
             vSync = Boolean.parseBoolean(props.getOrDefault("vsync", true).toString());
+            shaderRecompilation = Boolean.parseBoolean(props.getOrDefault("shaderRecompilation", false).toString());
         } catch (IOException excp) {
         	System.out.println("Could not read [" + FILENAME + "] properties file");
             //System.out.println(excp);
@@ -49,6 +51,10 @@ public class EngineProperties {
     
     public int getRequestedImages() {
         return requestedImages;
+    }
+    
+    public boolean isShaderRecompilation() {
+        return shaderRecompilation;
     }
 
     public int getUps() {

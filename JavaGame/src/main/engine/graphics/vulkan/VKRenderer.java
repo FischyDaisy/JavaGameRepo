@@ -1,10 +1,14 @@
 package main.engine.graphics.vulkan;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import main.engine.EngineProperties;
 import main.engine.Scene;
 import main.engine.Window;
 import main.engine.graphics.IHud;
 import main.engine.graphics.IRenderer;
+import main.engine.graphics.ModelData;
 import main.engine.graphics.camera.Camera;
 
 public class VKRenderer implements IRenderer {
@@ -17,9 +21,11 @@ public class VKRenderer implements IRenderer {
     private Queue.GraphicsQueue graphQueue;
     private Instance instance;
     private PhysicalDevice physicalDevice;
+    private PipelineCache pipelineCache;
     private Queue.PresentQueue presentQueue;
     private Surface surface;
     private SwapChain swapChain;
+    private List<VulkanModel> vulkanModels;
 	
 	public VKRenderer(Window window, Scene scene) {
 	}
@@ -35,13 +41,16 @@ public class VKRenderer implements IRenderer {
         swapChain = new SwapChain(device, surface, window, engProps.getRequestedImages(),
                 engProps.isvSync());
         commandPool = new CommandPool(device, graphQueue.getQueueFamilyIndex());
-        fwdRenderActivity = new ForwardRenderActivity(swapChain, commandPool);
+        pipelineCache = new PipelineCache(device);
+        fwdRenderActivity = new ForwardRenderActivity(swapChain, commandPool, pipelineCache);
+        vulkanModels = new ArrayList<>();
 	}
 
 	@Override
 	public void render(Window window, Camera camera, Scene scene) {
 		swapChain.acquireNextImage();
 
+		fwdRenderActivity.recordCommandBuffer(vulkanModels);
         fwdRenderActivity.submit(presentQueue);
 
         swapChain.presentImage(graphQueue);
@@ -52,6 +61,8 @@ public class VKRenderer implements IRenderer {
 		presentQueue.waitIdle();
         graphQueue.waitIdle();
         device.waitIdle();
+        vulkanModels.forEach(VulkanModel::cleanup);
+        pipelineCache.cleanup();
         fwdRenderActivity.cleanup();
         commandPool.cleanup();
         swapChain.cleanup();
@@ -60,4 +71,8 @@ public class VKRenderer implements IRenderer {
         physicalDevice.cleanup();
         instance.cleanup();
 	}
+	
+	public void loadModels(List<ModelData> modelDataList) {
+        vulkanModels.addAll(VulkanModel.transformModels(modelDataList, commandPool, graphQueue));
+    }
 }

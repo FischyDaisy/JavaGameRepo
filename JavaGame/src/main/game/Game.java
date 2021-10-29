@@ -10,6 +10,8 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -29,6 +31,7 @@ import main.engine.graphics.IHud;
 import main.engine.graphics.IHudElement;
 import main.engine.graphics.IRenderer;
 import main.engine.graphics.Material;
+import main.engine.graphics.ModelData;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.camera.Camera;
@@ -43,6 +46,7 @@ import main.engine.graphics.opengl.Mesh;
 import main.engine.graphics.opengl.Texture;
 import main.engine.graphics.particles.FlowParticleEmitter;
 import main.engine.graphics.particles.Particle;
+import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.graphics.weather.Fog;
 import main.engine.graphics.opengl.GLRenderer;
 import main.engine.items.GameItem;
@@ -117,7 +121,7 @@ public class Game implements IGameLogic {
         
         this.scene = scene;
         
-        if (!engineProperties.useVulkan()) {
+        if (!engineProperties.useVulkan()) { //OpenGL
         	float reflectance = 1f;
 
             float blockScale = 0.5f;
@@ -250,6 +254,19 @@ public class Game implements IGameLogic {
             this.soundMgr.init();
             this.soundMgr.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
             setupSounds();
+        } else { //Vulkan
+        	String modelId = "TriangleModel";
+            ModelData.MeshData meshData = new ModelData.MeshData(new float[]{
+                    -0.5f, -0.5f, 0.0f,
+                    0.0f, 0.5f, 0.0f,
+                    0.5f, -0.5f, 0.0f},
+                    new int[]{0, 1, 2});
+            List<ModelData.MeshData> meshDataList = new ArrayList<>();
+            meshDataList.add(meshData);
+            ModelData modelData = new ModelData(modelId, meshDataList);
+            List<ModelData> modelDataList = new ArrayList<>();
+            modelDataList.add(modelData);
+            ((VKRenderer) renderer).loadModels(modelDataList);
         }
     }
     
