@@ -12,11 +12,11 @@ public class SwapChainRenderPass {
     private final SwapChain swapChain;
     private final long vkRenderPass;
 
-    public SwapChainRenderPass(SwapChain swapChain) {
+    public SwapChainRenderPass(SwapChain swapChain, int depthImageFormat) {
         this.swapChain = swapChain;
 
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            VkAttachmentDescription.Buffer attachments = VkAttachmentDescription.calloc(1, stack);
+            VkAttachmentDescription.Buffer attachments = VkAttachmentDescription.calloc(2, stack);
 
             // Color attachment
             attachments.get(0)
@@ -27,14 +27,28 @@ public class SwapChainRenderPass {
                     .initialLayout(VK_IMAGE_LAYOUT_UNDEFINED)
                     .finalLayout(KHRSwapchain.VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
 
+            // Depth attachment
+            attachments.get(1)
+                    .format(depthImageFormat)
+                    .samples(VK_SAMPLE_COUNT_1_BIT)
+                    .loadOp(VK_ATTACHMENT_LOAD_OP_CLEAR)
+                    .storeOp(VK_ATTACHMENT_STORE_OP_DONT_CARE)
+                    .initialLayout(VK_IMAGE_LAYOUT_UNDEFINED)
+                    .finalLayout(VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
             VkAttachmentReference.Buffer colorReference = VkAttachmentReference.calloc(1, stack)
                     .attachment(0)
                     .layout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 
+            VkAttachmentReference depthReference = VkAttachmentReference.malloc(stack)
+                    .attachment(1)
+                    .layout(VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
             VkSubpassDescription.Buffer subPass = VkSubpassDescription.calloc(1, stack)
                     .pipelineBindPoint(VK_PIPELINE_BIND_POINT_GRAPHICS)
                     .colorAttachmentCount(colorReference.remaining())
-                    .pColorAttachments(colorReference);
+                    .pColorAttachments(colorReference)
+                    .pDepthStencilAttachment(depthReference);
 
             VkSubpassDependency.Buffer subpassDependencies = VkSubpassDependency.calloc(1, stack);
             subpassDependencies.get(0)

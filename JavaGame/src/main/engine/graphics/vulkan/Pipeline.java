@@ -9,7 +9,7 @@ import static org.lwjgl.vulkan.VK11.*;
 
 public class Pipeline {
 
-    private final Device device;
+	private final Device device;
     private final long vkPipeline;
     private final long vkPipelineLayout;
 
@@ -56,6 +56,17 @@ public class Pipeline {
                             .sType(VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO)
                             .rasterizationSamples(VK_SAMPLE_COUNT_1_BIT);
 
+            VkPipelineDepthStencilStateCreateInfo ds = null;
+            if (pipeLineCreationInfo.hasDepthAttachment()) {
+                ds = VkPipelineDepthStencilStateCreateInfo.calloc(stack)
+                        .sType(VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO)
+                        .depthTestEnable(true)
+                        .depthWriteEnable(true)
+                        .depthCompareOp(VK_COMPARE_OP_LESS_OR_EQUAL)
+                        .depthBoundsTestEnable(false)
+                        .stencilTestEnable(false);
+            }
+
             VkPipelineColorBlendAttachmentState.Buffer blendAttState = VkPipelineColorBlendAttachmentState.calloc(
                     pipeLineCreationInfo.numColorAttachments(), stack);
             for (int i = 0; i < pipeLineCreationInfo.numColorAttachments(); i++) {
@@ -75,8 +86,17 @@ public class Pipeline {
                                     VK_DYNAMIC_STATE_SCISSOR
                             ));
 
+            VkPushConstantRange.Buffer vpcr = null;
+            if (pipeLineCreationInfo.pushConstantsSize() > 0) {
+                vpcr = VkPushConstantRange.calloc(1, stack)
+                        .stageFlags(VK_SHADER_STAGE_VERTEX_BIT)
+                        .offset(0)
+                        .size(pipeLineCreationInfo.pushConstantsSize());
+            }
+
             VkPipelineLayoutCreateInfo pPipelineLayoutCreateInfo = VkPipelineLayoutCreateInfo.calloc(stack)
-                    .sType(VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO);
+                    .sType(VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO)
+                    .pPushConstantRanges(vpcr);
 
             VulkanUtils.vkCheck(vkCreatePipelineLayout(device.getVkDevice(), pPipelineLayoutCreateInfo, null, lp),
                     "Failed to create pipeline layout");
@@ -94,7 +114,9 @@ public class Pipeline {
                     .pDynamicState(vkPipelineDynamicStateCreateInfo)
                     .layout(vkPipelineLayout)
                     .renderPass(pipeLineCreationInfo.vkRenderPass);
-
+            if (ds != null) {
+                pipeline.pDepthStencilState(ds);
+            }
             VulkanUtils.vkCheck(vkCreateGraphicsPipelines(device.getVkDevice(), pipelineCache.getVkPipelineCache(), pipeline, null, lp),
                     "Error creating graphics pipeline");
             vkPipeline = lp.get(0);
@@ -116,6 +138,7 @@ public class Pipeline {
     }
 
     public record PipeLineCreationInfo(long vkRenderPass, ShaderProgram shaderProgram, int numColorAttachments,
+                                       boolean hasDepthAttachment, int pushConstantsSize,
                                        VertexInputStateInfo viInputStateInfo) {
         public void cleanup() {
             viInputStateInfo.cleanup();

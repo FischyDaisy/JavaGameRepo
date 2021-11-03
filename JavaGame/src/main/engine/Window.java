@@ -57,18 +57,14 @@ import static org.lwjgl.nuklear.Nuklear.nk_input_key;
 import static org.lwjgl.nuklear.Nuklear.nk_input_unicode;
 
 public class Window {
-	
-	public static final float FOV = (float) Math.toRadians(60.0f);
-
-    public static final float Z_NEAR = 0.01f;
-
-    public static final float Z_FAR = 1000.f;
 
     private final String title;
     
     private final List<Integer> codePointList;
     
     private final Map<Integer, Integer> keyMap;
+    
+    private final EngineProperties props = EngineProperties.getInstance();
 
     private int width;
 
@@ -289,7 +285,7 @@ public class Window {
 
     public Matrix4f updateProjectionMatrix() {
         float aspectRatio = (float) width / (float) height;
-        return projectionMatrix.setPerspective(FOV, aspectRatio, Z_NEAR, Z_FAR);
+        return projectionMatrix.setPerspective(props.getFOV(), aspectRatio, props.getZNear(), props.getZFar());
     }
 
     public String getTitle() {

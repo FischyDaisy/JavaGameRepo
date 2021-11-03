@@ -40,7 +40,7 @@ public class FrustumCullingFilter {
         Vector3f pos;
         for (GameItem gameItem : gameItems) {
         	if (!gameItem.isDisableFrustumCulling()) {
-                boundingRadius = gameItem.getScale() * meshBoundingRadius;
+                boundingRadius = gameItem.getLargestScale() * meshBoundingRadius;
                 pos = gameItem.getPosition();
                 gameItem.setInsideFrustum(insideFrustum(pos.x, pos.y, pos.z, boundingRadius));
             }

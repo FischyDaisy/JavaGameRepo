@@ -450,7 +450,7 @@ public class GLRenderer implements IRenderer {
 
             mesh.renderList(mapMeshes.get(mesh), (GameItem gameItem) -> {
             	sceneShaderProgram.setUniform("selectedNonInstanced", gameItem.isSelected() ? 1.0f : 0.0f);
-                Matrix4f modelMatrix = transformation.buildModelMatrix(gameItem);
+                Matrix4f modelMatrix = gameItem.buildModelMatrix();
                 if (viewMatrix != null) {
                     Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
                     sceneShaderProgram.setUniform("modelViewNonInstancedMatrix", modelViewMatrix);
@@ -555,7 +555,7 @@ public class GLRenderer implements IRenderer {
         Map<Mesh, List<GameItem>> portalMap = scene.getPortalMeshes();
         for (Mesh mesh : portalMap.keySet()) {
         	mesh.renderList(portalMap.get(mesh), (GameItem gameItem) -> {
-        		Matrix4f modelMatrix = transformation.buildModelMatrix(gameItem);
+        		Matrix4f modelMatrix = gameItem.buildModelMatrix();
         		Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
         		portalErrShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
         	});
@@ -570,7 +570,7 @@ public class GLRenderer implements IRenderer {
     	portalErrShaderProgram.setUniform("projectionMatrix", projectionMatrix);
         Matrix4f viewMatrix = camera.getViewMatrix();
         
-        Matrix4f modelMatrix = transformation.buildModelMatrix(rPortal);
+        Matrix4f modelMatrix = rPortal.buildModelMatrix();
 		Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
 		portalErrShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
 		
@@ -626,7 +626,7 @@ public class GLRenderer implements IRenderer {
     			renderPortalPink(window, camera, scene, p);
     			
     			//Make pCam
-    			Camera pCam = camera.createPortalCam(p, p.getWarp().toPortal(), transformation);
+    			Camera pCam = camera.createPortalCam(p, p.getWarp().toPortal());
     			pCam.updateViewMatrixQuat();
     			
     			if (recursionLevel == maxRecursion || (!scene.containsPortals())) {

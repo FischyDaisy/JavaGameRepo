@@ -145,7 +145,7 @@ public class Terrain {
 
     protected float getWorldHeight(int row, int col, GameItem gameItem) {
         float y = heightMapMesh.getHeight(row, col);
-        return y * gameItem.getScale() + gameItem.getPosition().y;
+        return y * gameItem.getScale().y + gameItem.getPosition().y;
     }
 
     protected float interpolateHeight(Vector3f pA, Vector3f pB, Vector3f pC, float x, float z) {
@@ -166,7 +166,7 @@ public class Terrain {
      * @return The boundingg box of the terrain block
      */
     private Box2D getBoundingBox(GameItem terrainBlock) {
-        float scale = terrainBlock.getScale();
+        float scale = terrainBlock.getScale().x;
         Vector3f position = terrainBlock.getPosition();
 
         float topLeftX = HeightMapMesh.STARTX * scale + position.x;

@@ -1,11 +1,16 @@
 package main.engine.graphics.vulkan;
 
+import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.*;
 
 import main.engine.EngineProperties;
+import main.engine.Scene;
+import main.engine.Window;
+import main.engine.items.GameItem;
 
+import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 import java.util.*;
 
@@ -13,68 +18,100 @@ import static org.lwjgl.vulkan.VK11.*;
 
 public class ForwardRenderActivity {
 
-    private static final String FRAGMENT_SHADER_FILE_GLSL = System.getProperty("user.dir") + "/src/main/resources/shaders/vulkan/fwd_fragment.glsl";
+	private static final String FRAGMENT_SHADER_FILE_GLSL = System.getProperty("user.dir") + "/src/main/resources/shaders/vulkan/fwd_fragment.glsl";
     private static final String FRAGMENT_SHADER_FILE_SPV = FRAGMENT_SHADER_FILE_GLSL + ".spv";
     private static final String VERTEX_SHADER_FILE_GLSL = System.getProperty("user.dir") + "/src/main/resources/shaders/vulkan/fwd_vertex.glsl";
     private static final String VERTEX_SHADER_FILE_SPV = VERTEX_SHADER_FILE_GLSL + ".spv";
 
     private final CommandBuffer[] commandBuffers;
+    private final Device device;
     private final Fence[] fences;
-    private final FrameBuffer[] frameBuffers;
     private final ShaderProgram fwdShaderProgram;
     private final Pipeline pipeLine;
+    private final PipelineCache pipelineCache;
     private final SwapChainRenderPass renderPass;
-    private final SwapChain swapChain;
+    private final Scene scene;
+    private final Window window;
 
-    public ForwardRenderActivity(SwapChain swapChain, CommandPool commandPool, PipelineCache pipelineCache) {
+    private FrameBuffer[] frameBuffers;
+    private Attachment[] depthAttachments;
+    private SwapChain swapChain;
+
+    public ForwardRenderActivity(SwapChain swapChain, CommandPool commandPool, PipelineCache pipelineCache, Scene scene, Window window) {
         this.swapChain = swapChain;
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            Device device = swapChain.getDevice();
-            VkExtent2D swapChainExtent = swapChain.getSwapChainExtent();
-            ImageView[] imageViews = swapChain.getImageViews();
-            int numImages = imageViews.length;
+        this.pipelineCache = pipelineCache;
+        this.scene = scene;
+        this.window = window;
+        device = swapChain.getDevice();
 
-            renderPass = new SwapChainRenderPass(swapChain);
+        Device device = swapChain.getDevice();
 
-            LongBuffer pAttachments = stack.mallocLong(1);
-            frameBuffers = new FrameBuffer[numImages];
-            for (int i = 0; i < numImages; i++) {
-                pAttachments.put(0, imageViews[i].getVkImageView());
-                frameBuffers[i] = new FrameBuffer(device, swapChainExtent.width(), swapChainExtent.height(),
-                        pAttachments, renderPass.getVkRenderPass());
-            }
+        int numImages = swapChain.getImageViews().length;
+        createDepthImages();
+        renderPass = new SwapChainRenderPass(swapChain, depthAttachments[0].getImage().getFormat());
+        createFrameBuffers();
 
-            EngineProperties engineProperties = EngineProperties.getInstance();
-            if (engineProperties.isShaderRecompilation()) {
-                ShaderCompiler.compileShaderIfChanged(VERTEX_SHADER_FILE_GLSL, Shaderc.shaderc_glsl_vertex_shader);
-                ShaderCompiler.compileShaderIfChanged(FRAGMENT_SHADER_FILE_GLSL, Shaderc.shaderc_glsl_fragment_shader);
-            }
-            fwdShaderProgram = new ShaderProgram(device, new ShaderProgram.ShaderModuleData[]
-                    {
-                            new ShaderProgram.ShaderModuleData(VK_SHADER_STAGE_VERTEX_BIT, VERTEX_SHADER_FILE_SPV),
-                            new ShaderProgram.ShaderModuleData(VK_SHADER_STAGE_FRAGMENT_BIT, FRAGMENT_SHADER_FILE_SPV),
-                    });
-            Pipeline.PipeLineCreationInfo pipeLineCreationInfo = new Pipeline.PipeLineCreationInfo(
-                    renderPass.getVkRenderPass(), fwdShaderProgram, 1, new VertexBufferStructure());
-            pipeLine = new Pipeline(pipelineCache, pipeLineCreationInfo);
-            pipeLineCreationInfo.cleanup();
+        EngineProperties engineProperties = EngineProperties.getInstance();
+        if (engineProperties.isShaderRecompilation()) {
+            ShaderCompiler.compileShaderIfChanged(VERTEX_SHADER_FILE_GLSL, Shaderc.shaderc_glsl_vertex_shader);
+            ShaderCompiler.compileShaderIfChanged(FRAGMENT_SHADER_FILE_GLSL, Shaderc.shaderc_glsl_fragment_shader);
+        }
+        fwdShaderProgram = new ShaderProgram(device, new ShaderProgram.ShaderModuleData[]
+                {
+                        new ShaderProgram.ShaderModuleData(VK_SHADER_STAGE_VERTEX_BIT, VERTEX_SHADER_FILE_SPV),
+                        new ShaderProgram.ShaderModuleData(VK_SHADER_STAGE_FRAGMENT_BIT, FRAGMENT_SHADER_FILE_SPV),
+                });
 
-            commandBuffers = new CommandBuffer[numImages];
-            fences = new Fence[numImages];
-            for (int i = 0; i < numImages; i++) {
-                commandBuffers[i] = new CommandBuffer(commandPool, true, false);
-                fences[i] = new Fence(device, true);
-            }
+
+        Pipeline.PipeLineCreationInfo pipeLineCreationInfo = new Pipeline.PipeLineCreationInfo(
+                renderPass.getVkRenderPass(), fwdShaderProgram, 1, true, GraphConstants.MAT4X4_SIZE * 2,
+                new VertexBufferStructure());
+        pipeLine = new Pipeline(this.pipelineCache, pipeLineCreationInfo);
+        pipeLineCreationInfo.cleanup();
+
+        commandBuffers = new CommandBuffer[numImages];
+        fences = new Fence[numImages];
+        for (int i = 0; i < numImages; i++) {
+            commandBuffers[i] = new CommandBuffer(commandPool, true, false);
+            fences[i] = new Fence(device, true);
         }
     }
 
     public void cleanup() {
         pipeLine.cleanup();
+        Arrays.stream(depthAttachments).forEach(Attachment::cleanup);
         fwdShaderProgram.cleanup();
         Arrays.stream(frameBuffers).forEach(FrameBuffer::cleanup);
         renderPass.cleanup();
         Arrays.stream(commandBuffers).forEach(CommandBuffer::cleanup);
         Arrays.stream(fences).forEach(Fence::cleanup);
+    }
+
+    private void createDepthImages() {
+        int numImages = swapChain.getNumImages();
+        VkExtent2D swapChainExtent = swapChain.getSwapChainExtent();
+        depthAttachments = new Attachment[numImages];
+        for (int i = 0; i < numImages; i++) {
+            depthAttachments[i] = new Attachment(device, swapChainExtent.width(), swapChainExtent.height(),
+                    VK_FORMAT_D32_SFLOAT, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
+        }
+    }
+
+    private void createFrameBuffers() {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            VkExtent2D swapChainExtent = swapChain.getSwapChainExtent();
+            ImageView[] imageViews = swapChain.getImageViews();
+            int numImages = imageViews.length;
+
+            LongBuffer pAttachments = stack.mallocLong(2);
+            frameBuffers = new FrameBuffer[numImages];
+            for (int i = 0; i < numImages; i++) {
+                pAttachments.put(0, imageViews[i].getVkImageView());
+                pAttachments.put(1, depthAttachments[i].getImageView().getVkImageView());
+                frameBuffers[i] = new FrameBuffer(device, swapChainExtent.width(), swapChainExtent.height(),
+                        pAttachments, renderPass.getVkRenderPass());
+            }
+        }
     }
 
     public void recordCommandBuffer(List<VulkanModel> vulkanModelList) {
@@ -92,8 +129,9 @@ public class ForwardRenderActivity {
             fence.reset();
 
             commandBuffer.reset();
-            VkClearValue.Buffer clearValues = VkClearValue.calloc(1, stack);
+            VkClearValue.Buffer clearValues = VkClearValue.calloc(2, stack);
             clearValues.apply(0, v -> v.color().float32(0, 0.5f).float32(1, 0.7f).float32(2, 0.9f).float32(3, 1));
+            clearValues.apply(1, v -> v.depthStencil().depth(1.0f));
 
             VkRenderPassBeginInfo renderPassBeginInfo = VkRenderPassBeginInfo.calloc(stack)
                     .sType(VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO)
@@ -129,18 +167,45 @@ public class ForwardRenderActivity {
             LongBuffer offsets = stack.mallocLong(1);
             offsets.put(0, 0L);
             LongBuffer vertexBuffer = stack.mallocLong(1);
+            ByteBuffer pushConstantBuffer = stack.malloc(GraphConstants.MAT4X4_SIZE * 2);
             for (VulkanModel vulkanModel : vulkanModelList) {
+                String modelId = vulkanModel.getModelId();
+                List<GameItem> gameItems = scene.getGameItemsByModelId(modelId);
+                if (gameItems.isEmpty()) {
+                    continue;
+                }
                 for (VulkanModel.VulkanMesh mesh : vulkanModel.getVulkanMeshList()) {
                     vertexBuffer.put(0, mesh.verticesBuffer().getBuffer());
                     vkCmdBindVertexBuffers(cmdHandle, 0, vertexBuffer, offsets);
                     vkCmdBindIndexBuffer(cmdHandle, mesh.indicesBuffer().getBuffer(), 0, VK_INDEX_TYPE_UINT32);
-                    vkCmdDrawIndexed(cmdHandle, mesh.numIndices(), 1, 0, 0, 0);
+
+                    for (GameItem gameItem : gameItems) {
+                        setPushConstants(cmdHandle, window.getProjectionMatrix(), gameItem.getModelMatrix(),
+                                pushConstantBuffer);
+                        vkCmdDrawIndexed(cmdHandle, mesh.numIndices(), 1, 0, 0, 0);
+                    }
                 }
             }
 
             vkCmdEndRenderPass(cmdHandle);
             commandBuffer.endRecording();
         }
+    }
+
+    public void resize(SwapChain swapChain) {
+        this.swapChain = swapChain;
+        Arrays.stream(frameBuffers).forEach(FrameBuffer::cleanup);
+        Arrays.stream(depthAttachments).forEach(Attachment::cleanup);
+        createDepthImages();
+        createFrameBuffers();
+    }
+
+    private void setPushConstants(VkCommandBuffer cmdHandle, Matrix4f projMatrix, Matrix4f modelMatrix,
+                                  ByteBuffer pushConstantBuffer) {
+        projMatrix.get(pushConstantBuffer);
+        modelMatrix.get(GraphConstants.MAT4X4_SIZE, pushConstantBuffer);
+        vkCmdPushConstants(cmdHandle, pipeLine.getVkPipelineLayout(),
+                VK_SHADER_STAGE_VERTEX_BIT, 0, pushConstantBuffer);
     }
 
     public void submit(Queue queue) {

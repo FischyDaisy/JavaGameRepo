@@ -42,18 +42,28 @@ public class VKRenderer implements IRenderer {
                 engProps.isvSync());
         commandPool = new CommandPool(device, graphQueue.getQueueFamilyIndex());
         pipelineCache = new PipelineCache(device);
-        fwdRenderActivity = new ForwardRenderActivity(swapChain, commandPool, pipelineCache);
+        fwdRenderActivity = new ForwardRenderActivity(swapChain, commandPool, pipelineCache, scene, window);
         vulkanModels = new ArrayList<>();
 	}
 
 	@Override
 	public void render(Window window, Camera camera, Scene scene) {
-		swapChain.acquireNextImage();
+		if (window.getWidth() <= 0 && window.getHeight() <= 0) {
+            return;
+        }
+        if (window.isResized() || swapChain.acquireNextImage()) {
+            window.setResized(false);
+            resize(window);
+            window.updateProjectionMatrix();
+            swapChain.acquireNextImage();
+        }
 
-		fwdRenderActivity.recordCommandBuffer(vulkanModels);
+        fwdRenderActivity.recordCommandBuffer(vulkanModels);
         fwdRenderActivity.submit(presentQueue);
 
-        swapChain.presentImage(graphQueue);
+        if (swapChain.presentImage(graphQueue)) {
+            window.setResized(true);
+        }
 	}
 
 	@Override
@@ -74,5 +84,18 @@ public class VKRenderer implements IRenderer {
 	
 	public void loadModels(List<ModelData> modelDataList) {
         vulkanModels.addAll(VulkanModel.transformModels(modelDataList, commandPool, graphQueue));
+    }
+	
+	private void resize(Window window) {
+        EngineProperties engProps = EngineProperties.getInstance();
+
+        device.waitIdle();
+        graphQueue.waitIdle();
+
+        swapChain.cleanup();
+
+        swapChain = new SwapChain(device, surface, window, engProps.getRequestedImages(),
+                engProps.isvSync());
+        fwdRenderActivity.resize(swapChain);
     }
 }

@@ -132,7 +132,7 @@ public class FlowParticleEmitter implements IParticleEmitter {
         long updateAnimInc = (long)sign *(long)(Math.random() * (float)this.animRange);
         particle.getPosition().add(posInc, posInc, posInc);
         particle.getSpeed().add(speedInc, speedInc, speedInc);
-        particle.setScale(particle.getScale() + scaleInc);
+        particle.setScale(particle.getScale().add(scaleInc, scaleInc, scaleInc));
         particle.setUpdateTextureNanos(particle.getUpdateTextureNanos() + updateAnimInc);
         particles.add(particle);
     }

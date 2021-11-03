@@ -158,9 +158,9 @@ public class Camera {
         //rotationQ.rotateXYZ((float) Math.toRadians(offsetX), (float) Math.toRadians(offsetY), (float) Math.toRadians(offsetZ));
     }
     
-    public Camera createPortalCam(Portal fromPortal, Portal toPortal, Transformation trans) {
-    	Matrix4f fromPMat = trans.buildModelMatrix(fromPortal).invert();
-    	Matrix4f toPMat = trans.buildModelMatrix(toPortal);
+    public Camera createPortalCam(Portal fromPortal, Portal toPortal) {
+    	Matrix4f fromPMat = fromPortal.buildModelMatrix().invert();
+    	Matrix4f toPMat = toPortal.buildModelMatrix();
     	
     	// Position
     	Vector3f relativePos = new Vector3f();

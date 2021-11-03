@@ -162,7 +162,7 @@ public class SwapChain {
     }
 
     private ImageView[] createImageViews(MemoryStack stack, Device device, long swapChain, int format) {
-        ImageView[] result;
+    	ImageView[] result;
 
         IntBuffer ip = stack.mallocInt(1);
         VulkanUtils.vkCheck(KHRSwapchain.vkGetSwapchainImagesKHR(device.getVkDevice(), swapChain, ip, null),
@@ -174,8 +174,9 @@ public class SwapChain {
                 "Failed to get surface images");
 
         result = new ImageView[numImages];
+        ImageView.ImageViewData imageViewData = new ImageView.ImageViewData().format(format).aspectMask(VK_IMAGE_ASPECT_COLOR_BIT);
         for (int i = 0; i < numImages; i++) {
-            result[i] = new ImageView(device, swapChainImages.get(i), format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+            result[i] = new ImageView(device, swapChainImages.get(i), imageViewData);
         }
 
         return result;

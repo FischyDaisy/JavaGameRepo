@@ -96,31 +96,31 @@ public class Transformation {
     	return forwardMatrix.rotation(gameItem.getRotation()).positiveZ(forward).negate();
     }
     
-    public Matrix4f buildLocalModelMatrix(GameItem gameItem) {
+    public static Matrix4f buildLocalModelMatrix(GameItem gameItem, Matrix4f matrix) {
     	Quaternionf rotation = gameItem.getRotation();
-    	return localModelMatrix.translationRotateScaleInvert(
+    	return matrix.translationRotateScaleInvert(
     			gameItem.getPosition().x, gameItem.getPosition().y, gameItem.getPosition().z, 
     			rotation.x, rotation.y, rotation.z, rotation.w, 
-    			gameItem.getScale(), gameItem.getScale(), gameItem.getScale());
+    			gameItem.getScale().x, gameItem.getScale().y, gameItem.getScale().z);
     }
     
-    public Matrix4f buildModelMatrix(GameItem gameItem) {
+    public static Matrix4f buildModelMatrix(GameItem gameItem, Matrix4f matrix) {
     	Quaternionf rotation = gameItem.getRotation();
-    	return modelMatrix.translationRotateScale(
+    	return matrix.translationRotateScale(
                 gameItem.getPosition().x, gameItem.getPosition().y, gameItem.getPosition().z,
                 rotation.x, rotation.y, rotation.z, rotation.w,
-                gameItem.getScale(), gameItem.getScale(), gameItem.getScale());
+                gameItem.getScale().x, gameItem.getScale().y, gameItem.getScale().z);
     }
     
-    public Matrix4f buildModelMatrix(Vector3f position, Quaternionf rotation, Vector3f scale) {
-    	return modelMatrix.translationRotateScale(
+    public static Matrix4f buildModelMatrix(Vector3f position, Quaternionf rotation, Vector3f scale, Matrix4f matrix) {
+    	return matrix.translationRotateScale(
                 position.x, position.y, position.z,
                 rotation.x, rotation.y, rotation.z, rotation.w,
                 scale.x, scale.y, scale.z);
     }
     
     public Matrix4f buildModelViewMatrix(GameItem gameItem, Matrix4f viewMatrix) {
-        return buildModelViewMatrix(buildModelMatrix(gameItem), viewMatrix);
+        return buildModelViewMatrix(buildModelMatrix(gameItem, modelMatrix), viewMatrix);
     }
     
     public Matrix4f buildModelViewMatrix(Matrix4f modelMatrix, Matrix4f viewMatrix) {
@@ -128,7 +128,7 @@ public class Transformation {
     }
 
     public Matrix4f buildModelLightViewMatrix(GameItem gameItem, Matrix4f lightViewMatrix) {
-        return buildModelViewMatrix(buildModelMatrix(gameItem), lightViewMatrix);
+        return buildModelViewMatrix(buildModelMatrix(gameItem, modelMatrix), lightViewMatrix);
     }
 
     public Matrix4f buildModelLightViewMatrix(Matrix4f modelMatrix, Matrix4f lightViewMatrix) {
@@ -136,6 +136,6 @@ public class Transformation {
     }
 
     public Matrix4f buildOrthoProjModelMatrix(GameItem gameItem, Matrix4f orthoMatrix) {
-        return orthoMatrix.mulOrthoAffine(buildModelMatrix(gameItem), orthoModelMatrix);
+        return orthoMatrix.mulOrthoAffine(buildModelMatrix(gameItem, modelMatrix), orthoModelMatrix);
     }
 }

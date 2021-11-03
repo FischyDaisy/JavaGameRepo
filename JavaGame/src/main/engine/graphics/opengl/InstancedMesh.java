@@ -125,7 +125,7 @@ public class InstancedMesh extends Mesh {
 
         Texture text = getMaterial().getTexture();
         for (GameItem gameItem : gameItems) {
-            Matrix4f modelMatrix = transformation.buildModelMatrix(gameItem);
+            Matrix4f modelMatrix = gameItem.buildModelMatrix();
             if (viewMatrix != null) {
                 if (billBoard) {
                     viewMatrix.transpose3x3(modelMatrix);

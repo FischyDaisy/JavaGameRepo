@@ -17,6 +17,8 @@ public class Scene {
 
 	private final Map<Mesh, List<GameItem>> meshMap;
 	
+	private final Map<String, List<GameItem>> modelMap;
+	
 	private final Map<InstancedMesh, List<GameItem>> instancedMeshMap;
 	
 	private final Map<Mesh, List<GameItem>> portalMap;
@@ -33,6 +35,7 @@ public class Scene {
     
     public Scene() {
         meshMap = new HashMap<Mesh, List<GameItem>>();
+        modelMap = new HashMap<String, List<GameItem>>();
         instancedMeshMap = new HashMap<InstancedMesh, List<GameItem>>();
         portalMap = new HashMap<Mesh, List<GameItem>>();
         fog = Fog.NOFOG;
@@ -51,6 +54,10 @@ public class Scene {
         return portalMap;
     }
     
+    public Map<String, List<GameItem>> getModelMap() {
+    	return modelMap;
+    }
+    
     public boolean isRenderShadows() {
         return renderShadows;
     }
@@ -65,6 +72,19 @@ public class Scene {
     		}
     	}
     	return false;
+    }
+    
+    public void addGameItem(GameItem gameItem) {
+    	List<GameItem> gameItems = modelMap.get(gameItem.getModelId());
+        if (gameItems == null) {
+            gameItems = new ArrayList<>();
+            modelMap.put(gameItem.getModelId(), gameItems);
+        }
+        gameItems.add(gameItem);
+    }
+    
+    public List<GameItem> getGameItemsByModelId(String modelId) {
+        return modelMap.get(modelId);
     }
 
     public void setGameItems(GameItem[] gameItems) {

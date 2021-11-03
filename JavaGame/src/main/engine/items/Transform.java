@@ -131,12 +131,6 @@ public class Transform {
 		//m[15] = 1f;
 	}
 
-	public Matrix4f getMatrix(Matrix4f out) {
-		
-		out.set(transform.buildModelMatrix(position, rotation, new Vector3f(1.0f, 1.0f, 1.0f)));
-		return out;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof Transform)) return false;
