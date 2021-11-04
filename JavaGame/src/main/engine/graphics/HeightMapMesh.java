@@ -71,9 +71,9 @@ public class HeightMapMesh {
                 }
             }
         }
-        float[] posArr = Utils.listToArray(positions);
+        float[] posArr = Utils.listFloatToArray(positions);
         int[] indicesArr = indices.stream().mapToInt(i -> i).toArray();
-        float[] textCoordsArr = Utils.listToArray(textCoords);
+        float[] textCoordsArr = Utils.listFloatToArray(textCoords);
         float[] normalsArr = calcNormals(posArr, width, height);
         this.mesh = new Mesh(posArr, textCoordsArr, normalsArr, indicesArr);
         Material material = new Material(texture, 0.0f);
@@ -161,7 +161,7 @@ public class HeightMapMesh {
                 normals.add(normal.z);
             }
         }
-        return Utils.listToArray(normals);
+        return Utils.listFloatToArray(normals);
     }
     
     public float getHeight(int row, int col) {

@@ -79,8 +79,8 @@ public class TextItem extends GameItem {
             startx += charInfo.width();
         }
 
-        float[] posArr = Utils.listToArray(positions);
-        float[] textCoordsArr = Utils.listToArray(textCoords);
+        float[] posArr = Utils.listFloatToArray(positions);
+        float[] textCoordsArr = Utils.listFloatToArray(textCoords);
         int[] indicesArr = indices.stream().mapToInt(i->i).toArray();
         Mesh mesh = new Mesh(posArr, textCoordsArr, normals, indicesArr);
         mesh.setMaterial(new Material(fontTexture.getTexture()));
