@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 
-import main.engine.graphics.opengl.Texture;
+import main.engine.graphics.opengl.GLTexture;
 
 public class FontTexture {
 
@@ -28,7 +28,7 @@ public class FontTexture {
 
     private final Map<Character, CharInfo> charMap;
 
-    private Texture texture;
+    private GLTexture texture;
 
     private int height;
 
@@ -50,7 +50,7 @@ public class FontTexture {
         return height;
     }
 
-    public Texture getTexture() {
+    public GLTexture getTexture() {
         return texture;
     }
 
@@ -112,7 +112,7 @@ public class FontTexture {
             buf.put(data, 0, data.length);
             buf.flip();
         }
-        texture = new Texture(buf);
+        texture = new GLTexture(buf);
     }
     
     //New CharInfo that uses record

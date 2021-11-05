@@ -7,7 +7,7 @@ import java.util.List;
 import org.joml.Vector3f;
 
 import main.engine.graphics.opengl.Mesh;
-import main.engine.graphics.opengl.Texture;
+import main.engine.graphics.opengl.GLTexture;
 import main.engine.utility.Utils;
 
 public class HeightMapMesh {
@@ -32,7 +32,7 @@ public class HeightMapMesh {
 
         heightArray = new float[height][width];
 
-        Texture texture = new Texture(textureFile);
+        GLTexture texture = new GLTexture(textureFile);
 
         float incx = getXLength() / (width - 1);
         float incz = getZLength() / (height - 1);

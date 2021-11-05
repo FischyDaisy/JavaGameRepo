@@ -1,6 +1,7 @@
 package main.engine.loaders;
 
 import org.joml.Vector4f;
+import org.joml.primitives.AABBf;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
 import org.lwjgl.system.MemoryStack;
@@ -142,5 +143,15 @@ public class ModelLoader {
             vertices.add(aiVertex.z());
         }
         return vertices;
+    }
+    
+    private static AABBf processAABB(AIMesh aiMesh) {
+    	AIAABB aiAABB = aiMesh.mAABB();
+    	AIVector3D min = aiAABB.mMin();
+    	AIVector3D max = aiAABB.mMax();
+    	AABBf aabb = new AABBf(min.x(), min.y(), min.z(),
+    			max.x(), max.y(), max.z());
+    	return aabb;
+    	
     }
 }

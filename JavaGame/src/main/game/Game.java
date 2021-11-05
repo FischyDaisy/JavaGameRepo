@@ -43,7 +43,7 @@ import main.engine.graphics.hud.GameHud;
 import main.engine.graphics.hud.MenuHud;
 import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.opengl.Mesh;
-import main.engine.graphics.opengl.Texture;
+import main.engine.graphics.opengl.GLTexture;
 import main.engine.graphics.particles.FlowParticleEmitter;
 import main.engine.graphics.particles.Particle;
 import main.engine.graphics.vulkan.VKRenderer;
@@ -163,10 +163,13 @@ public class Game implements IGameLogic {
             int instances = height * width;
             Mesh mesh = OBJLoader.loadMesh("/main/resources/models/cube.obj", instances);
             mesh.setBoundingRadius(2);
-            Texture texture = new Texture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\terrain_textures.png", 2, 1);
+            GLTexture texture = new GLTexture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\terrain_textures.png", 2, 1);
             Material material = new Material(texture, reflectance);
             mesh.setMaterial(material);
-            gameItems = new GameItem[instances];
+            Mesh bunny = OBJLoader.loadMesh("/main/resources/models/bunny.obj");
+            Material bMat = new Material(Material.DEFAULT_COLOR, reflectance);
+            bunny.setMaterial(bMat);
+            gameItems = new GameItem[instances + 1];
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     GameItem gameItem = new GameItem(mesh);
@@ -183,6 +186,10 @@ public class Game implements IGameLogic {
                 posx = startx;
                 posz -= inc;
             }
+            GameItem bun = new GameItem(bunny);
+            bun.setPosition(0f, 4f, 0f);
+            bun.setScale(2.0f);
+            gameItems[gameItems.length - 1] = bun;
             //scene.setGameItems(gameItems);
             
             // Particles
@@ -194,7 +201,7 @@ public class Game implements IGameLogic {
             float range = 0.2f;
             float scale = 1.0f;
             Mesh partMesh = OBJLoader.loadMesh("/main/resources/models/particle.obj", maxParticles);
-            Texture particleTexture = new Texture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\particle_anim.png", 4, 4);
+            GLTexture particleTexture = new GLTexture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\particle_anim.png", 4, 4);
             Material partMaterial = new Material(particleTexture, reflectance);
             partMesh.setMaterial(partMaterial);
             Particle particle = new Particle(partMesh, particleSpeed, ttl, 100);
@@ -213,8 +220,8 @@ public class Game implements IGameLogic {
             Portal portalB = new Portal(pMesh);
             portalA.setPosition(0f, 4f, 0f);
             portalB.setPosition(5f, 4f, 0f);
-            GameItem[] fullList = new GameItem[gameItems.length + 1];
-            for (int i = 0; i < gameItems.length - 1; i++) {
+            GameItem[] fullList = new GameItem[gameItems.length + 2];
+            for (int i = 0; i < gameItems.length; i++) {
             	fullList[i] = gameItems[i];
             }
             fullList[fullList.length - 2] = portalA;
@@ -259,6 +266,7 @@ public class Game implements IGameLogic {
             this.soundMgr.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
             setupSounds();
         } else { //Vulkan
+        	/*
         	float[] positions = new float[]{
                     -0.5f, 0.5f, 0.5f,
                     -0.5f, -0.5f, 0.5f,
@@ -309,6 +317,7 @@ public class Game implements IGameLogic {
             cube = new GameItem("CubeEntity", modelId);
             cube.setPosition(0, 0, -2);
             scene.addGameItem(cube);
+            */
         }
     }
     

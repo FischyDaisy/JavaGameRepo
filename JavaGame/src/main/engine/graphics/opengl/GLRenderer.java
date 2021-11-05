@@ -236,6 +236,9 @@ public class GLRenderer implements IRenderer {
         sceneShaderProgram.createUniform("isInstanced");
         sceneShaderProgram.createUniform("numCols");
         sceneShaderProgram.createUniform("numRows");
+        
+        // Create uniform for object selection
+        sceneShaderProgram.createUniform("selectedNonInstanced");
     }
 
     public void clear() {
@@ -261,7 +264,7 @@ public class GLRenderer implements IRenderer {
                 IParticleEmitter emitter = emitters[i];
                 InstancedMesh mesh = (InstancedMesh)emitter.getBaseParticle().getMesh();
                 
-                Texture text = mesh.getMaterial().getTexture();
+                GLTexture text = mesh.getMaterial().getTexture();
                 particlesShaderProgram.setUniform("numCols", text.getNumCols());
                 particlesShaderProgram.setUniform("numRows", text.getNumRows());
 
@@ -434,15 +437,16 @@ public class GLRenderer implements IRenderer {
         sceneShaderProgram.setUniform("isInstanced", 0);
 
         // Render each mesh with the associated game Items
-        Map<Mesh, List<GameItem>> mapMeshes = scene.getGameMeshes();
-        for (Mesh mesh : mapMeshes.keySet()) {
+        //Map<Mesh, List<GameItem>> mapMeshes = scene.getGameMeshes();
+        Map<String, List<GameItem>> mapMeshes = scene.getModelMap();
+        for (String modelId : mapMeshes.keySet()) {
             if (viewMatrix != null) {
                 shader.setUniform("material", mesh.getMaterial());
                 glActiveTexture(GL_TEXTURE2);
                 glBindTexture(GL_TEXTURE_2D, shadowMap.getDepthMapTexture().getId());
             }
 
-            Texture text = mesh.getMaterial().getTexture();
+            GLTexture text = mesh.getMaterial().getTexture();
             if (text != null) {
                 sceneShaderProgram.setUniform("numCols", text.getNumCols());
                 sceneShaderProgram.setUniform("numRows", text.getNumRows());
@@ -474,7 +478,7 @@ public class GLRenderer implements IRenderer {
         // Render each mesh with the associated game Items
         Map<InstancedMesh, List<GameItem>> mapMeshes = scene.getGameInstancedMeshes();
         for (InstancedMesh mesh : mapMeshes.keySet()) {
-            Texture text = mesh.getMaterial().getTexture();
+            GLTexture text = mesh.getMaterial().getTexture();
             if (text != null) {
                 sceneShaderProgram.setUniform("numCols", text.getNumCols());
                 sceneShaderProgram.setUniform("numRows", text.getNumRows());
@@ -726,7 +730,7 @@ public class GLRenderer implements IRenderer {
     	}
     }
     
-    public Texture getShadowMapTexture() {
+    public GLTexture getShadowMapTexture() {
     	return shadowMap.getDepthMapTexture();
     }
 

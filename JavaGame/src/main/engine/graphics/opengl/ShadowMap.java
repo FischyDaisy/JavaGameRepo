@@ -11,14 +11,14 @@ public class ShadowMap {
 
     private final int depthMapFBO;
 
-    private final Texture depthMap;
+    private final GLTexture depthMap;
 
     public ShadowMap() throws Exception {
         // Create a FBO to render the depth map
         depthMapFBO = glGenFramebuffers();
 
         // Create the depth map texture
-        depthMap = new Texture(SHADOW_MAP_WIDTH, SHADOW_MAP_HEIGHT, GL_DEPTH_COMPONENT);
+        depthMap = new GLTexture(SHADOW_MAP_WIDTH, SHADOW_MAP_HEIGHT, GL_DEPTH_COMPONENT);
 
         // Attach the the depth map texture to the FBO
         glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
@@ -35,7 +35,7 @@ public class ShadowMap {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    public Texture getDepthMapTexture() {
+    public GLTexture getDepthMapTexture() {
         return depthMap;
     }
 

@@ -3,7 +3,7 @@ package main.engine.graphics.particles;
 import org.joml.Vector3f;
 
 import main.engine.graphics.opengl.Mesh;
-import main.engine.graphics.opengl.Texture;
+import main.engine.graphics.opengl.GLTexture;
 import main.engine.items.GameItem;
 
 public class Particle extends GameItem {
@@ -27,7 +27,7 @@ public class Particle extends GameItem {
         this.ttl = ttl;
         this.updateTextureNanos = updateTextureNanos;
         this.currentAnimTimeNanos = 0;
-        Texture texture = this.getMesh().getMaterial().getTexture();
+        GLTexture texture = this.getMesh().getMaterial().getTexture();
         this.animFrames = texture.getNumCols() * texture.getNumRows();
     }
 

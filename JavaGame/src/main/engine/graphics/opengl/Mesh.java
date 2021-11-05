@@ -180,14 +180,14 @@ public class Mesh {
     }
     
     protected void initRender() {
-        Texture texture = material.getTexture();
+        GLTexture texture = material.getTexture();
         if (texture != null) {
             // Activate first texture bank
             glActiveTexture(GL_TEXTURE0);
             // Bind the texture
             glBindTexture(GL_TEXTURE_2D, texture.getId());
         }
-        Texture normalMap = material.getNormalMap();
+        GLTexture normalMap = material.getNormalMap();
         if (normalMap != null) {
             // Activate first texture bank
             glActiveTexture(GL_TEXTURE1);
@@ -237,7 +237,7 @@ public class Mesh {
         }
 
         // Delete the texture
-        Texture texture = material.getTexture();
+        GLTexture texture = material.getTexture();
         if (texture != null) {
             texture.cleanup();
         }

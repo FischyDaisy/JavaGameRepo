@@ -3,6 +3,7 @@ package main.engine.graphics.vulkan;
 import org.lwjgl.system.*;
 import org.lwjgl.vulkan.VkBufferCopy;
 
+import main.engine.graphics.IModel;
 import main.engine.graphics.ModelData;
 
 import java.nio.*;
@@ -10,7 +11,7 @@ import java.util.*;
 
 import static org.lwjgl.vulkan.VK11.*;
 
-public class VulkanModel {
+public class VulkanModel implements IModel{
 
     private final String modelId;
     private final List<VulkanModel.VulkanMesh> vulkanMeshList;
@@ -123,6 +124,7 @@ public class VulkanModel {
         return vulkanModelList;
     }
 
+    @Override
     public void cleanup() {
         vulkanMeshList.forEach(VulkanMesh::cleanup);
     }

@@ -11,6 +11,7 @@ import static org.lwjgl.vulkan.VK11.*;
 public class Device {
 
     private final PhysicalDevice physicalDevice;
+    private final boolean samplerAnisotropy;
     private final VkDevice vkDevice;
 
     public Device(PhysicalDevice physicalDevice) {
@@ -23,6 +24,11 @@ public class Device {
 
             // Set up required features
             VkPhysicalDeviceFeatures features = VkPhysicalDeviceFeatures.calloc(stack);
+            VkPhysicalDeviceFeatures supportedFeatures = this.physicalDevice.getVkPhysicalDeviceFeatures();
+            samplerAnisotropy = supportedFeatures.samplerAnisotropy();
+            if (samplerAnisotropy) {
+                features.samplerAnisotropy(true);
+            }
 
             // Enable all the queue families
             VkQueueFamilyProperties.Buffer queuePropsBuff = physicalDevice.getVkQueueFamilyProps();
@@ -59,6 +65,10 @@ public class Device {
 
     public VkDevice getVkDevice() {
         return vkDevice;
+    }
+    
+    public boolean isSamplerAnisotropy() {
+        return samplerAnisotropy;
     }
 
     public void waitIdle() {

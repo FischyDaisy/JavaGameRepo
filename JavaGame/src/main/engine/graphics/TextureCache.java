@@ -4,15 +4,16 @@ package main.engine.graphics;
 import java.util.*;
 
 import main.engine.EngineProperties;
+import main.engine.graphics.opengl.GLTexture;
 import main.engine.graphics.vulkan.Device;
-import main.engine.graphics.vulkan.Texture;
+import main.engine.graphics.vulkan.VKTexture;
 
 public class TextureCache {
 
-    private final IndexedLinkedHashMap<String, Texture> textureMap;
+    private final IndexedLinkedHashMap<String, ITexture> textureMap;
 
     public TextureCache() {
-        textureMap = new IndexedLinkedHashMap<>();
+        textureMap = new IndexedLinkedHashMap<String, ITexture>();
     }
 
     public void cleanup() {
@@ -20,22 +21,48 @@ public class TextureCache {
         textureMap.clear();
     }
 
-    public Texture createTexture(Device device, String texturePath, int format) {
+    public VKTexture createTexture(Device device, String texturePath, int format) {
         String path = texturePath;
         if (texturePath == null || texturePath.trim().isEmpty()) {
             EngineProperties engProperties = EngineProperties.getInstance();
             path = engProperties.getDefaultTexturePath();
         }
-        Texture texture = textureMap.get(path);
+        ITexture texture = textureMap.get(path);
         if (texture == null) {
-            texture = new Texture(device, path, format);
+            texture = new VKTexture(device, path, format);
             textureMap.put(path, texture);
         }
-        return texture;
+        return (VKTexture) texture;
+    }
+    
+    public GLTexture createTexture(String texturePath) throws Exception {
+    	String path = texturePath;
+        if (texturePath == null || texturePath.trim().isEmpty()) {
+            EngineProperties engProperties = EngineProperties.getInstance();
+            path = engProperties.getDefaultTexturePath();
+        }
+        ITexture texture = textureMap.get(path);
+        if (texture == null) {
+            texture = new GLTexture(path);
+            textureMap.put(path, texture);
+        }
+        return (GLTexture) texture;
     }
 
-    public List<Texture> getAsList() {
-        return new ArrayList<>(textureMap.values());
+    public List<VKTexture> getAsVKList() {
+        List<VKTexture> list = new ArrayList<VKTexture>();
+        for(ITexture text : textureMap.values()) {
+        	list.add((VKTexture) text);
+        }
+        return list;
+    }
+    
+    public List<GLTexture> getAsGLList() {
+        List<GLTexture> list = new ArrayList<GLTexture>();
+        for(ITexture text : textureMap.values()) {
+        	list.add((GLTexture) text);
+        }
+        return list;
     }
 
     public int getPosition(String texturePath) {
@@ -46,7 +73,7 @@ public class TextureCache {
         return result;
     }
 
-    public Texture getTexture(String texturePath) {
+    public ITexture getTexture(String texturePath) {
         return textureMap.get(texturePath.trim());
     }
 }

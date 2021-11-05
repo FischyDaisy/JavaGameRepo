@@ -15,7 +15,7 @@ import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.animation.AnimVertex;
 import main.engine.graphics.animation.AnimatedFrame;
 import main.engine.graphics.opengl.Mesh;
-import main.engine.graphics.opengl.Texture;
+import main.engine.graphics.opengl.GLTexture;
 import main.engine.items.GameItem;
 import main.engine.utility.Utils;
 
@@ -242,7 +242,7 @@ public class MD5Loader {
     private static void handleTexture(Mesh mesh, MD5Mesh md5Mesh, Vector4f defaultColour) throws Exception {
         String texturePath = md5Mesh.getTexture();
         if (texturePath != null && texturePath.length() > 0) {
-            Texture texture = new Texture(texturePath);
+            GLTexture texture = new GLTexture(texturePath);
             Material material = new Material(texture);
 
             // Handle normal Maps;
@@ -252,7 +252,7 @@ public class MD5Loader {
                 String extension = texturePath.substring(pos, texturePath.length());
                 String normalMapFileName = basePath + "_local" + extension;
                 if (Utils.existsResourceFile(normalMapFileName)) {
-                    Texture normalMap = new Texture(normalMapFileName);
+                    GLTexture normalMap = new GLTexture(normalMapFileName);
                     material.setNormalMap(normalMap);
                 }
             }

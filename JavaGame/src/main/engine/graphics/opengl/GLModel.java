@@ -1,6 +1,14 @@
 package main.engine.graphics.opengl;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
@@ -19,13 +27,16 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.lwjgl.system.MemoryUtil;
 
+import main.engine.graphics.IModel;
 import main.engine.graphics.Material;
 import main.engine.graphics.ModelData;
+import main.engine.items.GameItem;
 
-public class GLModel {
+public class GLModel implements IModel {
 	
 	private final String modelId;
 	private final List<GLModel.GLMesh> glMeshList;
@@ -61,6 +72,23 @@ public class GLModel {
 	
 	public void setBoundingRadius(float radius) {
 		this.boundingRadius = radius;
+	}
+	
+	public void render() {
+		for (GLMesh glMesh : glMeshList) {
+			glMesh.render(material);
+		}
+	}
+	
+	public void renderList(List<GameItem> gameItems, Consumer<GameItem> consumer) {
+		for (GLMesh glMesh : glMeshList) {
+			glMesh.renderList(gameItems, consumer, material);
+		}
+	}
+	
+	@Override
+	public void cleanup() {
+		glMeshList.forEach(GLMesh::cleanup);
 	}
 	
 	public static List<GLModel> transformModels(List<ModelData> modelDataList) {
@@ -183,6 +211,55 @@ public class GLModel {
 	}
 	
 	public record GLMesh(int vaoId, List<Integer> vboIdList, int vertexCount) {
+		 
+		protected void initRender(Material material) {
+		        GLTexture texture = material.getTexture();
+		        if (texture != null) {
+		            // Activate first texture bank
+		            glActiveTexture(GL_TEXTURE0);
+		            // Bind the texture
+		            glBindTexture(GL_TEXTURE_2D, texture.getId());
+		        }
+		        GLTexture normalMap = material.getNormalMap();
+		        if (normalMap != null) {
+		            // Activate first texture bank
+		            glActiveTexture(GL_TEXTURE1);
+		            // Bind the texture
+		            glBindTexture(GL_TEXTURE_2D, normalMap.getId());
+		        }
+
+		        // Draw the mesh
+		        glBindVertexArray(vaoId);
+		}
+		
+		protected void endRender() {
+	        // Restore state
+	        glBindVertexArray(0);
+
+	        glBindTexture(GL_TEXTURE_2D, 0);
+	    }
+		
+		public void render(Material material) {
+	    	initRender(material);
+
+	        glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+
+	        endRender();
+	    }
+		
+		public void renderList(List<GameItem> gameItems, Consumer<GameItem> consumer, Material material) {
+	        initRender(material);
+
+	        for (GameItem gameItem : gameItems) {
+	            // Set up data required by GameItem
+	            consumer.accept(gameItem);
+	            // Render this game item
+	            glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+	        }
+
+	        endRender();
+	    }
+		 
 		public void cleanup() {
 			glDisableVertexAttribArray(0);
 

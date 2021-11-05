@@ -12,6 +12,7 @@ public class EngineProperties {
     private static final float DEFAULT_Z_NEAR = 0.01f;
     private static final String FILENAME = "eng.properties";
     private static EngineProperties instance;
+    private String defaultTexturePath;
     private float fov;
     private String physDeviceName;
     private int requestedImages;
@@ -41,6 +42,7 @@ public class EngineProperties {
             fov = (float) Math.toRadians(Float.parseFloat(props.getOrDefault("fov", DEFAULT_FOV).toString()));
             zNear = Float.parseFloat(props.getOrDefault("zNear", DEFAULT_Z_NEAR).toString());
             zFar = Float.parseFloat(props.getOrDefault("zFar", DEFAULT_Z_FAR).toString());
+            defaultTexturePath = props.getProperty("defaultTexturePath");
         } catch (IOException excp) {
         	System.out.println("Could not read [" + FILENAME + "] properties file");
             //System.out.println(excp);
@@ -52,6 +54,10 @@ public class EngineProperties {
             instance = new EngineProperties();
         }
         return instance;
+    }
+    
+    public String getDefaultTexturePath() {
+        return defaultTexturePath;
     }
     
     public String getPhysDeviceName() {

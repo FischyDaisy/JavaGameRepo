@@ -10,7 +10,7 @@ import static org.lwjgl.vulkan.VK11.*;
 public class TextureDescriptorSet extends DescriptorSet {
 
     public TextureDescriptorSet(DescriptorPool descriptorPool, DescriptorSetLayout descriptorSetLayout,
-                                Texture texture, TextureSampler textureSampler, int binding) {
+                                VKTexture texture, TextureSampler textureSampler, int binding) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             Device device = descriptorPool.getDevice();
             LongBuffer pDescriptorSetLayout = stack.mallocLong(1);

@@ -12,7 +12,7 @@ import main.engine.graphics.Material;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.opengl.Mesh;
 import main.engine.graphics.opengl.ShaderProgram;
-import main.engine.graphics.opengl.Texture;
+import main.engine.graphics.opengl.GLTexture;
 import main.engine.items.GameItem;
 import main.engine.items.TextItem;
 import main.engine.loaders.obj.OBJLoader;
@@ -42,7 +42,7 @@ public class GameHud implements IHud {
         this.statusTextItem.getMesh().getMaterial().setAmbientColor(new Vector4f(1.0f, 1.0f, 1.0f, 10f));
         
         Mesh cMesh = OBJLoader.loadMesh("/main/resources/models/quad.obj");
-        Texture cText = new Texture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\hairycross.png");
+        GLTexture cText = new GLTexture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\hairycross.png");
         Material cMat = new Material(cText, 1f);
         //cMat.setAmbientColor(new Vector4f(1, 0, 0, 1));
         cMesh.setMaterial(cMat);

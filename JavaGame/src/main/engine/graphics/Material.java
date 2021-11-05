@@ -2,11 +2,11 @@ package main.engine.graphics;
 
 import org.joml.Vector4f;
 
-import main.engine.graphics.opengl.Texture;
+import main.engine.graphics.opengl.GLTexture;
 
 public class Material {
 
-    private static final Vector4f DEFAULT_COLOR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
+    public static final Vector4f DEFAULT_COLOR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
 
     private Vector4f ambientColor;
 
@@ -16,9 +16,9 @@ public class Material {
 
     private float reflectance;
 
-    private Texture texture;
+    private GLTexture texture;
     
-    private Texture normalMap;
+    private GLTexture normalMap;
 
     public Material() {
         this.ambientColor = DEFAULT_COLOR;
@@ -32,15 +32,15 @@ public class Material {
         this(color, color, color, null, reflectance);
     }
 
-    public Material(Texture texture) {
+    public Material(GLTexture texture) {
         this(DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR, texture, 0);
     }
 
-    public Material(Texture texture, float reflectance) {
+    public Material(GLTexture texture, float reflectance) {
         this(DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR, texture, reflectance);
     }
 
-    public Material(Vector4f ambientColor, Vector4f diffuseColor, Vector4f specularColor, Texture texture, float reflectance) {
+    public Material(Vector4f ambientColor, Vector4f diffuseColor, Vector4f specularColor, GLTexture texture, float reflectance) {
         this.ambientColor = ambientColor;
         this.diffuseColor = diffuseColor;
         this.specularColor = specularColor;
@@ -84,11 +84,11 @@ public class Material {
         return this.texture != null;
     }
 
-    public Texture getTexture() {
+    public GLTexture getTexture() {
         return texture;
     }
 
-    public void setTexture(Texture texture) {
+    public void setTexture(GLTexture texture) {
         this.texture = texture;
     }
     
@@ -96,11 +96,11 @@ public class Material {
         return this.normalMap != null;
     }
 
-    public Texture getNormalMap() {
+    public GLTexture getNormalMap() {
         return normalMap;
     }
 
-    public void setNormalMap(Texture normalMap) {
+    public void setNormalMap(GLTexture normalMap) {
         this.normalMap = normalMap;
     }
 }
