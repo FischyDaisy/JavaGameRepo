@@ -53,6 +53,7 @@ import main.engine.items.GameItem;
 import main.engine.items.Portal;
 import main.engine.items.SkyBox;
 import main.engine.items.Terrain;
+import main.engine.loaders.assimp.ModelLoader;
 import main.engine.loaders.md5.MD5AnimModel;
 import main.engine.loaders.md5.MD5Loader;
 import main.engine.loaders.md5.MD5Model;
@@ -62,6 +63,7 @@ import main.engine.sound.SoundBuffer;
 import main.engine.sound.SoundListener;
 import main.engine.sound.SoundManager;
 import main.engine.sound.SoundSource;
+import main.engine.utility.ResourcePaths;
 
 import com.newton.*;
 import com.newton.generated.Newton_h;
@@ -166,9 +168,20 @@ public class Game implements IGameLogic {
             GLTexture texture = new GLTexture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\terrain_textures.png", 2, 1);
             Material material = new Material(texture, reflectance);
             mesh.setMaterial(material);
-            Mesh bunny = OBJLoader.loadMesh("/main/resources/models/bunny.obj");
-            Material bMat = new Material(Material.DEFAULT_COLOR, reflectance);
+            //Mesh bunny = OBJLoader.loadMesh("/main/resources/models/bunny.obj");
+            String modelId = "CubeModel";
+            ModelData modelData = ModelLoader.loadModel(modelId, ResourcePaths.Models.BUNNY_OBJ,
+                    ResourcePaths.Textures.TEXTURE_DIR);
+            ModelData.MeshData meshData = modelData.getMeshDataList().get(0);
+            ModelData.Material mat = modelData.getMaterialList().get(0);
+            Mesh bunny = new Mesh(meshData.positions(), meshData.textCoords(), meshData.normals(),
+            		meshData.indices(), meshData.jointIndices(), meshData.weights());
+            Material bMat = new Material(mat.ambientColor().mul(Material.DEFAULT_COLOR), mat.diffuseColor().mul(Material.DEFAULT_COLOR), mat.specularColor().mul(Material.DEFAULT_COLOR), null, reflectance);
+            //Material bMat = new Material(mat.ambientColor(), mat.diffuseColor(), mat.specularColor(), null, reflectance);
             bunny.setMaterial(bMat);
+            List<ModelData> modelList = new ArrayList<ModelData>();
+            modelList.add(modelData);
+            renderer.loadModels(modelList);
             gameItems = new GameItem[instances + 1];
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
@@ -189,7 +202,9 @@ public class Game implements IGameLogic {
             GameItem bun = new GameItem(bunny);
             bun.setPosition(0f, 4f, 0f);
             bun.setScale(2.0f);
+            bun.setModelId(modelData.getModelId());
             gameItems[gameItems.length - 1] = bun;
+            scene.addGameItem(bun);
             //scene.setGameItems(gameItems);
             
             // Particles

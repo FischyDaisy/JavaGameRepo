@@ -21,7 +21,7 @@ public class TextureCache {
         textureMap.clear();
     }
 
-    public VKTexture createTexture(Device device, String texturePath, int format) {
+    public VKTexture getTexture(Device device, String texturePath, int format) {
         String path = texturePath;
         if (texturePath == null || texturePath.trim().isEmpty()) {
             EngineProperties engProperties = EngineProperties.getInstance();
@@ -35,11 +35,11 @@ public class TextureCache {
         return (VKTexture) texture;
     }
     
-    public GLTexture createTexture(String texturePath) throws Exception {
+    public GLTexture getTexture(String texturePath) throws Exception {
     	String path = texturePath;
         if (texturePath == null || texturePath.trim().isEmpty()) {
             EngineProperties engProperties = EngineProperties.getInstance();
-            path = engProperties.getDefaultTexturePath();
+            path = System.getProperty("user.dir") + "\\" + engProperties.getDefaultTexturePath().replace('/', '\\');
         }
         ITexture texture = textureMap.get(path);
         if (texture == null) {
@@ -71,9 +71,5 @@ public class TextureCache {
             result = textureMap.getIndexOf(texturePath);
         }
         return result;
-    }
-
-    public ITexture getTexture(String texturePath) {
-        return textureMap.get(texturePath.trim());
     }
 }

@@ -1,6 +1,7 @@
 package main.engine.utility;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,13 +22,24 @@ import static org.lwjgl.BufferUtils.*;
 
 public class Utils {
 
-    public static String loadResource(String fileName) throws Exception {
+    public static String loadJarResource(String fileName) throws Exception {
         String result;
         try (InputStream in = Utils.class.getResourceAsStream(fileName);
              Scanner scanner = new Scanner(in, java.nio.charset.StandardCharsets.UTF_8.name())) {
             result = scanner.useDelimiter("\\A").next();
         }
         return result;
+    }
+    
+    public static String loadResource(String filename) throws Exception {
+    	String result;
+    	File srcFile = new File(filename);
+    	if (srcFile.exists()) {
+    		result = new String(Files.readAllBytes(srcFile.toPath()));
+    	} else {
+    		throw new RuntimeException("File or Directory not found");
+    	}
+    	return result;
     }
     
     public static List<String> readAllLines(String fileName) throws Exception {

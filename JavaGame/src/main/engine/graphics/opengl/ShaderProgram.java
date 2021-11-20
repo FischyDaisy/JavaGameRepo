@@ -180,6 +180,15 @@ public class ShaderProgram {
         setUniform(uniformName + ".reflectance", material.getReflectance());
     }
     
+    public void setUniform(String uniformName, GLModel.GLMaterial material) {
+    	setUniform(uniformName + ".ambient", material.ambientColor());
+        setUniform(uniformName + ".diffuse", material.diffuseColor());
+        setUniform(uniformName + ".specular", material.specularColor());
+        setUniform(uniformName + ".hasTexture", material.isTextured() ? 1 : 0);
+        setUniform(uniformName + ".hasNormalMap", material.hasNormalMap() ? 1 : 0);
+        setUniform(uniformName + ".reflectance", material.reflectance());
+    }
+    
     public void setUniform(String uniformName, Fog fog) {
         setUniform(uniformName + ".activeFog", fog.isActive() ? 1 : 0);
         setUniform(uniformName + ".color", fog.getColor());

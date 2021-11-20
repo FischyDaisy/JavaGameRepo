@@ -34,6 +34,8 @@ import main.engine.Window;
 import main.engine.graphics.FrustumCullingFilter;
 import main.engine.graphics.IHud;
 import main.engine.graphics.IRenderer;
+import main.engine.graphics.ModelData;
+import main.engine.graphics.TextureCache;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.animation.AnimatedFrame;
@@ -42,11 +44,14 @@ import main.engine.graphics.hud.MenuHud;
 import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.lights.PointLight;
 import main.engine.graphics.lights.SpotLight;
+import main.engine.graphics.opengl.GLModel.GLMaterial;
 import main.engine.graphics.particles.IParticleEmitter;
+import main.engine.graphics.vulkan.VulkanModel;
 import main.engine.items.GameItem;
 import main.engine.items.Portal;
 import main.engine.items.SkyBox;
 import main.engine.utility.Utils;
+import static main.engine.utility.ResourcePaths.Shaders;
 
 public class GLRenderer implements IRenderer {
 
@@ -77,6 +82,8 @@ public class GLRenderer implements IRenderer {
     
     private ShaderProgram portalShaderProgram;
     
+    private final TextureCache textureCache;
+    
     private final Transformation transformation;
     
     private final float specularPower;
@@ -84,12 +91,16 @@ public class GLRenderer implements IRenderer {
     private final FrustumCullingFilter frustumFilter;
 
     private final List<GameItem> filteredItems;
+    
+    private final List<GLModel> glModels;
 
     public GLRenderer() {
     	transformation = new Transformation();
+    	textureCache = new TextureCache();
     	specularPower = 10f;
     	frustumFilter = new FrustumCullingFilter();
         filteredItems = new ArrayList<GameItem>();
+        glModels = new ArrayList<GLModel>();
     }
 
     @Override
@@ -138,8 +149,8 @@ public class GLRenderer implements IRenderer {
     
     private void setupPortalErrShader() throws Exception {
     	portalErrShaderProgram = new ShaderProgram();
-    	portalErrShaderProgram.createVertexShader(Utils.loadResource("/main/resources/shaders/pink_vertex.vs"));
-    	portalErrShaderProgram.createFragmentShader(Utils.loadResource("/main/resources/shaders/pink_fragment.fs"));
+    	portalErrShaderProgram.createVertexShader(Utils.loadResource(Shaders.OpenGL.PINK_VERTEX));
+    	portalErrShaderProgram.createFragmentShader(Utils.loadResource(Shaders.OpenGL.PINK_FRAGMENT));
     	portalErrShaderProgram.link();
     	
     	portalErrShaderProgram.createUniform("modelViewMatrix");
@@ -150,8 +161,8 @@ public class GLRenderer implements IRenderer {
     
     private void setupPortalShader() throws Exception {
     	portalShaderProgram = new ShaderProgram();
-    	portalShaderProgram.createVertexShader(Utils.loadResource("/main/resources/shaders/portal_vertex.vs"));
-    	portalShaderProgram.createFragmentShader(Utils.loadResource("/main/resources/shaders/portal_fragment.fs"));
+    	portalShaderProgram.createVertexShader(Utils.loadResource(Shaders.OpenGL.PORTAL_VERTEX));
+    	portalShaderProgram.createFragmentShader(Utils.loadResource(Shaders.OpenGL.PORTAL_FRAGMENT));
     	portalShaderProgram.link();
     	
     	portalShaderProgram.createUniform("modelViewMatrix");
@@ -162,8 +173,8 @@ public class GLRenderer implements IRenderer {
     
     private void setupParticlesShader() throws Exception {
         particlesShaderProgram = new ShaderProgram();
-        particlesShaderProgram.createVertexShader(Utils.loadResource("/main/resources/shaders/particles_vertex.vs"));
-        particlesShaderProgram.createFragmentShader(Utils.loadResource("/main/resources/shaders/particles_fragment.fs"));
+        particlesShaderProgram.createVertexShader(Utils.loadResource(Shaders.OpenGL.PARTICLES_VERTEX));
+        particlesShaderProgram.createFragmentShader(Utils.loadResource(Shaders.OpenGL.PARTICLES_FRAGMENT));
         particlesShaderProgram.link();
 
         particlesShaderProgram.createUniform("projectionMatrix");
@@ -175,8 +186,8 @@ public class GLRenderer implements IRenderer {
     
     private void setupDepthShader() throws Exception {
         depthShaderProgram = new ShaderProgram();
-        depthShaderProgram.createVertexShader(Utils.loadResource("/main/resources/shaders/depth_vertex.vs"));
-        depthShaderProgram.createFragmentShader(Utils.loadResource("/main/resources/shaders/depth_fragment.fs"));
+        depthShaderProgram.createVertexShader(Utils.loadResource(Shaders.OpenGL.DEPTH_VERTEX));
+        depthShaderProgram.createFragmentShader(Utils.loadResource(Shaders.OpenGL.DEPTH_FRAGMENT));
         depthShaderProgram.link();
 
         depthShaderProgram.createUniform("isInstanced");
@@ -187,8 +198,8 @@ public class GLRenderer implements IRenderer {
     
     private void setupSkyBoxShader() throws Exception {
         skyBoxShaderProgram = new ShaderProgram();
-        skyBoxShaderProgram.createVertexShader(Utils.loadResource("/main/resources/shaders/sb_vertex.vs"));
-        skyBoxShaderProgram.createFragmentShader(Utils.loadResource("/main/resources/shaders/sb_fragment.fs"));
+        skyBoxShaderProgram.createVertexShader(Utils.loadResource(Shaders.OpenGL.SB_VERTEX));
+        skyBoxShaderProgram.createFragmentShader(Utils.loadResource(Shaders.OpenGL.SB_FRAGMENT));
         skyBoxShaderProgram.link();
 
         // Create uniforms for projection matrix
@@ -203,8 +214,8 @@ public class GLRenderer implements IRenderer {
     private void setupSceneShader() throws Exception {
         // Create shader
         sceneShaderProgram = new ShaderProgram();
-        sceneShaderProgram.createVertexShader(Utils.loadResource("/main/resources/shaders/scene_vertex.vs"));
-        sceneShaderProgram.createFragmentShader(Utils.loadResource("/main/resources/shaders/scene_fragment.fs"));
+        sceneShaderProgram.createVertexShader(Utils.loadResource(Shaders.OpenGL.SCENE_VERTEX));
+        sceneShaderProgram.createFragmentShader(Utils.loadResource(Shaders.OpenGL.SCENE_FRAGMENT));
         sceneShaderProgram.link();
 
         // Create uniforms for modelView and projection matrices and texture
@@ -243,6 +254,17 @@ public class GLRenderer implements IRenderer {
 
     public void clear() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    }
+    
+    @Override
+    public void loadModels(List<ModelData> modelDataList) throws Exception {
+    	glModels.addAll(GLModel.transformModels(modelDataList, textureCache));
+    }
+    
+    @Override
+    public void clearAndLoadModels(List<ModelData> modelDataList) throws Exception {
+    	glModels.clear();
+    	loadModels(modelDataList);
     }
     
     private void renderParticles(Window window, Camera camera, Scene scene) {
@@ -439,36 +461,45 @@ public class GLRenderer implements IRenderer {
         // Render each mesh with the associated game Items
         //Map<Mesh, List<GameItem>> mapMeshes = scene.getGameMeshes();
         Map<String, List<GameItem>> mapMeshes = scene.getModelMap();
-        for (String modelId : mapMeshes.keySet()) {
-            if (viewMatrix != null) {
-                shader.setUniform("material", mesh.getMaterial());
-                glActiveTexture(GL_TEXTURE2);
-                glBindTexture(GL_TEXTURE_2D, shadowMap.getDepthMapTexture().getId());
-            }
-
-            GLTexture text = mesh.getMaterial().getTexture();
-            if (text != null) {
-                sceneShaderProgram.setUniform("numCols", text.getNumCols());
-                sceneShaderProgram.setUniform("numRows", text.getNumRows());
-            }
-
-            mesh.renderList(mapMeshes.get(mesh), (GameItem gameItem) -> {
-            	sceneShaderProgram.setUniform("selectedNonInstanced", gameItem.isSelected() ? 1.0f : 0.0f);
-                Matrix4f modelMatrix = gameItem.buildModelMatrix();
-                if (viewMatrix != null) {
-                    Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
-                    sceneShaderProgram.setUniform("modelViewNonInstancedMatrix", modelViewMatrix);
+        for (GLModel model : glModels) {
+        	String modelId = model.getModelId();
+        	List<GameItem> items = scene.getGameItemsByModelId(modelId);
+        	if (items.isEmpty()) {
+        		continue;
+        	}
+            for (GLMaterial material : model.getGLMaterialList()) {
+            	if (material.glMeshList().isEmpty()) {
+            		continue;
+            	}
+            	if (viewMatrix != null) {
+                    shader.setUniform("material", material);
+                    glActiveTexture(GL_TEXTURE2);
+                    glBindTexture(GL_TEXTURE_2D, shadowMap.getDepthMapTexture().getId());
                 }
-                Matrix4f modelLightViewMatrix = transformation.buildModelLightViewMatrix(modelMatrix, lightViewMatrix);
-                sceneShaderProgram.setUniform("modelLightViewNonInstancedMatrix", modelLightViewMatrix);
 
-                if (gameItem instanceof AnimGameItem) {
-                    AnimGameItem animGameItem = (AnimGameItem) gameItem;
-                    AnimatedFrame frame = animGameItem.getCurrentFrame();
-                    shader.setUniform("jointsMatrix", frame.getJointMatrices());
+                GLTexture text = material.texture();
+                if (text != null) {
+                    sceneShaderProgram.setUniform("numCols", text.getNumCols());
+                    sceneShaderProgram.setUniform("numRows", text.getNumRows());
                 }
+
+                model.renderList(mapMeshes.get(modelId), material, (GameItem gameItem) -> {
+                	sceneShaderProgram.setUniform("selectedNonInstanced", gameItem.isSelected() ? 1.0f : 0.0f);
+                    Matrix4f modelMatrix = gameItem.buildModelMatrix();
+                    if (viewMatrix != null) {
+                        Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
+                        sceneShaderProgram.setUniform("modelViewNonInstancedMatrix", modelViewMatrix);
+                    }
+                    Matrix4f modelLightViewMatrix = transformation.buildModelLightViewMatrix(modelMatrix, lightViewMatrix);
+                    sceneShaderProgram.setUniform("modelLightViewNonInstancedMatrix", modelLightViewMatrix);
+
+                    if (gameItem instanceof AnimGameItem) {
+                        AnimGameItem animGameItem = (AnimGameItem) gameItem;
+                        AnimatedFrame frame = animGameItem.getCurrentFrame();
+                        shader.setUniform("jointsMatrix", frame.getJointMatrices());
+                    }
+                });
             }
-            );
         }
     }
 

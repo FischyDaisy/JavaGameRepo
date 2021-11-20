@@ -18,6 +18,8 @@ import main.engine.items.TextItem;
 import main.engine.loaders.obj.OBJLoader;
 import main.engine.utility.Utils;
 
+import static main.engine.utility.ResourcePaths.Shaders;
+
 public class GameHud implements IHud {
 	
 	private static final Font FONT = new Font("Arial", Font.PLAIN, 20);
@@ -57,8 +59,8 @@ public class GameHud implements IHud {
     
     private void setupShader() throws Exception {
         shader = new ShaderProgram();
-        shader.createVertexShader(Utils.loadResource("/main/resources/shaders/hud_vertex.vs"));
-        shader.createFragmentShader(Utils.loadResource("/main/resources/shaders/hud_fragment.fs"));
+        shader.createVertexShader(Utils.loadResource(Shaders.OpenGL.HUD_VERTEX));
+        shader.createFragmentShader(Utils.loadResource(Shaders.OpenGL.HUD_FRAGMENT));
         shader.link();
 
         // Create uniforms for Ortographic-model projection matrix and base color

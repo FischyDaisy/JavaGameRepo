@@ -30,11 +30,19 @@ public class ModelData {
         return modelId;
     }
     
-    public record Material(String texturePath, Vector4f diffuseColor) {
+    public record Material(String texturePath, Vector4f ambientColor, Vector4f diffuseColor, Vector4f specularColor, Vector4f reflectance) {
         public static final Vector4f DEFAULT_COLOR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         public Material() {
-            this(null, DEFAULT_COLOR);
+            this(null, DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR);
+        }
+        
+        public Material(Vector4f color) {
+        	this(null, color, color, color, DEFAULT_COLOR);
+        }
+        
+        public Material(Vector4f color, float reflectance) {
+        	this(null, color, color, color, new Vector4f(reflectance));
         }
     }
 

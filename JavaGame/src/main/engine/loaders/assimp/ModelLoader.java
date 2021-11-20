@@ -1,4 +1,4 @@
-package main.engine.loaders;
+package main.engine.loaders.assimp;
 
 import org.joml.Vector4f;
 import org.joml.primitives.AABBf;
@@ -7,9 +7,11 @@ import org.lwjgl.assimp.*;
 import org.lwjgl.system.MemoryStack;
 
 import main.engine.graphics.ModelData;
+import main.engine.graphics.vulkan.GraphConstants;
 import main.engine.utility.Utils;
 
 import java.io.File;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.*;
 
@@ -66,7 +68,7 @@ public class ModelLoader {
     }
 
     protected static List<Integer> processIndices(AIMesh aiMesh) {
-        List<Integer> indices = new ArrayList<>();
+        List<Integer> indices = new ArrayList<Integer>();
         int numFaces = aiMesh.mNumFaces();
         AIFace.Buffer aiFaces = aiMesh.mFaces();
         for (int i = 0; i < numFaces; i++) {
@@ -81,13 +83,34 @@ public class ModelLoader {
 
     private static ModelData.Material processMaterial(AIMaterial aiMaterial, String texturesDir) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            AIColor4D colour = AIColor4D.create();
+            AIColor4D color = AIColor4D.calloc(stack);
+            
+            Vector4f ambient = ModelData.Material.DEFAULT_COLOR;
+            int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0,
+                    color);
+            if (result == aiReturn_SUCCESS) {
+                ambient = new Vector4f(color.r(), color.g(), color.b(), color.a());
+            }
 
             Vector4f diffuse = ModelData.Material.DEFAULT_COLOR;
-            int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0,
-                    colour);
+            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0,
+                    color);
             if (result == aiReturn_SUCCESS) {
-                diffuse = new Vector4f(colour.r(), colour.g(), colour.b(), colour.a());
+                diffuse = new Vector4f(color.r(), color.g(), color.b(), color.a());
+            }
+            
+            Vector4f specular = ModelData.Material.DEFAULT_COLOR;
+            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0,
+                    color);
+            if (result == aiReturn_SUCCESS) {
+                specular = new Vector4f(color.r(), color.g(), color.b(), color.a());
+            }
+            
+            Vector4f reflectance = ModelData.Material.DEFAULT_COLOR;
+            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_REFLECTIVE, aiTextureType_NONE, 0, 
+            		color);
+            if (result == aiReturn_SUCCESS) {
+                reflectance = new Vector4f(color.r(), color.g(), color.b(), color.a());
             }
             AIString aiTexturePath = AIString.calloc(stack);
             aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, aiTexturePath, (IntBuffer) null,
@@ -98,13 +121,14 @@ public class ModelLoader {
                 diffuse = new Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
             }
 
-            return new ModelData.Material(texturePath, diffuse);
+            return new ModelData.Material(texturePath, ambient,  diffuse, specular, reflectance);
         }
     }
 
     private static ModelData.MeshData processMesh(AIMesh aiMesh) {
         List<Float> vertices = processVertices(aiMesh);
         List<Float> textCoords = processTextCoords(aiMesh);
+        List<Float> normals = processNormals(aiMesh);
         List<Integer> indices = processIndices(aiMesh);
 
         // Texture coordinates may not have been populated. We need at least the empty slots
@@ -116,13 +140,12 @@ public class ModelLoader {
         }
 
         int materialIdx = aiMesh.mMaterialIndex();
-        float[] empF = new float[10];
-        return new ModelData.MeshData(Utils.listFloatToArray(vertices), Utils.listFloatToArray(textCoords), empF, Utils.listIntToArray(indices),
-                materialIdx);
+        return new ModelData.MeshData(Utils.listFloatToArray(vertices), Utils.listFloatToArray(textCoords), Utils.listFloatToArray(normals), 
+        		Utils.listIntToArray(indices), materialIdx);
     }
 
     private static List<Float> processTextCoords(AIMesh aiMesh) {
-        List<Float> textCoords = new ArrayList<>();
+        List<Float> textCoords = new ArrayList<Float>();
         AIVector3D.Buffer aiTextCoords = aiMesh.mTextureCoords(0);
         int numTextCoords = aiTextCoords != null ? aiTextCoords.remaining() : 0;
         for (int i = 0; i < numTextCoords; i++) {
@@ -134,7 +157,7 @@ public class ModelLoader {
     }
 
     private static List<Float> processVertices(AIMesh aiMesh) {
-        List<Float> vertices = new ArrayList<>();
+        List<Float> vertices = new ArrayList<Float>();
         AIVector3D.Buffer aiVertices = aiMesh.mVertices();
         while (aiVertices.remaining() > 0) {
             AIVector3D aiVertex = aiVertices.get();
@@ -143,6 +166,18 @@ public class ModelLoader {
             vertices.add(aiVertex.z());
         }
         return vertices;
+    }
+    
+    private static List<Float> processNormals(AIMesh aiMesh) {
+    	List<Float> normals = new ArrayList<Float>();
+    	AIVector3D.Buffer aiNormals = aiMesh.mNormals();
+    	while (aiNormals != null && aiNormals.remaining() > 0) {
+    		AIVector3D aiNormal = aiNormals.get();
+    		normals.add(aiNormal.x());
+    		normals.add(aiNormal.y());
+    		normals.add(aiNormal.z());
+    	}
+    	return normals;
     }
     
     private static AABBf processAABB(AIMesh aiMesh) {

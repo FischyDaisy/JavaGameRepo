@@ -1,5 +1,7 @@
 package main.engine.graphics;
 
+import java.util.List;
+
 import main.engine.Scene;
 import main.engine.Window;
 import main.engine.graphics.camera.Camera;
@@ -11,4 +13,8 @@ public interface IRenderer {
 	public void render(Window window, Camera camera, Scene scene);
 	
 	public void cleanup();
+	
+	public void loadModels(List<ModelData> modelDataList) throws Exception;
+	
+	public void clearAndLoadModels(List<ModelData> modelDataList) throws Exception;
 }
