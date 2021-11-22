@@ -82,7 +82,6 @@ public class VKRenderer implements IRenderer {
         instance.cleanup();
 	}
 	
-	@Override
 	public void loadModels(List<ModelData> modelDataList) {
         vulkanModels.addAll(VulkanModel.transformModels(modelDataList, commandPool, graphQueue));
     }

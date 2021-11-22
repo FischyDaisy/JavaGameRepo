@@ -39,7 +39,8 @@ public class TextureCache {
     	String path = texturePath;
         if (texturePath == null || texturePath.trim().isEmpty()) {
             EngineProperties engProperties = EngineProperties.getInstance();
-            path = System.getProperty("user.dir") + "\\" + engProperties.getDefaultTexturePath().replace('/', '\\');
+            //path = System.getProperty("user.dir") + "\\" + engProperties.getDefaultTexturePath().replace('/', '\\');
+            return null;
         }
         ITexture texture = textureMap.get(path);
         if (texture == null) {

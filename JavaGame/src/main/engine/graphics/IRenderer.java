@@ -13,8 +13,4 @@ public interface IRenderer {
 	public void render(Window window, Camera camera, Scene scene);
 	
 	public void cleanup();
-	
-	public void loadModels(List<ModelData> modelDataList) throws Exception;
-	
-	public void clearAndLoadModels(List<ModelData> modelDataList) throws Exception;
 }

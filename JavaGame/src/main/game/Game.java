@@ -181,7 +181,7 @@ public class Game implements IGameLogic {
             bunny.setMaterial(bMat);
             List<ModelData> modelList = new ArrayList<ModelData>();
             modelList.add(modelData);
-            renderer.loadModels(modelList);
+            ((GLRenderer) renderer).loadModels(modelList);
             gameItems = new GameItem[instances + 1];
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {

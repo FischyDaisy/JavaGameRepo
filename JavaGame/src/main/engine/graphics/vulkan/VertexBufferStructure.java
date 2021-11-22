@@ -2,6 +2,8 @@ package main.engine.graphics.vulkan;
 
 import org.lwjgl.vulkan.*;
 
+import main.engine.graphics.GraphConstants;
+
 import static org.lwjgl.vulkan.VK11.*;
 
 public class VertexBufferStructure extends VertexInputStateInfo {
@@ -32,12 +34,12 @@ public class VertexBufferStructure extends VertexInputStateInfo {
                 .binding(0)
                 .location(i)
                 .format(VK_FORMAT_R32G32_SFLOAT)
-                .offset(POSITION_COMPONENTS * GraphConstants.FLOAT_LENGTH);
+                .offset(POSITION_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES);
 
         viBindings.get(0)
                 .binding(0)
-                .stride(POSITION_COMPONENTS * GraphConstants.FLOAT_LENGTH +
-                        TEXT_COORD_COMPONENTS * GraphConstants.FLOAT_LENGTH)
+                .stride(POSITION_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES +
+                        TEXT_COORD_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES)
                 .inputRate(VK_VERTEX_INPUT_RATE_VERTEX);
 
         vi

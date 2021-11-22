@@ -6,8 +6,8 @@ import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
 import org.lwjgl.system.MemoryStack;
 
+import main.engine.graphics.GraphConstants;
 import main.engine.graphics.ModelData;
-import main.engine.graphics.vulkan.GraphConstants;
 import main.engine.utility.Utils;
 
 import java.io.File;

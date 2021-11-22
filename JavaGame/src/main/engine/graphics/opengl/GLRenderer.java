@@ -93,6 +93,8 @@ public class GLRenderer implements IRenderer {
     private final List<GameItem> filteredItems;
     
     private final List<GLModel> glModels;
+    
+    private final List<InstancedGLModel> glInstancedModels;
 
     public GLRenderer() {
     	transformation = new Transformation();
@@ -101,6 +103,7 @@ public class GLRenderer implements IRenderer {
     	frustumFilter = new FrustumCullingFilter();
         filteredItems = new ArrayList<GameItem>();
         glModels = new ArrayList<GLModel>();
+        glInstancedModels = new ArrayList<InstancedGLModel>();
     }
 
     @Override
@@ -256,15 +259,22 @@ public class GLRenderer implements IRenderer {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
     
-    @Override
     public void loadModels(List<ModelData> modelDataList) throws Exception {
     	glModels.addAll(GLModel.transformModels(modelDataList, textureCache));
     }
     
-    @Override
     public void clearAndLoadModels(List<ModelData> modelDataList) throws Exception {
     	glModels.clear();
     	loadModels(modelDataList);
+    }
+    
+    public void loadInstanceModels(List<ModelData> modelDataList, int numInstances) throws Exception {
+    	glInstancedModels.addAll((InstancedGLModel.transformModels(modelDataList, textureCache, numInstances)));
+    }
+    
+    public void clearAndLoadInstanceModels(List<ModelData> modelDataList, int numInstances) throws Exception {
+    	glInstancedModels.clear();
+    	loadInstanceModels(modelDataList, numInstances);
     }
     
     private void renderParticles(Window window, Camera camera, Scene scene) {

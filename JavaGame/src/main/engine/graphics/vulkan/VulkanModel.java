@@ -3,6 +3,7 @@ package main.engine.graphics.vulkan;
 import org.lwjgl.system.*;
 import org.lwjgl.vulkan.VkBufferCopy;
 
+import main.engine.graphics.GraphConstants;
 import main.engine.graphics.IModel;
 import main.engine.graphics.ModelData;
 
@@ -24,7 +25,7 @@ public class VulkanModel implements IModel{
     private static TransferBuffers createIndicesBuffers(Device device, ModelData.MeshData meshData) {
         int[] indices = meshData.indices();
         int numIndices = indices.length;
-        int bufferSize = numIndices * GraphConstants.INT_LENGTH;
+        int bufferSize = numIndices * GraphConstants.INT_SIZE_BYTES;
 
         VulkanBuffer srcBuffer = new VulkanBuffer(device, bufferSize,
                 VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
@@ -46,7 +47,7 @@ public class VulkanModel implements IModel{
             textCoords = new float[(positions.length / 3) * 2];
         }
         int numElements = positions.length + textCoords.length;
-        int bufferSize = numElements * GraphConstants.FLOAT_LENGTH;
+        int bufferSize = numElements * GraphConstants.FLOAT_SIZE_BYTES;
 
         VulkanBuffer srcBuffer = new VulkanBuffer(device, bufferSize,
                 VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);

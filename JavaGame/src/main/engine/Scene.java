@@ -19,6 +19,8 @@ public class Scene {
 	
 	private final Map<String, List<GameItem>> modelMap;
 	
+	private final Map<String, List<GameItem>> instancedModelMap;
+	
 	private final Map<InstancedMesh, List<GameItem>> instancedMeshMap;
 	
 	private final Map<Mesh, List<GameItem>> portalMap;
@@ -36,6 +38,7 @@ public class Scene {
     public Scene() {
         meshMap = new HashMap<Mesh, List<GameItem>>();
         modelMap = new HashMap<String, List<GameItem>>();
+        instancedModelMap = new HashMap<String, List<GameItem>>();
         instancedMeshMap = new HashMap<InstancedMesh, List<GameItem>>();
         portalMap = new HashMap<Mesh, List<GameItem>>();
         fog = Fog.NOFOG;

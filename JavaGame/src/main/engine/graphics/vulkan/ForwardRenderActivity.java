@@ -8,6 +8,7 @@ import org.lwjgl.vulkan.*;
 import main.engine.EngineProperties;
 import main.engine.Scene;
 import main.engine.Window;
+import main.engine.graphics.GraphConstants;
 import main.engine.items.GameItem;
 
 import java.nio.ByteBuffer;
@@ -64,7 +65,7 @@ public class ForwardRenderActivity {
 
 
         Pipeline.PipeLineCreationInfo pipeLineCreationInfo = new Pipeline.PipeLineCreationInfo(
-                renderPass.getVkRenderPass(), fwdShaderProgram, 1, true, GraphConstants.MAT4X4_SIZE * 2,
+                renderPass.getVkRenderPass(), fwdShaderProgram, 1, true, GraphConstants.MAT4X4_SIZE_BYTES * 2,
                 new VertexBufferStructure());
         pipeLine = new Pipeline(this.pipelineCache, pipeLineCreationInfo);
         pipeLineCreationInfo.cleanup();
@@ -167,7 +168,7 @@ public class ForwardRenderActivity {
             LongBuffer offsets = stack.mallocLong(1);
             offsets.put(0, 0L);
             LongBuffer vertexBuffer = stack.mallocLong(1);
-            ByteBuffer pushConstantBuffer = stack.malloc(GraphConstants.MAT4X4_SIZE * 2);
+            ByteBuffer pushConstantBuffer = stack.malloc(GraphConstants.MAT4X4_SIZE_BYTES * 2);
             for (VulkanModel vulkanModel : vulkanModelList) {
                 String modelId = vulkanModel.getModelId();
                 List<GameItem> gameItems = scene.getGameItemsByModelId(modelId);
@@ -203,7 +204,7 @@ public class ForwardRenderActivity {
     private void setPushConstants(VkCommandBuffer cmdHandle, Matrix4f projMatrix, Matrix4f modelMatrix,
                                   ByteBuffer pushConstantBuffer) {
         projMatrix.get(pushConstantBuffer);
-        modelMatrix.get(GraphConstants.MAT4X4_SIZE, pushConstantBuffer);
+        modelMatrix.get(GraphConstants.MAT4X4_SIZE_BYTES, pushConstantBuffer);
         vkCmdPushConstants(cmdHandle, pipeLine.getVkPipelineLayout(),
                 VK_SHADER_STAGE_VERTEX_BIT, 0, pushConstantBuffer);
     }
