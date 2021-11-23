@@ -121,7 +121,7 @@ public class ModelLoader {
                 diffuse = new Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
             }
 
-            return new ModelData.Material(texturePath, ambient,  diffuse, specular, reflectance);
+            return new ModelData.Material(texturePath, ambient,  diffuse, specular, reflectance, 1, 1);
         }
     }
 
@@ -130,6 +130,7 @@ public class ModelLoader {
         List<Float> textCoords = processTextCoords(aiMesh);
         List<Float> normals = processNormals(aiMesh);
         List<Integer> indices = processIndices(aiMesh);
+        AABBf aabb = processAABB(aiMesh);
 
         // Texture coordinates may not have been populated. We need at least the empty slots
         if (textCoords.isEmpty()) {
@@ -141,7 +142,7 @@ public class ModelLoader {
 
         int materialIdx = aiMesh.mMaterialIndex();
         return new ModelData.MeshData(Utils.listFloatToArray(vertices), Utils.listFloatToArray(textCoords), Utils.listFloatToArray(normals), 
-        		Utils.listIntToArray(indices), materialIdx);
+        		Utils.listIntToArray(indices), materialIdx, aabb);
     }
 
     private static List<Float> processTextCoords(AIMesh aiMesh) {

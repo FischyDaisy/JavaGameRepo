@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.joml.Vector4f;
+import org.joml.primitives.AABBf;
 import org.lwjgl.system.MemoryUtil;
 
 import main.engine.graphics.IModel;
@@ -57,6 +58,21 @@ public class GLModel implements IModel {
 	public List<GLModel.GLMaterial> getGLMaterialList() {
         return glMaterialList;
     }
+	
+	public void setGLMaterial(GLMaterial material) {
+		for (int i = 0; i < glMaterialList.size(); i++) {
+			glMaterialList.set(i, material);
+		}
+	}
+	
+	public void setGLMaterial(List<GLMaterial> materials) throws Exception {
+		if (materials.size() != glMaterialList.size()) {
+			throw new RuntimeException("List sizes don't match");
+		}
+		for (int i = 0; i < glMaterialList.size(); i++) {
+			glMaterialList.set(i, materials.get(i));
+		}
+	}
 	
 	public float getBoundingRadius() {
 		return boundingRadius;
@@ -197,6 +213,7 @@ public class GLModel implements IModel {
 	            glBindVertexArray(0);
 	            
 	            GLModel.GLMesh mesh = new GLModel.GLMesh(vaoId, vboIdList, vertexCount);
+	            mesh.setBoundingBox(meshData.boundingBox());
 	            
 	            GLMaterial glMaterial;
 	            int materialIdx = meshData.materialIdx();
@@ -233,7 +250,7 @@ public class GLModel implements IModel {
 	}
 	
 	public static GLMaterial transformMaterial(ModelData.Material material, TextureCache textureCache) throws Exception {
-		GLTexture texture = textureCache.getTexture(material.texturePath());
+		GLTexture texture = textureCache.getTexture(material.texturePath(), material.cols(), material.rows());
 		return new GLMaterial(material.ambientColor(), material.diffuseColor(), material.specularColor(),
 				texture, null, material.reflectance().x(), new ArrayList<GLMesh>());
 	}
@@ -284,11 +301,13 @@ public class GLModel implements IModel {
 		protected final int vaoId;
 		protected final List<Integer> vboIdList;
 		protected final int vertexCount;
+		protected final AABBf boundingBox;
 		
 		public GLMesh(int vaoId, List<Integer> vboIdList, int vertexCount) {
 			this.vaoId = vaoId;
 			this.vboIdList = vboIdList;
 			this.vertexCount = vertexCount;
+			boundingBox = new AABBf();
 		}
 		
 		public int vaoId() {
@@ -301,6 +320,14 @@ public class GLModel implements IModel {
 		
 		public int vertexCount() {
 			return vertexCount;
+		}
+		
+		public AABBf getBoundingBox() {
+			return boundingBox;
+		}
+		
+		public void setBoundingBox(AABBf aabb) {
+			boundingBox.set(aabb);
 		}
 		
 		protected void initRender(GLMaterial material) {

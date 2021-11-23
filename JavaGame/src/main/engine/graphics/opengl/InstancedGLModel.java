@@ -207,6 +207,7 @@ public class InstancedGLModel extends GLModel {
 	            glBindVertexArray(0);
 	            
 	            InstancedGLMesh mesh = new InstancedGLMesh(vaoId, vboIdList, vertexCount, numInstances, instanceDataVBO, instanceDataBuffer);
+	            mesh.setBoundingBox(meshData.boundingBox());
 	            
 	            GLMaterial glMaterial;
 	            int materialIdx = meshData.materialIdx();

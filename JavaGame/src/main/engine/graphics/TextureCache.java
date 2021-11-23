@@ -35,7 +35,7 @@ public class TextureCache {
         return (VKTexture) texture;
     }
     
-    public GLTexture getTexture(String texturePath) throws Exception {
+    public GLTexture getTexture(String texturePath, int cols, int rows) throws Exception {
     	String path = texturePath;
         if (texturePath == null || texturePath.trim().isEmpty()) {
             EngineProperties engProperties = EngineProperties.getInstance();
@@ -44,7 +44,7 @@ public class TextureCache {
         }
         ITexture texture = textureMap.get(path);
         if (texture == null) {
-            texture = new GLTexture(path);
+            texture = new GLTexture(path, cols, rows);
             textureMap.put(path, texture);
         }
         return (GLTexture) texture;

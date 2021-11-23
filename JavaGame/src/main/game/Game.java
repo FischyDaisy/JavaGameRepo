@@ -162,48 +162,41 @@ public class Game implements IGameLogic {
                 height = h.get();
             }
 
-            int instances = height * width;
-            Mesh mesh = OBJLoader.loadMesh("/main/resources/models/cube.obj", instances);
-            mesh.setBoundingRadius(2);
-            GLTexture texture = new GLTexture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\terrain_textures.png", 2, 1);
-            Material material = new Material(texture, reflectance);
-            mesh.setMaterial(material);
-            //Mesh bunny = OBJLoader.loadMesh("/main/resources/models/bunny.obj");
-            String modelId = "CubeModel";
-            ModelData modelData = ModelLoader.loadModel(modelId, ResourcePaths.Models.BUNNY_OBJ,
-                    ResourcePaths.Textures.TEXTURE_DIR);
-            ModelData.MeshData meshData = modelData.getMeshDataList().get(0);
-            ModelData.Material mat = modelData.getMaterialList().get(0);
-            Mesh bunny = new Mesh(meshData.positions(), meshData.textCoords(), meshData.normals(),
-            		meshData.indices(), meshData.jointIndices(), meshData.weights());
-            Material bMat = new Material(mat.ambientColor().mul(Material.DEFAULT_COLOR), mat.diffuseColor().mul(Material.DEFAULT_COLOR), mat.specularColor().mul(Material.DEFAULT_COLOR), null, reflectance);
-            //Material bMat = new Material(mat.ambientColor(), mat.diffuseColor(), mat.specularColor(), null, reflectance);
-            bunny.setMaterial(bMat);
             List<ModelData> modelList = new ArrayList<ModelData>();
+            int instances = height * width;
+            String cubeModelId = "CubeModel";
+            ModelData modelData = ModelLoader.loadModel(cubeModelId, ResourcePaths.Models.CUBE_OBJ,
+                    ResourcePaths.Textures.TEXTURE_DIR);
+            modelData.getMaterialList().set(0, new ModelData.Material(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\terrain_textures.png",
+            		2, 1));
+            modelList.add(modelData);
+            ((GLRenderer) renderer).loadInstanceModels(modelList, instances);
+            String modelId = "bunny";
+            modelData = ModelLoader.loadModel(modelId, ResourcePaths.Models.BUNNY_OBJ,
+                    ResourcePaths.Textures.TEXTURE_DIR);
+            modelList.clear();
             modelList.add(modelData);
             ((GLRenderer) renderer).loadModels(modelList);
-            gameItems = new GameItem[instances + 1];
+            gameItems = new GameItem[instances];
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
-                    GameItem gameItem = new GameItem(mesh);
+                    GameItem gameItem = new GameItem("CubeObject", cubeModelId);
                     gameItem.setScale(blockScale);
                     int rgb = HeightMapMesh.getRGB(i, j, width, buf);
                     incy = rgb / (10 * 255 * 255);
                     gameItem.setPosition(posx, starty + incy, posz);
                     int textPos = Math.random() > 0.5f ? 0 : 1;
                     gameItem.setTextPos(textPos);
-                    gameItems[i * width + j] = gameItem;
+                    scene.addInstancedGameItem(gameItem);
 
                     posx += inc;
                 }
                 posx = startx;
                 posz -= inc;
             }
-            GameItem bun = new GameItem(bunny);
+            GameItem bun = new GameItem("BunnyObject", modelId);
             bun.setPosition(0f, 4f, 0f);
             bun.setScale(2.0f);
-            bun.setModelId(modelData.getModelId());
-            gameItems[gameItems.length - 1] = bun;
             scene.addGameItem(bun);
             //scene.setGameItems(gameItems);
             
@@ -242,7 +235,6 @@ public class Game implements IGameLogic {
             fullList[fullList.length - 2] = portalA;
             fullList[fullList.length - 1] = portalB;
             Portal.connect(portalA, portalB, new Transformation());
-            scene.setGameItems(fullList);
             
             // Shadows
             scene.setRenderShadows(false);

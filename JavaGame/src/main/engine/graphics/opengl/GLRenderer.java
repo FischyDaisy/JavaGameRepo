@@ -470,10 +470,10 @@ public class GLRenderer implements IRenderer {
 
         // Render each mesh with the associated game Items
         //Map<Mesh, List<GameItem>> mapMeshes = scene.getGameMeshes();
-        Map<String, List<GameItem>> mapMeshes = scene.getModelMap();
+        Map<String, List<GameItem>> modelMap = scene.getModelMap();
         for (GLModel model : glModels) {
         	String modelId = model.getModelId();
-        	List<GameItem> items = scene.getGameItemsByModelId(modelId);
+        	List<GameItem> items = modelMap.get(modelId);
         	if (items.isEmpty()) {
         		continue;
         	}
@@ -493,7 +493,7 @@ public class GLRenderer implements IRenderer {
                     sceneShaderProgram.setUniform("numRows", text.getNumRows());
                 }
 
-                model.renderList(mapMeshes.get(modelId), material, (GameItem gameItem) -> {
+                model.renderList(items, material, (GameItem gameItem) -> {
                 	sceneShaderProgram.setUniform("selectedNonInstanced", gameItem.isSelected() ? 1.0f : 0.0f);
                     Matrix4f modelMatrix = gameItem.buildModelMatrix();
                     if (viewMatrix != null) {
@@ -517,27 +517,34 @@ public class GLRenderer implements IRenderer {
         shader.setUniform("isInstanced", 1);
 
         // Render each mesh with the associated game Items
-        Map<InstancedMesh, List<GameItem>> mapMeshes = scene.getGameInstancedMeshes();
-        for (InstancedMesh mesh : mapMeshes.keySet()) {
-            GLTexture text = mesh.getMaterial().getTexture();
-            if (text != null) {
-                sceneShaderProgram.setUniform("numCols", text.getNumCols());
-                sceneShaderProgram.setUniform("numRows", text.getNumRows());
-            }
-
-            if (viewMatrix != null) {
-                shader.setUniform("material", mesh.getMaterial());
-                glActiveTexture(GL_TEXTURE2);
-                glBindTexture(GL_TEXTURE_2D, shadowMap.getDepthMapTexture().getId());
-            }
-
-            filteredItems.clear();
-            for(GameItem gameItem : mapMeshes.get(mesh)) {
-                if ( gameItem.isInsideFrustum() ) {
-                    filteredItems.add(gameItem);
+        Map<String, List<GameItem>> modelMap = scene.getInstancedModelMap();
+        for (InstancedGLModel model : glInstancedModels) {
+        	String modelId = model.getModelId();
+        	List<GameItem> items = modelMap.get(modelId);
+        	if (items.isEmpty()) {
+        		continue;
+        	}
+            for (GLMaterial material : model.getGLMaterialList()) {
+            	GLTexture text = material.texture();
+                if (text != null) {
+                    sceneShaderProgram.setUniform("numCols", text.getNumCols());
+                    sceneShaderProgram.setUniform("numRows", text.getNumRows());
                 }
+
+                if (viewMatrix != null) {
+                    shader.setUniform("material", material);
+                    glActiveTexture(GL_TEXTURE2);
+                    glBindTexture(GL_TEXTURE_2D, shadowMap.getDepthMapTexture().getId());
+                }
+
+                filteredItems.clear();
+                for(GameItem gameItem : items) {
+                    if ( gameItem.isInsideFrustum() ) {
+                        filteredItems.add(gameItem);
+                    }
+                }
+                model.renderListInstanced(filteredItems, transformation, viewMatrix, lightViewMatrix, material);
             }
-            mesh.renderListInstanced(filteredItems, transformation, viewMatrix, lightViewMatrix);
         }
     }
     

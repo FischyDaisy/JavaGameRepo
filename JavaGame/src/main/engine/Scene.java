@@ -61,6 +61,10 @@ public class Scene {
     	return modelMap;
     }
     
+    public Map<String, List<GameItem>> getInstancedModelMap() {
+    	return instancedModelMap;
+    }
+    
     public boolean isRenderShadows() {
         return renderShadows;
     }
@@ -86,8 +90,21 @@ public class Scene {
         gameItems.add(gameItem);
     }
     
+    public void addInstancedGameItem(GameItem gameItem) {
+    	List<GameItem> gameItems = instancedModelMap.get(gameItem.getModelId());
+        if (gameItems == null) {
+            gameItems = new ArrayList<>();
+            instancedModelMap.put(gameItem.getModelId(), gameItems);
+        }
+        gameItems.add(gameItem);
+    }
+    
     public List<GameItem> getGameItemsByModelId(String modelId) {
         return modelMap.get(modelId);
+    }
+    
+    public List<GameItem> getInstancedGameItemsByModelId(String modelId) {
+        return instancedModelMap.get(modelId);
     }
 
     public void setGameItems(GameItem[] gameItems) {
