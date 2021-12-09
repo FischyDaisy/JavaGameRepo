@@ -82,11 +82,20 @@ public class VKRenderer implements IRenderer {
         instance.cleanup();
 	}
 	
-	public void loadModels(List<ModelData> modelDataList) {
+	@Override
+	public void loadSkyBox(ModelData skybox) throws Exception {
+	}
+	
+	@Override
+	public void loadParticles(List<ModelData> modelDataList, int maxParticles) throws Exception {
+	}
+	
+	@Override
+	public void loadModels(List<ModelData> modelDataList) throws Exception {
         vulkanModels.addAll(VulkanModel.transformModels(modelDataList, commandPool, graphQueue));
     }
 	
-	public void clearAndLoadModels(List<ModelData> modelDataList) {
+	public void clearAndLoadModels(List<ModelData> modelDataList) throws Exception {
 		vulkanModels.clear();
 		loadModels(modelDataList);
 	}

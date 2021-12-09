@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -32,6 +33,7 @@ import main.engine.graphics.IHudElement;
 import main.engine.graphics.IRenderer;
 import main.engine.graphics.Material;
 import main.engine.graphics.ModelData;
+import main.engine.graphics.TextureCache;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.camera.Camera;
@@ -44,6 +46,7 @@ import main.engine.graphics.hud.MenuHud;
 import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.opengl.Mesh;
 import main.engine.graphics.opengl.GLTexture;
+import main.engine.graphics.opengl.InstancedGLModel;
 import main.engine.graphics.particles.FlowParticleEmitter;
 import main.engine.graphics.particles.Particle;
 import main.engine.graphics.vulkan.VKRenderer;
@@ -54,9 +57,6 @@ import main.engine.items.Portal;
 import main.engine.items.SkyBox;
 import main.engine.items.Terrain;
 import main.engine.loaders.assimp.ModelLoader;
-import main.engine.loaders.md5.MD5AnimModel;
-import main.engine.loaders.md5.MD5Loader;
-import main.engine.loaders.md5.MD5Model;
 import main.engine.loaders.obj.OBJLoader;
 import main.engine.physics.NewtonLoader;
 import main.engine.sound.SoundBuffer;
@@ -108,6 +108,8 @@ public class Game implements IGameLogic {
     
     private GameItem cube;
     
+    private AnimGameItem momster;
+    
     private Vector3f rotatingAngle = new Vector3f(1, 1, 1);
     
     public Game() {
@@ -153,7 +155,7 @@ public class Game implements IGameLogic {
                 IntBuffer h = stack.mallocInt(1);
                 IntBuffer channels = stack.mallocInt(1);
 
-                buf = stbi_load(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\heightmap.png", w, h, channels, 4);
+                buf = stbi_load(System.getProperty("user.dir") + "\\resources\\textures\\heightmap.png", w, h, channels, 4);
                 if (buf == null) {
                     throw new Exception("Image file not loaded: " + stbi_failure_reason());
                 }
@@ -167,15 +169,19 @@ public class Game implements IGameLogic {
             String cubeModelId = "CubeModel";
             ModelData modelData = ModelLoader.loadModel(cubeModelId, ResourcePaths.Models.CUBE_OBJ,
                     ResourcePaths.Textures.TEXTURE_DIR);
-            modelData.getMaterialList().set(0, new ModelData.Material(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\terrain_textures.png",
+            modelData.getMaterialList().set(0, new ModelData.Material(System.getProperty("user.dir") + "\\resources\\textures\\terrain_textures.png",
             		2, 1));
             modelList.add(modelData);
             ((GLRenderer) renderer).loadInstanceModels(modelList, instances);
             String modelId = "bunny";
             modelData = ModelLoader.loadModel(modelId, ResourcePaths.Models.BUNNY_OBJ,
                     ResourcePaths.Textures.TEXTURE_DIR);
+            String animId = "momster";
+            ModelData animData = ModelLoader.loadAnimModel(animId, ResourcePaths.Models.MONSTER_MD5MESH, 
+            		ResourcePaths.Textures.TEXTURE_DIR);
             modelList.clear();
             modelList.add(modelData);
+            //modelList.add(animData);
             ((GLRenderer) renderer).loadModels(modelList);
             gameItems = new GameItem[instances];
             for (int i = 0; i < height; i++) {
@@ -198,6 +204,11 @@ public class Game implements IGameLogic {
             bun.setPosition(0f, 4f, 0f);
             bun.setScale(2.0f);
             scene.addGameItem(bun);
+            
+            //momster = new AnimGameItem("momsterObject", animId, animData.getAnimations());
+           // momster.setPosition(-5f, 4f, 0f);
+            //momster.setScale(1.0f);
+            //scene.addGameItem(momster);
             //scene.setGameItems(gameItems);
             
             // Particles
@@ -208,11 +219,19 @@ public class Game implements IGameLogic {
             long creationPeriodNanos = (long) 3e8;
             float range = 0.2f;
             float scale = 1.0f;
-            Mesh partMesh = OBJLoader.loadMesh("/main/resources/models/particle.obj", maxParticles);
-            GLTexture particleTexture = new GLTexture(System.getProperty("user.dir") + "\\src\\main\\resources\\textures\\particle_anim.png", 4, 4);
-            Material partMaterial = new Material(particleTexture, reflectance);
-            partMesh.setMaterial(partMaterial);
-            Particle particle = new Particle(partMesh, particleSpeed, ttl, 100);
+            //Mesh partMesh = OBJLoader.loadMesh("/resources/models/particle.obj", maxParticles);
+            String partId = "particle";
+            modelData = ModelLoader.loadModel(partId, ResourcePaths.Models.PARTICLE_OBJ, 
+            		ResourcePaths.Textures.TEXTURE_DIR);
+            modelData.getMaterialList().set(0, new ModelData.Material(System.getProperty("user.dir") + "\\resources\\textures\\particle_anim.png",
+            		4, 4));
+            modelList.clear();
+            modelList.add(modelData);
+            renderer.loadParticles(modelList, maxParticles);
+            GLTexture particleTexture = TextureCache.getInstance().getTexture(System.getProperty("user.dir") + "\\resources\\textures\\particle_anim.png", 4, 4);
+            //Material partMaterial = new Material(particleTexture, reflectance);
+            //partMesh.setMaterial(partMaterial);
+            Particle particle = new Particle("FlameParticle", partId, particleTexture, particleSpeed, ttl, 100);
             particle.setScale(scale);
             particleEmitter = new FlowParticleEmitter(particle, maxParticles, creationPeriodNanos);
             particleEmitter.setActive(true);
@@ -222,7 +241,9 @@ public class Game implements IGameLogic {
             this.scene.setParticleEmitters(new FlowParticleEmitter[]{particleEmitter});
             
             // Portals
-            Mesh pMesh = OBJLoader.loadMesh("/main/resources/models/double_quad.obj");
+            /*
+             
+            Mesh pMesh = OBJLoader.loadMesh("/resources/models/double_quad.obj");
             pMesh.setBoundingRadius(1.0f);
             Portal portalA = new Portal(pMesh);
             Portal portalB = new Portal(pMesh);
@@ -235,7 +256,7 @@ public class Game implements IGameLogic {
             fullList[fullList.length - 2] = portalA;
             fullList[fullList.length - 1] = portalB;
             Portal.connect(portalA, portalB, new Transformation());
-            
+            */
             // Shadows
             scene.setRenderShadows(false);
             
@@ -244,7 +265,9 @@ public class Game implements IGameLogic {
             scene.setFog(new Fog(true, fogColour, 0.02f));
             
             // Setup  SkyBox
-            SkyBox skyBox = new SkyBox("/main/resources/models/skybox.obj", new Vector4f(0.65f, 0.65f, 0.65f, 1.0f));
+            ModelData skyboxData = ModelLoader.loadModel("skyBoxModel", ResourcePaths.Models.SKYBOX_OBJ, 
+            		ResourcePaths.Textures.TEXTURE_DIR);
+            SkyBox skyBox = new SkyBox(skyboxData, renderer, new Vector4f(0.65f, 0.65f, 0.65f, 1.0f));
             skyBox.setScale(skyBoxScale);
             scene.setSkyBox(skyBox);
             
@@ -256,7 +279,7 @@ public class Game implements IGameLogic {
             String version = String.valueOf(runtimeVersion.version().get(0) + "." + runtimeVersion.version().get(1) + "." 
             		+ runtimeVersion.version().get(2));
             //hud = new Hud("Java Runtime Version: " + version + " | LWJGL Version: " + Version.getVersion());
-            gHud = new GameHud(System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
+            //gHud = new GameHud(System.getProperties().getProperty("java.home") + File.separator + "bin" + File.separator + "java.exe");
             //mHud = new MenuHud(window);
             //mHud.setElements(new IHudElement[] {new Demo(), new Calculator()});
             
@@ -329,19 +352,19 @@ public class Game implements IGameLogic {
     }
     
     private void setupSounds() throws Exception {
-        SoundBuffer buffBack = new SoundBuffer("/main/resources/sounds/background.ogg");
+        SoundBuffer buffBack = new SoundBuffer(ResourcePaths.Sounds.BACKGROUND_OGG);
         soundMgr.addSoundBuffer(buffBack);
         SoundSource sourceBack = new SoundSource(true, true);
         sourceBack.setBuffer(buffBack.getBufferId());
         soundMgr.addSoundSource(Sounds.MUSIC.toString(), sourceBack);
         
-        SoundBuffer buffBeep = new SoundBuffer("/main/resources/sounds/beep.ogg");
+        SoundBuffer buffBeep = new SoundBuffer(ResourcePaths.Sounds.BEEP_OGG);
         soundMgr.addSoundBuffer(buffBeep);
         SoundSource sourceBeep = new SoundSource(false, true);
         sourceBeep.setBuffer(buffBeep.getBufferId());
         soundMgr.addSoundSource(Sounds.BEEP.toString(), sourceBeep);
         
-        SoundBuffer buffFire = new SoundBuffer("/main/resources/sounds/fire.ogg");
+        SoundBuffer buffFire = new SoundBuffer(ResourcePaths.Sounds.FIRE_OGG);
         soundMgr.addSoundBuffer(buffFire);
         SoundSource sourceFire = new SoundSource(true, false);
         Vector3f pos = particleEmitter.getBaseParticle().getPosition();
@@ -402,6 +425,9 @@ public class Game implements IGameLogic {
                 soundMgr.playSoundSource(Sounds.BEEP.toString());
             } else {
                 angleInc = 0;
+            }
+            if (window.isKeyPressed(GLFW_KEY_SPACE)) {
+            	momster.getCurrentAnimation().nextFrame();
             }
         } else {
         	angleInc += 1.0f;
@@ -492,5 +518,13 @@ public class Game implements IGameLogic {
         if ( gHud != null ) {
             gHud.cleanup();
         }
+    }
+    
+    public static String arrToString(float[] arr) {
+    	String result = "";
+    	for (int i = 0; i < arr.length; i++) {
+    		result = result + ":" + arr[i] + ":";
+    	}
+    	return result;
     }
 }

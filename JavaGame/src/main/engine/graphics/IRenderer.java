@@ -13,4 +13,10 @@ public interface IRenderer {
 	public void render(Window window, Camera camera, Scene scene);
 	
 	public void cleanup();
+	
+	public void loadModels(List<ModelData> modelDataList) throws Exception;
+	
+	public void loadSkyBox(ModelData skyBox) throws Exception;
+	
+	public void loadParticles(List<ModelData> modelDataList, int maxParticles) throws Exception;
 }

@@ -1,6 +1,11 @@
 package main.engine.utility;
 
 public class ResourcePaths {
+	
+	public static final class Engine {
+		public static final String PROPERTIES = "resources/eng.properties";
+	}
+	
 	public static final class Fonts {
 		public static final String FIRASANS_REGULAR = "resources/fonts/FiraSans-Regular.ttf";
 	}

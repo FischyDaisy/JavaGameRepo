@@ -2,21 +2,25 @@ package main.engine.graphics;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.joml.Vector4f;
 import org.joml.primitives.AABBf;
 
+import main.engine.graphics.animation.Animation;
 import main.engine.graphics.opengl.Mesh;
 
 public class ModelData {
     private List<MeshData> meshDataList;
     private List<Material> materialList;
+    private Map<String, Animation> animations;
     private String modelId;
 
     public ModelData(String modelId, List<MeshData> meshDataList, List<Material> materialList) {
         this.modelId = modelId;
         this.meshDataList = meshDataList;
         this.materialList = materialList;
+        animations = null;
     }
 
     public List<MeshData> getMeshDataList() {
@@ -29,6 +33,14 @@ public class ModelData {
 
     public String getModelId() {
         return modelId;
+    }
+    
+    public Map<String, Animation> getAnimations() {
+    	return animations;
+    }
+    
+    public void setAnimations(Map<String, Animation> animations) {
+    	this.animations = animations;
     }
     
     public record Material(String texturePath, Vector4f ambientColor, Vector4f diffuseColor, Vector4f specularColor, Vector4f reflectance, 

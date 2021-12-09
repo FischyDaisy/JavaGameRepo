@@ -1,7 +1,11 @@
 package main.engine;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.Properties;
+
+import main.engine.utility.ResourcePaths;
 
 public class EngineProperties {
 	private static final float DEFAULT_FOV = 60.0f;
@@ -11,6 +15,7 @@ public class EngineProperties {
     private static final float DEFAULT_Z_FAR = 1000.f;
     private static final float DEFAULT_Z_NEAR = 0.01f;
     private static final String FILENAME = "eng.properties";
+    private static final File PROP_FILE = new File(ResourcePaths.Engine.PROPERTIES);
     private static EngineProperties instance;
     private String defaultTexturePath;
     private float fov;
@@ -28,8 +33,10 @@ public class EngineProperties {
     private EngineProperties() {
         // Singleton
         Properties props = new Properties();
+        
+        //EngineProperties.class.getResourceAsStream("/main/resources/" + FILENAME)
 
-        try (InputStream stream = EngineProperties.class.getResourceAsStream("/main/resources/" + FILENAME)) {
+        try (InputStream stream = Files.newInputStream(PROP_FILE.toPath(), StandardOpenOption.READ)) {
             props.load(stream);
             ups = Integer.parseInt(props.getOrDefault("ups", DEFAULT_UPS).toString());
             fps = Integer.parseInt(props.getOrDefault("fps", DEFAULT_FPS).toString());

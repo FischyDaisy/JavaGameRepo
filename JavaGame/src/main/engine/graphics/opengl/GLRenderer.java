@@ -82,6 +82,8 @@ public class GLRenderer implements IRenderer {
     
     private ShaderProgram portalShaderProgram;
     
+    private GLModel skyBoxModel;
+    
     private final TextureCache textureCache;
     
     private final Transformation transformation;
@@ -95,15 +97,18 @@ public class GLRenderer implements IRenderer {
     private final List<GLModel> glModels;
     
     private final List<InstancedGLModel> glInstancedModels;
+    
+    private final List<InstancedGLModel> particleModels;
 
     public GLRenderer() {
     	transformation = new Transformation();
-    	textureCache = new TextureCache();
+    	textureCache = TextureCache.getInstance();
     	specularPower = 10f;
     	frustumFilter = new FrustumCullingFilter();
         filteredItems = new ArrayList<GameItem>();
         glModels = new ArrayList<GLModel>();
         glInstancedModels = new ArrayList<InstancedGLModel>();
+        particleModels = new ArrayList<InstancedGLModel>();
     }
 
     @Override
@@ -259,6 +264,19 @@ public class GLRenderer implements IRenderer {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     }
     
+    @Override
+    public void loadSkyBox(ModelData skybox) throws Exception {
+    	List<ModelData> list = new ArrayList<ModelData>();
+    	list.add(skybox);
+    	skyBoxModel = GLModel.transformModels(list, textureCache).get(0);
+    }
+    
+    @Override
+    public void loadParticles(List<ModelData> modelDataList, int maxParticles) throws Exception {
+    	particleModels.addAll(InstancedGLModel.transformModels(modelDataList, textureCache, maxParticles));
+    }
+    
+    @Override
     public void loadModels(List<ModelData> modelDataList) throws Exception {
     	glModels.addAll(GLModel.transformModels(modelDataList, textureCache));
     }
@@ -294,13 +312,18 @@ public class GLRenderer implements IRenderer {
 
             for (int i = 0; i < numEmitters; i++) {
                 IParticleEmitter emitter = emitters[i];
-                InstancedMesh mesh = (InstancedMesh)emitter.getBaseParticle().getMesh();
-                
-                GLTexture text = mesh.getMaterial().getTexture();
-                particlesShaderProgram.setUniform("numCols", text.getNumCols());
-                particlesShaderProgram.setUniform("numRows", text.getNumRows());
+                for (InstancedGLModel model : particleModels) {
+                	for (GLMaterial material : model.getGLMaterialList()) {
+                		//InstancedMesh mesh = (InstancedMesh)emitter.getBaseParticle().getMesh();
+                        
+                        GLTexture text = material.texture();
+                        particlesShaderProgram.setUniform("numCols", text.getNumCols());
+                        particlesShaderProgram.setUniform("numRows", text.getNumRows());
 
-                mesh.renderListInstanced(emitter.getParticles(), true, transformation, viewMatrix, null);
+                        model.renderListInstanced(emitter.getParticles(), true, transformation, viewMatrix, null);
+                        //mesh.renderListInstanced(emitter.getParticles(), true, transformation, viewMatrix, null);
+                	}
+                }
             }
 
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -343,33 +366,34 @@ public class GLRenderer implements IRenderer {
     
     private void renderSkyBox(Window window, Camera camera, Scene scene) {
     	SkyBox skyBox = scene.getSkyBox();
-        if (skyBox != null) {
+        if (skyBox != null && skyBoxModel != null) {
             skyBoxShaderProgram.bind();
 
-            skyBoxShaderProgram.setUniform("texture_sampler", 0);
+            for (GLMaterial material : skyBoxModel.getGLMaterialList()) {
+            	skyBoxShaderProgram.setUniform("texture_sampler", 0);
 
-            Matrix4f projectionMatrix = window.getProjectionMatrix();
-            skyBoxShaderProgram.setUniform("projectionMatrix", projectionMatrix);
-            Matrix4f viewMatrix = camera.getViewMatrix();
-            float m30 = viewMatrix.m30();
-            viewMatrix.m30(0);
-            float m31 = viewMatrix.m31();
-            viewMatrix.m31(0);
-            float m32 = viewMatrix.m32();
-            viewMatrix.m32(0);
-            
-            Mesh mesh = skyBox.getMesh();
-            Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(skyBox, viewMatrix);
-            skyBoxShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-            skyBoxShaderProgram.setUniform("ambientLight", scene.getSceneLight().getSkyBoxLight());
-            skyBoxShaderProgram.setUniform("color", mesh.getMaterial().getAmbientColor());
-            skyBoxShaderProgram.setUniform("hasTexture", mesh.getMaterial().isTextured() ? 1 : 0);
+                Matrix4f projectionMatrix = window.getProjectionMatrix();
+                skyBoxShaderProgram.setUniform("projectionMatrix", projectionMatrix);
+                Matrix4f viewMatrix = camera.getViewMatrix();
+                float m30 = viewMatrix.m30();
+                viewMatrix.m30(0);
+                float m31 = viewMatrix.m31();
+                viewMatrix.m31(0);
+                float m32 = viewMatrix.m32();
+                viewMatrix.m32(0);
+                
+                Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(skyBox, viewMatrix);
+                skyBoxShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+                skyBoxShaderProgram.setUniform("ambientLight", scene.getSceneLight().getSkyBoxLight());
+                skyBoxShaderProgram.setUniform("color", material.ambientColor());
+                skyBoxShaderProgram.setUniform("hasTexture", material.isTextured() ? 1 : 0);
 
-            mesh.render();
+                skyBoxModel.render(material);
 
-            viewMatrix.m30(m30);
-            viewMatrix.m31(m31);
-            viewMatrix.m32(m32);
+                viewMatrix.m30(m30);
+                viewMatrix.m31(m31);
+                viewMatrix.m32(m32);
+            }
             
             skyBoxShaderProgram.unbind();
         }
@@ -377,33 +401,34 @@ public class GLRenderer implements IRenderer {
     
     private void renderSkyBox(Matrix4f projMat, Camera camera, Scene scene) {
     	SkyBox skyBox = scene.getSkyBox();
-        if (skyBox != null) {
+        if (skyBox != null && skyBoxModel != null) {
             skyBoxShaderProgram.bind();
 
-            skyBoxShaderProgram.setUniform("texture_sampler", 0);
+            for (GLMaterial material : skyBoxModel.getGLMaterialList()) {
+            	skyBoxShaderProgram.setUniform("texture_sampler", 0);
 
-            Matrix4f projectionMatrix = projMat;
-            skyBoxShaderProgram.setUniform("projectionMatrix", projectionMatrix);
-            Matrix4f viewMatrix = camera.getViewMatrix();
-            float m30 = viewMatrix.m30();
-            viewMatrix.m30(0);
-            float m31 = viewMatrix.m31();
-            viewMatrix.m31(0);
-            float m32 = viewMatrix.m32();
-            viewMatrix.m32(0);
-            
-            Mesh mesh = skyBox.getMesh();
-            Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(skyBox, viewMatrix);
-            skyBoxShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-            skyBoxShaderProgram.setUniform("ambientLight", scene.getSceneLight().getSkyBoxLight());
-            skyBoxShaderProgram.setUniform("color", mesh.getMaterial().getAmbientColor());
-            skyBoxShaderProgram.setUniform("hasTexture", mesh.getMaterial().isTextured() ? 1 : 0);
+                Matrix4f projectionMatrix = projMat;
+                skyBoxShaderProgram.setUniform("projectionMatrix", projectionMatrix);
+                Matrix4f viewMatrix = camera.getViewMatrix();
+                float m30 = viewMatrix.m30();
+                viewMatrix.m30(0);
+                float m31 = viewMatrix.m31();
+                viewMatrix.m31(0);
+                float m32 = viewMatrix.m32();
+                viewMatrix.m32(0);
+                
+                Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(skyBox, viewMatrix);
+                skyBoxShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+                skyBoxShaderProgram.setUniform("ambientLight", scene.getSceneLight().getSkyBoxLight());
+                skyBoxShaderProgram.setUniform("color", material.ambientColor());
+                skyBoxShaderProgram.setUniform("hasTexture", material.isTextured() ? 1 : 0);
 
-            mesh.render();
+                skyBoxModel.render(material);
 
-            viewMatrix.m30(m30);
-            viewMatrix.m31(m31);
-            viewMatrix.m32(m32);
+                viewMatrix.m30(m30);
+                viewMatrix.m31(m31);
+                viewMatrix.m32(m32);
+            }
             
             skyBoxShaderProgram.unbind();
         }
@@ -505,7 +530,7 @@ public class GLRenderer implements IRenderer {
 
                     if (gameItem instanceof AnimGameItem) {
                         AnimGameItem animGameItem = (AnimGameItem) gameItem;
-                        AnimatedFrame frame = animGameItem.getCurrentFrame();
+                        AnimatedFrame frame = animGameItem.getCurrentAnimation().getCurrentFrame();
                         shader.setUniform("jointsMatrix", frame.getJointMatrices());
                     }
                 });

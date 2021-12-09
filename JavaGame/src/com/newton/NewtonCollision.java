@@ -4,15 +4,23 @@ import com.newton.generated.Newton_h;
 
 import jdk.incubator.foreign.*;
 
-public class NewtonCollision {
+public abstract class NewtonCollision implements Addressable {
 	
-	private final MemoryAddress address;
+	protected final MemoryAddress address;
+	protected ResourceScope scope;
 	
-	public NewtonCollision(MemoryAddress address) {
+	protected NewtonCollision(MemoryAddress address) {
 		this.address = address;
+		scope = ResourceScope.newConfinedScope();
 	}
 	
-	public MemoryAddress getAddress() {
+	public void destroy() {
+		Newton_h.NewtonDestroyCollision(this);
+		scope.close();
+	}
+	
+	@Override
+	public MemoryAddress address() {
 		return address;
 	}
 }

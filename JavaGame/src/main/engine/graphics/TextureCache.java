@@ -11,9 +11,18 @@ import main.engine.graphics.vulkan.VKTexture;
 public class TextureCache {
 
     private final IndexedLinkedHashMap<String, ITexture> textureMap;
+    
+    private static TextureCache instance;
 
-    public TextureCache() {
+    private TextureCache() {
         textureMap = new IndexedLinkedHashMap<String, ITexture>();
+    }
+    
+    public static synchronized TextureCache getInstance() {
+    	if (instance == null) {
+    		instance = new TextureCache();
+    	}
+    	return instance;
     }
 
     public void cleanup() {

@@ -1,29 +1,24 @@
 package main.engine.items;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joml.Vector4f;
 
-import main.engine.graphics.Material;
-import main.engine.graphics.opengl.Mesh;
-import main.engine.graphics.opengl.GLTexture;
-import main.engine.loaders.obj.OBJLoader;
+import main.engine.graphics.IRenderer;
+import main.engine.graphics.ModelData;
 
 public class SkyBox extends GameItem {
 
-    public SkyBox(String objModel, String textureFile) throws Exception {
-        super();
-        Mesh skyBoxMesh = OBJLoader.loadMesh(objModel);
-        GLTexture skyBoxtexture = new GLTexture(textureFile);
-        skyBoxMesh.setMaterial(new Material(skyBoxtexture, 0.0f));
-        setMesh(skyBoxMesh);
+    public SkyBox(ModelData modelData, IRenderer renderer, String textureFile) throws Exception {
+    	super("SkyBox", modelData.getModelId());
+        renderer.loadSkyBox(modelData);
         setPosition(0, 0, 0);
     }
     
-    public SkyBox(String objModel, Vector4f color) throws Exception {
-        super();
-        Mesh skyBoxMesh = OBJLoader.loadMesh(objModel);
-        Material material = new Material(color, 0);
-        skyBoxMesh.setMaterial(material);
-        setMesh(skyBoxMesh);
+    public SkyBox(ModelData modelData, IRenderer renderer, Vector4f color) throws Exception {
+        super("SkyBox", modelData.getModelId());
+        renderer.loadSkyBox(modelData);
         setPosition(0, 0, 0);
     }
 }
