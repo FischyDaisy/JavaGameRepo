@@ -545,7 +545,7 @@ public class MenuHud implements IHud {
         shader.setUniform("inGame", 0);
         
         //glBlendEquation(GL_FUNC_ADD);
-        if (window.getWindowOptions().cullFace) {
+        if (window.getOptions().cullFace) {
         	glDisable(GL_CULL_FACE);
         }
         glDisable(GL_DEPTH_TEST);

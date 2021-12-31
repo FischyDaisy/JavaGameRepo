@@ -84,7 +84,7 @@ public class Scene {
     public void addGameItem(GameItem gameItem) {
     	List<GameItem> gameItems = modelMap.get(gameItem.getModelId());
         if (gameItems == null) {
-            gameItems = new ArrayList<>();
+            gameItems = new ArrayList<GameItem>();
             modelMap.put(gameItem.getModelId(), gameItems);
         }
         gameItems.add(gameItem);
@@ -93,7 +93,7 @@ public class Scene {
     public void addInstancedGameItem(GameItem gameItem) {
     	List<GameItem> gameItems = instancedModelMap.get(gameItem.getModelId());
         if (gameItems == null) {
-            gameItems = new ArrayList<>();
+            gameItems = new ArrayList<GameItem>();
             instancedModelMap.put(gameItem.getModelId(), gameItems);
         }
         gameItems.add(gameItem);

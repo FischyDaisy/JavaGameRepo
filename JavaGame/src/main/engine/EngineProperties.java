@@ -29,6 +29,7 @@ public class EngineProperties {
     private boolean validate;
     private float zFar;
     private float zNear;
+    private boolean useDeferred;
 
     private EngineProperties() {
         // Singleton
@@ -50,6 +51,7 @@ public class EngineProperties {
             zNear = Float.parseFloat(props.getOrDefault("zNear", DEFAULT_Z_NEAR).toString());
             zFar = Float.parseFloat(props.getOrDefault("zFar", DEFAULT_Z_FAR).toString());
             defaultTexturePath = props.getProperty("defaultTexturePath");
+            useDeferred = Boolean.parseBoolean(props.getOrDefault("useDeferred", false).toString());
         } catch (IOException excp) {
         	System.out.println("Could not read [" + FILENAME + "] properties file");
             //System.out.println(excp);
@@ -109,5 +111,9 @@ public class EngineProperties {
     
     public boolean isvSync() {
         return vSync;
+    }
+    
+    public boolean useDeferred() {
+    	return useDeferred;
     }
 }

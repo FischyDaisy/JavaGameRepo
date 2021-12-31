@@ -6,6 +6,8 @@ import java.util.Map;
 import org.joml.FrustumIntersection;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+
+import main.engine.graphics.opengl.GLModel;
 import main.engine.graphics.opengl.Mesh;
 import main.engine.items.GameItem;
 
@@ -28,11 +30,15 @@ public class FrustumCullingFilter {
         frustumInt.set(prjViewMatrix);
     }
 
-    public void filter(Map<? extends Mesh, List<GameItem>> mapMesh) {
-        for (Map.Entry<? extends Mesh, List<GameItem>> entry : mapMesh.entrySet()) {
-            List<GameItem> gameItems = entry.getValue();
-            filter(gameItems, entry.getKey().getBoundingRadius());
-        }
+    public void filter(Map<? extends String, List<GameItem>> mapMesh, List<? extends GLModel> modelList) {
+    	for (GLModel model : modelList) {
+    		String modelId = model.getModelId();
+        	List<GameItem> items = mapMesh.get(modelId);
+        	if (items.isEmpty()) {
+        		continue;
+        	}
+        	filter(items, model.getBoundingRadius());
+    	}
     }
 
     public void filter(List<GameItem> gameItems, float meshBoundingRadius) {

@@ -30,9 +30,9 @@ import main.engine.Window;
 import main.engine.graphics.HeightMapMesh;
 import main.engine.graphics.IHud;
 import main.engine.graphics.IHudElement;
-import main.engine.graphics.IRenderer;
 import main.engine.graphics.Material;
 import main.engine.graphics.ModelData;
+import main.engine.graphics.Renderer;
 import main.engine.graphics.TextureCache;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.animation.AnimGameItem;
@@ -102,7 +102,11 @@ public class Game implements IGameLogic {
     
     private boolean leftButtonPressed;
     
-    private enum Sounds { MUSIC, BEEP, FIRE };
+    private boolean firstTime;
+
+    private boolean sceneChanged;
+    
+    private enum Sounds { FIRE };
     
     private GameItem[] gameItems;
     
@@ -112,17 +116,21 @@ public class Game implements IGameLogic {
     
     private Vector3f rotatingAngle = new Vector3f(1, 1, 1);
     
+    private GLRenderer glRenderer;
+    
+    private VKRenderer vkRenderer;
+    
     public Game() {
         camera = new Camera();
         soundMgr = new SoundManager();
         cameraInc = new Vector3f(0.0f, 0.0f, 0.0f);
         angleInc = 0;
         lightAngle = 45;
+        firstTime = true;
     }
     
     @Override
-    public void init(Window window, Scene scene, IRenderer renderer) throws Exception {
-        renderer.init(window, scene);
+    public void init(Window window, Scene scene, Renderer renderer) throws Exception {
         soundMgr.init();
         
         leftButtonPressed = false;
@@ -130,6 +138,7 @@ public class Game implements IGameLogic {
         this.scene = scene;
         
         if (!engineProperties.useVulkan()) { //OpenGL
+        	glRenderer = (GLRenderer) renderer;
         	float reflectance = 1f;
 
             float blockScale = 0.5f;
@@ -167,7 +176,7 @@ public class Game implements IGameLogic {
             List<ModelData> modelList = new ArrayList<ModelData>();
             int instances = height * width;
             String cubeModelId = "CubeModel";
-            ModelData modelData = ModelLoader.loadModel(cubeModelId, ResourcePaths.Models.CUBE_OBJ,
+            ModelData modelData = ModelLoader.loadModel(cubeModelId, ResourcePaths.Models.MCUBE_OBJ,
                     ResourcePaths.Textures.TEXTURE_DIR);
             modelData.getMaterialList().set(0, new ModelData.Material(System.getProperty("user.dir") + "\\resources\\textures\\terrain_textures.png",
             		2, 1));
@@ -176,11 +185,12 @@ public class Game implements IGameLogic {
             String modelId = "bunny";
             modelData = ModelLoader.loadModel(modelId, ResourcePaths.Models.BUNNY_OBJ,
                     ResourcePaths.Textures.TEXTURE_DIR);
-            String animId = "momster";
-            ModelData animData = ModelLoader.loadAnimModel(animId, ResourcePaths.Models.MONSTER_MD5MESH, 
-            		ResourcePaths.Textures.TEXTURE_DIR);
+            String houseId = "house";
+            ModelData houseData = ModelLoader.loadAnimModel(houseId, ResourcePaths.Models.HOUSE_OBJ, 
+            		ResourcePaths.Models.HOUSE_DIR);
             modelList.clear();
             modelList.add(modelData);
+            //modelList.add(houseData);
             //modelList.add(animData);
             ((GLRenderer) renderer).loadModels(modelList);
             gameItems = new GameItem[instances];
@@ -194,6 +204,7 @@ public class Game implements IGameLogic {
                     int textPos = Math.random() > 0.5f ? 0 : 1;
                     gameItem.setTextPos(textPos);
                     scene.addInstancedGameItem(gameItem);
+                    gameItems[i * width + j] = gameItem;
 
                     posx += inc;
                 }
@@ -204,6 +215,9 @@ public class Game implements IGameLogic {
             bun.setPosition(0f, 4f, 0f);
             bun.setScale(2.0f);
             scene.addGameItem(bun);
+            
+            GameItem house = new GameItem("HouseObject", houseId);
+            //scene.addGameItem(house);
             
             //momster = new AnimGameItem("momsterObject", animId, animData.getAnimations());
            // momster.setPosition(-5f, 4f, 0f);
@@ -227,7 +241,7 @@ public class Game implements IGameLogic {
             		4, 4));
             modelList.clear();
             modelList.add(modelData);
-            renderer.loadParticles(modelList, maxParticles);
+            glRenderer.loadParticles(modelList, maxParticles);
             GLTexture particleTexture = TextureCache.getInstance().getTexture(System.getProperty("user.dir") + "\\resources\\textures\\particle_anim.png", 4, 4);
             //Material partMaterial = new Material(particleTexture, reflectance);
             //partMesh.setMaterial(partMaterial);
@@ -258,16 +272,16 @@ public class Game implements IGameLogic {
             Portal.connect(portalA, portalB, new Transformation());
             */
             // Shadows
-            scene.setRenderShadows(false);
+            scene.setRenderShadows(true);
             
             // Fog
             Vector3f fogColour = new Vector3f(0.5f, 0.5f, 0.5f);
-            scene.setFog(new Fog(true, fogColour, 0.02f));
+            //scene.setFog(new Fog(true, fogColour, 0.02f));
             
             // Setup  SkyBox
             ModelData skyboxData = ModelLoader.loadModel("skyBoxModel", ResourcePaths.Models.SKYBOX_OBJ, 
             		ResourcePaths.Textures.TEXTURE_DIR);
-            SkyBox skyBox = new SkyBox(skyboxData, renderer, new Vector4f(0.65f, 0.65f, 0.65f, 1.0f));
+            SkyBox skyBox = new SkyBox(skyboxData, glRenderer, new Vector4f(0.65f, 0.65f, 0.65f, 1.0f));
             skyBox.setScale(skyBoxScale);
             scene.setSkyBox(skyBox);
             
@@ -296,73 +310,22 @@ public class Game implements IGameLogic {
             this.soundMgr.setAttenuationModel(AL11.AL_EXPONENT_DISTANCE);
             setupSounds();
         } else { //Vulkan
-        	/*
-        	float[] positions = new float[]{
-                    -0.5f, 0.5f, 0.5f,
-                    -0.5f, -0.5f, 0.5f,
-                    0.5f, -0.5f, 0.5f,
-                    0.5f, 0.5f, 0.5f,
-                    -0.5f, 0.5f, -0.5f,
-                    0.5f, 0.5f, -0.5f,
-                    -0.5f, -0.5f, -0.5f,
-                    0.5f, -0.5f, -0.5f,
-            };
-            float[] textCoords = new float[]{
-                    0.0f, 0.0f,
-                    0.5f, 0.0f,
-                    1.0f, 0.0f,
-                    1.0f, 0.5f,
-                    1.0f, 1.0f,
-                    0.5f, 1.0f,
-                    0.0f, 1.0f,
-                    0.0f, 0.5f,
-            };
-            int[] indices = new int[]{
-                    // Front face
-                    0, 1, 3, 3, 1, 2,
-                    // Top Face
-                    4, 0, 3, 5, 4, 3,
-                    // Right face
-                    3, 2, 7, 5, 3, 7,
-                    // Left face
-                    6, 1, 0, 6, 0, 4,
-                    // Bottom face
-                    2, 1, 6, 2, 6, 7,
-                    // Back face
-                    7, 6, 4, 7, 4, 5,
-            };
-            
-            float[] empF = new float[10];
-            int[] empI = new int[10];
+        	vkRenderer = (VKRenderer) renderer;
+        	List<ModelData> modelDataList = new ArrayList<>();
 
             String modelId = "CubeModel";
-            ModelData.MeshData meshData = new ModelData.MeshData(positions, textCoords, empF, indices, empI, empF);
-            List<ModelData.MeshData> meshDataList = new ArrayList<>();
-            meshDataList.add(meshData);
-            ModelData modelData = new ModelData(modelId, meshDataList);
-            List<ModelData> modelDataList = new ArrayList<>();
+            ModelData modelData = ModelLoader.loadModel(modelId, ResourcePaths.Models.CUBE_OBJ,
+                    ResourcePaths.Models.CUBE_DIR);
             modelDataList.add(modelData);
-            ((VKRenderer) renderer).loadModels(modelDataList);
-
-            cube = new GameItem("CubeEntity", modelId);
+            cube = new GameItem("CubeItem", modelId);
             cube.setPosition(0, 0, -2);
             scene.addGameItem(cube);
-            */
+
+            vkRenderer.loadModels(modelDataList);
         }
     }
     
     private void setupSounds() throws Exception {
-        SoundBuffer buffBack = new SoundBuffer(ResourcePaths.Sounds.BACKGROUND_OGG);
-        soundMgr.addSoundBuffer(buffBack);
-        SoundSource sourceBack = new SoundSource(true, true);
-        sourceBack.setBuffer(buffBack.getBufferId());
-        soundMgr.addSoundSource(Sounds.MUSIC.toString(), sourceBack);
-        
-        SoundBuffer buffBeep = new SoundBuffer(ResourcePaths.Sounds.BEEP_OGG);
-        soundMgr.addSoundBuffer(buffBeep);
-        SoundSource sourceBeep = new SoundSource(false, true);
-        sourceBeep.setBuffer(buffBeep.getBufferId());
-        soundMgr.addSoundSource(Sounds.BEEP.toString(), sourceBeep);
         
         SoundBuffer buffFire = new SoundBuffer(ResourcePaths.Sounds.FIRE_OGG);
         soundMgr.addSoundBuffer(buffFire);
@@ -373,9 +336,7 @@ public class Game implements IGameLogic {
         soundMgr.addSoundSource(Sounds.FIRE.toString(), sourceFire);
         sourceFire.play();
         
-        soundMgr.setListener(new SoundListener(new Vector3f()));
-
-        sourceBack.play();        
+        soundMgr.setListener(new SoundListener(new Vector3f()));      
     }
     
     private void setupLights() {
@@ -397,42 +358,51 @@ public class Game implements IGameLogic {
 
     @Override
     public void input(Window window, Scene scene, long diffTimeMillis) {
+    	sceneChanged = false;
         if (!engineProperties.useVulkan()) {
         	if (mHud != null) {
         		mHud.input(window);
+        		
         	}
         	cameraInc.set(0, 0, 0);
             if (window.isKeyPressed(GLFW_KEY_W)) {
                 cameraInc.z = -1;
+                sceneChanged = true;
             } else if (window.isKeyPressed(GLFW_KEY_S)) {
                 cameraInc.z = 1;
+                sceneChanged = true;
             }
             if (window.isKeyPressed(GLFW_KEY_A)) {
                 cameraInc.x = -1;
+                sceneChanged = true;
             } else if (window.isKeyPressed(GLFW_KEY_D)) {
                 cameraInc.x = 1;
+                sceneChanged = true;
             }
             if (window.isKeyPressed(GLFW_KEY_Z)) {
                 cameraInc.y = -1;
+                sceneChanged = true;
             } else if (window.isKeyPressed(GLFW_KEY_X)) {
                 cameraInc.y = 1;
+                sceneChanged = true;
             }
             if (window.isKeyPressed(GLFW_KEY_LEFT)) {
                 angleInc -= 0.05f;
-                soundMgr.playSoundSource(Sounds.BEEP.toString());
+                sceneChanged = true;
             } else if (window.isKeyPressed(GLFW_KEY_RIGHT)) {
                 angleInc += 0.05f;
-                soundMgr.playSoundSource(Sounds.BEEP.toString());
+                sceneChanged = true;
             } else {
                 angleInc = 0;
             }
             if (window.isKeyPressed(GLFW_KEY_SPACE)) {
             	momster.getCurrentAnimation().nextFrame();
+            	sceneChanged = true;
             }
         } else {
         	angleInc += 1.0f;
             if (angleInc >= 360) {
-                angleInc = angleInc - 360;
+                angleInc = angleInc - 360f;
             }
             cube.getRotation().identity().rotateAxis((float) Math.toRadians(angleInc), rotatingAngle);
             cube.buildModelMatrix();
@@ -447,6 +417,7 @@ public class Game implements IGameLogic {
             if (mouseInput.isRightButtonPressed()) {
                 Vector2f rotVec = mouseInput.getDisplVec();
                 camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
+                sceneChanged = true;
             }
             
             // Update camera position
@@ -496,9 +467,18 @@ public class Game implements IGameLogic {
     }
 
     @Override
-    public void render(Window window, Scene scene, IRenderer renderer) {
+    public void render(Window window, Scene scene) {
+    	if (firstTime) {
+            sceneChanged = true;
+            firstTime = false;
+        }
     	this.scene = scene;
-        renderer.render(window, camera, scene);
+        if (glRenderer != null) {
+        	glRenderer.render(window, camera, scene, sceneChanged);
+        }
+        if (vkRenderer != null) {
+        	vkRenderer.render(window, camera, scene);
+        }
         if (mHud != null) {
         	mHud.render(window);
         }
@@ -508,8 +488,13 @@ public class Game implements IGameLogic {
     }
 
     @Override
-    public void cleanup(IRenderer renderer) {
-    	renderer.cleanup();
+    public void cleanup() {
+    	if (glRenderer != null) {
+    		glRenderer.cleanup();
+    	}
+    	if (vkRenderer != null) {
+    		vkRenderer.cleanup();
+    	}
     	soundMgr.cleanup();
         scene.cleanup();
         if ( mHud != null ) {

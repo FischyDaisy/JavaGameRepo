@@ -14,7 +14,6 @@ public class Pipeline {
     private final long vkPipelineLayout;
 
     public Pipeline(PipelineCache pipelineCache, Pipeline.PipeLineCreationInfo pipeLineCreationInfo) {
-        System.out.println("Creating pipeline");
         device = pipelineCache.getDevice();
         try (MemoryStack stack = MemoryStack.stackPush()) {
             LongBuffer lp = stack.mallocLong(1);
@@ -94,8 +93,16 @@ public class Pipeline {
                         .size(pipeLineCreationInfo.pushConstantsSize());
             }
 
+            DescriptorSetLayout[] descriptorSetLayouts = pipeLineCreationInfo.descriptorSetLayouts();
+            int numLayouts = descriptorSetLayouts != null ? descriptorSetLayouts.length : 0;
+            LongBuffer ppLayout = stack.mallocLong(numLayouts);
+            for (int i = 0; i < numLayouts; i++) {
+                ppLayout.put(i, descriptorSetLayouts[i].getVkDescriptorLayout());
+            }
+
             VkPipelineLayoutCreateInfo pPipelineLayoutCreateInfo = VkPipelineLayoutCreateInfo.calloc(stack)
                     .sType(VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO)
+                    .pSetLayouts(ppLayout)
                     .pPushConstantRanges(vpcr);
 
             VulkanUtils.vkCheck(vkCreatePipelineLayout(device.getVkDevice(), pPipelineLayoutCreateInfo, null, lp),
@@ -124,7 +131,6 @@ public class Pipeline {
     }
 
     public void cleanup() {
-        System.out.println("Destroying pipeline");
         vkDestroyPipelineLayout(device.getVkDevice(), vkPipelineLayout, null);
         vkDestroyPipeline(device.getVkDevice(), vkPipeline, null);
     }
@@ -139,7 +145,8 @@ public class Pipeline {
 
     public record PipeLineCreationInfo(long vkRenderPass, ShaderProgram shaderProgram, int numColorAttachments,
                                        boolean hasDepthAttachment, int pushConstantsSize,
-                                       VertexInputStateInfo viInputStateInfo) {
+                                       VertexInputStateInfo viInputStateInfo,
+                                       DescriptorSetLayout[] descriptorSetLayouts) {
         public void cleanup() {
             viInputStateInfo.cleanup();
         }

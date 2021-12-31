@@ -11,6 +11,7 @@ public class Main {
             Window.WindowOptions opts = new Window.WindowOptions();
             opts.showFps = true;
             opts.compatibleProfile = true;
+            opts.frustumCulling = true;
             GameEngine gameEng = new GameEngine("GAME", opts, gameLogic);
             gameEng.start();
         } catch (Exception excp) {

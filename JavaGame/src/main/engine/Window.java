@@ -107,6 +107,7 @@ public class Window {
             GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
             width = vidMode.width();
             height = vidMode.height();
+            setResized(true);
 
             glfwDefaultWindowHints();
             glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -229,6 +230,7 @@ public class Window {
                 glCullFace(GL_BACK);
             }
         }
+        updateProjectionMatrix();
         mouseInput = new MouseInput(windowHandle);
     }
     
@@ -350,7 +352,7 @@ public class Window {
         glfwTerminate();
     }
     
-    public WindowOptions getWindowOptions() {
+    public WindowOptions getOptions() {
         return opts;
     }
     
@@ -365,5 +367,9 @@ public class Window {
         public boolean useVulkan;
         
         public boolean compatibleProfile;
+        
+        public boolean antialiasing;
+
+        public boolean frustumCulling;    
     }
 }

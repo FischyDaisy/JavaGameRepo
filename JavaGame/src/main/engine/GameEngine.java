@@ -1,6 +1,6 @@
 package main.engine;
 
-import main.engine.graphics.IRenderer;
+import main.engine.graphics.Renderer;
 import main.engine.graphics.opengl.GLRenderer;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.items.GameItem;
@@ -18,7 +18,7 @@ public class GameEngine implements Runnable {
 
     private final IGameLogic gameLogic;
     
-    private final IRenderer renderer;
+    private final Renderer renderer;
     
     private double lastFps;
     
@@ -43,7 +43,7 @@ public class GameEngine implements Runnable {
     	window.init(null);
         this.gameLogic = gameLogic;
         scene = new Scene();
-        this.renderer = opts.useVulkan == false ? new GLRenderer() : new VKRenderer(window, scene);
+        this.renderer = opts.useVulkan == false ? new GLRenderer(window) : new VKRenderer(window, scene);
         gameLogic.init(window, scene, renderer);
         lastFps = System.nanoTime();
         fps = 0;
@@ -71,13 +71,13 @@ public class GameEngine implements Runnable {
                 deltaU--;
             }
 
-            if ( window.getWindowOptions().showFps && updateTime - lastFps > 1000000000 ) {
+            if ( window.getOptions().showFps && updateTime - lastFps > 1000000000 ) {
                 lastFps = updateTime;
                 window.setWindowTitle(windowTitle + " - " + fps + " FPS");
                 fps = 0;
             }
             fps++;
-            gameLogic.render(window, scene, renderer);
+            gameLogic.render(window, scene);
             if (!engineProperties.useVulkan()) {
             	window.swapBuffers();
             }
@@ -91,7 +91,7 @@ public class GameEngine implements Runnable {
     }
 
     protected void cleanup() {
-        gameLogic.cleanup(renderer);
+        gameLogic.cleanup();
         window.cleanup();
     }
     
@@ -112,7 +112,7 @@ public class GameEngine implements Runnable {
     }
 
     protected void render() {
-        gameLogic.render(window, scene, renderer);
+        gameLogic.render(window, scene);
         window.update();
     }
     

@@ -34,34 +34,22 @@ import main.engine.items.GameItem;
 
 public class InstancedGLModel extends GLModel {
 	
-	public static final int INSTANCE_SIZE_BYTES = GraphConstants.MAT4X4_SIZE_BYTES * 2 + GraphConstants.FLOAT_SIZE_BYTES * 2 + GraphConstants.FLOAT_SIZE_BYTES;
-	public static final int INSTANCE_SIZE_FLOATS = GraphConstants.MAT4X4_SIZE_FLOATS * 2 + 3;
+	public static final int INSTANCE_SIZE_BYTES = GraphConstants.MAT4X4_SIZE_BYTES + GraphConstants.FLOAT_SIZE_BYTES * 2 + GraphConstants.FLOAT_SIZE_BYTES;
+	public static final int INSTANCE_SIZE_FLOATS = GraphConstants.MAT4X4_SIZE_FLOATS + 3;
 
 	public InstancedGLModel(String modelId) {
 		super(modelId);
 	}
 	
-	public void renderListInstanced(List<GameItem> gameItems, Transformation transformation, Matrix4f viewMatrix, Matrix4f lightViewMatrix) {
-		for (GLMaterial material : glMaterialList) {
-			renderListInstanced(gameItems, transformation, viewMatrix, lightViewMatrix, material);
-		}
-	}
-	
-	public void renderListInstanced(List<GameItem> gameItems, Transformation transformation, Matrix4f viewMatrix, Matrix4f lightViewMatrix, GLMaterial material) {
+	public void renderListInstanced(List<GameItem> gameItems, Transformation transformation, Matrix4f viewMatrix, GLMaterial material) {
 		for (GLMesh mesh : material.glMeshList()) {
-			((InstancedGLMesh) mesh).renderListInstanced(gameItems, transformation, viewMatrix, lightViewMatrix, material);
+			((InstancedGLMesh) mesh).renderListInstanced(gameItems, transformation, viewMatrix, material);
 		}
 	}
 	
-	public void renderListInstanced(List<GameItem> gameItems, boolean billBoard, Transformation transformation, Matrix4f viewMatrix, Matrix4f lightViewMatrix) {
-		for (GLMaterial material : glMaterialList) {
-			renderListInstanced(gameItems, billBoard, transformation, viewMatrix, lightViewMatrix, material);
-		}
-	}
-	
-	public void renderListInstanced(List<GameItem> gameItems, boolean billBoard, Transformation transformation, Matrix4f viewMatrix, Matrix4f lightViewMatrix, GLMaterial material) {
+	public void renderListInstanced(List<GameItem> gameItems, boolean billBoard, Transformation transformation, Matrix4f viewMatrix, GLMaterial material) {
 		for (GLMesh mesh : material.glMeshList()) {
-			((InstancedGLMesh) mesh).renderListInstanced(gameItems, billBoard, transformation, viewMatrix, lightViewMatrix, material);
+			((InstancedGLMesh) mesh).renderListInstanced(gameItems, billBoard, transformation, viewMatrix, material);
 		}
 	}
 	
@@ -181,15 +169,6 @@ public class InstancedGLModel extends GLModel {
 	                strideStart += GraphConstants.VECTOR4F_SIZE_BYTES;
 	            }
 
-	            // Light view matrix
-	            for (int i = 0; i < 4; i++) {
-	                glVertexAttribPointer(start, 4, GL_FLOAT, false, InstancedGLModel.INSTANCE_SIZE_BYTES, strideStart);
-	                glVertexAttribDivisor(start, 1);
-	                glEnableVertexAttribArray(start);
-	                start++;
-	                strideStart += GraphConstants.VECTOR4F_SIZE_BYTES;
-	            }
-
 	            // Texture offsets
 	            glVertexAttribPointer(start, 2, GL_FLOAT, false, InstancedGLModel.INSTANCE_SIZE_BYTES, strideStart);
 	            glVertexAttribDivisor(start, 1);
@@ -269,11 +248,11 @@ public class InstancedGLModel extends GLModel {
 			return instanceDataBuffer;
 		}
 		
-		public void renderListInstanced(List<GameItem> gameItems, Transformation transformation, Matrix4f viewMatrix, Matrix4f lightViewMatrix, GLMaterial material) {
-	        renderListInstanced(gameItems, false, transformation, viewMatrix, lightViewMatrix, material);
+		public void renderListInstanced(List<GameItem> gameItems, Transformation transformation, Matrix4f viewMatrix, GLMaterial material) {
+	        renderListInstanced(gameItems, false, transformation, viewMatrix, material);
 	    }
 
-	    public void renderListInstanced(List<GameItem> gameItems, boolean billBoard, Transformation transformation, Matrix4f viewMatrix, Matrix4f lightViewMatrix, GLMaterial material) {
+	    public void renderListInstanced(List<GameItem> gameItems, boolean billBoard, Transformation transformation, Matrix4f viewMatrix, GLMaterial material) {
 	    	initRender(material);
 
 	        int chunkSize = numInstances;
@@ -281,13 +260,13 @@ public class InstancedGLModel extends GLModel {
 	        for (int i = 0; i < length; i += chunkSize) {
 	            int end = Math.min(length, i + chunkSize);
 	            List<GameItem> subList = gameItems.subList(i, end);
-	            renderChunkInstanced(subList, billBoard, transformation, viewMatrix, lightViewMatrix, material);
+	            renderChunkInstanced(subList, billBoard, transformation, viewMatrix, material);
 	        }
 
 	        endRender();
 	    }
 
-	    private void renderChunkInstanced(List<GameItem> gameItems, boolean billBoard, Transformation transformation, Matrix4f viewMatrix, Matrix4f lightViewMatrix, GLMaterial material) {
+	    private void renderChunkInstanced(List<GameItem> gameItems, boolean billBoard, Transformation transformation, Matrix4f viewMatrix, GLMaterial material) {
 	    	this.instanceDataBuffer.clear();
 
 	        int i = 0;
@@ -295,32 +274,22 @@ public class InstancedGLModel extends GLModel {
 	        GLTexture text = material.texture();
 	        for (GameItem gameItem : gameItems) {
 	            Matrix4f modelMatrix = gameItem.buildModelMatrix();
-	            if (viewMatrix != null) {
-	                if (billBoard) {
-	                    viewMatrix.transpose3x3(modelMatrix);
-	                }
-	                Matrix4f modelViewMatrix = transformation.buildModelViewMatrix(modelMatrix, viewMatrix);
-	                if (billBoard) {
-	                    modelViewMatrix.scale(gameItem.getScale());
-	                }
-	                modelViewMatrix.get(InstancedGLModel.INSTANCE_SIZE_FLOATS * i, instanceDataBuffer);
+	            if (viewMatrix != null && billBoard) {
+	                viewMatrix.transpose3x3(modelMatrix);
 	            }
-	            if (lightViewMatrix != null) {
-	                Matrix4f modelLightViewMatrix = transformation.buildModelLightViewMatrix(modelMatrix, lightViewMatrix);
-	                modelLightViewMatrix.get(InstancedGLModel.INSTANCE_SIZE_FLOATS * i + GraphConstants.MAT4X4_SIZE_FLOATS, this.instanceDataBuffer);
-	            }
+	            modelMatrix.get(InstancedGLModel.INSTANCE_SIZE_FLOATS * i, instanceDataBuffer);
 	            if (text != null) {
 	                int col = gameItem.getTextPos() % text.getNumCols();
 	                int row = gameItem.getTextPos() / text.getNumCols();
 	                float textXOffset = (float) col / text.getNumCols();
 	                float textYOffset = (float) row / text.getNumRows();
-	                int buffPos = InstancedGLModel.INSTANCE_SIZE_FLOATS * i + GraphConstants.MAT4X4_SIZE_FLOATS * 2;
+	                int buffPos = InstancedGLModel.INSTANCE_SIZE_FLOATS * i + GraphConstants.MAT4X4_SIZE_FLOATS;
 	                this.instanceDataBuffer.put(buffPos, textXOffset);
 	                this.instanceDataBuffer.put(buffPos + 1, textYOffset);
 	            }
 	            
 	            // Selected data
-	            int buffPos = InstancedGLModel.INSTANCE_SIZE_FLOATS * i + GraphConstants.MAT4X4_SIZE_FLOATS * 2 + 2;
+	            int buffPos = InstancedGLModel.INSTANCE_SIZE_FLOATS * i + GraphConstants.MAT4X4_SIZE_FLOATS + 2;
 	            this.instanceDataBuffer.put(buffPos, gameItem.isSelected() ? 1 : 0);
 
 	            i++;

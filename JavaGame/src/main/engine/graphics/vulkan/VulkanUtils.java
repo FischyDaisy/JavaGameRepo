@@ -2,12 +2,31 @@ package main.engine.graphics.vulkan;
 
 import static org.lwjgl.vulkan.VK11.*;
 
+import java.nio.ByteBuffer;
+
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.vulkan.VkCommandBuffer;
 import org.lwjgl.vulkan.VkMemoryType;
+
+import main.engine.graphics.GraphConstants;
 
 public class VulkanUtils {
 
     private VulkanUtils() {
         // Utility class
+    }
+    
+    public static void copyMatrixToBuffer(VulkanBuffer vulkanBuffer, Matrix4f matrix) {
+        copyMatrixToBuffer(vulkanBuffer, matrix, 0);
+    }
+
+    public static void copyMatrixToBuffer(VulkanBuffer vulkanBuffer, Matrix4f matrix, int offset) {
+        long mappedMemory = vulkanBuffer.map();
+        ByteBuffer matrixBuffer = MemoryUtil.memByteBuffer(mappedMemory, (int) vulkanBuffer.getRequestedSize());
+        matrix.get(offset, matrixBuffer);
+        vulkanBuffer.unMap();
     }
     
     public static int memoryTypeFromProperties(PhysicalDevice physDevice, int typeBits, int reqsMask) {
@@ -24,6 +43,15 @@ public class VulkanUtils {
             throw new RuntimeException("Failed to find memoryType");
         }
         return result;
+    }
+    
+    public static void setMatrixAsPushConstant(Pipeline pipeLine, VkCommandBuffer cmdHandle, Matrix4f matrix) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            ByteBuffer pushConstantBuffer = stack.malloc(GraphConstants.MAT4X4_SIZE_BYTES);
+            matrix.get(0, pushConstantBuffer);
+            vkCmdPushConstants(cmdHandle, pipeLine.getVkPipelineLayout(),
+                    VK_SHADER_STAGE_VERTEX_BIT, 0, pushConstantBuffer);
+        }
     }
 
     public static void vkCheck(int err, String errMsg) {

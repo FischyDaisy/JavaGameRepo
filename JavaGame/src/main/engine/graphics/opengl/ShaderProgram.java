@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -44,6 +45,12 @@ public class ShaderProgram {
         uniforms.put(uniformName, uniformLocation);
     }
     
+    public void createUniform(String uniformName, int size) throws Exception {
+        for (int i=0; i<size; i++) {
+            createUniform(uniformName + "[" + i + "]");
+        }
+    }
+    
     public void createPointLightListUniform(String uniformName, int size) throws Exception {
         for (int i = 0; i < size; i++) {
             createPointLightUniform(uniformName + "[" + i + "]");
@@ -78,7 +85,6 @@ public class ShaderProgram {
     }
 
     public void createMaterialUniform(String uniformName) throws Exception {
-        createUniform(uniformName + ".ambient");
         createUniform(uniformName + ".diffuse");
         createUniform(uniformName + ".specular");
         createUniform(uniformName + ".hasTexture");
@@ -100,6 +106,10 @@ public class ShaderProgram {
         }
     }
     
+    public void setUniform(String uniformName, Matrix4f value, int index) {
+        setUniform(uniformName + "[" + index  + "]", value);
+    }
+    
     public void setUniform(String uniformName, Matrix4f[] matrices) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             int length = matrices != null ? matrices.length : 0;
@@ -117,6 +127,18 @@ public class ShaderProgram {
     
     public void setUniform(String uniformName, float value) {
         glUniform1f(uniforms.get(uniformName), value);
+    }
+    
+    public void setUniform(String uniformName, float value, int index) {
+        setUniform(uniformName + "[" + index  + "]", value);
+    }
+    
+    public void setUniform(String uniformName, float x, float y) {
+        glUniform2f(uniforms.get(uniformName), x, y);
+    }
+    
+    public void setUniform(String uniformName, Vector2f value) {
+        glUniform2f(uniforms.get(uniformName), value.x, value.y);
     }
     
     public void setUniform(String uniformName, Vector3f value) {
@@ -170,18 +192,8 @@ public class ShaderProgram {
         setUniform(uniformName + ".direction", dirLight.getDirection());
         setUniform(uniformName + ".intensity", dirLight.getIntensity());
     }
-
-    public void setUniform(String uniformName, Material material) {
-        setUniform(uniformName + ".ambient", material.getAmbientColor());
-        setUniform(uniformName + ".diffuse", material.getDiffuseColor());
-        setUniform(uniformName + ".specular", material.getSpecularColor());
-        setUniform(uniformName + ".hasTexture", material.isTextured() ? 1 : 0);
-        setUniform(uniformName + ".hasNormalMap", material.hasNormalMap() ? 1 : 0);
-        setUniform(uniformName + ".reflectance", material.getReflectance());
-    }
     
     public void setUniform(String uniformName, GLModel.GLMaterial material) {
-    	setUniform(uniformName + ".ambient", material.ambientColor());
         setUniform(uniformName + ".diffuse", material.diffuseColor());
         setUniform(uniformName + ".specular", material.specularColor());
         setUniform(uniformName + ".hasTexture", material.isTextured() ? 1 : 0);
