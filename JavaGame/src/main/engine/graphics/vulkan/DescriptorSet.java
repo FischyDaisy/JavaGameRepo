@@ -14,6 +14,13 @@ public abstract class DescriptorSet {
     public long getVkDescriptorSet() {
         return vkDescriptorSet;
     }
+    
+    public static class DynUniformDescriptorSet extends SimpleDescriptorSet {
+        public DynUniformDescriptorSet(DescriptorPool descriptorPool, DescriptorSetLayout descriptorSetLayout,
+                                       VulkanBuffer buffer, int binding, long size) {
+            super(descriptorPool, descriptorSetLayout, buffer, binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, size);
+        }
+    }
 
     public static class SimpleDescriptorSet extends DescriptorSet {
 
@@ -51,6 +58,15 @@ public abstract class DescriptorSet {
 
                 vkUpdateDescriptorSets(device.getVkDevice(), descrBuffer, null);
             }
+        }
+    }
+    
+    public static class StorageDescriptorSet extends SimpleDescriptorSet {
+
+        public StorageDescriptorSet(DescriptorPool descriptorPool, DescriptorSetLayout descriptorSetLayout,
+                                    VulkanBuffer buffer, int binding) {
+            super(descriptorPool, descriptorSetLayout, buffer, binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+                    buffer.getRequestedSize());
         }
     }
 

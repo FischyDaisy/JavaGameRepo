@@ -58,6 +58,7 @@ public class GameEngine implements Runnable {
         long updateTime = initialTime;
         while (running && !window.windowShouldClose()) {
 
+        	scene.getCamera().setHasMoved(false);
             window.pollEvents();
 
             long currentTime = System.nanoTime();

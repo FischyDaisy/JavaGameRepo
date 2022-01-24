@@ -33,7 +33,6 @@ import main.engine.graphics.IHudElement;
 import main.engine.graphics.Material;
 import main.engine.graphics.ModelData;
 import main.engine.graphics.Renderer;
-import main.engine.graphics.TextureCache;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.camera.Camera;
@@ -44,8 +43,10 @@ import main.engine.graphics.hud.Demo;
 import main.engine.graphics.hud.GameHud;
 import main.engine.graphics.hud.MenuHud;
 import main.engine.graphics.lights.DirectionalLight;
+import main.engine.graphics.lights.Light;
 import main.engine.graphics.opengl.Mesh;
 import main.engine.graphics.opengl.GLTexture;
+import main.engine.graphics.opengl.GLTextureCache;
 import main.engine.graphics.opengl.InstancedGLModel;
 import main.engine.graphics.particles.FlowParticleEmitter;
 import main.engine.graphics.particles.Particle;
@@ -63,6 +64,7 @@ import main.engine.sound.SoundBuffer;
 import main.engine.sound.SoundListener;
 import main.engine.sound.SoundManager;
 import main.engine.sound.SoundSource;
+import main.engine.utility.AxisRotation;
 import main.engine.utility.ResourcePaths;
 
 import com.newton.*;
@@ -94,6 +96,8 @@ public class Game implements IGameLogic {
     
     private float angleInc;
     
+    private Light directionalLight;
+    
     private final SoundManager soundMgr;
     
     private FlowParticleEmitter particleEmitter;
@@ -110,7 +114,9 @@ public class Game implements IGameLogic {
     
     private GameItem[] gameItems;
     
-    private GameItem cube;
+    private GameItem bob;
+    
+    private int maxFrames = 0;
     
     private AnimGameItem momster;
     
@@ -177,17 +183,17 @@ public class Game implements IGameLogic {
             int instances = height * width;
             String cubeModelId = "CubeModel";
             ModelData modelData = ModelLoader.loadModel(cubeModelId, ResourcePaths.Models.MCUBE_OBJ,
-                    ResourcePaths.Textures.TEXTURE_DIR);
+                    ResourcePaths.Textures.TEXTURE_DIR, false);
             modelData.getMaterialList().set(0, new ModelData.Material(System.getProperty("user.dir") + "\\resources\\textures\\terrain_textures.png",
             		2, 1));
             modelList.add(modelData);
             ((GLRenderer) renderer).loadInstanceModels(modelList, instances);
             String modelId = "bunny";
             modelData = ModelLoader.loadModel(modelId, ResourcePaths.Models.BUNNY_OBJ,
-                    ResourcePaths.Textures.TEXTURE_DIR);
+                    ResourcePaths.Textures.TEXTURE_DIR, false);
             String houseId = "house";
-            ModelData houseData = ModelLoader.loadAnimModel(houseId, ResourcePaths.Models.HOUSE_OBJ, 
-            		ResourcePaths.Models.HOUSE_DIR);
+            ModelData houseData = ModelLoader.loadModel(houseId, ResourcePaths.Models.HOUSE_OBJ, 
+            		ResourcePaths.Models.HOUSE_DIR, false);
             modelList.clear();
             modelList.add(modelData);
             //modelList.add(houseData);
@@ -236,13 +242,13 @@ public class Game implements IGameLogic {
             //Mesh partMesh = OBJLoader.loadMesh("/resources/models/particle.obj", maxParticles);
             String partId = "particle";
             modelData = ModelLoader.loadModel(partId, ResourcePaths.Models.PARTICLE_OBJ, 
-            		ResourcePaths.Textures.TEXTURE_DIR);
+            		ResourcePaths.Textures.TEXTURE_DIR, false);
             modelData.getMaterialList().set(0, new ModelData.Material(System.getProperty("user.dir") + "\\resources\\textures\\particle_anim.png",
             		4, 4));
             modelList.clear();
             modelList.add(modelData);
             glRenderer.loadParticles(modelList, maxParticles);
-            GLTexture particleTexture = TextureCache.getInstance().getTexture(System.getProperty("user.dir") + "\\resources\\textures\\particle_anim.png", 4, 4);
+            GLTexture particleTexture = GLTextureCache.getInstance().get(System.getProperty("user.dir") + "\\resources\\textures\\particle_anim.png", 4, 4);
             //Material partMaterial = new Material(particleTexture, reflectance);
             //partMesh.setMaterial(partMaterial);
             Particle particle = new Particle("FlameParticle", partId, particleTexture, particleSpeed, ttl, 100);
@@ -280,7 +286,7 @@ public class Game implements IGameLogic {
             
             // Setup  SkyBox
             ModelData skyboxData = ModelLoader.loadModel("skyBoxModel", ResourcePaths.Models.SKYBOX_OBJ, 
-            		ResourcePaths.Textures.TEXTURE_DIR);
+            		ResourcePaths.Textures.TEXTURE_DIR, false);
             SkyBox skyBox = new SkyBox(skyboxData, glRenderer, new Vector4f(0.65f, 0.65f, 0.65f, 1.0f));
             skyBox.setScale(skyBoxScale);
             scene.setSkyBox(skyBox);
@@ -313,15 +319,50 @@ public class Game implements IGameLogic {
         	vkRenderer = (VKRenderer) renderer;
         	List<ModelData> modelDataList = new ArrayList<>();
 
-            String modelId = "CubeModel";
-            ModelData modelData = ModelLoader.loadModel(modelId, ResourcePaths.Models.CUBE_OBJ,
-                    ResourcePaths.Models.CUBE_DIR);
-            modelDataList.add(modelData);
-            cube = new GameItem("CubeItem", modelId);
-            cube.setPosition(0, 0, -2);
-            scene.addGameItem(cube);
+        	String sponzaModelId = "sponza-model";
+            ModelData sponzaModelData = ModelLoader.loadModel(sponzaModelId, ResourcePaths.Models.SPONZA_GLTF,
+                    ResourcePaths.Models.SPONZA_DIR, false);
+            modelDataList.add(sponzaModelData);
+            GameItem sponza = new GameItem("SponzaObject", sponzaModelId);
+            scene.addGameItem(sponza);
+            
+            String bobModelId = "bob-model";
+            ModelData bobModelData = ModelLoader.loadModel(bobModelId, ResourcePaths.Models.BOBLAMP_MD5MESH,
+            		ResourcePaths.Models.BOBLAMP_DIR, true);
+            maxFrames = bobModelData.getAnimationsList().get(0).frames().size();
+            modelDataList.add(bobModelData);
+            bob = new GameItem("BobObject", bobModelId);
+            bob.setScale(0.1f);
+            AxisRotation rot = AxisRotation.UP;
+            rot.setRotation((float) Math.toRadians(-90.0f));
+            bob.setRotation(rot.getQuatRotation());
+            bob.buildModelMatrix();
+            bob.setGameItemAnimation(new GameItem.GameItemAnimation(false, 0, 0));
+            scene.addGameItem(bob);
 
             vkRenderer.loadModels(modelDataList);
+            vkRenderer.loadAnimation(bob);
+            
+            camera.setPosition(0.0f, 5.0f, 0.0f);
+            camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
+            scene.setCamera(camera);
+            
+            scene.getSceneLight().getAmbientLight().set(0.2f, 0.2f, 0.2f, 1.0f);
+            List<Light> lights = new ArrayList<>();
+            directionalLight = new Light();
+            directionalLight.getPosition().set(0.0f, 1.0f, 0.0f, 0.0f);
+            directionalLight.getColor().set(1.0f, 1.0f, 1.0f, 1.0f);
+            lights.add(directionalLight);
+            updateDirectionalLight();
+
+            Light light = new Light();
+            light.getPosition().set(0, 1, 0, 1.0f);
+            light.getColor().set(0.0f, 1.0f, 0.0f, 1.0f);
+            lights.add(light);
+            
+            Light[] lightArr = new Light[lights.size()];
+            lightArr = lights.toArray(lightArr);
+            scene.getSceneLight().setLights(lightArr);
         }
     }
     
@@ -344,8 +385,8 @@ public class Game implements IGameLogic {
         scene.setSceneLight(sceneLight);
 
         // Ambient Light
-        sceneLight.setAmbientLight(new Vector3f(0.3f, 0.3f, 0.3f));
-        sceneLight.setSkyBoxLight(new Vector3f(1.0f, 1.0f, 1.0f));
+        //sceneLight.setAmbientLight(new Vector3f(0.3f, 0.3f, 0.3f));
+        sceneLight.getSkyBoxLight().set(new Vector3f(1.0f, 1.0f, 1.0f));
 
         // Directional Light
         float lightIntensity = 1.0f;
@@ -353,7 +394,7 @@ public class Game implements IGameLogic {
         DirectionalLight directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), lightDirection, lightIntensity);
         directionalLight.setShadowPosMult(5);
         directionalLight.setOrthoCords(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 20.0f);
-        sceneLight.setDirectionalLight(directionalLight);
+        //sceneLight.setDirectionalLight(directionalLight);
     }
 
     @Override
@@ -400,12 +441,57 @@ public class Game implements IGameLogic {
             	sceneChanged = true;
             }
         } else {
-        	angleInc += 1.0f;
-            if (angleInc >= 360) {
-                angleInc = angleInc - 360f;
+        	cameraInc.set(0, 0, 0);
+            if (window.isKeyPressed(GLFW_KEY_W)) {
+                cameraInc.z = -1;
+                sceneChanged = true;
+            } else if (window.isKeyPressed(GLFW_KEY_S)) {
+                cameraInc.z = 1;
+                sceneChanged = true;
             }
-            cube.getRotation().identity().rotateAxis((float) Math.toRadians(angleInc), rotatingAngle);
-            cube.buildModelMatrix();
+            if (window.isKeyPressed(GLFW_KEY_A)) {
+                cameraInc.x = -1;
+                sceneChanged = true;
+            } else if (window.isKeyPressed(GLFW_KEY_D)) {
+                cameraInc.x = 1;
+                sceneChanged = true;
+            }
+            if (window.isKeyPressed(GLFW_KEY_Z)) {
+                cameraInc.y = -1;
+                sceneChanged = true;
+            } else if (window.isKeyPressed(GLFW_KEY_X)) {
+                cameraInc.y = 1;
+                sceneChanged = true;
+            }
+            
+            if (window.isKeyPressed(GLFW_KEY_LEFT)) {
+                angleInc -= 0.05f;
+                scene.getSceneLight().setLightChanged(true);
+            } else if (window.isKeyPressed(GLFW_KEY_RIGHT)) {
+                angleInc += 0.05f;
+                scene.getSceneLight().setLightChanged(true);
+            } else {
+                angleInc = 0;
+                scene.getSceneLight().setLightChanged(false);
+            }
+            
+            if (window.isKeyPressed(GLFW_KEY_SPACE)) {
+                bob.getGameItemAnimation().setStarted(!bob.getGameItemAnimation().isStarted());
+            }
+            
+            lightAngle += angleInc;
+            if (lightAngle < 0) {
+                lightAngle = 0;
+            } else if (lightAngle > 180) {
+                lightAngle = 180;
+            }
+            updateDirectionalLight();
+            
+            GameItem.GameItemAnimation itemAnimation = bob.getGameItemAnimation();
+            if (itemAnimation.isStarted()) {
+                int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, maxFrames);
+                itemAnimation.setCurrentFrame(currentFrame);
+            }
         }
     }
 
@@ -438,7 +524,7 @@ public class Game implements IGameLogic {
             }
             float zValue = (float) Math.cos(Math.toRadians(lightAngle));
             float yValue = (float) Math.sin(Math.toRadians(lightAngle));
-            Vector3f lightDirection = this.scene.getSceneLight().getDirectionalLight().getDirection();
+            Vector3f lightDirection = new Vector3f();//this.scene.getSceneLight().getDirectionalLight().getDirection();
             lightDirection.x = 0;
             lightDirection.y = yValue;
             lightDirection.z = zValue;
@@ -463,6 +549,25 @@ public class Game implements IGameLogic {
                 //this.gHud.incCounter();
             }
             this.leftButtonPressed = aux;
+        } else {
+        	// Update camera based on mouse            
+            if (mouseInput.isRightButtonPressed()) {
+                Vector2f rotVec = mouseInput.getDisplVec();
+                camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
+                sceneChanged = true;
+            }
+            
+            // Update camera position
+            Vector3f prevPos = new Vector3f(camera.getPosition());
+            camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);        
+            // Check if there has been a collision. If true, set the y position to
+            // the maximum height
+            float height = terrain != null ? terrain.getHeight(camera.getPosition()) : -Float.MAX_VALUE;
+            if ( camera.getPosition().y <= height )  {
+                camera.setPosition(prevPos.x, prevPos.y, prevPos.z);
+            }
+            
+            camera.updateViewMatrixQuat();
         }
     }
 
@@ -503,6 +608,17 @@ public class Game implements IGameLogic {
         if ( gHud != null ) {
             gHud.cleanup();
         }
+    }
+    
+    private void updateDirectionalLight() {
+        float zValue = (float) Math.cos(Math.toRadians(lightAngle));
+        float yValue = (float) Math.sin(Math.toRadians(lightAngle));
+        Vector4f lightDirection = directionalLight.getPosition();
+        lightDirection.x = 0;
+        lightDirection.y = yValue;
+        lightDirection.z = zValue;
+        lightDirection.normalize();
+        lightDirection.w = 0.0f;
     }
     
     public static String arrToString(float[] arr) {

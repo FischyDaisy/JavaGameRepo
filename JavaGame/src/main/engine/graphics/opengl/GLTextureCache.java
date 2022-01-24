@@ -1,13 +1,21 @@
 package main.engine.graphics.opengl;
 
 import main.engine.EngineProperties;
-import main.engine.graphics.ITexture;
 import main.engine.utility.Cache;
 
 public class GLTextureCache extends Cache<GLTexture> {
 	
-	public GLTextureCache() {
+	private static GLTextureCache instance;
+	
+	private GLTextureCache() {
 		super();
+	}
+	
+	public static synchronized GLTextureCache getInstance() {
+		if (instance == null) {
+    		instance = new GLTextureCache();
+    	}
+    	return instance;
 	}
 
 	@Override
@@ -18,13 +26,12 @@ public class GLTextureCache extends Cache<GLTexture> {
             //path = System.getProperty("user.dir") + "\\" + engProperties.getDefaultTexturePath().replace('/', '\\');
             return null;
         }
-        GLTexture texture = cacheMap.get(path);
-		return texture;
+		return cacheMap.get(path);
 	}
 	
 	public GLTexture get(String key, int cols, int rows) throws Exception {
 		GLTexture texture = get(key);
-		if (texture == null) {
+		if (texture == null && key.length() > 0) {
 			texture = new GLTexture(key, cols, rows);
             cacheMap.put(key, texture);
 		}

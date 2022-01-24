@@ -19,6 +19,7 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.nuklear.Nuklear.NK_ANTI_ALIASING_ON;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,6 @@ import main.engine.graphics.FrustumCullingFilter;
 import main.engine.graphics.IHud;
 import main.engine.graphics.ModelData;
 import main.engine.graphics.Renderer;
-import main.engine.graphics.TextureCache;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.animation.AnimatedFrame;
@@ -80,7 +80,7 @@ public class GLRenderer implements Renderer {
     
     private final ShadowRenderer shadowRenderer;
     
-    private final TextureCache textureCache;
+    private final GLTextureCache textureCache;
     
     private final Transformation transformation;
     
@@ -108,7 +108,7 @@ public class GLRenderer implements Renderer {
 
     public GLRenderer(Window window) throws Exception {
     	transformation = new Transformation();
-    	textureCache = TextureCache.getInstance();
+    	textureCache = GLTextureCache.getInstance();
     	specularPower = 10f;
     	frustumFilter = new FrustumCullingFilter();
         filteredItems = new ArrayList<GameItem>();
@@ -343,6 +343,20 @@ public class GLRenderer implements Renderer {
     
     public void loadModels(List<ModelData> modelDataList) throws Exception {
     	glModels.addAll(GLModel.transformModels(modelDataList, textureCache));
+    	
+    	// Reorder materials inside models
+        glModels.forEach(m -> {
+            Collections.sort(m.getGLMaterialList(), (a, b) -> Boolean.compare(a.isTransparent(), b.isTransparent()));
+        });
+
+        // Reorder models
+        Collections.sort(glModels, (a, b) -> {
+            boolean aHasTransparentMt = a.getGLMaterialList().stream().filter(m -> m.isTransparent()).findAny().isPresent();
+            boolean bHasTransparentMt = b.getGLMaterialList().stream().filter(m -> m.isTransparent()).findAny().isPresent();
+
+            return Boolean.compare(aHasTransparentMt, bHasTransparentMt);
+        });
+    	
     	shadowRenderer.loadModels(glModels);
     }
     
@@ -353,6 +367,20 @@ public class GLRenderer implements Renderer {
     
     public void loadInstanceModels(List<ModelData> modelDataList, int numInstances) throws Exception {
     	glInstancedModels.addAll((InstancedGLModel.transformModels(modelDataList, textureCache, numInstances)));
+    	
+    	// Reorder materials inside models
+    	glInstancedModels.forEach(m -> {
+            Collections.sort(m.getGLMaterialList(), (a, b) -> Boolean.compare(a.isTransparent(), b.isTransparent()));
+        });
+
+        // Reorder models
+        Collections.sort(glInstancedModels, (a, b) -> {
+            boolean aHasTransparentMt = a.getGLMaterialList().stream().filter(m -> m.isTransparent()).findAny().isPresent();
+            boolean bHasTransparentMt = b.getGLMaterialList().stream().filter(m -> m.isTransparent()).findAny().isPresent();
+
+            return Boolean.compare(aHasTransparentMt, bHasTransparentMt);
+        });
+    	
     	shadowRenderer.loadInstancedModels(glInstancedModels);
     }
     

@@ -56,6 +56,33 @@ public class Queue {
     public void waitIdle() {
         vkQueueWaitIdle(vkQueue);
     }
+    
+    public static class ComputeQueue extends Queue {
+
+        public ComputeQueue(Device device, int queueIndex) {
+            super(device, getComputeQueueFamilyIndex(device), queueIndex);
+        }
+
+        private static int getComputeQueueFamilyIndex(Device device) {
+            int index = -1;
+            PhysicalDevice physicalDevice = device.getPhysicalDevice();
+            VkQueueFamilyProperties.Buffer queuePropsBuff = physicalDevice.getVkQueueFamilyProps();
+            int numQueuesFamilies = queuePropsBuff.capacity();
+            for (int i = 0; i < numQueuesFamilies; i++) {
+                VkQueueFamilyProperties props = queuePropsBuff.get(i);
+                boolean computeQueue = (props.queueFlags() & VK_QUEUE_COMPUTE_BIT) != 0;
+                if (computeQueue) {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index < 0) {
+                throw new RuntimeException("Failed to get compute Queue family index");
+            }
+            return index;
+        }
+    }
 
     public static class GraphicsQueue extends Queue {
 

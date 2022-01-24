@@ -15,12 +15,12 @@ public class Portal extends GameItem {
 	private Warp dest;
 	
 	public Portal(Mesh mesh) throws Exception {
-		super(mesh);
+		//super(mesh);
 		dest = null;
 	}
 	
 	public Portal(Mesh[] meshes) throws Exception {
-		super(meshes);
+		//super(meshes);
 		dest = null;
 	}
 	

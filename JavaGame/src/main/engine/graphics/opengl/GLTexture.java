@@ -23,6 +23,8 @@ public class GLTexture implements ITexture {
 
     private int numCols = 1;
     
+    private boolean hasTransparencies;
+    
     /**
      * Creates an empty texture.
      *
@@ -55,6 +57,7 @@ public class GLTexture implements ITexture {
             if (buf == null) {
                 throw new Exception("Image file [" + fileName  + "] not loaded: " + stbi_failure_reason());
             }
+            setHasTransparencies(buf);
 
             width = w.get();
             height = h.get();
@@ -83,6 +86,7 @@ public class GLTexture implements ITexture {
             if (buf == null) {
                 throw new Exception("Image file not loaded: " + stbi_failure_reason());
             }
+            setHasTransparencies(buf);
 
             width = w.get();
             height = h.get();
@@ -112,7 +116,25 @@ public class GLTexture implements ITexture {
         glGenerateMipmap(GL_TEXTURE_2D);
 
         return textureId;
-    }	
+    }
+    
+    public boolean hasTransparencies() {
+        return hasTransparencies;
+    }
+    
+    private void setHasTransparencies(ByteBuffer buf) {
+        int numPixels = buf.capacity() / 4;
+        int offset = 0;
+        hasTransparencies = false;
+        for (int i = 0; i < numPixels; i++) {
+            int a = (0xFF & buf.get(offset + 3));
+            if (a < 255) {
+                hasTransparencies = true;
+                break;
+            }
+            offset += 4;
+        }
+    }
 
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, id);

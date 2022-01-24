@@ -8,6 +8,12 @@ public class Attachment {
     private final ImageView imageView;
 
     private boolean depthAttachment;
+    
+    public Attachment(Image image, ImageView imageView, boolean depthAttachment) {
+        this.image = image;
+        this.imageView = imageView;
+        this.depthAttachment = depthAttachment;
+    }
 
     public Attachment(Device device, int width, int height, int format, int usage) {
         Image.ImageData imageData = new Image.ImageData().width(width).height(height).
@@ -15,18 +21,22 @@ public class Attachment {
                 format(format);
         image = new Image(device, imageData);
 
-        int aspectMask = 0;
-        if ((usage & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) > 0) {
-            aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-            depthAttachment = false;
-        }
-        if ((usage & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) > 0) {
-            aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-            depthAttachment = true;
-        }
+        int aspectMask = calcAspectMask(usage);
+        depthAttachment = aspectMask == VK_IMAGE_ASPECT_DEPTH_BIT;
 
         ImageView.ImageViewData imageViewData = new ImageView.ImageViewData().format(image.getFormat()).aspectMask(aspectMask);
         imageView = new ImageView(device, image.getVkImage(), imageViewData);
+    }
+    
+    public static int calcAspectMask(int usage) {
+        int aspectMask = 0;
+        if ((usage & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) > 0) {
+            aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        }
+        if ((usage & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) > 0) {
+            aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+        }
+        return aspectMask;
     }
 
     public void cleanup() {

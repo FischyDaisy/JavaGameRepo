@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import main.engine.graphics.camera.Camera;
 import main.engine.graphics.opengl.InstancedMesh;
 import main.engine.graphics.opengl.Mesh;
 import main.engine.graphics.particles.IParticleEmitter;
@@ -24,6 +25,8 @@ public class Scene {
 	private final Map<InstancedMesh, List<GameItem>> instancedMeshMap;
 	
 	private final Map<Mesh, List<GameItem>> portalMap;
+	
+	private Camera camera;
     
     private SkyBox skyBox;
     
@@ -43,6 +46,7 @@ public class Scene {
         portalMap = new HashMap<Mesh, List<GameItem>>();
         fog = Fog.NOFOG;
         renderShadows = true;
+        sceneLight = new SceneLight();
     }
 
     public Map<Mesh, List<GameItem>> getGameMeshes() {
@@ -167,6 +171,14 @@ public class Scene {
 
     public void setSceneLight(SceneLight sceneLight) {
         this.sceneLight = sceneLight;
+    }
+    
+    public Camera getCamera() {
+    	return camera;
+    }
+    
+    public void setCamera(Camera camera) {
+    	this.camera = camera;
     }
     
     /**

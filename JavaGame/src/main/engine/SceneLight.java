@@ -1,29 +1,67 @@
 package main.engine;
 
-import org.joml.Vector3f;
+import java.util.Arrays;
+import java.util.Optional;
 
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
+import main.engine.graphics.GraphConstants;
 import main.engine.graphics.lights.DirectionalLight;
+import main.engine.graphics.lights.Light;
 import main.engine.graphics.lights.PointLight;
 import main.engine.graphics.lights.SpotLight;
 
 public class SceneLight {
 
-    private Vector3f ambientLight;
+    private final Vector4f ambientLight;
     
-    private Vector3f skyBoxLight;
+    private final Vector3f skyBoxLight;
     
     private PointLight[] pointLightList;
     
     private SpotLight[] spotLightList;
     
-    private DirectionalLight directionalLight;
-
-    public Vector3f getAmbientLight() {
-        return ambientLight;
+    private Light directionalLight;
+    
+    private boolean lightChanged;
+    
+    private Light[] lights;
+    
+    public SceneLight() {
+    	ambientLight = new Vector4f();
+    	skyBoxLight = new Vector3f();
     }
 
-    public void setAmbientLight(Vector3f ambientLight) {
-        this.ambientLight = ambientLight;
+    public Vector4f getAmbientLight() {
+        return ambientLight;
+    }
+    
+    public Light[] getLights() {
+        return this.lights;
+    }
+    
+    public boolean isLightChanged() {
+        return lightChanged;
+    }
+    
+    public void setLightChanged(boolean lightChanged) {
+        this.lightChanged = lightChanged;
+    }
+    
+    public void setLights(Light[] lights) {
+    	directionalLight = null;
+        int numLights = lights != null ? lights.length : 0;
+        if (numLights > GraphConstants.MAX_LIGHTS) {
+            throw new RuntimeException("Maximum number of lights set to: " + GraphConstants.MAX_LIGHTS);
+        }
+        this.lights = lights;
+        Optional<Light> option = Arrays.stream(lights).filter(l -> l.getPosition().w == 0).findFirst();
+        if (option.isPresent()) {
+            directionalLight = option.get();
+        }
+
+        lightChanged = true;
     }
 
     public PointLight[] getPointLightList() {
@@ -42,19 +80,15 @@ public class SceneLight {
         this.spotLightList = spotLightList;
     }
 
-    public DirectionalLight getDirectionalLight() {
+    public Light getDirectionalLight() {
         return directionalLight;
     }
 
-    public void setDirectionalLight(DirectionalLight directionalLight) {
+    public void setDirectionalLight(Light directionalLight) {
         this.directionalLight = directionalLight;
     }
     
     public Vector3f getSkyBoxLight() {
         return skyBoxLight;
-    }
-
-    public void setSkyBoxLight(Vector3f skyBoxLight) {
-        this.skyBoxLight = skyBoxLight;
     }
 }

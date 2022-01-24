@@ -8,7 +8,7 @@ import main.engine.graphics.IndexedLinkedHashMap;
 public abstract class Cache<T> {
 	protected final IndexedLinkedHashMap<String, T> cacheMap;
 	
-	public Cache() {
+	protected Cache() {
 		cacheMap = new IndexedLinkedHashMap<String, T>();
 	}
 	

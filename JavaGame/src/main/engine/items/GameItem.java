@@ -9,13 +9,13 @@ import main.engine.graphics.opengl.Mesh;
 
 public class GameItem {
 	
+	private GameItemAnimation gameItemAnimation;
+	
 	private String id;
 	
 	private String modelId;
 	
 	private boolean selected;
-
-	private Mesh[] meshes;
     
     private final Vector3f scale;
     
@@ -44,15 +44,17 @@ public class GameItem {
     	this.id = id;
     	this.modelId = modelId;
     }
-
-    public GameItem(Mesh mesh) {
-        this();
-        this.meshes = new Mesh[]{mesh};
+    
+    public GameItemAnimation getGameItemAnimation() {
+        return gameItemAnimation;
     }
 
-    public GameItem(Mesh[] meshes) {
-        this();
-        this.meshes = meshes;
+    public void setGameItemAnimation(GameItemAnimation entityAnimation) {
+        this.gameItemAnimation = entityAnimation;
+    }
+
+    public boolean hasAnimation() {
+        return gameItemAnimation != null;
     }
 
     public Vector3f getPosition() {
@@ -159,22 +161,6 @@ public class GameItem {
     	return modelMatrix.set(m);
     }
     
-    public Mesh getMesh() {
-        return meshes[0];
-    }
-    
-    public Mesh[] getMeshes() {
-        return meshes;
-    }
-
-    public void setMeshes(Mesh[] meshes) {
-        this.meshes = meshes;
-    }
-
-    public void setMesh(Mesh mesh) {
-        this.meshes = new Mesh[]{mesh};
-    }
-    
     public boolean isInsideFrustum() {
         return insideFrustum;
     }
@@ -189,12 +175,41 @@ public class GameItem {
 
     public void setDisableFrustumCulling(boolean disableFrustumCulling) {
         this.disableFrustumCulling = disableFrustumCulling;
-    } 
+    }
     
-    public void cleanup() {
-        int numMeshes = this.meshes != null ? this.meshes.length : 0;
-        for(int i = 0; i < numMeshes; i++) {
-            this.meshes[i].cleanup();
+    public static class GameItemAnimation {
+        private int animationIdx;
+        private int currentFrame;
+        private boolean started;
+
+        public GameItemAnimation(boolean started, int animationIdx, int currentFrame) {
+            this.started = started;
+            this.animationIdx = animationIdx;
+            this.currentFrame = currentFrame;
+        }
+
+        public int getAnimationIdx() {
+            return animationIdx;
+        }
+
+        public void setAnimationIdx(int animationIdx) {
+            this.animationIdx = animationIdx;
+        }
+
+        public int getCurrentFrame() {
+            return currentFrame;
+        }
+
+        public void setCurrentFrame(int currentFrame) {
+            this.currentFrame = currentFrame;
+        }
+
+        public boolean isStarted() {
+            return started;
+        }
+
+        public void setStarted(boolean started) {
+            this.started = started;
         }
     }
 }

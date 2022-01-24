@@ -26,6 +26,11 @@ public abstract class DescriptorSetLayout {
         return vkDescriptorLayout;
     }
 
+    public static class DynUniformDescriptorSetLayout extends SimpleDescriptorSetLayout {
+        public DynUniformDescriptorSetLayout(Device device, int binding, int stage) {
+            super(device, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, binding, stage);
+        }
+    }
 
     public static class SamplerDescriptorSetLayout extends SimpleDescriptorSetLayout {
         public SamplerDescriptorSetLayout(Device device, int binding, int stage) {
@@ -54,6 +59,12 @@ public abstract class DescriptorSetLayout {
                         "Failed to create descriptor set layout");
                 super.vkDescriptorLayout = pSetLayout.get(0);
             }
+        }
+    }
+    
+    public static class StorageDescriptorSetLayout extends SimpleDescriptorSetLayout {
+        public StorageDescriptorSetLayout(Device device, int binding, int stage) {
+            super(device, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, binding, stage);
         }
     }
 

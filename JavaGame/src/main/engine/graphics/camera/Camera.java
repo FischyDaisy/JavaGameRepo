@@ -22,6 +22,8 @@ public class Camera {
     
     private final Matrix4f viewMatrix;
     
+    private boolean hasMoved;
+    
     public Camera() {
         position = new Vector3f();
         rotationEuler = new Vector3f();
@@ -40,6 +42,14 @@ public class Camera {
         this.position.set(position);
         this.rotationQ.set(rotation);
     }
+    
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+    
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
 
     public Vector3f getPosition() {
         return position;
@@ -49,10 +59,14 @@ public class Camera {
         position.x = x;
         position.y = y;
         position.z = z;
+        
+        hasMoved = true;
     }
     
     public void setPosition(Vector3f v) {
     	position.set(v);
+    	
+    	hasMoved = true;
     }
     
     public Matrix4f getViewMatrix() {
@@ -113,6 +127,8 @@ public class Camera {
             position.z += (float)Math.cos(Math.toRadians(rotationEuler.y - 90)) * offsetX;
         }
         position.y += offsetY;
+        
+        hasMoved = true;
     }
 
     public Vector3f getRotationEuler() {
@@ -146,6 +162,8 @@ public class Camera {
         Quaternionf pYaw = rot.getQuatRotation();
         pPitch.mul(pYaw);
         rotationQ.set(pPitch);
+        
+        hasMoved = true;
     }
 
     public void moveRotation(float offsetX, float offsetY, float offsetZ) {

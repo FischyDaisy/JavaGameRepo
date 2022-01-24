@@ -13,7 +13,6 @@ import main.engine.Scene;
 import main.engine.SceneLight;
 import main.engine.Window;
 import main.engine.graphics.ModelData;
-import main.engine.graphics.TextureCache;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.animation.AnimatedFrame;

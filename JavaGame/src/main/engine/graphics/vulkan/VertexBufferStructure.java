@@ -9,7 +9,8 @@ import static org.lwjgl.vulkan.VK11.*;
 public class VertexBufferStructure extends VertexInputStateInfo {
 
 	public static final int TEXT_COORD_COMPONENTS = 2;
-    private static final int NUMBER_OF_ATTRIBUTES = 2;
+	private static final int NORMAL_COMPONENTS = 3;
+    private static final int NUMBER_OF_ATTRIBUTES = 5;
     private static final int POSITION_COMPONENTS = 3;
 
     private final VkVertexInputAttributeDescription.Buffer viAttrs;
@@ -27,6 +28,30 @@ public class VertexBufferStructure extends VertexInputStateInfo {
                 .location(i)
                 .format(VK_FORMAT_R32G32B32_SFLOAT)
                 .offset(0);
+        
+        // Normal
+        i++;
+        viAttrs.get(i)
+                .binding(0)
+                .location(i)
+                .format(VK_FORMAT_R32G32B32_SFLOAT)
+                .offset(POSITION_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES);
+
+        // Tangent
+        i++;
+        viAttrs.get(i)
+                .binding(0)
+                .location(i)
+                .format(VK_FORMAT_R32G32B32_SFLOAT)
+                .offset(NORMAL_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES + POSITION_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES);
+
+        // BiTangent
+        i++;
+        viAttrs.get(i)
+                .binding(0)
+                .location(i)
+                .format(VK_FORMAT_R32G32B32_SFLOAT)
+                .offset(NORMAL_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES * 2 + POSITION_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES);
 
         // Texture coordinates
         i++;
@@ -34,11 +59,12 @@ public class VertexBufferStructure extends VertexInputStateInfo {
                 .binding(0)
                 .location(i)
                 .format(VK_FORMAT_R32G32_SFLOAT)
-                .offset(POSITION_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES);
+                .offset(NORMAL_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES * 3 + POSITION_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES);
 
         viBindings.get(0)
                 .binding(0)
                 .stride(POSITION_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES +
+                        NORMAL_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES * 3 +
                         TEXT_COORD_COMPONENTS * GraphConstants.FLOAT_SIZE_BYTES)
                 .inputRate(VK_VERTEX_INPUT_RATE_VERTEX);
 

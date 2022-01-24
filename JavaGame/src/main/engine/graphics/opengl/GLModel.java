@@ -36,7 +36,6 @@ import org.lwjgl.system.MemoryUtil;
 import main.engine.graphics.IModel;
 import main.engine.graphics.Material;
 import main.engine.graphics.ModelData;
-import main.engine.graphics.TextureCache;
 import main.engine.items.GameItem;
 
 public class GLModel implements IModel {
@@ -111,7 +110,7 @@ public class GLModel implements IModel {
 		glMaterialList.forEach(GLMaterial::cleanup);
 	}
 	
-	public static List<GLModel> transformModels(List<ModelData> modelDataList, TextureCache textureCache) throws Exception {
+	public static List<GLModel> transformModels(List<ModelData> modelDataList, GLTextureCache textureCache) throws Exception {
 		List<GLModel> glModelList = new ArrayList<GLModel>();
 		
 		for (ModelData modelData : modelDataList) {
@@ -131,7 +130,7 @@ public class GLModel implements IModel {
 	}
 	
 	protected static void transformModel(ModelData modelData, GLModel glModel, 
-			GLMaterial defaultGLMaterial, TextureCache textureCache) throws Exception {
+			GLMaterial defaultGLMaterial, GLTextureCache textureCache) throws Exception {
 		for (ModelData.MeshData meshData : modelData.getMeshDataList()) {
 			FloatBuffer posBuffer = null;
 	        FloatBuffer textCoordsBuffer = null;
@@ -249,8 +248,9 @@ public class GLModel implements IModel {
 		}
 	}
 	
-	public static GLMaterial transformMaterial(ModelData.Material material, TextureCache textureCache) throws Exception {
-		GLTexture texture = textureCache.getTexture(material.texturePath(), material.cols(), material.rows());
+	public static GLMaterial transformMaterial(ModelData.Material material, GLTextureCache textureCache) throws Exception {
+		GLTexture texture = textureCache.get(material.texturePath(), material.cols(), material.rows());
+		
 		return new GLMaterial(material.ambientColor(), material.diffuseColor(), material.specularColor(),
 				texture, null, material.reflectance().x(), new ArrayList<GLMesh>());
 	}
@@ -282,6 +282,10 @@ public class GLModel implements IModel {
 		public GLMaterial(GLTexture texture, GLTexture normalMap, float reflectance, List<GLMesh> glMeshList) {
 			this(DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR, texture, normalMap, reflectance, glMeshList);
 		}
+		
+		public boolean isTransparent() {
+            return texture.hasTransparencies();
+        }
 		
 		public boolean isTextured() {
 			return texture != null;

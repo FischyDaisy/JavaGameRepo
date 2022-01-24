@@ -2,59 +2,53 @@ package main.engine.graphics.vulkan;
 
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.util.vma.VmaAllocationCreateInfo;
 import org.lwjgl.vulkan.*;
 
 import java.nio.LongBuffer;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.util.vma.Vma.*;
 import static org.lwjgl.vulkan.VK11.*;
 
 public class VulkanBuffer {
 
-    private final Device device;
-    private final long allocationSize;
+	private final long allocation;
     private final long buffer;
-    private final long memory;
+    private final Device device;
     private final PointerBuffer pb;
     private final long requestedSize;
 
     private long mappedMemory;
 
-    public VulkanBuffer(Device device, long size, int usage, int reqMask) {
+    public VulkanBuffer(Device device, long size, int bufferUsage, int memoryUsage,
+            int requiredFlags) {
         this.device = device;
         requestedSize = size;
-        mappedMemory = NULL;
         try (MemoryStack stack = MemoryStack.stackPush()) {
             VkBufferCreateInfo bufferCreateInfo = VkBufferCreateInfo.calloc(stack)
                     .sType(VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO)
                     .size(size)
-                    .usage(usage)
+                    .usage(bufferUsage)
                     .sharingMode(VK_SHARING_MODE_EXCLUSIVE);
+            
+            VmaAllocationCreateInfo allocInfo = VmaAllocationCreateInfo.calloc(stack)
+                    .requiredFlags(requiredFlags)
+                    .usage(memoryUsage);
+
+            PointerBuffer pAllocation = stack.callocPointer(1);
             LongBuffer lp = stack.mallocLong(1);
-            VulkanUtils.vkCheck(vkCreateBuffer(device.getVkDevice(), bufferCreateInfo, null, lp), "Failed to create buffer");
+            VulkanUtils.vkCheck(vmaCreateBuffer(device.getMemoryAllocator().getVmaAllocator(), bufferCreateInfo, allocInfo, lp,
+                    pAllocation, null), "Failed to create buffer");
             buffer = lp.get(0);
-
-            VkMemoryRequirements memReqs = VkMemoryRequirements.malloc(stack);
-            vkGetBufferMemoryRequirements(device.getVkDevice(), buffer, memReqs);
-
-            VkMemoryAllocateInfo memAlloc = VkMemoryAllocateInfo.calloc(stack)
-                    .sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO)
-                    .allocationSize(memReqs.size())
-                    .memoryTypeIndex(VulkanUtils.memoryTypeFromProperties(device.getPhysicalDevice(),
-                            memReqs.memoryTypeBits(), reqMask));
-
-            VulkanUtils.vkCheck(vkAllocateMemory(device.getVkDevice(), memAlloc, null, lp), "Failed to allocate memory");
-            allocationSize = memAlloc.allocationSize();
-            memory = lp.get(0);
+            allocation = pAllocation.get(0);
             pb = PointerBuffer.allocateDirect(1);
-
-            VulkanUtils.vkCheck(vkBindBufferMemory(device.getVkDevice(), buffer, memory, 0), "Failed to bind buffer memory");
         }
     }
 
     public void cleanup() {
-        vkDestroyBuffer(device.getVkDevice(), buffer, null);
-        vkFreeMemory(device.getVkDevice(), memory, null);
+    	unMap();
+        vmaDestroyBuffer(device.getMemoryAllocator().getVmaAllocator(), buffer, allocation);
     }
 
     public long getBuffer() {
@@ -67,7 +61,8 @@ public class VulkanBuffer {
 
     public long map() {
         if (mappedMemory == NULL) {
-        	VulkanUtils.vkCheck(vkMapMemory(device.getVkDevice(), memory, 0, allocationSize, 0, pb), "Failed to map Buffer");
+        	VulkanUtils.vkCheck(vmaMapMemory(device.getMemoryAllocator().getVmaAllocator(), allocation, pb),
+                    "Failed to map allocation");
             mappedMemory = pb.get(0);
         }
         return mappedMemory;
@@ -75,7 +70,7 @@ public class VulkanBuffer {
 
     public void unMap() {
         if (mappedMemory != NULL) {
-            vkUnmapMemory(device.getVkDevice(), memory);
+        	vmaUnmapMemory(device.getMemoryAllocator().getVmaAllocator(), allocation);
             mappedMemory = NULL;
         }
     }

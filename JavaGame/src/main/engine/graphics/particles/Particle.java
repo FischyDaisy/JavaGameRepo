@@ -3,7 +3,6 @@ package main.engine.graphics.particles;
 import org.joml.Vector3f;
 
 import main.engine.graphics.opengl.Mesh;
-import main.engine.graphics.TextureCache;
 import main.engine.graphics.opengl.GLTexture;
 import main.engine.items.GameItem;
 

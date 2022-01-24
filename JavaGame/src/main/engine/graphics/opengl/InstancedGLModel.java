@@ -27,7 +27,6 @@ import org.lwjgl.system.MemoryUtil;
 
 import main.engine.graphics.GraphConstants;
 import main.engine.graphics.ModelData;
-import main.engine.graphics.TextureCache;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.opengl.GLModel.GLMaterial;
 import main.engine.items.GameItem;
@@ -53,7 +52,7 @@ public class InstancedGLModel extends GLModel {
 		}
 	}
 	
-	public static List<InstancedGLModel> transformModels(List<ModelData> modelDataList, TextureCache textureCache, int numInstances) throws Exception {
+	public static List<InstancedGLModel> transformModels(List<ModelData> modelDataList, GLTextureCache textureCache, int numInstances) throws Exception {
 		List<InstancedGLModel> glModelList = new ArrayList<InstancedGLModel>();
 		
 		for (ModelData modelData : modelDataList) {
@@ -73,7 +72,7 @@ public class InstancedGLModel extends GLModel {
 	}
 	
 	private static void transformInstancedModel(ModelData modelData, InstancedGLModel glModel, 
-			GLMaterial defaultGLMaterial, TextureCache textureCache, int numInstances) throws Exception{
+			GLMaterial defaultGLMaterial, GLTextureCache textureCache, int numInstances) throws Exception{
 		for (ModelData.MeshData meshData : modelData.getMeshDataList()) {
 			FloatBuffer posBuffer = null;
 	        FloatBuffer textCoordsBuffer = null;

@@ -240,15 +240,17 @@ public class SwapChain {
 
     public record SurfaceFormat(int imageFormat, int colorSpace) {}
 
-    public record SyncSemaphores(Semaphore imgAcquisitionSemaphore, Semaphore renderCompleteSemaphore) {
+    public record SyncSemaphores(Semaphore imgAcquisitionSemaphore, Semaphore geometryCompleteSemaphore,
+            Semaphore renderCompleteSemaphore) {
 
-        public SyncSemaphores(Device device) {
-            this(new Semaphore(device), new Semaphore(device));
-        }
+    		public SyncSemaphores(Device device) {
+    			this(new Semaphore(device), new Semaphore(device), new Semaphore(device));
+    		}
 
-        public void cleanup() {
-            imgAcquisitionSemaphore.cleanup();
-            renderCompleteSemaphore.cleanup();
-        }
-    }
-}
+    		public void cleanup() {
+    			imgAcquisitionSemaphore.cleanup();
+    			geometryCompleteSemaphore.cleanup();
+    			renderCompleteSemaphore.cleanup();
+    		}
+    	}
+	}

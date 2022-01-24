@@ -10,11 +10,12 @@ import static org.lwjgl.vulkan.VK11.*;
 
 public class Device {
 
+	private final MemoryAllocator memoryAllocator;
     private final PhysicalDevice physicalDevice;
     private final boolean samplerAnisotropy;
     private final VkDevice vkDevice;
 
-    public Device(PhysicalDevice physicalDevice) {
+    public Device(Instance instance, PhysicalDevice physicalDevice) {
         this.physicalDevice = physicalDevice;
         try (MemoryStack stack = MemoryStack.stackPush()) {
 
@@ -52,11 +53,18 @@ public class Device {
             VulkanUtils.vkCheck(vkCreateDevice(physicalDevice.getVkPhysicalDevice(), deviceCreateInfo, null, pp),
                     "Failed to create device");
             vkDevice = new VkDevice(pp.get(0), physicalDevice.getVkPhysicalDevice(), deviceCreateInfo);
+            
+            memoryAllocator = new MemoryAllocator(instance, physicalDevice, vkDevice);
         }
     }
 
     public void cleanup() {
+    	memoryAllocator.cleanup();
         vkDestroyDevice(vkDevice, null);
+    }
+    
+    public MemoryAllocator getMemoryAllocator() {
+        return memoryAllocator;
     }
 
     public PhysicalDevice getPhysicalDevice() {

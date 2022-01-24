@@ -24,11 +24,15 @@ public class Pipeline {
             int numModules = shaderModules.length;
             VkPipelineShaderStageCreateInfo.Buffer shaderStages = VkPipelineShaderStageCreateInfo.calloc(numModules, stack);
             for (int i = 0; i < numModules; i++) {
+            	ShaderProgram.ShaderModule shaderModule = shaderModules[i];
                 shaderStages.get(i)
                         .sType(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO)
-                        .stage(shaderModules[i].shaderStage())
-                        .module(shaderModules[i].handle())
+                        .stage(shaderModule.shaderStage())
+                        .module(shaderModule.handle())
                         .pName(main);
+                if (shaderModule.specInfo() != null) {
+                    shaderStages.get(i).pSpecializationInfo(shaderModule.specInfo());
+                }
             }
 
             VkPipelineInputAssemblyStateCreateInfo vkPipelineInputAssemblyStateCreateInfo =
@@ -70,7 +74,16 @@ public class Pipeline {
                     pipeLineCreationInfo.numColorAttachments(), stack);
             for (int i = 0; i < pipeLineCreationInfo.numColorAttachments(); i++) {
                 blendAttState.get(i)
-                        .colorWriteMask(VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
+                        .colorWriteMask(VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT)
+                        .blendEnable(pipeLineCreationInfo.useBlend());
+                if (pipeLineCreationInfo.useBlend()) {
+                    blendAttState.get(i).colorBlendOp(VK_BLEND_OP_ADD)
+                            .alphaBlendOp(VK_BLEND_OP_ADD)
+                            .srcColorBlendFactor(VK_BLEND_FACTOR_SRC_ALPHA)
+                            .dstColorBlendFactor(VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
+                            .srcAlphaBlendFactor(VK_BLEND_FACTOR_ONE)
+                            .dstAlphaBlendFactor(VK_BLEND_FACTOR_ZERO);
+                }
             }
             VkPipelineColorBlendStateCreateInfo colorBlendState =
                     VkPipelineColorBlendStateCreateInfo.calloc(stack)
@@ -144,8 +157,8 @@ public class Pipeline {
     }
 
     public record PipeLineCreationInfo(long vkRenderPass, ShaderProgram shaderProgram, int numColorAttachments,
-                                       boolean hasDepthAttachment, int pushConstantsSize,
-                                       VertexInputStateInfo viInputStateInfo,
+                                       boolean hasDepthAttachment, boolean useBlend, 
+                                       int pushConstantsSize, VertexInputStateInfo viInputStateInfo,
                                        DescriptorSetLayout[] descriptorSetLayouts) {
         public void cleanup() {
             viInputStateInfo.cleanup();

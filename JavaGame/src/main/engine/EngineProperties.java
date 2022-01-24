@@ -9,7 +9,12 @@ import main.engine.utility.ResourcePaths;
 
 public class EngineProperties {
 	private static final float DEFAULT_FOV = 60.0f;
+	private static final int DEFAULT_MAX_JOINTS_MATRICES_LISTS = 100;
+    private static final int DEFAULT_STORAGES_BUFFERS = 100;
+	private static final int DEFAULT_MAX_MATERIALS = 500;
 	private static final int DEFAULT_REQUESTED_IMAGES = 3;
+	private static final float DEFAULT_SHADOW_BIAS = 0.00005f;
+    private static final int DEFAULT_SHADOW_MAP_SIZE = 2048;
     private static final int DEFAULT_UPS = 30;
     private static final int DEFAULT_FPS = 60;
     private static final float DEFAULT_Z_FAR = 1000.f;
@@ -19,9 +24,16 @@ public class EngineProperties {
     private static EngineProperties instance;
     private String defaultTexturePath;
     private float fov;
+    private int maxJointsMatricesLists;
+    private int maxStorageBuffers;
+    private int maxMaterials;
     private String physDeviceName;
     private int requestedImages;
     private boolean shaderRecompilation;
+    private float shadowBias;
+    private boolean shadowDebug;
+    private int shadowMapSize;
+    private boolean shadowPcf;
     private int ups;
     private int fps;
     private boolean useVulkan;
@@ -52,6 +64,13 @@ public class EngineProperties {
             zFar = Float.parseFloat(props.getOrDefault("zFar", DEFAULT_Z_FAR).toString());
             defaultTexturePath = props.getProperty("defaultTexturePath");
             useDeferred = Boolean.parseBoolean(props.getOrDefault("useDeferred", false).toString());
+            maxMaterials = Integer.parseInt(props.getOrDefault("maxMaterials", DEFAULT_MAX_MATERIALS).toString());
+            shadowPcf = Boolean.parseBoolean(props.getOrDefault("shadowPcf", false).toString());
+            shadowBias = Float.parseFloat(props.getOrDefault("shadowBias", DEFAULT_SHADOW_BIAS).toString());
+            shadowMapSize = Integer.parseInt(props.getOrDefault("shadowMapSize", DEFAULT_SHADOW_MAP_SIZE).toString());
+            shadowDebug = Boolean.parseBoolean(props.getOrDefault("shadowDebug", false).toString());
+            maxStorageBuffers = Integer.parseInt(props.getOrDefault("maxStorageBuffers", DEFAULT_STORAGES_BUFFERS).toString());
+            maxJointsMatricesLists = Integer.parseInt(props.getOrDefault("maxJointsMatricesLists", DEFAULT_MAX_JOINTS_MATRICES_LISTS).toString());
         } catch (IOException excp) {
         	System.out.println("Could not read [" + FILENAME + "] properties file");
             //System.out.println(excp);
@@ -77,10 +96,14 @@ public class EngineProperties {
         return requestedImages;
     }
     
-    public boolean isShaderRecompilation() {
-        return shaderRecompilation;
+    public float getShadowBias() {
+        return shadowBias;
     }
 
+    public int getShadowMapSize() {
+        return shadowMapSize;
+    }
+    
     public int getUps() {
         return ups;
     }
@@ -99,6 +122,30 @@ public class EngineProperties {
     
     public float getZFar() {
     	return zFar;
+    }
+    
+    public int getMaxJointsMatricesLists() {
+        return maxJointsMatricesLists;
+    }
+
+    public int getMaxStorageBuffers() {
+        return maxStorageBuffers;
+    }
+    
+    public int getMaxMaterials() {
+        return maxMaterials;
+    }
+    
+    public boolean isShaderRecompilation() {
+        return shaderRecompilation;
+    }
+    
+    public boolean isShadowDebug() {
+        return shadowDebug;
+    }
+
+    public boolean isShadowPcf() {
+        return shadowPcf;
     }
     
     public boolean useVulkan() {
