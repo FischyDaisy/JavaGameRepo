@@ -317,10 +317,50 @@ public class VulkanModel implements IModel{
             return texture != null && texture.hasTransparencies();
         }
     }
-
-    public record VulkanMesh(VulkanBuffer verticesBuffer, VulkanBuffer indicesBuffer, int numIndices,
+    
+    public static class VulkanMesh {
+    	private final VulkanBuffer verticesBuffer;
+    	private final VulkanBuffer indicesBuffer;
+    	private final int numIndices;
+    	private final VulkanBuffer weightsBuffer;
+    	
+    	private boolean animationRendered;
+    	
+    	public VulkanMesh(VulkanBuffer verticesBuffer, VulkanBuffer indicesBuffer, int numIndices,
             VulkanBuffer weightsBuffer) {
-        public void cleanup() {
+    		this.verticesBuffer = verticesBuffer;
+    		this.indicesBuffer = indicesBuffer;
+    		this.numIndices = numIndices;
+    		this.weightsBuffer = weightsBuffer;
+    		
+    		animationRendered = false;
+    	}
+    	
+    	public VulkanBuffer verticesBuffer() {
+    		return verticesBuffer;
+    	}
+    	
+    	public VulkanBuffer indicesBuffer() {
+    		return indicesBuffer;
+    	}
+    	
+    	public int numIndices() {
+    		return numIndices;
+    	}
+    	
+    	public VulkanBuffer weightsBuffer() {
+    		return weightsBuffer;
+    	}
+    	
+    	public boolean animationRendered() {
+    		return animationRendered;
+    	}
+    	
+    	public void setAnimationRendered(boolean animationRendered) {
+    		this.animationRendered = animationRendered;
+    	}
+    	
+    	public void cleanup() {
             verticesBuffer.cleanup();
             indicesBuffer.cleanup();
             if (weightsBuffer != null) {

@@ -286,8 +286,8 @@ public class GeometryRenderActivity {
                     for (GameItem item : items) {
                     	if (vulkanModel.hasAnimations()) {
                             List<AnimationComputeActivity.GameItemAnimationBuffer> animationsBuffer = gameItemAnimationsBuffers.get(item.getId());
-                            AnimationComputeActivity.GameItemAnimationBuffer entityAnimationBuffer = animationsBuffer.get(meshCount);
-                            vertexBuffer.put(0, entityAnimationBuffer.verticesBuffer().getBuffer());
+                            AnimationComputeActivity.GameItemAnimationBuffer itemAnimationBuffer = animationsBuffer.get(meshCount);
+                            vertexBuffer.put(0, itemAnimationBuffer.verticesBuffer().getBuffer());
                             vkCmdBindVertexBuffers(cmdHandle, 0, vertexBuffer, offsets);
                         }
                     	descriptorSets.put(2, textureDescriptorSet.getVkDescriptorSet());

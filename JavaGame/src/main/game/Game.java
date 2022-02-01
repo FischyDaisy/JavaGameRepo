@@ -332,12 +332,12 @@ public class Game implements IGameLogic {
             maxFrames = bobModelData.getAnimationsList().get(0).frames().size();
             modelDataList.add(bobModelData);
             bob = new GameItem("BobObject", bobModelId);
-            bob.setScale(0.1f);
+            bob.setScale(0.04f);
             AxisRotation rot = AxisRotation.UP;
             rot.setRotation((float) Math.toRadians(-90.0f));
             bob.setRotation(rot.getQuatRotation());
             bob.buildModelMatrix();
-            bob.setGameItemAnimation(new GameItem.GameItemAnimation(false, 0, 0));
+            bob.setGameItemAnimation(new GameItem.GameItemAnimation(false, false, 0, 0));
             scene.addGameItem(bob);
 
             vkRenderer.loadModels(modelDataList);

@@ -147,15 +147,15 @@ public class AnimationComputeActivity {
 
                         for (GameItem item : items) {
                             List<GameItemAnimationBuffer> animationsBuffer = gameItemAnimationsBuffers.get(item.getId());
-                            GameItemAnimationBuffer entityAnimationBuffer = animationsBuffer.get(meshCount);
-                            descriptorSets.put(2, entityAnimationBuffer.descriptorSet().getVkDescriptorSet());
+                            GameItemAnimationBuffer gameItemAnimationBuffer = animationsBuffer.get(meshCount);
+                            descriptorSets.put(2, gameItemAnimationBuffer.descriptorSet().getVkDescriptorSet());
 
-                            GameItem.GameItemAnimation entityAnimation = item.getGameItemAnimation();
-                            if (!entityAnimation.isStarted()) {
+                            GameItem.GameItemAnimation itemAnimation = item.getGameItemAnimation();
+                            if (!itemAnimation.isStarted() && mesh.animationRendered()) {
                                 continue;
                             }
                             DescriptorSet jointMatricesDescriptorSet = modelDescriptorSets.jointMatricesBufferDescriptorSets.
-                                    get(entityAnimation.getAnimationIdx()).get(entityAnimation.getCurrentFrame());
+                                    get(itemAnimation.getAnimationIdx()).get(itemAnimation.getCurrentFrame());
                             descriptorSets.put(3, jointMatricesDescriptorSet.getVkDescriptorSet());
 
                             vkCmdBindDescriptorSets(cmdHandle, VK_PIPELINE_BIND_POINT_COMPUTE,
@@ -163,6 +163,7 @@ public class AnimationComputeActivity {
 
                             vkCmdDispatch(cmdHandle, meshDescriptorSets.groupSize(), 1, 1);
                         }
+                        mesh.setAnimationRendered(true);
                         meshCount++;
                     }
                 }

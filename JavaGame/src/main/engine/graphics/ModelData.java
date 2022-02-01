@@ -55,14 +55,11 @@ public class ModelData {
     public void setAnimationsList(List<Animation> animationsList) {
         this.animationsList = animationsList;
     }
-    public record AnimMeshData(float[] weights, int[] boneIds) {
-    }
+    public record AnimMeshData(float[] weights, int[] boneIds) {}
 
-    public record AnimatedFrame(Matrix4f[] jointMatrices) {
-    }
+    public record AnimatedFrame(Matrix4f[] jointMatrices) {}
 
-    public record Animation(String name, double duration, List<AnimatedFrame> frames) {
-    }
+    public record Animation(String name, double duration, List<AnimatedFrame> frames) {}
     
     public record Material(String texturePath, String normalMapPath, String metalRoughMap, Vector4f diffuseColor, float roughnessFactor, float metallicFactor, 
     		int cols, int rows) {
@@ -89,23 +86,5 @@ public class ModelData {
         }
     }
 
-    public record MeshData(float[] positions, float[] normals, float[] tangents, float[] biTangents, float[] textCoords, int[] indices, int[] jointIndices, float[] weights, int materialIdx, AABBf boundingBox) {
-    	public static final int MAX_WEIGHTS = 4;
-    	
-    	public MeshData(float[] positions, float[] normals, float[] tangents, float[] biTangents, float[] textCoords, int[] indices, int materialIdx, AABBf boundingBox) {
-    		this(positions, normals, tangents, biTangents, textCoords,  indices, MeshData.createEmptyIntArray(MAX_WEIGHTS * positions.length / 3, 0), MeshData.createEmptyFloatArray(MAX_WEIGHTS * positions.length / 3, 0), materialIdx, boundingBox);
-    	}
-    	
-    	public static float[] createEmptyFloatArray(int length, float defaultValue) {
-            float[] result = new float[length];
-            Arrays.fill(result, defaultValue);
-            return result;
-        }
-
-        public static int[] createEmptyIntArray(int length, int defaultValue) {
-            int[] result = new int[length];
-            Arrays.fill(result, defaultValue);
-            return result;
-        }
-    }
+    public record MeshData(float[] positions, float[] normals, float[] tangents, float[] biTangents, float[] textCoords, int[] indices, int materialIdx, AABBf boundingBox) {}
 }
