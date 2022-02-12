@@ -181,11 +181,9 @@ public class GameItem {
         private int animationIdx;
         private int currentFrame;
         private boolean started;
-        private boolean rendered;
 
-        public GameItemAnimation(boolean started, boolean rendered, int animationIdx, int currentFrame) {
+        public GameItemAnimation(boolean started, int animationIdx, int currentFrame) {
             this.started = started;
-            this.rendered = rendered;
             this.animationIdx = animationIdx;
             this.currentFrame = currentFrame;
         }
@@ -212,14 +210,6 @@ public class GameItem {
 
         public void setStarted(boolean started) {
             this.started = started;
-        }
-        
-        public boolean wasRendered() {
-        	return rendered;
-        }
-        
-        public void setRendered(boolean rendered) {
-        	this.rendered = rendered;
         }
     }
 }

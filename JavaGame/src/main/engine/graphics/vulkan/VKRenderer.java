@@ -130,6 +130,7 @@ public class VKRenderer implements Renderer {
 		vulkanModels.addAll(VulkanModel.transformModels(modelDataList, textureCache, commandPool, graphQueue));
 		
 		// Reorder materials inside models
+		/*
         vulkanModels.forEach(m -> {
             Collections.sort(m.getVulkanMaterialList(), (a, b) -> Boolean.compare(a.isTransparent(), b.isTransparent()));
         });
@@ -140,7 +141,7 @@ public class VKRenderer implements Renderer {
             boolean bHasTransparentMt = b.getVulkanMaterialList().stream().filter(m -> m.isTransparent()).findAny().isPresent();
 
             return Boolean.compare(aHasTransparentMt, bHasTransparentMt);
-        });
+        });*/
 		
         geometryRenderActivity.registerModels(vulkanModels);
         animationComputeActivity.registerModels(vulkanModels);

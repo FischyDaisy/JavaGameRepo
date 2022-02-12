@@ -337,7 +337,7 @@ public class Game implements IGameLogic {
             rot.setRotation((float) Math.toRadians(-90.0f));
             bob.setRotation(rot.getQuatRotation());
             bob.buildModelMatrix();
-            bob.setGameItemAnimation(new GameItem.GameItemAnimation(false, false, 0, 0));
+            bob.setGameItemAnimation(new GameItem.GameItemAnimation(false, 0, 0));
             scene.addGameItem(bob);
 
             vkRenderer.loadModels(modelDataList);

@@ -70,7 +70,7 @@ public class Terrain {
                 float xDisplacement = (col - ((float) terrainSize - 1) / (float) 2) * scale * HeightMapMesh.getXLength();
                 float zDisplacement = (row - ((float) terrainSize - 1) / (float) 2) * scale * HeightMapMesh.getZLength();
 
-                GameItem terrainBlock = new GameItem(heightMapMesh.getMesh());
+                GameItem terrainBlock = new GameItem();
                 terrainBlock.setScale(scale);
                 terrainBlock.setPosition(xDisplacement, 0, zDisplacement);
                 gameItems[row * terrainSize + col] = terrainBlock;

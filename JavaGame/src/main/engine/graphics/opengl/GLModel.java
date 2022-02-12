@@ -36,6 +36,7 @@ import org.lwjgl.system.MemoryUtil;
 import main.engine.graphics.IModel;
 import main.engine.graphics.Material;
 import main.engine.graphics.ModelData;
+import main.engine.graphics.vulkan.VKTexture;
 import main.engine.items.GameItem;
 
 public class GLModel implements IModel {
@@ -134,9 +135,9 @@ public class GLModel implements IModel {
 		for (ModelData.MeshData meshData : modelData.getMeshDataList()) {
 			FloatBuffer posBuffer = null;
 	        FloatBuffer textCoordsBuffer = null;
-	        FloatBuffer vecNormalsBuffer = null;
-	        FloatBuffer weightsBuffer = null;
-	        IntBuffer jointIndicesBuffer = null;
+	        FloatBuffer normalsBuffer = null;
+	        FloatBuffer tangentsBuffer = null;
+	        FloatBuffer biTangentsBuffer = null;
 	        IntBuffer indicesBuffer = null;
 	        try {
 	        	int vertexCount = meshData.indices().length;
@@ -155,50 +156,45 @@ public class GLModel implements IModel {
 	            glEnableVertexAttribArray(0);
 	            glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 
-	            // Texture coordinates VBO
+	            // Normals VBO
+	            vboId = glGenBuffers();
+	            vboIdList.add(vboId);
+	            normalsBuffer = MemoryUtil.memAllocFloat(meshData.normals().length);
+	            normalsBuffer.put(meshData.normals()).flip();
+	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+	            glBufferData(GL_ARRAY_BUFFER, normalsBuffer, GL_STATIC_DRAW);
+	            glEnableVertexAttribArray(1);
+	            glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
+	            
+	            // Tangents VBO
+	            vboId = glGenBuffers();
+	            vboIdList.add(vboId);
+	            tangentsBuffer = MemoryUtil.memAllocFloat(meshData.tangents().length);
+	            tangentsBuffer.put(meshData.tangents()).flip();
+	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+	            glBufferData(GL_ARRAY_BUFFER, tangentsBuffer, GL_STATIC_DRAW);
+	            glEnableVertexAttribArray(2);
+	            glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
+	            
+	            // BiTangents VBO
+	            vboId = glGenBuffers();
+	            vboIdList.add(vboId);
+	            biTangentsBuffer = MemoryUtil.memAllocFloat(meshData.biTangents().length);
+	            biTangentsBuffer.put(meshData.biTangents()).flip();
+	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+	            glBufferData(GL_ARRAY_BUFFER, biTangentsBuffer, GL_STATIC_DRAW);
+	            glEnableVertexAttribArray(3);
+	            glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
+
+	            // Texture Coords VBO
 	            vboId = glGenBuffers();
 	            vboIdList.add(vboId);
 	            textCoordsBuffer = MemoryUtil.memAllocFloat(meshData.textCoords().length);
 	            textCoordsBuffer.put(meshData.textCoords()).flip();
 	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
 	            glBufferData(GL_ARRAY_BUFFER, textCoordsBuffer, GL_STATIC_DRAW);
-	            glEnableVertexAttribArray(1);
-	            glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
-	            
-	            // Vertex normals VBO
-	            vboId = glGenBuffers();
-	            vboIdList.add(vboId);
-	            vecNormalsBuffer = MemoryUtil.memAllocFloat(meshData.normals().length);
-	            if (vecNormalsBuffer.capacity() > 0) {
-	                vecNormalsBuffer.put(meshData.normals()).flip();
-	            } else {
-	                // Create empty structure
-	                vecNormalsBuffer = MemoryUtil.memAllocFloat(meshData.positions().length);
-	            }
-	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-	            glBufferData(GL_ARRAY_BUFFER, vecNormalsBuffer, GL_STATIC_DRAW);
-	            glEnableVertexAttribArray(2);
-	            glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
-	            
-	            // Weights
-	            vboId = glGenBuffers();
-	            vboIdList.add(vboId);
-	            weightsBuffer = MemoryUtil.memAllocFloat(meshData.weights().length);
-	            weightsBuffer.put(meshData.weights()).flip();
-	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-	            glBufferData(GL_ARRAY_BUFFER, weightsBuffer, GL_STATIC_DRAW);
-	            glEnableVertexAttribArray(3);
-	            glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
-
-	            // Joint indices
-	            vboId = glGenBuffers();
-	            vboIdList.add(vboId);
-	            jointIndicesBuffer = MemoryUtil.memAllocInt(meshData.jointIndices().length);
-	            jointIndicesBuffer.put(meshData.jointIndices()).flip();
-	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-	            glBufferData(GL_ARRAY_BUFFER, jointIndicesBuffer, GL_STATIC_DRAW);
 	            glEnableVertexAttribArray(4);
-	            glVertexAttribPointer(4, 4, GL_FLOAT, false, 0, 0);
+	            glVertexAttribPointer(4, 2, GL_FLOAT, false, 0, 0);
 
 	            // Index VBO
 	            vboId = glGenBuffers();
@@ -232,14 +228,14 @@ public class GLModel implements IModel {
 	            if (textCoordsBuffer != null) {
 	                MemoryUtil.memFree(textCoordsBuffer);
 	            }
-	            if (vecNormalsBuffer != null) {
-	                MemoryUtil.memFree(vecNormalsBuffer);
+	            if (normalsBuffer != null) {
+	                MemoryUtil.memFree(normalsBuffer);
 	            }
-	            if (weightsBuffer != null) {
-	                MemoryUtil.memFree(weightsBuffer);
+	            if (tangentsBuffer != null) {
+	                MemoryUtil.memFree(tangentsBuffer);
 	            }
-	            if (jointIndicesBuffer != null) {
-	                MemoryUtil.memFree(jointIndicesBuffer);
+	            if (biTangentsBuffer != null) {
+	                MemoryUtil.memFree(biTangentsBuffer);
 	            }
 	            if (indicesBuffer != null) {
 	                MemoryUtil.memFree(indicesBuffer);
@@ -250,41 +246,23 @@ public class GLModel implements IModel {
 	
 	public static GLMaterial transformMaterial(ModelData.Material material, GLTextureCache textureCache) throws Exception {
 		GLTexture texture = textureCache.get(material.texturePath(), material.cols(), material.rows());
+		boolean hasTexture = material.texturePath() != null && material.texturePath().trim().length() > 0;
+		GLTexture normalMapTexture = textureCache.get(material.normalMapPath(), material.cols(), material.rows());
+		boolean hasNormalMapTexture = material.normalMapPath() != null && material.normalMapPath().trim().length() > 0;
+		GLTexture metalRoughTexture = textureCache.get(material.metalRoughMap(), material.cols(), material.rows());
+		boolean hasMetalRoughTexture = material.metalRoughMap() != null && material.metalRoughMap().trim().length() > 0;
 		
-		return new GLMaterial(material.ambientColor(), material.diffuseColor(), material.specularColor(),
-				texture, null, material.reflectance().x(), new ArrayList<GLMesh>());
+		return new GLMaterial(material.diffuseColor(), texture, hasTexture, normalMapTexture,
+				hasNormalMapTexture, metalRoughTexture, hasMetalRoughTexture, material.metallicFactor(), material.roughnessFactor(), new ArrayList<GLMesh>());
 	}
 	
-	public record GLMaterial(Vector4f ambientColor, Vector4f diffuseColor, Vector4f specularColor, GLTexture texture, 
-			GLTexture normalMap, float reflectance, List<GLMesh> glMeshList) {
+	public record GLMaterial(Vector4f diffuseColor, GLTexture texture, boolean hasTexture, GLTexture normalMap,
+            boolean hasNormalMap, GLTexture metalRoughMap, boolean hasMetalRoughMap,
+            float metallicFactor, float roughnessFactor, List<GLMesh> glMeshList) {
 		public static final Vector4f DEFAULT_COLOR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
 		
-		public GLMaterial(List<GLMesh> glMeshList) {
-			this(DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR, null, null, 0f, glMeshList);
-		}
-		
-		public GLMaterial(Vector4f color, float reflectance, List<GLMesh> glMeshList) {
-			this(color, color, color, null, null, reflectance, glMeshList);
-		}
-		
-		public GLMaterial(GLTexture texture, List<GLMesh> glMeshList) {
-			this(DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR, texture, null, 0f, glMeshList);
-		}
-		
-		public GLMaterial(GLTexture texture, GLTexture normalMap, List<GLMesh> glMeshList) {
-			this(DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR, texture, normalMap, 0f, glMeshList);
-		}
-		
-		public GLMaterial(GLTexture texture, float reflectance, List<GLMesh> glMeshList) {
-			this(DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR, texture, null, reflectance, glMeshList);
-		}
-		
-		public GLMaterial(GLTexture texture, GLTexture normalMap, float reflectance, List<GLMesh> glMeshList) {
-			this(DEFAULT_COLOR, DEFAULT_COLOR, DEFAULT_COLOR, texture, normalMap, reflectance, glMeshList);
-		}
-		
 		public boolean isTransparent() {
-            return texture.hasTransparencies();
+			return texture != null && texture.hasTransparencies();
         }
 		
 		public boolean isTextured() {

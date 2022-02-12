@@ -76,9 +76,9 @@ public class InstancedGLModel extends GLModel {
 		for (ModelData.MeshData meshData : modelData.getMeshDataList()) {
 			FloatBuffer posBuffer = null;
 	        FloatBuffer textCoordsBuffer = null;
-	        FloatBuffer vecNormalsBuffer = null;
-	        FloatBuffer weightsBuffer = null;
-	        IntBuffer jointIndicesBuffer = null;
+	        FloatBuffer normalsBuffer = null;
+	        FloatBuffer tangentsBuffer = null;
+	        FloatBuffer biTangentsBuffer = null;
 	        IntBuffer indicesBuffer = null;
 	        FloatBuffer instanceDataBuffer = null;
 	        try {
@@ -98,50 +98,45 @@ public class InstancedGLModel extends GLModel {
 	            glEnableVertexAttribArray(0);
 	            glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 
-	            // Texture coordinates VBO
+	            // Normals VBO
+	            vboId = glGenBuffers();
+	            vboIdList.add(vboId);
+	            normalsBuffer = MemoryUtil.memAllocFloat(meshData.normals().length);
+	            normalsBuffer.put(meshData.normals()).flip();
+	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+	            glBufferData(GL_ARRAY_BUFFER, normalsBuffer, GL_STATIC_DRAW);
+	            glEnableVertexAttribArray(1);
+	            glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
+	            
+	            // Tangents VBO
+	            vboId = glGenBuffers();
+	            vboIdList.add(vboId);
+	            tangentsBuffer = MemoryUtil.memAllocFloat(meshData.tangents().length);
+	            tangentsBuffer.put(meshData.tangents()).flip();
+	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+	            glBufferData(GL_ARRAY_BUFFER, tangentsBuffer, GL_STATIC_DRAW);
+	            glEnableVertexAttribArray(2);
+	            glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
+	            
+	            // BiTangents VBO
+	            vboId = glGenBuffers();
+	            vboIdList.add(vboId);
+	            biTangentsBuffer = MemoryUtil.memAllocFloat(meshData.biTangents().length);
+	            biTangentsBuffer.put(meshData.biTangents()).flip();
+	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+	            glBufferData(GL_ARRAY_BUFFER, biTangentsBuffer, GL_STATIC_DRAW);
+	            glEnableVertexAttribArray(3);
+	            glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
+
+	            // Texture Coords VBO
 	            vboId = glGenBuffers();
 	            vboIdList.add(vboId);
 	            textCoordsBuffer = MemoryUtil.memAllocFloat(meshData.textCoords().length);
 	            textCoordsBuffer.put(meshData.textCoords()).flip();
 	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
 	            glBufferData(GL_ARRAY_BUFFER, textCoordsBuffer, GL_STATIC_DRAW);
-	            glEnableVertexAttribArray(1);
-	            glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
-	            
-	            // Vertex normals VBO
-	            vboId = glGenBuffers();
-	            vboIdList.add(vboId);
-	            vecNormalsBuffer = MemoryUtil.memAllocFloat(meshData.normals().length);
-	            if (vecNormalsBuffer.capacity() > 0) {
-	                vecNormalsBuffer.put(meshData.normals()).flip();
-	            } else {
-	                // Create empty structure
-	                vecNormalsBuffer = MemoryUtil.memAllocFloat(meshData.positions().length);
-	            }
-	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-	            glBufferData(GL_ARRAY_BUFFER, vecNormalsBuffer, GL_STATIC_DRAW);
-	            glEnableVertexAttribArray(2);
-	            glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
-	            
-	            // Weights
-	            vboId = glGenBuffers();
-	            vboIdList.add(vboId);
-	            weightsBuffer = MemoryUtil.memAllocFloat(meshData.weights().length);
-	            weightsBuffer.put(meshData.weights()).flip();
-	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-	            glBufferData(GL_ARRAY_BUFFER, weightsBuffer, GL_STATIC_DRAW);
-	            glEnableVertexAttribArray(3);
-	            glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
-
-	            // Joint indices
-	            vboId = glGenBuffers();
-	            vboIdList.add(vboId);
-	            jointIndicesBuffer = MemoryUtil.memAllocInt(meshData.jointIndices().length);
-	            jointIndicesBuffer.put(meshData.jointIndices()).flip();
-	            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-	            glBufferData(GL_ARRAY_BUFFER, jointIndicesBuffer, GL_STATIC_DRAW);
 	            glEnableVertexAttribArray(4);
-	            glVertexAttribPointer(4, 4, GL_FLOAT, false, 0, 0);
+	            glVertexAttribPointer(4, 2, GL_FLOAT, false, 0, 0);
 
 	            // Index VBO
 	            vboId = glGenBuffers();
@@ -205,14 +200,14 @@ public class InstancedGLModel extends GLModel {
 	            if (textCoordsBuffer != null) {
 	                MemoryUtil.memFree(textCoordsBuffer);
 	            }
-	            if (vecNormalsBuffer != null) {
-	                MemoryUtil.memFree(vecNormalsBuffer);
+	            if (normalsBuffer != null) {
+	                MemoryUtil.memFree(normalsBuffer);
 	            }
-	            if (weightsBuffer != null) {
-	                MemoryUtil.memFree(weightsBuffer);
+	            if (tangentsBuffer != null) {
+	                MemoryUtil.memFree(tangentsBuffer);
 	            }
-	            if (jointIndicesBuffer != null) {
-	                MemoryUtil.memFree(jointIndicesBuffer);
+	            if (biTangentsBuffer != null) {
+	                MemoryUtil.memFree(biTangentsBuffer);
 	            }
 	            if (indicesBuffer != null) {
 	                MemoryUtil.memFree(indicesBuffer);

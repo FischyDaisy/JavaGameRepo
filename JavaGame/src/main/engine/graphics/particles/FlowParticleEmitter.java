@@ -156,8 +156,8 @@ public class FlowParticleEmitter implements IParticleEmitter {
 
     @Override
     public void cleanup() {
-        for (GameItem particle : getParticles()) {
-            particle.cleanup();
-        }
+        //for (GameItem particle : getParticles()) {
+        //    particle.cleanup();
+        //}
     }
 }
