@@ -1,17 +1,19 @@
 package main.engine.graphics.opengl;
 
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
+import static org.lwjgl.opengl.GL43.GL_COMPUTE_SHADER;
+
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-
-import static org.lwjgl.opengl.GL20.*;
 import org.lwjgl.system.MemoryStack;
 
-import main.engine.graphics.Material;
 import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.lights.PointLight;
 import main.engine.graphics.lights.SpotLight;
@@ -20,14 +22,13 @@ import main.engine.graphics.weather.Fog;
 public class ShaderProgram {
 
     private final int programId;
-
+    private final Map<String, Integer> uniforms;
+    private int computeShaderId;
     private int vertexShaderId;
-
     private int fragmentShaderId;
-    
     private int geometryShaderId;
 
-    private final Map<String, Integer> uniforms;
+    
 
     public ShaderProgram() throws Exception {
         programId = glCreateProgram();
@@ -85,11 +86,12 @@ public class ShaderProgram {
     }
 
     public void createMaterialUniform(String uniformName) throws Exception {
-        createUniform(uniformName + ".diffuse");
-        createUniform(uniformName + ".specular");
+        createUniform(uniformName + ".diffuseColor");
         createUniform(uniformName + ".hasTexture");
         createUniform(uniformName + ".hasNormalMap");
-        createUniform(uniformName + ".reflectance");
+        createUniform(uniformName + ".hasMetalRoughMap");
+        createUniform(uniformName + ".roughnessFactor");
+        createUniform(uniformName + ".metallicFactor");
     }
     
     public void createFogUniform(String uniformName) throws Exception {
@@ -194,11 +196,12 @@ public class ShaderProgram {
     }
     
     public void setUniform(String uniformName, GLModel.GLMaterial material) {
-        setUniform(uniformName + ".diffuse", material.diffuseColor());
-        setUniform(uniformName + ".specular", material.specularColor());
-        setUniform(uniformName + ".hasTexture", material.isTextured() ? 1 : 0);
-        setUniform(uniformName + ".hasNormalMap", material.hasNormalMap() ? 1 : 0);
-        setUniform(uniformName + ".reflectance", material.reflectance());
+        setUniform(uniformName + ".diffuseColor", material.diffuseColor());
+        setUniform(uniformName + ".hasTexture", material.hasTexture() ? 1f : 0f);
+        setUniform(uniformName + ".hasNormalMap", material.hasNormalMap() ? 1f : 0f);
+        setUniform(uniformName + ".hasMetalRoughMap", material.hasMetalRoughMap() ? 1f : 0f);
+        setUniform(uniformName + ".roughnessFactor", material.roughnessFactor());
+        setUniform(uniformName + ".metallicFactor", material.metallicFactor());
     }
     
     public void setUniform(String uniformName, Fog fog) {
@@ -216,7 +219,11 @@ public class ShaderProgram {
     }
     
     public void createGeometryShader(String shaderCode) throws Exception {
-        //geometryShaderId = createShader(shaderCode, GL_GEOMETRY_SHADER);
+        geometryShaderId = createShader(shaderCode, GL_GEOMETRY_SHADER);
+    }
+    
+    public void createComputeShader(String shaderCode) throws Exception {
+    	computeShaderId = createShader(shaderCode, GL_COMPUTE_SHADER);
     }
 
     protected int createShader(String shaderCode, int shaderType) throws Exception {
@@ -243,6 +250,9 @@ public class ShaderProgram {
             throw new Exception("Error linking Shader code: " + glGetProgramInfoLog(programId, 1024));
         }
 
+        if (computeShaderId != 0) {
+            glDetachShader(programId, computeShaderId);
+        }
         if (vertexShaderId != 0) {
             glDetachShader(programId, vertexShaderId);
         }
