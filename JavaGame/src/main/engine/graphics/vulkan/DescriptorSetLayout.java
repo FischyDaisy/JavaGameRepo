@@ -2,6 +2,7 @@ package main.engine.graphics.vulkan;
 
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import java.nio.LongBuffer;
 
@@ -18,7 +19,7 @@ public abstract class DescriptorSetLayout {
     }
 
     public void cleanup() {
-        //LOGGER.debug("Destroying descriptor set layout");
+    	Logger.debug("Destroying descriptor set layout");
         vkDestroyDescriptorSetLayout(device.getVkDevice(), vkDescriptorLayout, null);
     }
 

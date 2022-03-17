@@ -2,6 +2,7 @@ package main.engine.graphics.vulkan;
 
 import org.lwjgl.system.*;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import main.engine.graphics.ITexture;
 
@@ -24,7 +25,7 @@ public class VKTexture implements ITexture {
     private boolean hasTransparencies;
 
     public VKTexture(Device device, String fileName, int imageFormat) {
-        //LOGGER.debug("Creating texture [{}]", fileName);
+    	Logger.debug("Creating texture [{}]", fileName);
         recordedTransition = false;
         this.fileName = fileName;
         ByteBuffer buf;
@@ -255,7 +256,7 @@ public class VKTexture implements ITexture {
 
     public void recordTextureTransition(CommandBuffer cmd) {
         if (stgBuffer != null && !recordedTransition) {
-            //LOGGER.debug("Recording transition for texture [{}]", fileName);
+        	Logger.debug("Recording transition for texture [{}]", fileName);
             recordedTransition = true;
             try (MemoryStack stack = MemoryStack.stackPush()) {
                 recordImageTransition(stack, cmd, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
@@ -263,7 +264,7 @@ public class VKTexture implements ITexture {
                 recordGenerateMipMaps(stack, cmd);
             }
         } else {
-            //LOGGER.debug("Texture [{}] has already been transitioned", fileName);
+        	Logger.debug("Texture [{}] has already been transitioned", fileName);
         }
     }
 }

@@ -3,6 +3,7 @@ package main.engine.graphics.vulkan;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import java.nio.IntBuffer;
 import java.util.*;
@@ -17,6 +18,7 @@ public class PhysicalDevice {
     private final VkPhysicalDeviceFeatures vkPhysicalDeviceFeatures;
     private final VkPhysicalDeviceProperties vkPhysicalDeviceProperties;
     private final VkQueueFamilyProperties.Buffer vkQueueFamilyProps;
+    private Set<Integer> suportedSampleCount;
 
     private PhysicalDevice(VkPhysicalDevice vkPhysicalDevice) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -34,6 +36,8 @@ public class PhysicalDevice {
             vkDeviceExtensions = VkExtensionProperties.calloc(intBuffer.get(0));
             VulkanUtils.vkCheck(vkEnumerateDeviceExtensionProperties(vkPhysicalDevice, (String) null, intBuffer, vkDeviceExtensions),
                     "Failed to get extension properties");
+            
+            suportedSampleCount = calSupportedSampleCount(vkPhysicalDeviceProperties);
 
             // Get Queue family properties
             vkGetPhysicalDeviceQueueFamilyProperties(vkPhysicalDevice, intBuffer, null);
@@ -50,7 +54,8 @@ public class PhysicalDevice {
     }
 
     public static PhysicalDevice createPhysicalDevice(Instance instance, String prefferredDeviceName) {
-        PhysicalDevice selectedPhysicalDevice = null;
+    	Logger.debug("Selecting physical devices");
+    	PhysicalDevice selectedPhysicalDevice = null;
         try (MemoryStack stack = MemoryStack.stackPush()) {
             // Get available devices
             PointerBuffer pPhysicalDevices = getPhysicalDevices(instance, stack);
@@ -67,14 +72,14 @@ public class PhysicalDevice {
 
                 String deviceName = physicalDevice.getDeviceName();
                 if (physicalDevice.hasGraphicsQueueFamily() && physicalDevice.hasKHRSwapChainExtension()) {
-                	System.out.println("Device [" + deviceName + "] supports required extensions");
+                	Logger.debug("Device [{}] supports required extensions", deviceName);
                     if (prefferredDeviceName != null && prefferredDeviceName.equals(deviceName)) {
                         selectedPhysicalDevice = physicalDevice;
                         break;
                     }
                     devices.add(physicalDevice);
                 } else {
-                	System.out.println("Device [" + deviceName + "] does not support required extensions");
+                	Logger.debug("Device [{}] does not support required extensions", deviceName);
                     physicalDevice.cleanup();
                 }
             }
@@ -90,7 +95,7 @@ public class PhysicalDevice {
             if (selectedPhysicalDevice == null) {
                 throw new RuntimeException("No suitable physical devices found");
             }
-            System.out.println("Selected device: [" + selectedPhysicalDevice.getDeviceName() + "]");
+            Logger.debug("Selected device: [{}]", selectedPhysicalDevice.getDeviceName());
         }
 
         return selectedPhysicalDevice;
@@ -103,7 +108,7 @@ public class PhysicalDevice {
         VulkanUtils.vkCheck(vkEnumeratePhysicalDevices(instance.getVkInstance(), intBuffer, null),
                 "Failed to get number of physical devices");
         int numDevices = intBuffer.get(0);
-        System.out.println("Detected " + numDevices + " physical device(s)");
+        Logger.debug("Detected {} physical device(s)", numDevices);
 
         // Populate physical devices list pointer
         pPhysicalDevices = stack.mallocPointer(numDevices);
@@ -111,8 +116,43 @@ public class PhysicalDevice {
                 "Failed to get physical devices");
         return pPhysicalDevices;
     }
+    
+    private Set<Integer> calSupportedSampleCount(VkPhysicalDeviceProperties devProps) {
+        Set<Integer> result = new HashSet<>();
+        long colorCounts = Integer.toUnsignedLong(vkPhysicalDeviceProperties.limits().framebufferColorSampleCounts());
+        Logger.debug("Color max samples: {}", colorCounts);
+        long depthCounts = Integer.toUnsignedLong(devProps.limits().framebufferDepthSampleCounts());
+        Logger.debug("Depth max samples: {}", depthCounts);
+        int counts = (int) (Math.min(colorCounts, depthCounts));
+        Logger.debug("Max samples: {}", depthCounts);
+
+        result.add(VK_SAMPLE_COUNT_1_BIT);
+        if ((counts & VK_SAMPLE_COUNT_64_BIT) > 0) {
+            result.add(VK_SAMPLE_COUNT_64_BIT);
+        }
+        if ((counts & VK_SAMPLE_COUNT_32_BIT) > 0) {
+            result.add(VK_SAMPLE_COUNT_32_BIT);
+        }
+        if ((counts & VK_SAMPLE_COUNT_16_BIT) > 0) {
+            result.add(VK_SAMPLE_COUNT_16_BIT);
+        }
+        if ((counts & VK_SAMPLE_COUNT_8_BIT) > 0) {
+            result.add(VK_SAMPLE_COUNT_8_BIT);
+        }
+        if ((counts & VK_SAMPLE_COUNT_4_BIT) > 0) {
+            result.add(VK_SAMPLE_COUNT_4_BIT);
+        }
+        if ((counts & VK_SAMPLE_COUNT_2_BIT) != 0) {
+            result.add(VK_SAMPLE_COUNT_2_BIT);
+        }
+
+        return result;
+    }
 
     public void cleanup() {
+    	if (Logger.isDebugEnabled()) {
+            Logger.debug("Destroying physical device [{}]", vkPhysicalDeviceProperties.deviceNameString());
+        }
         vkMemoryProperties.free();
         vkPhysicalDeviceFeatures.free();
         vkQueueFamilyProps.free();
@@ -168,5 +208,9 @@ public class PhysicalDevice {
             }
         }
         return result;
+    }
+    
+    public boolean supportsSampleCount(int numSamples) {
+        return suportedSampleCount.contains(numSamples);
     }
 }

@@ -46,6 +46,7 @@ import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.lights.PointLight;
 import main.engine.graphics.lights.SpotLight;
 import main.engine.graphics.opengl.GLModel.GLMaterial;
+import main.engine.graphics.opengl.geometry.GBuffer;
 import main.engine.graphics.opengl.shadows.ShadowCascade;
 import main.engine.graphics.opengl.shadows.ShadowRenderer;
 import main.engine.graphics.particles.IParticleEmitter;

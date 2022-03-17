@@ -54,6 +54,7 @@ import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.graphics.weather.Fog;
 import main.engine.graphics.opengl.GLRenderer;
 import main.engine.items.GameItem;
+import main.engine.items.GameItem.GameItemAnimation;
 import main.engine.items.Portal;
 import main.engine.items.SkyBox;
 import main.engine.items.Terrain;
@@ -116,7 +117,11 @@ public class Game implements IGameLogic {
     
     private GameItem bob;
     
+    private GameItem monster;
+    
     private int maxFrames = 0;
+    
+    private int monsterMax;
     
     private AnimGameItem momster;
     
@@ -339,9 +344,24 @@ public class Game implements IGameLogic {
             bob.buildModelMatrix();
             bob.setGameItemAnimation(new GameItem.GameItemAnimation(false, 0, 0));
             scene.addGameItem(bob);
+            
+            String monsterModelId = "monster-model";
+            ModelData monsterModelData = ModelLoader.loadModel(monsterModelId, ResourcePaths.Models.MONSTER_MD5MESH, 
+            		ResourcePaths.Models.MONSTER_DIR, true);
+            monsterMax = monsterModelData.getAnimationsList().get(0).frames().size();
+            modelDataList.add(monsterModelData);
+            monster = new GameItem("MonsterObject", monsterModelId);
+            monster.setScale(0.02f);
+            //rot.setRotation((float) Math.toRadians(-90.0f));
+            //monster.setRotation(rot.getQuatRotation());
+            monster.setPosition(-5f, 0f, 0f);
+            monster.buildModelMatrix();
+            monster.setGameItemAnimation(new GameItem.GameItemAnimation(false, 0, 0));
+            scene.addGameItem(monster);
 
             vkRenderer.loadModels(modelDataList);
             vkRenderer.loadAnimation(bob);
+            vkRenderer.loadAnimation(monster);
             
             camera.setPosition(0.0f, 5.0f, 0.0f);
             camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
@@ -477,6 +497,7 @@ public class Game implements IGameLogic {
             
             if (window.isKeyPressed(GLFW_KEY_SPACE)) {
                 bob.getGameItemAnimation().setStarted(!bob.getGameItemAnimation().isStarted());
+                monster.getGameItemAnimation().setStarted(!monster.getGameItemAnimation().isStarted());
             }
             
             lightAngle += angleInc;
@@ -490,6 +511,12 @@ public class Game implements IGameLogic {
             GameItem.GameItemAnimation itemAnimation = bob.getGameItemAnimation();
             if (itemAnimation.isStarted()) {
                 int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, maxFrames);
+                itemAnimation.setCurrentFrame(currentFrame);
+            }
+            
+            itemAnimation = monster.getGameItemAnimation();
+            if (itemAnimation.isStarted()) {
+                int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, monsterMax);
                 itemAnimation.setCurrentFrame(currentFrame);
             }
         }

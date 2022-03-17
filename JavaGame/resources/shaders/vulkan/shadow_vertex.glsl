@@ -1,10 +1,10 @@
 #version 450
 
-layout(location = 0) in vec3 entityPos;
-layout(location = 1) in vec3 entityNormal;
-layout(location = 2) in vec3 entityTangent;
-layout(location = 3) in vec3 entityBitangent;
-layout(location = 4) in vec2 entityTextCoords;
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 normal;
+layout(location = 2) in vec3 tangent;
+layout(location = 3) in vec3 bitangent;
+layout(location = 4) in vec2 textCoords;
 
 layout(push_constant) uniform matrices {
     mat4 modelMatrix;
@@ -12,5 +12,5 @@ layout(push_constant) uniform matrices {
 
 void main()
 {
-    gl_Position = push_constants.modelMatrix * vec4(entityPos, 1.0f);
+    gl_Position = push_constants.modelMatrix * vec4(position, 1.0f);
 }

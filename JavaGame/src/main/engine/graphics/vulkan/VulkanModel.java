@@ -124,6 +124,7 @@ public class VulkanModel implements IModel{
         long mappedMemory = srcBuffer.map();
         FloatBuffer data = MemoryUtil.memFloatBuffer(mappedMemory, (int) srcBuffer.getRequestedSize());
 
+        
         int rows = weights.length / 4;
         for (int row = 0; row < rows; row++) {
             int startPos = row * 4;
@@ -136,7 +137,7 @@ public class VulkanModel implements IModel{
             data.put(boneIds[startPos + 2]);
             data.put(boneIds[startPos + 3]);
         }
-
+        data.put(weights);
         srcBuffer.unMap();
 
         return new TransferBuffers(srcBuffer, dstBuffer);

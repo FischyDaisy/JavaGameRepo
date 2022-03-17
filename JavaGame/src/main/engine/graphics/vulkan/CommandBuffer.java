@@ -3,16 +3,17 @@ package main.engine.graphics.vulkan;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
-
+import org.tinylog.Logger;
 import static org.lwjgl.vulkan.VK11.*;
 
 public class CommandBuffer {
 
-    private final CommandPool commandPool;
+	private final CommandPool commandPool;
     private final boolean oneTimeSubmit;
     private final VkCommandBuffer vkCommandBuffer;
 
     public CommandBuffer(CommandPool commandPool, boolean primary, boolean oneTimeSubmit) {
+        Logger.trace("Creating command buffer");
         this.commandPool = commandPool;
         this.oneTimeSubmit = oneTimeSubmit;
         VkDevice vkDevice = commandPool.getDevice().getVkDevice();
@@ -43,12 +44,13 @@ public class CommandBuffer {
     }
 
     public void cleanup() {
+        Logger.trace("Destroying command buffer");
         vkFreeCommandBuffers(commandPool.getDevice().getVkDevice(), commandPool.getVkCommandPool(),
                 vkCommandBuffer);
     }
 
     public void endRecording() {
-        VulkanUtils.vkCheck(vkEndCommandBuffer(vkCommandBuffer), "Failed to end command buffer");
+    	VulkanUtils.vkCheck(vkEndCommandBuffer(vkCommandBuffer), "Failed to end command buffer");
     }
 
     public VkCommandBuffer getVkCommandBuffer() {

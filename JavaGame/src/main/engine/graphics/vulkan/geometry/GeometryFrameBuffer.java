@@ -2,6 +2,7 @@ package main.engine.graphics.vulkan.geometry;
 
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkExtent2D;
+import org.tinylog.Logger;
 
 import main.engine.graphics.vulkan.Attachment;
 import main.engine.graphics.vulkan.FrameBuffer;
@@ -18,14 +19,14 @@ public class GeometryFrameBuffer {
     private GeometryAttachments geometryAttachments;
 
     public GeometryFrameBuffer(SwapChain swapChain) {
-        //LOGGER.debug("Creating GeometryFrameBuffer");
+    	Logger.debug("Creating GeometryFrameBuffer");
         createAttachments(swapChain);
         geometryRenderPass = new GeometryRenderPass(swapChain.getDevice(), geometryAttachments.getAttachments());
         createFrameBuffer(swapChain);
     }
 
     public void cleanup() {
-        //LOGGER.debug("Destroying Geometry FrameBuffer");
+    	Logger.debug("Destroying Geometry FrameBuffer");
         geometryRenderPass.cleanup();
         geometryAttachments.cleanup();
         frameBuffer.cleanup();

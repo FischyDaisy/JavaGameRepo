@@ -145,8 +145,8 @@ public class GeometryRenderActivity {
 
         viewMatricesDescriptorSets = new DescriptorSet.UniformDescriptorSet[numImages];
         viewMatricesBuffer = new VulkanBuffer[numImages];
-        materialsBuffer = new VulkanBuffer(device, (long) materialSize * engineProps.getMaxMaterials(), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0);
+        materialsBuffer = new VulkanBuffer(device, (long) materialSize * engineProps.getMaxMaterials(), 
+        		VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0);
         materialsDescriptorSet = new DescriptorSet.DynUniformDescriptorSet(descriptorPool, materialDescriptorSetLayout,
                 materialsBuffer, 0, materialSize);
         for (int i = 0; i < numImages; i++) {
@@ -285,10 +285,10 @@ public class GeometryRenderActivity {
 
                     for (GameItem item : items) {
                     	if (vulkanModel.hasAnimations()) {
-                            List<AnimationComputeActivity.GameItemAnimationBuffer> animationsBuffer = gameItemAnimationsBuffers.get(item.getId());
-                            AnimationComputeActivity.GameItemAnimationBuffer itemAnimationBuffer = animationsBuffer.get(meshCount);
-                            vertexBuffer.put(0, itemAnimationBuffer.verticesBuffer().getBuffer());
-                            vkCmdBindVertexBuffers(cmdHandle, 0, vertexBuffer, offsets);
+                    		List<AnimationComputeActivity.GameItemAnimationBuffer> animationsBuffer = gameItemAnimationsBuffers.get(item.getId());
+                    		AnimationComputeActivity.GameItemAnimationBuffer itemAnimationBuffer = animationsBuffer.get(meshCount);
+                    		vertexBuffer.put(0, itemAnimationBuffer.verticesBuffer().getBuffer());
+                    		vkCmdBindVertexBuffers(cmdHandle, 0, vertexBuffer, offsets);
                         }
                     	descriptorSets.put(2, textureDescriptorSet.getVkDescriptorSet());
                         descriptorSets.put(3, normalMapDescriptorSet.getVkDescriptorSet());

@@ -1,6 +1,7 @@
 package main.engine.graphics.vulkan;
 
 import org.lwjgl.util.shaderc.Shaderc;
+import org.tinylog.Logger;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -11,7 +12,6 @@ public class ShaderCompiler {
     private ShaderCompiler() {
         // Utility class
     }
-
 
     public static byte[] compileShader(String shaderCode, int shaderType) {
         long compiler = 0;
@@ -52,13 +52,13 @@ public class ShaderCompiler {
             File glslFile = new File(glsShaderFile);
             File spvFile = new File(glsShaderFile + ".spv");
             if (!spvFile.exists() || glslFile.lastModified() > spvFile.lastModified()) {
-            	System.out.println("Compiling [" + glslFile.getPath() + "] to [" + spvFile.getPath() + "]");
+            	Logger.debug("Compiling [{}] to [{}]", glslFile.getPath(), spvFile.getPath());
                 String shaderCode = new String(Files.readAllBytes(glslFile.toPath()));
 
                 compiledShader = compileShader(shaderCode, shaderType);
                 Files.write(spvFile.toPath(), compiledShader);
             } else {
-            	System.out.println("Shader [" + glslFile.getPath() + "] already compiled. Loading compiled version: [" + spvFile.getPath() + "]");
+            	Logger.debug("Shader [{}] already compiled. Loading compiled version: [{}]", glslFile.getPath(), spvFile.getPath());
             }
         } catch (IOException excp) {
             throw new RuntimeException(excp);

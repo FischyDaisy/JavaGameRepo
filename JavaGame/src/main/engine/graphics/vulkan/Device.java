@@ -3,6 +3,7 @@ package main.engine.graphics.vulkan;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import java.nio.FloatBuffer;
 
@@ -16,6 +17,8 @@ public class Device {
     private final VkDevice vkDevice;
 
     public Device(Instance instance, PhysicalDevice physicalDevice) {
+    	Logger.debug("Creating device");
+    	
         this.physicalDevice = physicalDevice;
         try (MemoryStack stack = MemoryStack.stackPush()) {
 
@@ -30,6 +33,8 @@ public class Device {
             if (samplerAnisotropy) {
                 features.samplerAnisotropy(true);
             }
+            features.depthClamp(supportedFeatures.depthClamp());
+            features.geometryShader(true);
 
             // Enable all the queue families
             VkQueueFamilyProperties.Buffer queuePropsBuff = physicalDevice.getVkQueueFamilyProps();
@@ -59,6 +64,7 @@ public class Device {
     }
 
     public void cleanup() {
+    	Logger.debug("Destroying Vulkan device");
     	memoryAllocator.cleanup();
         vkDestroyDevice(vkDevice, null);
     }

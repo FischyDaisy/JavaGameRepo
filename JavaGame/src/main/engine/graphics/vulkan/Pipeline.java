@@ -2,6 +2,7 @@ package main.engine.graphics.vulkan;
 
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import java.nio.*;
 
@@ -14,7 +15,8 @@ public class Pipeline {
     private final long vkPipelineLayout;
 
     public Pipeline(PipelineCache pipelineCache, Pipeline.PipeLineCreationInfo pipeLineCreationInfo) {
-        device = pipelineCache.getDevice();
+    	Logger.debug("Creating pipeline");
+    	device = pipelineCache.getDevice();
         try (MemoryStack stack = MemoryStack.stackPush()) {
             LongBuffer lp = stack.mallocLong(1);
 
@@ -144,6 +146,7 @@ public class Pipeline {
     }
 
     public void cleanup() {
+    	Logger.debug("Destroying pipeline");
         vkDestroyPipelineLayout(device.getVkDevice(), vkPipelineLayout, null);
         vkDestroyPipeline(device.getVkDevice(), vkPipeline, null);
     }

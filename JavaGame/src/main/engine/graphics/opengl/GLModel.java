@@ -1,27 +1,10 @@
 package main.engine.graphics.opengl;
 
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -318,14 +301,21 @@ public class GLModel implements IModel {
 	            // Activate first texture bank
 	            glActiveTexture(GL_TEXTURE0);
 	            // Bind the texture
-	            glBindTexture(GL_TEXTURE_2D, texture.getId());
+	            texture.bind();
 	        }
 	        GLTexture normalMap = material.normalMap();
 	        if (normalMap != null) {
 	            // Activate first texture bank
 	            glActiveTexture(GL_TEXTURE1);
 	            // Bind the texture
-	            glBindTexture(GL_TEXTURE_2D, normalMap.getId());
+	            normalMap.bind();
+	        }
+	        GLTexture metalRoughMap = material.metalRoughMap();
+	        if (metalRoughMap != null) {
+	        	// Activate first texture bank
+	            glActiveTexture(GL_TEXTURE2);
+	            // Bind the texture
+	            metalRoughMap.bind();
 	        }
 
 	        // Draw the mesh

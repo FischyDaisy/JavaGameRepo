@@ -13,7 +13,7 @@ public class ResourcePaths {
 	}
 	
 	public static final class Models {
-		public static final String BOBLAMP_DIR = "resources|models|bob|".replace('|', File.separatorChar);
+		public static final String BOBLAMP_DIR = "resources|models|bob".replace('|', File.separatorChar);
 		public static final String BOBLAMP_MD5MESH = BOBLAMP_DIR + "|boblamp.md5mesh".replace('|', File.separatorChar);
 		public static final String BUNNY_OBJ = "resources|models|bunny.obj".replace('|', File.separatorChar);
 		public static final String CUBE_DIR = "resources|models|cube".replace('|', File.separatorChar);
@@ -22,8 +22,8 @@ public class ResourcePaths {
 		public static final String HOUSE_OBJ = HOUSE_DIR +"|house.obj".replace('|', File.separatorChar);
 		public static final String MCUBE_OBJ = "resources|models|cube.obj".replace('|', File.separatorChar);
 		public static final String DOUBLE_QUAD_OBJ = "resources|models|double_quad.obj".replace('|', File.separatorChar);
-		public static final String MONSTER_MD5ANIM = "resources|models|monster.md5anim".replace('|', File.separatorChar);
-		public static final String MONSTER_MD5MESH = "resources|models|monster.md5mesh".replace('|', File.separatorChar);
+		public static final String MONSTER_DIR = "resources|models|monster".replace('|', File.separatorChar);
+		public static final String MONSTER_MD5MESH =  MONSTER_DIR + "|monster.md5mesh".replace('|', File.separatorChar);
 		public static final String PARTICLE_OBJ = "resources|models|particle.obj".replace('|', File.separatorChar);
 		public static final String PLANE_OBJ = "resources|models|plane.obj".replace('|', File.separatorChar);
 		public static final String QUAD_OBJ = "resources|models|quad.obj".replace('|', File.separatorChar);

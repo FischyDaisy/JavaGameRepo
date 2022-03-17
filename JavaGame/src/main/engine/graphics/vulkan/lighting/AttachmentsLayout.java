@@ -2,6 +2,7 @@ package main.engine.graphics.vulkan.lighting;
 
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import main.engine.graphics.vulkan.*;
 
@@ -14,7 +15,7 @@ public class AttachmentsLayout extends DescriptorSetLayout {
     public AttachmentsLayout(Device device, int numAttachments) {
         super(device);
 
-        //LOGGER.debug("Creating Attachments Layout");
+        Logger.debug("Creating Attachments Layout");
         try (MemoryStack stack = MemoryStack.stackPush()) {
             VkDescriptorSetLayoutBinding.Buffer layoutBindings = VkDescriptorSetLayoutBinding.calloc(numAttachments, stack);
             for (int i = 0; i < numAttachments; i++) {

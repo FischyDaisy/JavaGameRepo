@@ -110,34 +110,6 @@ public class Scene {
     public List<GameItem> getInstancedGameItemsByModelId(String modelId) {
         return instancedModelMap.get(modelId);
     }
-
-    public void setGameItems(GameItem[] gameItems) {
-    	// Create a map of meshes to speed up rendering
-        int numGameItems = gameItems != null ? gameItems.length : 0;
-        for (int i = 0; i < numGameItems; i++) {
-            GameItem gameItem = gameItems[i];
-            boolean isPortal = gameItem instanceof Portal;
-            Mesh[] meshes = gameItem.getMeshes();
-            for (Mesh mesh : meshes) {
-                boolean instancedMesh = mesh instanceof InstancedMesh;
-                List<GameItem> list = instancedMesh ? instancedMeshMap.get(mesh) : meshMap.get(mesh);
-                list = isPortal ? portalMap.get(mesh) : list;
-                if (list == null) {
-                    list = new ArrayList<>();
-                    if (instancedMesh) {
-                        instancedMeshMap.put((InstancedMesh)mesh, list);
-                    } else {
-                    	if (isPortal) {
-                    		portalMap.put(mesh, list);
-                    	} else {
-                    		meshMap.put(mesh, list);
-                    	}
-                    }
-                }
-                list.add(gameItem);
-            }
-        }
-    }
     
     public void cleanup() {
     	for (Mesh mesh : meshMap.keySet()) {

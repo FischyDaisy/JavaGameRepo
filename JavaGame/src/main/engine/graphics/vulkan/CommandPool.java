@@ -2,6 +2,7 @@ package main.engine.graphics.vulkan;
 
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkCommandPoolCreateInfo;
+import org.tinylog.Logger;
 
 import java.nio.LongBuffer;
 
@@ -9,10 +10,12 @@ import static org.lwjgl.vulkan.VK11.*;
 
 public class CommandPool {
 
-    private final Device device;
+	private final Device device;
     private final long vkCommandPool;
 
     public CommandPool(Device device, int queueFamilyIndex) {
+        Logger.debug("Creating Vulkan CommandPool");
+
         this.device = device;
         try (MemoryStack stack = MemoryStack.stackPush()) {
             VkCommandPoolCreateInfo cmdPoolInfo = VkCommandPoolCreateInfo.calloc(stack)

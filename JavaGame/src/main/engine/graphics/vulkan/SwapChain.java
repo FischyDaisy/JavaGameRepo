@@ -3,6 +3,7 @@ package main.engine.graphics.vulkan;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import main.engine.Window;
 
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import static org.lwjgl.vulkan.VK11.*;
 
 public class SwapChain {
+	
     private final Device device;
     private final ImageView[] imageViews;
     private final SurfaceFormat surfaceFormat;
@@ -22,7 +24,8 @@ public class SwapChain {
     private int currentFrame;
 
     public SwapChain(Device device, Surface surface, Window window, int requestedImages, boolean vsync) {
-        this.device = device;
+    	Logger.debug("Creating Vulkan SwapChain");
+    	this.device = device;
         try (MemoryStack stack = MemoryStack.stackPush()) {
 
             PhysicalDevice physicalDevice = device.getPhysicalDevice();
@@ -64,9 +67,7 @@ public class SwapChain {
             imageViews = createImageViews(stack, device, vkSwapChain, surfaceFormat.imageFormat);
             numImages = imageViews.length;
             syncSemaphoresList = new SyncSemaphores[numImages];
-            for (int i = 0; i < numImages; i++) {
-                syncSemaphoresList[i] = new SyncSemaphores(device);
-            }
+            Arrays.setAll(syncSemaphoresList, i -> new SyncSemaphores(device));
             currentFrame = 0;
         }
     }
@@ -98,7 +99,8 @@ public class SwapChain {
             result = Math.min(requestedImages, maxImages);
         }
         result = Math.max(result, minImages);
-        System.out.println("Requested [" + requestedImages + "] images, got [" + result + "] images. Surface capabilities, maxImages: [" + maxImages + "], minImages [" + minImages + "]");
+        Logger.debug("Requested [{}] images, got [{}] images. Surface capabilities, maxImages: [{}], minImages [{}]",
+                requestedImages, result, maxImages, minImages);
 
         return result;
     }
@@ -120,11 +122,11 @@ public class SwapChain {
             VulkanUtils.vkCheck(KHRSurface.vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice.getVkPhysicalDevice(),
                     surface.getVkSurface(), ip, surfaceFormats), "Failed to get surface formats");
 
-            imageFormat = VK_FORMAT_B8G8R8A8_UNORM;
+            imageFormat = VK_FORMAT_B8G8R8A8_SRGB;
             colorSpace = surfaceFormats.get(0).colorSpace();
             for (int i = 0; i < numFormats; i++) {
                 VkSurfaceFormatKHR surfaceFormatKHR = surfaceFormats.get(i);
-                if (surfaceFormatKHR.format() == VK_FORMAT_B8G8R8A8_UNORM &&
+                if (surfaceFormatKHR.format() == VK_FORMAT_B8G8R8A8_SRGB &&
                         surfaceFormatKHR.colorSpace() == KHRSurface.VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
                     imageFormat = surfaceFormatKHR.format();
                     colorSpace = surfaceFormatKHR.colorSpace();
@@ -155,9 +157,15 @@ public class SwapChain {
     }
 
     public void cleanup() {
+    	Logger.debug("Destroying Vulkan SwapChain");
         swapChainExtent.free();
-        Arrays.stream(imageViews).forEach(ImageView::cleanup);
-        Arrays.stream(syncSemaphoresList).forEach(SyncSemaphores::cleanup);
+
+        int size = imageViews != null ? imageViews.length : 0;
+        for (int i = 0; i < size; i++) {
+            imageViews[i].cleanup();
+            syncSemaphoresList[i].cleanup();
+        }
+
         KHRSwapchain.vkDestroySwapchainKHR(device.getVkDevice(), vkSwapChain, null);
     }
 
@@ -241,16 +249,16 @@ public class SwapChain {
     public record SurfaceFormat(int imageFormat, int colorSpace) {}
 
     public record SyncSemaphores(Semaphore imgAcquisitionSemaphore, Semaphore geometryCompleteSemaphore,
-            Semaphore renderCompleteSemaphore) {
+    		Semaphore renderCompleteSemaphore) {
 
-    		public SyncSemaphores(Device device) {
-    			this(new Semaphore(device), new Semaphore(device), new Semaphore(device));
-    		}
-
-    		public void cleanup() {
-    			imgAcquisitionSemaphore.cleanup();
-    			geometryCompleteSemaphore.cleanup();
-    			renderCompleteSemaphore.cleanup();
-    		}
+    	public SyncSemaphores(Device device) {
+    		this(new Semaphore(device), new Semaphore(device), new Semaphore(device));
     	}
-	}
+
+    	public void cleanup() {
+    		imgAcquisitionSemaphore.cleanup();
+    		geometryCompleteSemaphore.cleanup();
+    		renderCompleteSemaphore.cleanup();
+    	}
+    }
+}

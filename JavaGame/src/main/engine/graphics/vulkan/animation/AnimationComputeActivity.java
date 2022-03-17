@@ -85,7 +85,7 @@ public class AnimationComputeActivity {
         storageDescriptorSetLayout = new DescriptorSetLayout.StorageDescriptorSetLayout(device, 0, VK_SHADER_STAGE_COMPUTE_BIT);
         uniformDescriptorSetLayout = new DescriptorSetLayout.UniformDescriptorSetLayout(device, 0, VK_SHADER_STAGE_COMPUTE_BIT);
         descriptorSetLayouts = new DescriptorSetLayout[]{
-                storageDescriptorSetLayout,
+        		storageDescriptorSetLayout,
                 storageDescriptorSetLayout,
                 storageDescriptorSetLayout,
                 uniformDescriptorSetLayout,
@@ -128,7 +128,7 @@ public class AnimationComputeActivity {
 
             vkCmdBindPipeline(cmdHandle, VK_PIPELINE_BIND_POINT_COMPUTE, computePipeline.getVkPipeline());
 
-            LongBuffer descriptorSets = stack.mallocLong(4);
+            LongBuffer descriptorSets = stack.mallocLong(5);
 
             for (VulkanModel vulkanModel : vulkanModelList) {
                 String modelId = vulkanModel.getModelId();

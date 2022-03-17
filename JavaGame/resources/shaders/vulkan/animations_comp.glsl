@@ -10,21 +10,25 @@ layout (std430, set = 1, binding = 0) readonly buffer weightsBuf {
     float data[];
 } weightsVector;
 
-layout (std430, set = 2, binding = 0) buffer dstBuf {
+layout (std430, set = 2, binding = 0) readonly buffer jointsBuf {
+    int data[];
+} jointsVector;
+
+layout (std430, set = 3, binding = 0) buffer dstBuf {
     float data[];
 } dstVector;
 
-layout (local_size_x=32, local_size_y=1, local_size_z=1) in;
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
-layout(set = 3, binding = 0) uniform JointMatricesUniform {
+layout(set = 4, binding = 0) uniform JointMatricesUniform {
     mat4 jointMatrices[MAX_JOINTS];
 } jointMatricesUniform;
 
 void main()
 {
-    int baseIdxWeightsBuf  = int(gl_GlobalInvocationID.x) * 8;
+	int baseIdxWeightsBuf  = int(gl_GlobalInvocationID.x) * 4;
     vec4 weights = vec4(weightsVector.data[baseIdxWeightsBuf], weightsVector.data[baseIdxWeightsBuf + 1], weightsVector.data[baseIdxWeightsBuf + 2], weightsVector.data[baseIdxWeightsBuf + 3]);
-    ivec4 joints = ivec4(weightsVector.data[baseIdxWeightsBuf + 4], weightsVector.data[baseIdxWeightsBuf + 5], weightsVector.data[baseIdxWeightsBuf + 6], weightsVector.data[baseIdxWeightsBuf + 7]);
+    ivec4 joints = ivec4(jointsVector.data[baseIdxWeightsBuf], jointsVector.data[baseIdxWeightsBuf + 1], jointsVector.data[baseIdxWeightsBuf + 2], jointsVector.data[baseIdxWeightsBuf + 3]);
 
     int baseIdxSrcBuf = int(gl_GlobalInvocationID.x) * 14;
     vec4 position = vec4(srcVector.data[baseIdxSrcBuf], srcVector.data[baseIdxSrcBuf + 1], srcVector.data[baseIdxSrcBuf + 2], 1);

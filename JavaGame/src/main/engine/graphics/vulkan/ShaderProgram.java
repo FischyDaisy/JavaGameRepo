@@ -3,6 +3,7 @@ package main.engine.graphics.vulkan;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.VkShaderModuleCreateInfo;
 import org.lwjgl.vulkan.VkSpecializationInfo;
+import org.tinylog.Logger;
 
 import java.io.*;
 import java.nio.*;
@@ -27,7 +28,7 @@ public class ShaderProgram {
                         shaderModuleData[i].specInfo());
             }
         } catch (IOException excp) {
-            System.out.println("Error reading shader files" + excp);
+        	Logger.error("Error reading shader files", excp);
             throw new RuntimeException(excp);
         }
     }

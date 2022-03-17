@@ -179,13 +179,13 @@ public class ShadowRenderActivity {
             vkCmdBindDescriptorSets(cmdHandle, VK_PIPELINE_BIND_POINT_GRAPHICS,
                     pipeLine.getVkPipelineLayout(), 0, descriptorSets, null);
 
-            recordEntities(stack, cmdHandle, vulkanModelList, gameItemAnimationsBuffers);
+            recordGameItems(stack, cmdHandle, vulkanModelList, gameItemAnimationsBuffers);
 
             vkCmdEndRenderPass(cmdHandle);
         }
     }
 
-    private void recordEntities(MemoryStack stack, VkCommandBuffer cmdHandle, List<VulkanModel> vulkanModelList,
+    private void recordGameItems(MemoryStack stack, VkCommandBuffer cmdHandle, List<VulkanModel> vulkanModelList,
     		Map<String, List<AnimationComputeActivity.GameItemAnimationBuffer>> gameItemAnimationsBuffers) {
         LongBuffer offsets = stack.mallocLong(1);
         offsets.put(0, 0L);

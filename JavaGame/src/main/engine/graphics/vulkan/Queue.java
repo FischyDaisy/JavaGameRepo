@@ -3,6 +3,7 @@ package main.engine.graphics.vulkan;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import static org.lwjgl.vulkan.VK11.*;
 
@@ -15,6 +16,8 @@ public class Queue {
     private final VkQueue vkQueue;
 
     public Queue(Device device, int queueFamilyIndex, int queueIndex) {
+    	Logger.debug("Creating queue");
+    	
         this.queueFamilyIndex = queueFamilyIndex;
         try (MemoryStack stack = MemoryStack.stackPush()) {
             PointerBuffer pQueue = stack.mallocPointer(1);

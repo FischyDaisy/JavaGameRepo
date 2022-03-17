@@ -4,11 +4,10 @@ import static org.lwjgl.vulkan.VK11.*;
 
 public class Attachment {
 
-    private final Image image;
+	private final Image image;
     private final ImageView imageView;
+    private final boolean depthAttachment;
 
-    private boolean depthAttachment;
-    
     public Attachment(Image image, ImageView imageView, boolean depthAttachment) {
         this.image = image;
         this.imageView = imageView;
@@ -27,7 +26,7 @@ public class Attachment {
         ImageView.ImageViewData imageViewData = new ImageView.ImageViewData().format(image.getFormat()).aspectMask(aspectMask);
         imageView = new ImageView(device, image.getVkImage(), imageViewData);
     }
-    
+
     public static int calcAspectMask(int usage) {
         int aspectMask = 0;
         if ((usage & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) > 0) {
