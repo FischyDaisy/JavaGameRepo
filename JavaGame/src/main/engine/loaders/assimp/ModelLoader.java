@@ -7,6 +7,7 @@ import org.joml.primitives.AABBf;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
 import org.lwjgl.system.MemoryStack;
+import org.tinylog.Logger;
 
 import main.engine.graphics.GraphConstants;
 import main.engine.graphics.ModelData;
@@ -138,7 +139,7 @@ public class ModelLoader {
     }
 
     public static ModelData loadModel(String modelId, String modelPath, String texturesDir, int flags) {
-        //LOGGER.debug("Loading model data [{}]", modelPath);
+    	Logger.debug("Loading model data [{}]", modelPath);
         if (!new File(modelPath).exists()) {
             throw new RuntimeException("Model path does not exist [" + modelPath + "]");
         }
@@ -172,7 +173,7 @@ public class ModelLoader {
         
         int numAnimations = aiScene.mNumAnimations();
         if (numAnimations > 0) {
-            //LOGGER.debug("Processing animations");
+        	Logger.debug("Processing animations");
             List<Bone> boneList = new ArrayList<>();
             List<ModelData.AnimMeshData> animMeshDataList = new ArrayList<>();
             for (int i = 0; i < numMeshes; i++) {
@@ -189,7 +190,7 @@ public class ModelLoader {
         }
 
         aiReleaseImport(aiScene);
-        //LOGGER.debug("Loaded model [{}]", modelPath);
+        Logger.debug("Loaded model [{}]", modelPath);
         return modelData;
     }
     

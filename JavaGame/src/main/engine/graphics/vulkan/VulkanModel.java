@@ -123,7 +123,6 @@ public class VulkanModel implements IModel{
 
         long mappedMemory = srcBuffer.map();
         FloatBuffer data = MemoryUtil.memFloatBuffer(mappedMemory, (int) srcBuffer.getRequestedSize());
-
         
         int rows = weights.length / 4;
         for (int row = 0; row < rows; row++) {
@@ -137,7 +136,7 @@ public class VulkanModel implements IModel{
             data.put(boneIds[startPos + 2]);
             data.put(boneIds[startPos + 3]);
         }
-        data.put(weights);
+        
         srcBuffer.unMap();
 
         return new TransferBuffers(srcBuffer, dstBuffer);
@@ -252,6 +251,7 @@ public class VulkanModel implements IModel{
                     vulkanMaterial = defaultVulkanMaterial;
                 }
                 vulkanMaterial.vulkanMeshList.add(vulkanMesh);
+                meshCount++;
             }
             
             List<VulkanMaterial> temp = new ArrayList<VulkanMaterial>(vulkanModel.vulkanMaterialList);

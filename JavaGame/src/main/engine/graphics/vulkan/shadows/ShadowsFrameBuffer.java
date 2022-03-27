@@ -1,6 +1,7 @@
 package main.engine.graphics.vulkan.shadows;
 
 import org.lwjgl.system.MemoryStack;
+import org.tinylog.Logger;
 
 import main.engine.EngineProperties;
 import main.engine.graphics.GraphConstants;
@@ -17,7 +18,7 @@ public class ShadowsFrameBuffer {
     private final ShadowsRenderPass shadowsRenderPass;
 
     public ShadowsFrameBuffer(Device device) {
-        //LOGGER.debug("Creating ShadowsFrameBuffer");
+    	Logger.debug("Creating ShadowsFrameBuffer");
         try (MemoryStack stack = MemoryStack.stackPush()) {
             int usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
             EngineProperties engineProperties = EngineProperties.getInstance();
@@ -31,7 +32,7 @@ public class ShadowsFrameBuffer {
 
             ImageView.ImageViewData imageViewData = new ImageView.ImageViewData().format(depthImage.getFormat()).
                     aspectMask(aspectMask).viewType(VK_IMAGE_VIEW_TYPE_2D_ARRAY).
-                    layerCount( GraphConstants.SHADOW_MAP_CASCADE_COUNT);
+                    layerCount(GraphConstants.SHADOW_MAP_CASCADE_COUNT);
             ImageView depthImageView = new ImageView(device, depthImage.getVkImage(), imageViewData);
             depthAttachment = new Attachment(depthImage, depthImageView, true);
 
@@ -45,7 +46,7 @@ public class ShadowsFrameBuffer {
     }
 
     public void cleanup() {
-        //LOGGER.debug("Destroying ShadowsFrameBuffer");
+    	Logger.debug("Destroying ShadowsFrameBuffer");
         shadowsRenderPass.cleanup();
         depthAttachment.cleanup();
         frameBuffer.cleanup();

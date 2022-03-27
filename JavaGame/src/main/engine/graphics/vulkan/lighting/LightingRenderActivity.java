@@ -40,7 +40,6 @@ public class LightingRenderActivity {
     private Fence[] fences;
     private VulkanBuffer[] invMatricesBuffers;
     private DescriptorSet.UniformDescriptorSet[] invMatricesDescriptorSets;
-    private DescriptorSet.UniformDescriptorSet invProjMatrixDescriptorSet;
     private VulkanBuffer[] lightsBuffers;
     private DescriptorSet.UniformDescriptorSet[] lightsDescriptorSets;
     private Pipeline pipeline;

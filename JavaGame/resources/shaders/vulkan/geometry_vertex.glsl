@@ -5,14 +5,16 @@ layout(location = 1) in vec3 normals;
 layout(location = 2) in vec3 tangents;
 layout(location = 3) in vec3 biTangents;
 layout(location = 4) in vec2 textCoords;
-layout(location = 5) in mat4 modelInstancedMatrix;
-layout(location = 9) in vec2 texOffset;
-layout(location = 10) in float selectedInstanced;
 
 layout(location = 0) out vec3 outNormal;
 layout(location = 1) out vec3 outTangent;
 layout(location = 2) out vec3 outBitangent;
 layout(location = 3) out vec2 outTextCoords;
+
+out gl_PerVertex
+{
+    vec4 gl_Position;
+};
 
 layout(set = 0, binding = 0) uniform ProjUniform {
     mat4 projectionMatrix;

@@ -60,7 +60,7 @@ public class VKRenderer implements Renderer {
         textureCache = VKTextureCache.getInstance();
 	}
 
-	public void render(Window window, Camera camera, Scene scene) {
+	public void render(Window window, Scene scene) {
 		if (window.getWidth() <= 0 && window.getHeight() <= 0) {
             return;
         }
@@ -153,8 +153,6 @@ public class VKRenderer implements Renderer {
 	}
 	
 	private void resize(Window window) {
-        EngineProperties engProps = EngineProperties.getInstance();
-
         device.waitIdle();
         graphQueue.waitIdle();
 

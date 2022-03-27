@@ -128,7 +128,7 @@ public class AnimationComputeActivity {
 
             vkCmdBindPipeline(cmdHandle, VK_PIPELINE_BIND_POINT_COMPUTE, computePipeline.getVkPipeline());
 
-            LongBuffer descriptorSets = stack.mallocLong(5);
+            LongBuffer descriptorSets = stack.mallocLong(4);
 
             for (VulkanModel vulkanModel : vulkanModelList) {
                 String modelId = vulkanModel.getModelId();

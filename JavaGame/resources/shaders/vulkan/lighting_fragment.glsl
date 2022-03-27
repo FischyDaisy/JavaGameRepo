@@ -34,6 +34,7 @@ layout(set = 1, binding = 0) uniform UBO {
     uint count;
     Light lights[MAX_LIGHTS];
 } lights;
+
 layout(set = 2, binding = 0) uniform ProjUniform {
     mat4 invProjectionMatrix;
     mat4 invViewMatrix;
@@ -187,7 +188,7 @@ void main() {
     vec3 albedo = texture(albedoSampler, inTextCoord).rgb;
     vec3 normal = normalize(2.0 * texture(normalsSampler, inTextCoord).rgb  - 1.0);
     vec3 pbrSampledValue = texture(pbrSampler, inTextCoord).rgb;
-    float ao = pbrSampledValue.r;
+    float ao = 1.0;
     float roughness = pbrSampledValue.g;
     float metallic = pbrSampledValue.b;
 
@@ -221,7 +222,7 @@ void main() {
 
     vec3 ambient = lights.ambientLightColor.rgb * albedo * ao;
 
-    outFragColor = vec4(pow(ambient * shadowFactor + lightColor * shadowFactor, vec3(0.4545)), 1.0);
+    outFragColor = vec4(ambient * shadowFactor + lightColor * shadowFactor, 1.0);
 
     if (DEBUG_SHADOWS == 1) {
         switch (cascadeIndex) {

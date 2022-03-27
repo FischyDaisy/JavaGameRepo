@@ -107,7 +107,7 @@ public class Window {
             GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
             width = vidMode.width();
             height = vidMode.height();
-            setResized(true);
+            //setResized(true);
 
             glfwDefaultWindowHints();
             glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);

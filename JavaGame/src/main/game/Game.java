@@ -363,7 +363,7 @@ public class Game implements IGameLogic {
             vkRenderer.loadAnimation(bob);
             vkRenderer.loadAnimation(monster);
             
-            camera.setPosition(0.0f, 5.0f, 0.0f);
+            camera.setPosition(-6.0f, 2.0f, 0.0f);
             camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
             scene.setCamera(camera);
             
@@ -374,11 +374,6 @@ public class Game implements IGameLogic {
             directionalLight.getColor().set(1.0f, 1.0f, 1.0f, 1.0f);
             lights.add(directionalLight);
             updateDirectionalLight();
-
-            Light light = new Light();
-            light.getPosition().set(0, 1, 0, 1.0f);
-            light.getColor().set(0.0f, 1.0f, 0.0f, 1.0f);
-            lights.add(light);
             
             Light[] lightArr = new Light[lights.size()];
             lightArr = lights.toArray(lightArr);
@@ -609,7 +604,7 @@ public class Game implements IGameLogic {
         	glRenderer.render(window, camera, scene, sceneChanged);
         }
         if (vkRenderer != null) {
-        	vkRenderer.render(window, camera, scene);
+        	vkRenderer.render(window, scene);
         }
         if (mHud != null) {
         	mHud.render(window);

@@ -117,10 +117,6 @@ public class GameEngine implements Runnable {
         window.update();
     }
     
-    protected void load(GameItem[] items) {
-    	scene.setGameItems(items);
-    }
-    
     public void start() {
         running = true;
         run();

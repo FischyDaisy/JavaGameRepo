@@ -9,6 +9,9 @@ import main.engine.graphics.ITexture;
 import java.nio.*;
 
 import static org.lwjgl.stb.STBImage.*;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_USAGE_SAMPLED_BIT;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+import static org.lwjgl.vulkan.VK10.VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
 import static org.lwjgl.vulkan.VK11.*;
 
 public class VKTexture implements ITexture {
@@ -46,7 +49,7 @@ public class VKTexture implements ITexture {
 
             createStgBuffer(device, buf);
             Image.ImageData imageData = new Image.ImageData().width(width).height(height).
-                    usage(VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT).
+                    usage(VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT).
                     format(imageFormat).mipLevels(mipLevels);
             image = new Image(device, imageData);
             ImageView.ImageViewData imageViewData = new ImageView.ImageViewData().format(image.getFormat()).
