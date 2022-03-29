@@ -1,2 +1,2 @@
 # JavaGameRepo
-Repository to hold code for java game engine
+Repository to hold code for Crustacean Game Engine. Creatred by Chris Fischer and Paolo Hidalgo.
