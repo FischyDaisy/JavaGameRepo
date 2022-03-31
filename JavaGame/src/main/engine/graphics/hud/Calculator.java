@@ -7,8 +7,6 @@ package main.engine.graphics.hud;
 import org.lwjgl.nuklear.*;
 import org.lwjgl.system.*;
 
-import main.engine.graphics.IHudElement;
-
 import java.nio.*;
 import java.text.*;
 
@@ -20,7 +18,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Java port of
  * <a href="https://github.com/vurtun/nuklear/blob/master/demo/calculator.c">https://github.com/vurtun/nuklear/blob/master/demo/calculator.c</a>.
  */
-public class Calculator implements IHudElement {
+public class Calculator implements NKHudElement {
 
     private static final String NUMS = "789456123";
     private static final String OPS  = "+-*/";

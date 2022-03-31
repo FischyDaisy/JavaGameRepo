@@ -124,7 +124,6 @@ import org.lwjgl.system.MemoryStack;
 import main.engine.MouseInput;
 import main.engine.Window;
 import main.engine.graphics.IHud;
-import main.engine.graphics.IHudElement;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.opengl.ShaderProgram;
 import main.engine.utility.Utils;
@@ -161,7 +160,7 @@ public class MenuHud implements IHud {
     private NkBuffer          cmds         = NkBuffer.create();
     private NkDrawNullTexture null_texture = NkDrawNullTexture.create();
     
-    private IHudElement[] elements;
+    private NKHudElement[] elements;
     
     private boolean AA;
     
@@ -177,7 +176,7 @@ public class MenuHud implements IHud {
     
     public MenuHud(Window window) throws Exception {
     	transformation = new Transformation();
-    	elements = new IHudElement[MAX_ELEMENTS];
+    	elements = new NKHudElement[MAX_ELEMENTS];
     	AA = true;
     	try {
             this.ttf = Utils.ioResourceToByteBuffer(System.getProperty("user.dir") + "\\src\\main\\resources\\fonts\\FiraSans-Regular.ttf", 512 * 1024);
@@ -247,7 +246,7 @@ public class MenuHud implements IHud {
 
             ByteBuffer bitmap = memAlloc(BITMAP_W * BITMAP_H);
 
-            STBTTPackContext pc = STBTTPackContext.mallocStack(stack);
+            STBTTPackContext pc = STBTTPackContext.malloc(stack);
             stbtt_PackBegin(pc, bitmap, BITMAP_W, BITMAP_H, 0, 1, NULL);
             stbtt_PackSetOversampling(pc, 4, 4);
             stbtt_PackFontRange(pc, ttf, 0, FONT_HEIGHT, 32, cdata);
@@ -372,7 +371,7 @@ public class MenuHud implements IHud {
         return ctx;
     }
     
-    public void setElements(IHudElement[] l) {
+    public void setElements(NKHudElement[] l) {
     	elements = l;
     }
 
@@ -424,7 +423,7 @@ public class MenuHud implements IHud {
 		
 		// Scroll Input
 		try (MemoryStack stack = stackPush()) {
-            NkVec2 scroll = NkVec2.mallocStack(stack)
+            NkVec2 scroll = NkVec2.malloc(stack)
                 .x((float)mouse.getXOffset())
                 .y((float)mouse.getYOffset());
             nk_input_scroll(ctx, scroll);
@@ -519,7 +518,7 @@ public class MenuHud implements IHud {
 	}
 	
 	private void render(Window window, int AA, int max_vertex_buffer, int max_element_buffer) {
-		for (IHudElement e : elements) {
+		for (NKHudElement e : elements) {
         	e.layout(ctx);
         }
         

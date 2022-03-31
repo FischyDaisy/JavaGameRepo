@@ -16,13 +16,13 @@ import static org.lwjgl.vulkan.VK11.*;
 
 public class VKTexture implements ITexture {
 
-    private final String fileName;
     private final int height;
-    private final Image image;
-    private final ImageView imageView;
     private final int mipLevels;
     private final int width;
 
+    private String fileName;
+    private Image image;
+    private ImageView imageView;
     private VulkanBuffer stgBuffer;
     private boolean recordedTransition;
     private boolean hasTransparencies;
@@ -33,7 +33,7 @@ public class VKTexture implements ITexture {
         this.fileName = fileName;
         ByteBuffer buf;
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            IntBuffer w = stack.mallocInt(1);
+        	IntBuffer w = stack.mallocInt(1);
             IntBuffer h = stack.mallocInt(1);
             IntBuffer channels = stack.mallocInt(1);
 
@@ -47,17 +47,18 @@ public class VKTexture implements ITexture {
             height = h.get();
             mipLevels = (int) Math.floor(log2(Math.min(width, height))) + 1;
 
-            createStgBuffer(device, buf);
-            Image.ImageData imageData = new Image.ImageData().width(width).height(height).
-                    usage(VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT).
-                    format(imageFormat).mipLevels(mipLevels);
-            image = new Image(device, imageData);
-            ImageView.ImageViewData imageViewData = new ImageView.ImageViewData().format(image.getFormat()).
-                    aspectMask(VK_IMAGE_ASPECT_COLOR_BIT).mipLevels(mipLevels);
-            imageView = new ImageView(device, image.getVkImage(), imageViewData);
+            createTextureResources(device, buf, imageFormat);
         }
 
         stbi_image_free(buf);
+    }
+    
+    public VKTexture(Device device, ByteBuffer buf, int width, int height, int imageFormat) {
+        this.width = width;
+        this.height = height;
+        mipLevels = 1;
+
+        createTextureResources(device, buf, imageFormat);
     }
 
     @Override
@@ -85,6 +86,16 @@ public class VKTexture implements ITexture {
         stgBuffer.unMap();
     }
 
+    private void createTextureResources(Device device, ByteBuffer buf, int imageFormat) {
+        createStgBuffer(device, buf);
+        Image.ImageData imageData = new Image.ImageData().width(width).height(height).
+                usage(VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT).
+                format(imageFormat).mipLevels(mipLevels);
+        image = new Image(device, imageData);
+        ImageView.ImageViewData imageViewData = new ImageView.ImageViewData().format(image.getFormat()).
+                aspectMask(VK_IMAGE_ASPECT_COLOR_BIT).mipLevels(mipLevels);
+        imageView = new ImageView(device, image.getVkImage(), imageViewData);
+    }
 
     public String getFileName() {
         return fileName;

@@ -8,8 +8,6 @@ import org.lwjgl.*;
 import org.lwjgl.nuklear.*;
 import org.lwjgl.system.*;
 
-import main.engine.graphics.IHudElement;
-
 import java.nio.*;
 
 import static org.lwjgl.nuklear.Nuklear.*;
@@ -19,7 +17,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * Java port of
  * <a href="https://github.com/vurtun/nuklear/blob/master/demo/glfw_opengl3/main.c">https://github.com/vurtun/nuklear/blob/master/demo/glfw_opengl3/main.c</a>.
  */
-public class Demo implements IHudElement {
+public class Demo implements NKHudElement {
 
     private static final int EASY = 0;
     private static final int HARD = 1;

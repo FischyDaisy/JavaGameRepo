@@ -67,6 +67,10 @@ public class ResourcePaths {
 			public static final String LIGHTING_FRAGMENT_SPV = LIGHTING_FRAGMENT_GLSL + ".spv";
 			public static final String LIGHTING_VERTEX_GLSL = "resources|shaders|vulkan|lighting_vertex.glsl".replace('|', File.separatorChar);
 			public static final String LIGHTING_VERTEX_SPV = LIGHTING_VERTEX_GLSL + ".spv";
+			public static final String NUKLEAR_VERTEX_GLSL = "resources|shaders|vulkan|nuklear_vertex.glsl".replace('|', File.separatorChar);
+			public static final String NUKLEAR_VERTEX_SPV = NUKLEAR_VERTEX_GLSL + ".spv";
+			public static final String NUKLEAR_FRAGMENT_GLSL = "resources|shaders|vulkan|nuklear_fragment.glsl".replace('|', File.separatorChar);
+			public static final String NUKLEAR_FRAGMENT_SPV = NUKLEAR_FRAGMENT_GLSL + ".spv";
 			public static final String SHADOW_GEOMETRY_GLSL = "resources|shaders|vulkan|shadow_geometry.glsl".replace('|', File.separatorChar);
 			public static final String SHADOW_GEOMETRY_SPV = SHADOW_GEOMETRY_GLSL + ".spv";
 			public static final String SHADOW_VERTEX_GLSL = "resources|shaders|vulkan|shadow_vertex.glsl".replace('|', File.separatorChar);

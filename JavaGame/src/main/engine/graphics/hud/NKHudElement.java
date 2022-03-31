@@ -1,7 +1,7 @@
-package main.engine.graphics;
+package main.engine.graphics.hud;
 
 import org.lwjgl.nuklear.NkContext;
 
-public interface IHudElement {
+public interface NKHudElement {
 	public void layout(NkContext ctx);
 }
