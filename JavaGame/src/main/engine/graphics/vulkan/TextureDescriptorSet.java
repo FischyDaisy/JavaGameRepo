@@ -42,4 +42,44 @@ public class TextureDescriptorSet extends DescriptorSet {
             vkUpdateDescriptorSets(device.getVkDevice(), descrBuffer, null);
         }
     }
+    
+    public void update(Device device, VKTexture texture, TextureSampler textureSampler, int binding) {
+    	try (MemoryStack stack = MemoryStack.stackPush()) {
+    		VkDescriptorImageInfo.Buffer imageInfo = VkDescriptorImageInfo.calloc(1, stack)
+                    .imageLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+                    .imageView(texture.getImageView().getVkImageView())
+                    .sampler(textureSampler.getVkSampler());
+
+            VkWriteDescriptorSet.Buffer descrBuffer = VkWriteDescriptorSet.calloc(1, stack);
+            descrBuffer.get(0)
+                    .sType(VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET)
+                    .dstSet(vkDescriptorSet)
+                    .dstBinding(binding)
+                    .descriptorType(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+                    .descriptorCount(1)
+                    .pImageInfo(imageInfo);
+
+            vkUpdateDescriptorSets(device.getVkDevice(), descrBuffer, null);
+    	}
+    }
+    
+    public void update(Device device, long vkImageView, TextureSampler textureSampler, int binding) {
+    	try (MemoryStack stack = MemoryStack.stackPush()) {
+    		VkDescriptorImageInfo.Buffer imageInfo = VkDescriptorImageInfo.calloc(1, stack)
+                    .imageLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+                    .imageView(vkImageView)
+                    .sampler(textureSampler.getVkSampler());
+
+            VkWriteDescriptorSet.Buffer descrBuffer = VkWriteDescriptorSet.calloc(1, stack);
+            descrBuffer.get(0)
+                    .sType(VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET)
+                    .dstSet(vkDescriptorSet)
+                    .dstBinding(binding)
+                    .descriptorType(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+                    .descriptorCount(1)
+                    .pImageInfo(imageInfo);
+
+            vkUpdateDescriptorSets(device.getVkDevice(), descrBuffer, null);
+    	}
+    }
 }

@@ -79,6 +79,7 @@ import main.engine.graphics.GraphConstants;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.hud.NKHudElement;
 import main.engine.graphics.vulkan.*;
+import main.engine.utility.ResourcePaths;
 import main.engine.utility.Utils;
 
 public class NuklearRenderActivity {
@@ -116,7 +117,7 @@ public class NuklearRenderActivity {
     private Device device;
     private NKHudElement[] elements;
     private VKTexture fontsTexture;
-    private TextureSampler fontsTextureSampler;
+    private TextureSampler textureSampler;
     private VulkanBuffer[] indicesBuffers;
     private int elementIdx;
     private NkDrawNullTexture null_texture;
@@ -164,7 +165,7 @@ public class NuklearRenderActivity {
     
     public void cleanup() {
         textureDescriptorSetLayout.cleanup();
-        fontsTextureSampler.cleanup();
+        textureSampler.cleanup();
         descriptorPool.cleanup();
         fontsTexture.cleanup();
         Arrays.stream(vertexBuffers).filter(Objects::nonNull).forEach(VulkanBuffer::cleanup);
@@ -209,9 +210,9 @@ public class NuklearRenderActivity {
         descriptorSetLayouts = new DescriptorSetLayout[]{
                 textureDescriptorSetLayout,
         };
-        fontsTextureSampler = new TextureSampler(device, 1);
+        textureSampler = new TextureSampler(device, 1);
         textureDescriptorSet = new TextureDescriptorSet(descriptorPool, textureDescriptorSetLayout, fontsTexture,
-                fontsTextureSampler, 0);
+                textureSampler, 0);
     }
 
     private void createPipeline(PipelineCache pipelineCache, long vkRenderPass) {
@@ -236,14 +237,32 @@ public class NuklearRenderActivity {
     }
     
     private void createUIResources(SwapChain swapChain, CommandPool commandPool, Queue queue) {
-    	try {
-            this.ttf = Utils.ioResourceToByteBuffer(System.getProperty("user.dir") + "\\src\\main\\resources\\fonts\\FiraSans-Regular.ttf", 512 * 1024);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    	
     	nk_buffer_init(cmds, ALLOCATOR, BUFFER_INITIAL_SIZE);
     	
+    	createNullTexture(commandPool, queue);
+    	createFontsTexture(ResourcePaths.Fonts.FIRASANS_REGULAR, commandPool, queue);
+    	
+    	vertexBuffers = new VulkanBuffer[swapChain.getNumImages()];
+        indicesBuffers = new VulkanBuffer[swapChain.getNumImages()];
+    }
+    
+    private void createNullTexture(CommandPool commandPool, Queue queue) {
+    	try (MemoryStack stack = MemoryStack.stackPush()) {
+    		nullTexture = new VKTexture(device, stack.bytes((byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF), 1, 1, VK_FORMAT_R8G8B8A8_SRGB);
+    		
+    		CommandBuffer cmd = new CommandBuffer(commandPool, true, true);
+            cmd.beginRecording();
+            nullTexture.recordTextureTransition(cmd);
+            cmd.endRecording();
+            cmd.submitAndWait(device, queue);
+            cmd.cleanup();
+    	}
+    	
+    	null_texture.texture().ptr(nullTexture.getImageView().getVkImageView());
+    	null_texture.uv().set(0.5f, 0.5f);
+    }
+    
+    private void createFontsTexture(String filePath, CommandPool commandPool, Queue queue) {
     	int BITMAP_W = 1024;
         int BITMAP_H = 1024;
         int FONT_HEIGHT = 18;
@@ -253,11 +272,11 @@ public class NuklearRenderActivity {
         
         float scale;
         float descent;
-    	
-    	try (MemoryStack stack = MemoryStack.stackPush()) {
-    		nullTexture = new VKTexture(device, stack.bytes((byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF), 1, 1, VK_FORMAT_R8G8B8A8_SRGB);
-            
-            stbtt_InitFont(fontInfo, ttf);
+        
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+        	this.ttf = Utils.ioResourceToByteBuffer(filePath, 512 * 1024);
+        	
+        	stbtt_InitFont(fontInfo, ttf);
             scale = stbtt_ScaleForPixelHeight(fontInfo, FONT_HEIGHT);
             
             IntBuffer d = stack.mallocInt(1);
@@ -284,19 +303,17 @@ public class NuklearRenderActivity {
             CommandBuffer cmd = new CommandBuffer(commandPool, true, true);
             cmd.beginRecording();
             fontsTexture.recordTextureTransition(cmd);
-            nullTexture.recordTextureTransition(cmd);
             cmd.endRecording();
             cmd.submitAndWait(device, queue);
             cmd.cleanup();
             
             memFree(texture);
             memFree(bitmap);
-    	}
-    	
-    	null_texture.texture().ptr(nullTexture.getImageView().getVkImageView());
-    	null_texture.uv().set(0.5f, 0.5f);
-    	
-    	default_font
+        } catch (IOException e) {
+        	throw new RuntimeException(e);
+        }
+        
+        default_font
         .width((handle, h, text, len) -> {
             float text_width = 0;
             try (MemoryStack stack = stackPush()) {
@@ -354,9 +371,6 @@ public class NuklearRenderActivity {
     	
     	fontInfo.free();
     	cdata.free();
-    	
-    	vertexBuffers = new VulkanBuffer[swapChain.getNumImages()];
-        indicesBuffers = new VulkanBuffer[swapChain.getNumImages()];
     }
     
     private void mouseInput(MouseInput mouse) {
