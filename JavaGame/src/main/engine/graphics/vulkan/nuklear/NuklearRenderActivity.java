@@ -1,43 +1,8 @@
 package main.engine.graphics.vulkan.nuklear;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_B;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_C;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_END;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_HOME;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_P;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_UP;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_CONTROL;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_SHIFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.glfw.GLFW.glfwSetClipboardString;
-import static org.lwjgl.glfw.GLFW.nglfwGetClipboardString;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nuklear.Nuklear.*;
-import static org.lwjgl.stb.STBTruetype.stbtt_GetCodepointHMetrics;
-import static org.lwjgl.stb.STBTruetype.stbtt_GetFontVMetrics;
-import static org.lwjgl.stb.STBTruetype.stbtt_GetPackedQuad;
-import static org.lwjgl.stb.STBTruetype.stbtt_InitFont;
-import static org.lwjgl.stb.STBTruetype.stbtt_PackBegin;
-import static org.lwjgl.stb.STBTruetype.stbtt_PackEnd;
-import static org.lwjgl.stb.STBTruetype.stbtt_PackFontRange;
-import static org.lwjgl.stb.STBTruetype.stbtt_PackSetOversampling;
-import static org.lwjgl.stb.STBTruetype.stbtt_ScaleForPixelHeight;
+import static org.lwjgl.stb.STBTruetype.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.vulkan.VK11.*;
@@ -48,6 +13,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,15 +21,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import org.lwjgl.nuklear.NkAllocator;
-import org.lwjgl.nuklear.NkBuffer;
-import org.lwjgl.nuklear.NkContext;
-import org.lwjgl.nuklear.NkConvertConfig;
-import org.lwjgl.nuklear.NkDrawNullTexture;
-import org.lwjgl.nuklear.NkDrawVertexLayoutElement;
-import org.lwjgl.nuklear.NkUserFont;
-import org.lwjgl.nuklear.NkUserFontGlyph;
-import org.lwjgl.nuklear.NkVec2;
+import org.joml.Matrix4f;
+import org.lwjgl.nuklear.*;
 import org.lwjgl.stb.STBTTAlignedQuad;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTTPackContext;
@@ -71,7 +30,7 @@ import org.lwjgl.stb.STBTTPackedchar;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.shaderc.Shaderc;
-import org.lwjgl.vulkan.VkExtent2D;
+import org.lwjgl.vulkan.*;
 
 import main.engine.EngineProperties;
 import main.engine.MouseInput;
@@ -121,7 +80,6 @@ public class NuklearRenderActivity {
     private VKTexture fontsTexture;
     private TextureSampler textureSampler;
     private VulkanBuffer[] indicesBuffers;
-    private int elementIdx;
     private NkDrawNullTexture null_texture;
     private VKTexture nullTexture;
     private Pipeline pipeline;
@@ -148,13 +106,12 @@ public class NuklearRenderActivity {
         createPipeline(pipelineCache, vkRenderPass);
     }
     
-    public int addElement(NKHudElement element) {
-    	elements[elementIdx] = element;
-    	return elementIdx++;
+    public NKHudElement[] getElements() {
+    	return elements;
     }
     
-    public void removeElement(int index) {
-    	elements[index] = null;
+    public void setElements(NKHudElement[] elements) {
+    	this.elements = elements;
     }
     
     public boolean getAA() {
@@ -494,6 +451,50 @@ public class NuklearRenderActivity {
 			updateBuffers(idx);
             if (vertexBuffers[idx] == null) {
                 return;
+            }
+            
+            VkExtent2D swapChainExtent = swapChain.getSwapChainExtent();
+            int width = swapChainExtent.width();
+            int height = swapChainExtent.height();
+
+            VkCommandBuffer cmdHandle = commandBuffer.getVkCommandBuffer();
+
+            vkCmdBindPipeline(cmdHandle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.getVkPipeline());
+
+            VkViewport.Buffer viewport = VkViewport.calloc(1, stack)
+                    .x(0)
+                    .y(height)
+                    .height(-height)
+                    .width(width)
+                    .minDepth(0.0f)
+                    .maxDepth(1.0f);
+            vkCmdSetViewport(cmdHandle, 0, viewport);
+            
+            LongBuffer vtxBuffer = stack.mallocLong(1);
+            vtxBuffer.put(0, vertexBuffers[idx].getBuffer());
+            LongBuffer offsets = stack.mallocLong(1);
+            offsets.put(0, 0L);
+            vkCmdBindVertexBuffers(cmdHandle, 0, vtxBuffer, offsets);
+            vkCmdBindIndexBuffer(cmdHandle, indicesBuffers[idx].getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+            
+            Matrix4f ortho = transformation.getOrtho2DProjectionMatrix(0, width, height, 0);
+            VulkanUtils.setMatrixAsPushConstant(pipeline, cmdHandle, ortho);
+            
+            LongBuffer descriptorSets = stack.mallocLong(1)
+                    .put(0, this.textureDescriptorSet.getVkDescriptorSet());
+            vkCmdBindDescriptorSets(cmdHandle, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                    pipeline.getVkPipelineLayout(), 0, descriptorSets, null);
+            
+            long offset = NULL;
+            int offsetIdx = 0;
+            int offsetVtx = 0;
+            VkRect2D.Buffer rect = VkRect2D.calloc(1, stack);
+            for (NkDrawCommand cmd = nk__draw_begin(ctx, cmds); cmd != null; cmd = nk__draw_next(cmd, cmds, ctx)) {
+            	if (cmd.elem_count() == 0) {
+                    continue;
+                }
+            	textureDescriptorSet.update(device, cmd.texture().ptr(), textureSampler, 0);
+            	rect.offset(it -> it.x((int) cmd.clip_rect().x()));
             }
 		}
 	}
