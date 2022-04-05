@@ -50,6 +50,10 @@ public class VulkanBuffer {
     	unMap();
         vmaDestroyBuffer(device.getMemoryAllocator().getVmaAllocator(), buffer, allocation);
     }
+    
+    public void flush() {
+        vmaFlushAllocation(device.getMemoryAllocator().getVmaAllocator(), allocation, 0, this.requestedSize);
+    }
 
     public long getBuffer() {
         return buffer;

@@ -58,6 +58,7 @@ import java.util.Set;
 import org.lwjgl.nuklear.NkAllocator;
 import org.lwjgl.nuklear.NkBuffer;
 import org.lwjgl.nuklear.NkContext;
+import org.lwjgl.nuklear.NkConvertConfig;
 import org.lwjgl.nuklear.NkDrawNullTexture;
 import org.lwjgl.nuklear.NkDrawVertexLayoutElement;
 import org.lwjgl.nuklear.NkUserFont;
@@ -70,6 +71,7 @@ import org.lwjgl.stb.STBTTPackedchar;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.shaderc.Shaderc;
+import org.lwjgl.vulkan.VkExtent2D;
 
 import main.engine.EngineProperties;
 import main.engine.MouseInput;
@@ -87,7 +89,7 @@ public class NuklearRenderActivity {
 	public static final int MAX_ELEMENTS = 10;
 	public static final int BUFFER_INITIAL_SIZE = 4 * 1024;
     public static final int MAX_VERTEX_BUFFER  = 512 * 1024;
-    public static final int MAX_ELEMENT_BUFFER = 128 * 1024;
+    public static final int MAX_INDICES_BUFFER = 128 * 1024;
 	
 	private static final NkAllocator ALLOCATOR;
 
@@ -486,5 +488,72 @@ public class NuklearRenderActivity {
 	}
 	
 	public void recordCommandBuffer(Scene scene, CommandBuffer commandBuffer) {
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			int idx = swapChain.getCurrentFrame();
+			
+			updateBuffers(idx);
+            if (vertexBuffers[idx] == null) {
+                return;
+            }
+		}
 	}
+	
+	public void resize(SwapChain swapChain) {
+        this.swapChain = swapChain;
+        VkExtent2D swapChainExtent = swapChain.getSwapChainExtent();
+    }
+	
+	private void updateBuffers(int idx) {
+        VulkanBuffer vertexBuffer = vertexBuffers[idx];
+        if (vertexBuffer == null || MAX_VERTEX_BUFFER != vertexBuffer.getRequestedSize()) {
+            if (vertexBuffer != null) {
+                vertexBuffer.cleanup();
+            }
+            vertexBuffer = new VulkanBuffer(device, MAX_VERTEX_BUFFER, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+                    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0);
+            vertexBuffers[idx] = vertexBuffer;
+        }
+
+        VulkanBuffer indicesBuffer = indicesBuffers[idx];
+        if (indicesBuffer == null || MAX_INDICES_BUFFER != indicesBuffer.getRequestedSize()) {
+            if (indicesBuffer != null) {
+                indicesBuffer.cleanup();
+            }
+            indicesBuffer = new VulkanBuffer(device, MAX_INDICES_BUFFER, VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+                    VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0);
+            indicesBuffers[idx] = indicesBuffer;
+        }
+
+        ByteBuffer dstVertexBuffer = MemoryUtil.memByteBuffer(vertexBuffer.map(), MAX_VERTEX_BUFFER);
+        ByteBuffer dstIdxBuffer = MemoryUtil.memByteBuffer(indicesBuffer.map(), MAX_INDICES_BUFFER);
+
+        try (MemoryStack stack = stackPush()) {
+            // fill convert configuration
+            NkConvertConfig config = NkConvertConfig.calloc(stack)
+                .vertex_layout(VERTEX_LAYOUT)
+                .vertex_size(20)
+                .vertex_alignment(4)
+                .null_texture(null_texture)
+                .circle_segment_count(22)
+                .curve_segment_count(22)
+                .arc_segment_count(22)
+                .global_alpha(1.0f)
+                .shape_AA(AA ? NK_ANTI_ALIASING_ON : NK_ANTI_ALIASING_OFF)
+                .line_AA(AA ? NK_ANTI_ALIASING_ON : NK_ANTI_ALIASING_OFF);
+
+            // setup buffers to load vertices and elements
+            NkBuffer vbuf = NkBuffer.malloc(stack);
+            NkBuffer ebuf = NkBuffer.malloc(stack);
+
+            nk_buffer_init_fixed(vbuf, dstVertexBuffer/*, max_vertex_buffer*/);
+            nk_buffer_init_fixed(ebuf, dstIdxBuffer/*, max_element_buffer*/);
+            nk_convert(ctx, cmds, vbuf, ebuf, config);
+        }
+
+        vertexBuffer.flush();
+        indicesBuffer.flush();
+
+        vertexBuffer.unMap();
+        indicesBuffer.unMap();
+    }
 }
