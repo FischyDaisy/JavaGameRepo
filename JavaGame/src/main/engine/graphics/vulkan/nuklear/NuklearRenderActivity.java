@@ -131,6 +131,10 @@ public class NuklearRenderActivity {
         Arrays.stream(indicesBuffers).filter(Objects::nonNull).forEach(VulkanBuffer::cleanup);
         pipeline.cleanup();
         shaderProgram.cleanup();
+        null_texture.free();
+        default_font.free();
+        cmds.free();
+        ctx.free();
     }
     
     private void createContext(Window window) {
@@ -176,7 +180,7 @@ public class NuklearRenderActivity {
 
     private void createPipeline(PipelineCache pipelineCache, long vkRenderPass) {
         Pipeline.PipeLineCreationInfo pipeLineCreationInfo = new Pipeline.PipeLineCreationInfo(vkRenderPass,
-                shaderProgram, 1, false, true, GraphConstants.FLOAT_SIZE_BYTES * 2,
+                shaderProgram, 1, false, true, GraphConstants.MAT4X4_SIZE_BYTES,
                 new NuklearVertexBufferStructure(), descriptorSetLayouts);
         pipeline = new Pipeline(pipelineCache, pipeLineCreationInfo);
         pipeLineCreationInfo.cleanup();
@@ -196,6 +200,7 @@ public class NuklearRenderActivity {
     }
     
     private void createUIResources(SwapChain swapChain, CommandPool commandPool, Queue queue) {
+    	cmds = NkBuffer.create();
     	nk_buffer_init(cmds, ALLOCATOR, BUFFER_INITIAL_SIZE);
     	
     	createNullTexture(commandPool, queue);
@@ -217,6 +222,7 @@ public class NuklearRenderActivity {
             cmd.cleanup();
     	}
     	
+    	null_texture = NkDrawNullTexture.create();
     	null_texture.texture().ptr(nullTexture.getImageView().getVkImageView());
     	null_texture.uv().set(0.5f, 0.5f);
     }
@@ -272,6 +278,7 @@ public class NuklearRenderActivity {
         	throw new RuntimeException(e);
         }
         
+        default_font = NkUserFont.create();
         default_font
         .width((handle, h, text, len) -> {
             float text_width = 0;
@@ -332,11 +339,17 @@ public class NuklearRenderActivity {
     	cdata.free();
     }
     
+    private void layoutElements() {
+    	for (NKHudElement element : elements) {
+    		element.layout(ctx);
+    	}
+    }
+    
     private void mouseInput(MouseInput mouse) {
 		Map<Integer, Integer> buttonMap = mouse.getButtonMap();
 		Set<Integer> buttons = buttonMap.keySet();
 		// Button Input
-		for(int button : buttons) {
+		for (int button : buttons) {
 			int nkButton;
             switch (button) {
                 case GLFW_MOUSE_BUTTON_RIGHT:
@@ -448,6 +461,7 @@ public class NuklearRenderActivity {
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			int idx = swapChain.getCurrentFrame();
 			
+			layoutElements();
 			updateBuffers(idx);
             if (vertexBuffers[idx] == null) {
                 return;
@@ -475,7 +489,7 @@ public class NuklearRenderActivity {
             LongBuffer offsets = stack.mallocLong(1);
             offsets.put(0, 0L);
             vkCmdBindVertexBuffers(cmdHandle, 0, vtxBuffer, offsets);
-            vkCmdBindIndexBuffer(cmdHandle, indicesBuffers[idx].getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+            vkCmdBindIndexBuffer(cmdHandle, indicesBuffers[idx].getBuffer(), 0, VK_INDEX_TYPE_UINT16);
             
             Matrix4f ortho = transformation.getOrtho2DProjectionMatrix(0, width, height, 0);
             VulkanUtils.setMatrixAsPushConstant(pipeline, cmdHandle, ortho);
@@ -485,16 +499,22 @@ public class NuklearRenderActivity {
             vkCmdBindDescriptorSets(cmdHandle, VK_PIPELINE_BIND_POINT_GRAPHICS,
                     pipeline.getVkPipelineLayout(), 0, descriptorSets, null);
             
-            long offset = NULL;
             int offsetIdx = 0;
-            int offsetVtx = 0;
             VkRect2D.Buffer rect = VkRect2D.calloc(1, stack);
             for (NkDrawCommand cmd = nk__draw_begin(ctx, cmds); cmd != null; cmd = nk__draw_next(cmd, cmds, ctx)) {
             	if (cmd.elem_count() == 0) {
                     continue;
                 }
             	textureDescriptorSet.update(device, cmd.texture().ptr(), textureSampler, 0);
-            	rect.offset(it -> it.x((int) cmd.clip_rect().x()));
+            	int offsetX = (int) cmd.clip_rect().x();
+            	int offsetY = (int) (height - (int)(cmd.clip_rect().y() + cmd.clip_rect().h()));
+            	rect.offset(it -> it.x(offsetX).y(offsetY));
+            	int extentX = (int) cmd.clip_rect().w();
+            	int extentY = (int) cmd.clip_rect().h();
+            	rect.extent(it -> it.width(extentX).height(extentY));
+            	vkCmdSetScissor(cmdHandle, 0, rect);
+            	vkCmdDrawIndexed(cmdHandle, cmd.elem_count(), 1, offsetIdx, 0, 0);
+            	offsetIdx += cmd.elem_count();
             }
 		}
 	}

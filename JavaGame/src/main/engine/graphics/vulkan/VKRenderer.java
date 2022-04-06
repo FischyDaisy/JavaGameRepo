@@ -12,9 +12,12 @@ import main.engine.graphics.IHud;
 import main.engine.graphics.ModelData;
 import main.engine.graphics.Renderer;
 import main.engine.graphics.camera.Camera;
+import main.engine.graphics.hud.Demo;
+import main.engine.graphics.hud.NKHudElement;
 import main.engine.graphics.vulkan.animation.AnimationComputeActivity;
 import main.engine.graphics.vulkan.geometry.GeometryRenderActivity;
 import main.engine.graphics.vulkan.lighting.LightingRenderActivity;
+import main.engine.graphics.vulkan.nuklear.NuklearRenderActivity;
 import main.engine.graphics.vulkan.shadows.ShadowRenderActivity;
 import main.engine.items.GameItem;
 
@@ -28,6 +31,7 @@ public class VKRenderer implements Renderer {
     private final GeometryRenderActivity geometryRenderActivity;
     private final LightingRenderActivity lightingRenderActivity;
     private final ShadowRenderActivity shadowRenderActivity;
+    private final NuklearRenderActivity nuklearRenderActivity;
     private final Queue.GraphicsQueue graphQueue;
     private final Instance instance;
     private final PhysicalDevice physicalDevice;
@@ -56,6 +60,9 @@ public class VKRenderer implements Renderer {
         attachments.add(shadowRenderActivity.getDepthAttachment());
         lightingRenderActivity = new LightingRenderActivity(swapChain, commandPool, pipelineCache, attachments, scene, window);
         animationComputeActivity = new AnimationComputeActivity(commandPool, pipelineCache, scene);
+        nuklearRenderActivity = new NuklearRenderActivity(swapChain, commandPool, graphQueue, pipelineCache,
+                lightingRenderActivity.getLightingFrameBuffer().getLightingRenderPass().getVkRenderPass(), window);
+        nuklearRenderActivity.setElements(new NKHudElement[] {new Demo()});
         vulkanModels = new ArrayList<>();
         textureCache = VKTextureCache.getInstance();
 	}
@@ -79,7 +86,10 @@ public class VKRenderer implements Renderer {
         shadowRenderActivity.recordCommandBuffer(commandBuffer, vulkanModels, animationComputeActivity.getGameItemAnimationsBuffers());
         geometryRenderActivity.endRecording(commandBuffer);
         geometryRenderActivity.submit(graphQueue);
-        lightingRenderActivity.prepareCommandBuffer(shadowRenderActivity.getShadowCascades());
+        commandBuffer = lightingRenderActivity.beginRecording(shadowRenderActivity.getShadowCascades());
+        lightingRenderActivity.recordCommandBuffer(commandBuffer);
+        nuklearRenderActivity.recordCommandBuffer(scene, commandBuffer);
+        lightingRenderActivity.endRecording(commandBuffer);
         lightingRenderActivity.submit(graphQueue);
 
         if (swapChain.presentImage(graphQueue)) {
@@ -94,6 +104,7 @@ public class VKRenderer implements Renderer {
         textureCache.cleanup();
         vulkanModels.forEach(VulkanModel::cleanup);
         pipelineCache.cleanup();
+        nuklearRenderActivity.cleanup();
         lightingRenderActivity.cleanup();
         animationComputeActivity.cleanup();
         shadowRenderActivity.cleanup();

@@ -66,10 +66,25 @@ public class LightingRenderActivity {
         createDescriptorSets(attachments, numImages);
         createPipeline(pipelineCache);
         createCommandBuffers(commandPool, numImages);
+    }
+    
+    public CommandBuffer beginRecording(List<CascadeShadow> cascadeShadows) {
+        int idx = swapChain.getCurrentFrame();
 
-        for (int i = 0; i < numImages; i++) {
-            preRecordCommandBuffer(i);
-        }
+        Fence fence = fences[idx];
+        CommandBuffer commandBuffer = commandBuffers[idx];
+
+        fence.fenceWait();
+        fence.reset();
+
+        updateLights(scene.getSceneLight().getAmbientLight(), scene.getSceneLight().getLights(), scene.getCamera().getViewMatrix(), lightsBuffers[idx]);
+        updateInvMatrices(invMatricesBuffers[idx]);
+        updateCascadeShadowMatrices(cascadeShadows, shadowsMatricesBuffers[idx]);
+
+        commandBuffer.reset();
+        commandBuffer.beginRecording();
+
+        return commandBuffer;
     }
 
     public void cleanup() {
@@ -173,15 +188,24 @@ public class LightingRenderActivity {
                     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0);
         }
     }
+    
+    public void endRecording(CommandBuffer commandBuffer) {
+        vkCmdEndRenderPass(commandBuffer.getVkCommandBuffer());
+        commandBuffer.endRecording();
+    }
 
-    public void preRecordCommandBuffer(int idx) {
+    public LightingFrameBuffer getLightingFrameBuffer() {
+        return lightingFrameBuffer;
+    }
+
+    public void recordCommandBuffer(CommandBuffer commandBuffer) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
+            int idx = swapChain.getCurrentFrame();
             VkExtent2D swapChainExtent = swapChain.getSwapChainExtent();
             int width = swapChainExtent.width();
             int height = swapChainExtent.height();
 
             FrameBuffer frameBuffer = lightingFrameBuffer.getFrameBuffers()[idx];
-            CommandBuffer commandBuffer = commandBuffers[idx];
 
             commandBuffer.reset();
             VkClearValue.Buffer clearValues = VkClearValue.calloc(1, stack);
@@ -200,8 +224,7 @@ public class LightingRenderActivity {
 
             commandBuffer.beginRecording();
             VkCommandBuffer cmdHandle = commandBuffer.getVkCommandBuffer();
-            vkCmdBeginRenderPass(cmdHandle, renderPassBeginInfo,
-                    VK_SUBPASS_CONTENTS_INLINE);
+            vkCmdBeginRenderPass(cmdHandle, renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
             vkCmdBindPipeline(cmdHandle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.getVkPipeline());
 
@@ -224,7 +247,7 @@ public class LightingRenderActivity {
             vkCmdSetScissor(cmdHandle, 0, scissor);
 
             LongBuffer descriptorSets = stack.mallocLong(4)
-            		.put(0, attachmentsDescriptorSet.getVkDescriptorSet())
+                    .put(0, attachmentsDescriptorSet.getVkDescriptorSet())
                     .put(1, lightsDescriptorSets[idx].getVkDescriptorSet())
                     .put(2, invMatricesDescriptorSets[idx].getVkDescriptorSet())
                     .put(3, shadowsMatricesDescriptorSets[idx].getVkDescriptorSet());
@@ -232,33 +255,13 @@ public class LightingRenderActivity {
                     pipeline.getVkPipelineLayout(), 0, descriptorSets, null);
 
             vkCmdDraw(cmdHandle, 3, 1, 0, 0);
-
-            vkCmdEndRenderPass(cmdHandle);
-            commandBuffer.endRecording();
         }
-    }
-
-    public void prepareCommandBuffer(List<CascadeShadow> cascadeShadows) {
-    	int idx = swapChain.getCurrentFrame();
-        Fence fence = fences[idx];
-
-        fence.fenceWait();
-        fence.reset();
-
-        updateLights(scene.getSceneLight().getAmbientLight(), scene.getSceneLight().getLights(), scene.getCamera().getViewMatrix(), lightsBuffers[idx]);
-        updateInvMatrices(invMatricesBuffers[idx]);
-        updateCascadeShadowMatrices(cascadeShadows, shadowsMatricesBuffers[idx]);
     }
 
     public void resize(SwapChain swapChain, List<Attachment> attachments) {
     	this.swapChain = swapChain;
         attachmentsDescriptorSet.update(attachments);
         lightingFrameBuffer.resize(swapChain);
-
-        int numImages = swapChain.getNumImages();
-        for (int i = 0; i < numImages; i++) {
-            preRecordCommandBuffer(i);
-        }
     }
 
     public void submit(Queue queue) {
