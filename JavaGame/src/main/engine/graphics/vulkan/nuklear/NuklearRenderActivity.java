@@ -70,6 +70,8 @@ public class NuklearRenderActivity {
     private final Transformation transformation;
     
     private boolean AA;
+    private STBTTFontinfo fontInfo;
+    private STBTTPackedchar.Buffer cdata;
     private NkBuffer cmds;
     private NkContext ctx;
     private NkUserFont default_font;
@@ -86,7 +88,7 @@ public class NuklearRenderActivity {
     private ShaderProgram shaderProgram;
     private SwapChain swapChain;
     private ByteBuffer ttf;
-    private TextureDescriptorSet textureDescriptorSet;
+    private TextureDescriptorSet[] textureDescriptorSets;
     private DescriptorSetLayout.SamplerDescriptorSetLayout textureDescriptorSetLayout;
     private VulkanBuffer[] vertexBuffers;
     
@@ -102,7 +104,7 @@ public class NuklearRenderActivity {
         createShaders();
         createUIResources(swapChain, commandPool, queue);
         createDescriptorPool();
-        createDescriptorSets();
+        createDescriptorSets(swapChain);
         createPipeline(pipelineCache, vkRenderPass);
     }
     
@@ -137,6 +139,12 @@ public class NuklearRenderActivity {
         ctx.free();
     }
     
+    public void cleanupElements() {
+    	for (NKHudElement elem : elements) {
+    		//elem.cleanup();
+    	}
+    }
+    
     private void createContext(Window window) {
     	ctx = NkContext.create();
     	nk_init(ctx, ALLOCATOR, null);
@@ -164,18 +172,21 @@ public class NuklearRenderActivity {
 
     private void createDescriptorPool() {
         List<DescriptorPool.DescriptorTypeCount> descriptorTypeCounts = new ArrayList<>();
-        descriptorTypeCounts.add(new DescriptorPool.DescriptorTypeCount(1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+        descriptorTypeCounts.add(new DescriptorPool.DescriptorTypeCount(3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
         descriptorPool = new DescriptorPool(device, descriptorTypeCounts);
     }
 
-    private void createDescriptorSets() {
+    private void createDescriptorSets(SwapChain swapChain) {
         textureDescriptorSetLayout = new DescriptorSetLayout.SamplerDescriptorSetLayout(device, 0, VK_SHADER_STAGE_FRAGMENT_BIT);
         descriptorSetLayouts = new DescriptorSetLayout[]{
                 textureDescriptorSetLayout,
         };
         textureSampler = new TextureSampler(device, 1);
-        textureDescriptorSet = new TextureDescriptorSet(descriptorPool, textureDescriptorSetLayout, fontsTexture,
-                textureSampler, 0);
+        textureDescriptorSets = new TextureDescriptorSet[swapChain.getNumImages()];
+        for (int i = 0; i < swapChain.getNumImages(); i++) {
+        	textureDescriptorSets[i] = new TextureDescriptorSet(descriptorPool, textureDescriptorSetLayout, fontsTexture,
+                    textureSampler, 0);
+        }
     }
 
     private void createPipeline(PipelineCache pipelineCache, long vkRenderPass) {
@@ -232,8 +243,18 @@ public class NuklearRenderActivity {
         int BITMAP_H = 1024;
         int FONT_HEIGHT = 18;
         
-        STBTTFontinfo fontInfo = STBTTFontinfo.create();
-        STBTTPackedchar.Buffer cdata = STBTTPackedchar.create(95);
+        if (fontInfo == null) {
+        	fontInfo = STBTTFontinfo.create();
+        } else {
+        	fontInfo.free();
+        	fontInfo = STBTTFontinfo.create();
+        }
+        if (cdata == null) {
+            cdata = STBTTPackedchar.create(95);
+        } else {
+        	cdata.free();
+        	cdata = STBTTPackedchar.create(95);
+        }
         
         float scale;
         float descent;
@@ -334,9 +355,6 @@ public class NuklearRenderActivity {
         .texture(t -> t.ptr(fontsTexture.getImageView().getVkImageView()));
     	
     	nk_style_set_font(ctx, default_font);
-    	
-    	fontInfo.free();
-    	cdata.free();
     }
     
     private void layoutElements() {
@@ -344,6 +362,29 @@ public class NuklearRenderActivity {
     		element.layout(ctx);
     	}
     }
+    
+    public void input(Window window) {
+		long win = window.getWindowHandle();
+
+        nk_input_begin(ctx);
+        windowInput(window);
+        mouseInput(window.getMouseInput());
+
+        NkMouse mouse = ctx.input().mouse();
+        if (mouse.grab()) {
+            glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        } else if (mouse.grabbed()) {
+            float prevX = mouse.prev().x();
+            float prevY = mouse.prev().y();
+            glfwSetCursorPos(win, prevX, prevY);
+            mouse.pos().x(prevX);
+            mouse.pos().y(prevY);
+        } else if (mouse.ungrab()) {
+            glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+
+        nk_input_end(ctx);
+	}
     
     private void mouseInput(MouseInput mouse) {
 		Map<Integer, Integer> buttonMap = mouse.getButtonMap();
@@ -495,7 +536,7 @@ public class NuklearRenderActivity {
             VulkanUtils.setMatrixAsPushConstant(pipeline, cmdHandle, ortho);
             
             LongBuffer descriptorSets = stack.mallocLong(1)
-                    .put(0, this.textureDescriptorSet.getVkDescriptorSet());
+                    .put(0, this.textureDescriptorSets[idx].getVkDescriptorSet());
             vkCmdBindDescriptorSets(cmdHandle, VK_PIPELINE_BIND_POINT_GRAPHICS,
                     pipeline.getVkPipelineLayout(), 0, descriptorSets, null);
             
@@ -505,17 +546,19 @@ public class NuklearRenderActivity {
             	if (cmd.elem_count() == 0) {
                     continue;
                 }
-            	textureDescriptorSet.update(device, cmd.texture().ptr(), textureSampler, 0);
-            	int offsetX = (int) cmd.clip_rect().x();
-            	int offsetY = (int) (height - (int)(cmd.clip_rect().y() + cmd.clip_rect().h()));
+            	textureDescriptorSets[idx].update(device, cmd.texture().ptr(), textureSampler, 0);
+            	int offsetX = (int) Math.max(cmd.clip_rect().x(), 0);
+            	int offsetY = (int) Math.max(cmd.clip_rect().y(), 1);
             	rect.offset(it -> it.x(offsetX).y(offsetY));
             	int extentX = (int) cmd.clip_rect().w();
             	int extentY = (int) cmd.clip_rect().h();
             	rect.extent(it -> it.width(extentX).height(extentY));
             	vkCmdSetScissor(cmdHandle, 0, rect);
-            	vkCmdDrawIndexed(cmdHandle, cmd.elem_count(), 1, offsetIdx, 0, 0);
-            	offsetIdx += cmd.elem_count();
+            	int elemCount = cmd.elem_count();
+            	vkCmdDrawIndexed(cmdHandle, elemCount, 1, offsetIdx, 0, 0);
+            	offsetIdx += elemCount;
             }
+            nk_clear(ctx);
 		}
 	}
 	

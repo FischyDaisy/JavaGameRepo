@@ -12,6 +12,7 @@ import main.engine.graphics.IHud;
 import main.engine.graphics.ModelData;
 import main.engine.graphics.Renderer;
 import main.engine.graphics.camera.Camera;
+import main.engine.graphics.hud.Calculator;
 import main.engine.graphics.hud.Demo;
 import main.engine.graphics.hud.NKHudElement;
 import main.engine.graphics.vulkan.animation.AnimationComputeActivity;
@@ -62,7 +63,7 @@ public class VKRenderer implements Renderer {
         animationComputeActivity = new AnimationComputeActivity(commandPool, pipelineCache, scene);
         nuklearRenderActivity = new NuklearRenderActivity(swapChain, commandPool, graphQueue, pipelineCache,
                 lightingRenderActivity.getLightingFrameBuffer().getLightingRenderPass().getVkRenderPass(), window);
-        nuklearRenderActivity.setElements(new NKHudElement[] {new Demo()});
+        nuklearRenderActivity.setElements(new NKHudElement[] {new Demo(), new Calculator()});
         vulkanModels = new ArrayList<>();
         textureCache = VKTextureCache.getInstance();
 	}
@@ -115,6 +116,10 @@ public class VKRenderer implements Renderer {
         device.cleanup();
         physicalDevice.cleanup();
         instance.cleanup();
+	}
+	
+	public void inputNuklear(Window window) {
+		nuklearRenderActivity.input(window);
 	}
 	
 	public void loadSkyBox(ModelData skybox) throws Exception {

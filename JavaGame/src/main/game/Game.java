@@ -456,6 +456,7 @@ public class Game implements IGameLogic {
             	sceneChanged = true;
             }
         } else {
+        	vkRenderer.inputNuklear(window);
         	cameraInc.set(0, 0, 0);
             if (window.isKeyPressed(GLFW_KEY_W)) {
                 cameraInc.z = -1;

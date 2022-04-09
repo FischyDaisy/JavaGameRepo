@@ -65,7 +65,7 @@ public class Calculator implements NKHudElement {
     @Override
     public void layout(NkContext ctx) {
         try (MemoryStack stack = stackPush()) {
-            NkRect rect = NkRect.mallocStack(stack);
+            NkRect rect = NkRect.malloc(stack);
             if (nk_begin(ctx, "Calculator", nk_rect(x, y, 180, 250, rect), NK_WINDOW_BORDER | NK_WINDOW_NO_SCROLLBAR | NK_WINDOW_MOVABLE)) {
                 nk_layout_row_dynamic(ctx, 35, 1);
                 {
