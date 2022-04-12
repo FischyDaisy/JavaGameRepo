@@ -68,7 +68,7 @@ public class ShadowRenderActivity {
     }
 
     private void createDescriptorSets(int numImages) {
-        uniformDescriptorSetLayout = new DescriptorSetLayout.UniformDescriptorSetLayout(device, 0, VK_SHADER_STAGE_GEOMETRY_BIT);
+        uniformDescriptorSetLayout = new DescriptorSetLayout.UniformDescriptorSetLayout(device, 0, VK_SHADER_STAGE_GEOMETRY_BIT, 0);
         descriptorSetLayouts = new DescriptorSetLayout[]{
                 uniformDescriptorSetLayout,
         };

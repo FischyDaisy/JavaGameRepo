@@ -122,7 +122,7 @@ public class LightingRenderActivity {
 
     private void createDescriptorSets(List<Attachment> attachments, int numImages) {
     	attachmentsLayout = new AttachmentsLayout(device, attachments.size());
-        uniformDescriptorSetLayout = new DescriptorSetLayout.UniformDescriptorSetLayout(device, 0, VK_SHADER_STAGE_FRAGMENT_BIT);
+        uniformDescriptorSetLayout = new DescriptorSetLayout.UniformDescriptorSetLayout(device, 0, VK_SHADER_STAGE_FRAGMENT_BIT, 0);
         descriptorSetLayouts = new DescriptorSetLayout[]{
                 attachmentsLayout,
                 uniformDescriptorSetLayout,

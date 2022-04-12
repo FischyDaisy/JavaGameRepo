@@ -6,6 +6,7 @@ import static org.lwjgl.stb.STBTruetype.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.vulkan.VK11.*;
+import static org.lwjgl.vulkan.VK12.*;
 
 import static main.engine.utility.ResourcePaths.Shaders;
 
@@ -177,7 +178,7 @@ public class NuklearRenderActivity {
     }
 
     private void createDescriptorSets(SwapChain swapChain) {
-        textureDescriptorSetLayout = new DescriptorSetLayout.SamplerDescriptorSetLayout(device, 0, VK_SHADER_STAGE_FRAGMENT_BIT);
+        textureDescriptorSetLayout = new DescriptorSetLayout.SamplerDescriptorSetLayout(device, 0, VK_SHADER_STAGE_FRAGMENT_BIT, VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT);
         descriptorSetLayouts = new DescriptorSetLayout[]{
                 textureDescriptorSetLayout,
         };

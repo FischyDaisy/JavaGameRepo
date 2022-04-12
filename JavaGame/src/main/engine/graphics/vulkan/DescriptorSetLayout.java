@@ -28,20 +28,20 @@ public abstract class DescriptorSetLayout {
     }
 
     public static class DynUniformDescriptorSetLayout extends SimpleDescriptorSetLayout {
-        public DynUniformDescriptorSetLayout(Device device, int binding, int stage) {
-            super(device, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, binding, stage);
+        public DynUniformDescriptorSetLayout(Device device, int binding, int stage, int flags) {
+            super(device, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, binding, stage, flags);
         }
     }
 
     public static class SamplerDescriptorSetLayout extends SimpleDescriptorSetLayout {
-        public SamplerDescriptorSetLayout(Device device, int binding, int stage) {
-            super(device, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, binding, stage);
+        public SamplerDescriptorSetLayout(Device device, int binding, int stage, int flags) {
+            super(device, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, binding, stage, flags);
         }
     }
 
     public static class SimpleDescriptorSetLayout extends DescriptorSetLayout {
 
-        public SimpleDescriptorSetLayout(Device device, int descriptorType, int binding, int stage) {
+        public SimpleDescriptorSetLayout(Device device, int descriptorType, int binding, int stage, int flags) {
             super(device);
             try (MemoryStack stack = MemoryStack.stackPush()) {
                 VkDescriptorSetLayoutBinding.Buffer layoutBindings = VkDescriptorSetLayoutBinding.calloc(1, stack);
@@ -53,7 +53,8 @@ public abstract class DescriptorSetLayout {
 
                 VkDescriptorSetLayoutCreateInfo layoutInfo = VkDescriptorSetLayoutCreateInfo.calloc(stack)
                         .sType(VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO)
-                        .pBindings(layoutBindings);
+                        .pBindings(layoutBindings)
+                        .flags(flags);
 
                 LongBuffer pSetLayout = stack.mallocLong(1);
                 VulkanUtils.vkCheck(vkCreateDescriptorSetLayout(device.getVkDevice(), layoutInfo, null, pSetLayout),
@@ -64,14 +65,14 @@ public abstract class DescriptorSetLayout {
     }
     
     public static class StorageDescriptorSetLayout extends SimpleDescriptorSetLayout {
-        public StorageDescriptorSetLayout(Device device, int binding, int stage) {
-            super(device, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, binding, stage);
+        public StorageDescriptorSetLayout(Device device, int binding, int stage, int flags) {
+            super(device, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, binding, stage, flags);
         }
     }
 
     public static class UniformDescriptorSetLayout extends SimpleDescriptorSetLayout {
-        public UniformDescriptorSetLayout(Device device, int binding, int stage) {
-            super(device, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, binding, stage);
+        public UniformDescriptorSetLayout(Device device, int binding, int stage, int flags) {
+            super(device, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, binding, stage, flags);
         }
     }
 }
