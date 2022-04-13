@@ -50,6 +50,8 @@ public class NuklearRenderActivity {
 	public static final int BUFFER_INITIAL_SIZE = 4 * 1024;
     public static final int MAX_VERTEX_BUFFER  = 512 * 1024;
     public static final int MAX_INDICES_BUFFER = 128 * 1024;
+    public static final int NULL_TEXTURE_ID = 0;
+    public static final int FONT_TEXTURE_ID = 1;
 	
 	private static final NkAllocator ALLOCATOR;
 
@@ -89,7 +91,8 @@ public class NuklearRenderActivity {
     private ShaderProgram shaderProgram;
     private SwapChain swapChain;
     private ByteBuffer ttf;
-    private TextureDescriptorSet[] textureDescriptorSets;
+    private TextureDescriptorSet nullDescriptorSet;
+    private TextureDescriptorSet fontDescriptorSet;
     private DescriptorSetLayout.SamplerDescriptorSetLayout textureDescriptorSetLayout;
     private VulkanBuffer[] vertexBuffers;
     
@@ -173,21 +176,20 @@ public class NuklearRenderActivity {
 
     private void createDescriptorPool() {
         List<DescriptorPool.DescriptorTypeCount> descriptorTypeCounts = new ArrayList<>();
-        descriptorTypeCounts.add(new DescriptorPool.DescriptorTypeCount(3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
+        descriptorTypeCounts.add(new DescriptorPool.DescriptorTypeCount(2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
         descriptorPool = new DescriptorPool(device, descriptorTypeCounts);
     }
 
     private void createDescriptorSets(SwapChain swapChain) {
-        textureDescriptorSetLayout = new DescriptorSetLayout.SamplerDescriptorSetLayout(device, 0, VK_SHADER_STAGE_FRAGMENT_BIT, VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT);
+        textureDescriptorSetLayout = new DescriptorSetLayout.SamplerDescriptorSetLayout(device, 0, VK_SHADER_STAGE_FRAGMENT_BIT, 0);
         descriptorSetLayouts = new DescriptorSetLayout[]{
                 textureDescriptorSetLayout,
         };
         textureSampler = new TextureSampler(device, 1);
-        textureDescriptorSets = new TextureDescriptorSet[swapChain.getNumImages()];
-        for (int i = 0; i < swapChain.getNumImages(); i++) {
-        	textureDescriptorSets[i] = new TextureDescriptorSet(descriptorPool, textureDescriptorSetLayout, fontsTexture,
-                    textureSampler, 0);
-        }
+        nullDescriptorSet = new TextureDescriptorSet(descriptorPool, textureDescriptorSetLayout, nullTexture,
+                textureSampler, 0);
+        fontDescriptorSet = new TextureDescriptorSet(descriptorPool, textureDescriptorSetLayout, fontsTexture,
+                textureSampler, 0);
     }
 
     private void createPipeline(PipelineCache pipelineCache, long vkRenderPass) {
@@ -235,7 +237,7 @@ public class NuklearRenderActivity {
     	}
     	
     	null_texture = NkDrawNullTexture.create();
-    	null_texture.texture().ptr(nullTexture.getImageView().getVkImageView());
+    	null_texture.texture().id(NULL_TEXTURE_ID);
     	null_texture.uv().set(0.5f, 0.5f);
     }
     
@@ -353,7 +355,7 @@ public class NuklearRenderActivity {
                 ufg.uv(1).set(q.s1(), q.t1());
             }
         })
-        .texture(t -> t.ptr(fontsTexture.getImageView().getVkImageView()));
+        .texture().id(FONT_TEXTURE_ID);
     	
     	nk_style_set_font(ctx, default_font);
     }
@@ -536,10 +538,10 @@ public class NuklearRenderActivity {
             Matrix4f ortho = transformation.getOrtho2DProjectionMatrix(0, width, height, 0);
             VulkanUtils.setMatrixAsPushConstant(pipeline, cmdHandle, ortho);
             
-            LongBuffer descriptorSets = stack.mallocLong(1)
-                    .put(0, this.textureDescriptorSets[idx].getVkDescriptorSet());
-            vkCmdBindDescriptorSets(cmdHandle, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                    pipeline.getVkPipelineLayout(), 0, descriptorSets, null);
+            LongBuffer nullDescriptorSets = stack.mallocLong(1)
+                    .put(0, this.nullDescriptorSet.getVkDescriptorSet());
+            LongBuffer fontDescriptorSets = stack.mallocLong(1)
+                    .put(0, this.fontDescriptorSet.getVkDescriptorSet());
             
             int offsetIdx = 0;
             VkRect2D.Buffer rect = VkRect2D.calloc(1, stack);
@@ -547,7 +549,18 @@ public class NuklearRenderActivity {
             	if (cmd.elem_count() == 0) {
                     continue;
                 }
-            	textureDescriptorSets[idx].update(device, cmd.texture().ptr(), textureSampler, 0);
+            	int id = cmd.texture().id();
+            	switch (id) {
+            		case FONT_TEXTURE_ID: 
+            			vkCmdBindDescriptorSets(cmdHandle, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                pipeline.getVkPipelineLayout(), 0, fontDescriptorSets, null);
+            			break;
+            		default:
+            			vkCmdBindDescriptorSets(cmdHandle, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                pipeline.getVkPipelineLayout(), 0, nullDescriptorSets, null);
+            			break;
+            	}
+            	//textureDescriptorSets[idx].update(device, cmd.texture().ptr(), textureSampler, 0);
             	int offsetX = (int) Math.max(cmd.clip_rect().x(), 0);
             	int offsetY = (int) Math.max(cmd.clip_rect().y(), 1);
             	rect.offset(it -> it.x(offsetX).y(offsetY));
