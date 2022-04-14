@@ -11,6 +11,6 @@ public class NewtonCapsule extends NewtonCollision {
 	}
 	
 	public static NewtonCollision createCapsuleCollision(NewtonWorld world, float radius0,  float radius1,  float height,  int shapeID,  Addressable offsetMatrix) {
-		return new NewtonCapsule(Newton_h.NewtonCreateCapsule(world, radius0, radius1, height, shapeID, offsetMatrix));
+		return new NewtonCapsule(Newton_h.NewtonCreateCapsule(world.address, radius0, radius1, height, shapeID, offsetMatrix));
 	}
 }

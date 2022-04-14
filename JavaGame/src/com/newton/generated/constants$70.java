@@ -6,67 +6,61 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$70 {
 
     static final FunctionDescriptor NewtonBodyAddImpulse$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonBodyAddImpulse$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyAddImpulse",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonBodyAddImpulse",
         constants$70.NewtonBodyAddImpulse$FUNC, false
     );
     static final FunctionDescriptor NewtonBodyApplyImpulseArray$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonBodyApplyImpulseArray$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyApplyImpulseArray",
-        "(Ljdk/incubator/foreign/MemoryAddress;IILjdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonBodyApplyImpulseArray",
         constants$70.NewtonBodyApplyImpulseArray$FUNC, false
     );
     static final FunctionDescriptor NewtonBodyIntegrateVelocity$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonBodyIntegrateVelocity$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyIntegrateVelocity",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonBodyIntegrateVelocity",
         constants$70.NewtonBodyIntegrateVelocity$FUNC, false
     );
-    static final FunctionDescriptor NewtonBodyGetLinearDamping$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonBodyGetLinearDamping$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetLinearDamping$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetLinearDamping",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonBodyGetLinearDamping",
         constants$70.NewtonBodyGetLinearDamping$FUNC, false
     );
     static final FunctionDescriptor NewtonBodyGetAngularDamping$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetAngularDamping$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetAngularDamping",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodyGetAngularDamping",
         constants$70.NewtonBodyGetAngularDamping$FUNC, false
     );
     static final FunctionDescriptor NewtonBodyGetAABB$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetAABB$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetAABB",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodyGetAABB",
         constants$70.NewtonBodyGetAABB$FUNC, false
     );
 }

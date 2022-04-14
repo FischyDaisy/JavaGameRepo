@@ -6,61 +6,55 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$62 {
 
     static final FunctionDescriptor NewtonBodySetOmegaNoSleep$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodySetOmegaNoSleep$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetOmegaNoSleep",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodySetOmegaNoSleep",
         constants$62.NewtonBodySetOmegaNoSleep$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetVelocity$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodySetVelocity$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetVelocity",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodySetVelocity",
         constants$62.NewtonBodySetVelocity$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetVelocityNoSleep$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodySetVelocityNoSleep$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetVelocityNoSleep",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodySetVelocityNoSleep",
         constants$62.NewtonBodySetVelocityNoSleep$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetForce$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodySetForce$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetForce",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodySetForce",
         constants$62.NewtonBodySetForce$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetTorque$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodySetTorque$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetTorque",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodySetTorque",
         constants$62.NewtonBodySetTorque$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetLinearDamping$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonBodySetLinearDamping$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetLinearDamping",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonBodySetLinearDamping",
         constants$62.NewtonBodySetLinearDamping$FUNC, false
     );
 }

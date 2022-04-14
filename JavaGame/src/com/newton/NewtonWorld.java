@@ -4,9 +4,9 @@ import jdk.incubator.foreign.*;
 import com.newton.*;
 import com.newton.generated.Newton_h;
 
-public class NewtonWorld implements Addressable {
+public class NewtonWorld {
 	
-	private final MemoryAddress address;
+	protected final MemoryAddress address;
 	
 	private NewtonWorld(MemoryAddress address) {
 		this.address = address;
@@ -17,19 +17,19 @@ public class NewtonWorld implements Addressable {
 	}
 	
 	public void destroy() {
-		Newton_h.NewtonDestroy(this);
+		Newton_h.NewtonDestroy(address);
 	}
 	
 	public void update(float timestep) {
-		Newton_h.NewtonUpdate(this, timestep);
+		Newton_h.NewtonUpdate(address, timestep);
 	}
 	
 	public void destroyAllBodies() {
-		Newton_h.NewtonDestroyAllBodies(this);
+		Newton_h.NewtonDestroyAllBodies(address);
 	}
 	
 	public void setSolverIterations(int i) {
-		Newton_h.NewtonSetSolverIterations(this, i);
+		Newton_h.NewtonSetSolverIterations(address, i);
 	}
 	
 	/**
@@ -39,12 +39,7 @@ public class NewtonWorld implements Addressable {
 	 * @param address - MemoryAddress of NewtonWorld
 	 * @return NewtonWorld object
 	 */
-	public static NewtonWorld wrap(MemoryAddress address) {
+	protected static NewtonWorld wrap(MemoryAddress address) {
 		return new NewtonWorld(address);
-	}
-	
-	@Override
-	public MemoryAddress address() {
-		return address;
 	}
 }

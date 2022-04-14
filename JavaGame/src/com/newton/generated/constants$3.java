@@ -6,29 +6,26 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$3 {
 
     static final FunctionDescriptor NewtonWorldDestroyListenerCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldDestroyListenerCallback$MH = RuntimeHelper.downcallHandle(
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
         constants$3.NewtonWorldDestroyListenerCallback$FUNC, false
     );
-    static final FunctionDescriptor NewtonGetTimeInMicrosencondsCallback$FUNC = FunctionDescriptor.of(C_LONG_LONG);
+    static final FunctionDescriptor NewtonGetTimeInMicrosencondsCallback$FUNC = FunctionDescriptor.of(Constants$root.C_LONG_LONG$LAYOUT);
     static final MethodHandle NewtonGetTimeInMicrosencondsCallback$MH = RuntimeHelper.downcallHandle(
-        "()J",
         constants$3.NewtonGetTimeInMicrosencondsCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonSerializeCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonSerializeCallback$MH = RuntimeHelper.downcallHandle(
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)V",
         constants$3.NewtonSerializeCallback$FUNC, false
     );
 }

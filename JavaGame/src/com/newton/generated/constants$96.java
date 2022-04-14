@@ -6,59 +6,53 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$96 {
 
     static final FunctionDescriptor NewtonMeshGetUV1Channel$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetUV1Channel$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetUV1Channel",
-        "(Ljdk/incubator/foreign/MemoryAddress;ILjdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMeshGetUV1Channel",
         constants$96.NewtonMeshGetUV1Channel$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshGetVertexColorChannel$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetVertexColorChannel$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetVertexColorChannel",
-        "(Ljdk/incubator/foreign/MemoryAddress;ILjdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMeshGetVertexColorChannel",
         constants$96.NewtonMeshGetVertexColorChannel$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshHasNormalChannel$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshHasNormalChannel$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshHasNormalChannel$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshHasNormalChannel",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshHasNormalChannel",
         constants$96.NewtonMeshHasNormalChannel$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshHasBinormalChannel$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshHasBinormalChannel$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshHasBinormalChannel$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshHasBinormalChannel",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshHasBinormalChannel",
         constants$96.NewtonMeshHasBinormalChannel$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshHasUV0Channel$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshHasUV0Channel$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshHasUV0Channel$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshHasUV0Channel",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshHasUV0Channel",
         constants$96.NewtonMeshHasUV0Channel$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshHasUV1Channel$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshHasUV1Channel$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshHasUV1Channel$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshHasUV1Channel",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshHasUV1Channel",
         constants$96.NewtonMeshHasUV1Channel$FUNC, false
     );
 }

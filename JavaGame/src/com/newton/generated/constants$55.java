@@ -6,86 +6,80 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$55 {
 
-    static final FunctionDescriptor NewtonCollisionGetSkinThickness$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCollisionGetSkinThickness$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCollisionGetSkinThickness$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionGetSkinThickness",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonCollisionGetSkinThickness",
         constants$55.NewtonCollisionGetSkinThickness$FUNC, false
     );
     static final FunctionDescriptor NewtonCollisionSetSkinThickness$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonCollisionSetSkinThickness$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionSetSkinThickness",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonCollisionSetSkinThickness",
         constants$55.NewtonCollisionSetSkinThickness$FUNC, false
     );
-    static final FunctionDescriptor NewtonCollisionIntersectionTest$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonCollisionIntersectionTest$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonCollisionIntersectionTest$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionIntersectionTest",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)I",
+        "NewtonCollisionIntersectionTest",
         constants$55.NewtonCollisionIntersectionTest$FUNC, false
     );
-    static final FunctionDescriptor NewtonCollisionPointDistance$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonCollisionPointDistance$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonCollisionPointDistance$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionPointDistance",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)I",
+        "NewtonCollisionPointDistance",
         constants$55.NewtonCollisionPointDistance$FUNC, false
     );
-    static final FunctionDescriptor NewtonCollisionClosestPoint$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonCollisionClosestPoint$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonCollisionClosestPoint$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionClosestPoint",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)I",
+        "NewtonCollisionClosestPoint",
         constants$55.NewtonCollisionClosestPoint$FUNC, false
     );
-    static final FunctionDescriptor NewtonCollisionCollide$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonCollisionCollide$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonCollisionCollide$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionCollide",
-        "(Ljdk/incubator/foreign/MemoryAddress;ILjdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)I",
+        "NewtonCollisionCollide",
         constants$55.NewtonCollisionCollide$FUNC, false
     );
 }

@@ -6,74 +6,68 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$33 {
 
     static final FunctionDescriptor NewtonMaterialSetContactGenerationCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactGenerationCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactGenerationCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;IILjdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMaterialSetContactGenerationCallback",
         constants$33.NewtonMaterialSetContactGenerationCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetCompoundCollisionCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetCompoundCollisionCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetCompoundCollisionCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;IILjdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMaterialSetCompoundCollisionCallback",
         constants$33.NewtonMaterialSetCompoundCollisionCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetCollisionCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetCollisionCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetCollisionCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;IILjdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMaterialSetCollisionCallback",
         constants$33.NewtonMaterialSetCollisionCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetDefaultSoftness$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetDefaultSoftness$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetDefaultSoftness",
-        "(Ljdk/incubator/foreign/MemoryAddress;IIF)V",
+        "NewtonMaterialSetDefaultSoftness",
         constants$33.NewtonMaterialSetDefaultSoftness$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetDefaultElasticity$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetDefaultElasticity$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetDefaultElasticity",
-        "(Ljdk/incubator/foreign/MemoryAddress;IIF)V",
+        "NewtonMaterialSetDefaultElasticity",
         constants$33.NewtonMaterialSetDefaultElasticity$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetDefaultCollidable$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetDefaultCollidable$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetDefaultCollidable",
-        "(Ljdk/incubator/foreign/MemoryAddress;III)V",
+        "NewtonMaterialSetDefaultCollidable",
         constants$33.NewtonMaterialSetDefaultCollidable$FUNC, false
     );
 }

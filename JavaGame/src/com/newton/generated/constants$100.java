@@ -6,58 +6,52 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$100 {
 
-    static final FunctionDescriptor NewtonMeshGetVertexArray$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshGetVertexArray$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetVertexArray$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetVertexArray",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMeshGetVertexArray",
         constants$100.NewtonMeshGetVertexArray$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshGetVertexBaseCount$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshGetVertexBaseCount$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetVertexBaseCount$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetVertexBaseCount",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshGetVertexBaseCount",
         constants$100.NewtonMeshGetVertexBaseCount$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshSetVertexBaseCount$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMeshSetVertexBaseCount$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshSetVertexBaseCount",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonMeshSetVertexBaseCount",
         constants$100.NewtonMeshSetVertexBaseCount$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshGetFirstVertex$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshGetFirstVertex$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetFirstVertex$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetFirstVertex",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMeshGetFirstVertex",
         constants$100.NewtonMeshGetFirstVertex$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshGetNextVertex$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshGetNextVertex$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetNextVertex$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetNextVertex",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMeshGetNextVertex",
         constants$100.NewtonMeshGetNextVertex$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshGetVertexIndex$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshGetVertexIndex$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetVertexIndex$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetVertexIndex",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshGetVertexIndex",
         constants$100.NewtonMeshGetVertexIndex$FUNC, false
     );
 }

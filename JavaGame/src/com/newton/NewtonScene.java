@@ -11,6 +11,6 @@ public class NewtonScene extends NewtonCollision {
 	}
 	
 	public static NewtonCollision createSceneCollision(NewtonWorld world, int shapeID) {
-		return new NewtonScene(Newton_h.NewtonCreateSceneCollision(world, shapeID));
+		return new NewtonScene(Newton_h.NewtonCreateSceneCollision(world.address, shapeID));
 	}
 }

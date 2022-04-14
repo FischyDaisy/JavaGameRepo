@@ -6,18 +6,18 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonMaterialData {
 
-    static final MemoryLayout $union$LAYOUT = MemoryLayout.unionLayout(
-        C_POINTER.withName("m_ptr"),
-        C_LONG_LONG.withName("m_int"),
-        C_FLOAT.withName("m_float")
+    static final  GroupLayout $union$LAYOUT = MemoryLayout.unionLayout(
+        Constants$root.C_POINTER$LAYOUT.withName("m_ptr"),
+        Constants$root.C_LONG_LONG$LAYOUT.withName("m_int"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_float")
     );
     public static MemoryLayout $LAYOUT() {
         return NewtonMaterialData.$union$LAYOUT;
     }
-    static final VarHandle m_ptr$VH = MemoryHandles.asAddressVarHandle($union$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_ptr")));
+    static final VarHandle m_ptr$VH = $union$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_ptr"));
     public static VarHandle m_ptr$VH() {
         return NewtonMaterialData.m_ptr$VH;
     }
@@ -33,7 +33,7 @@ public class NewtonMaterialData {
     public static void m_ptr$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonMaterialData.m_ptr$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_int$VH = $union$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_int"));
+    static final VarHandle m_int$VH = $union$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_int"));
     public static VarHandle m_int$VH() {
         return NewtonMaterialData.m_int$VH;
     }
@@ -49,7 +49,7 @@ public class NewtonMaterialData {
     public static void m_int$set(MemorySegment seg, long index, long x) {
         NewtonMaterialData.m_int$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_float$VH = $union$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_float"));
+    static final VarHandle m_float$VH = $union$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_float"));
     public static VarHandle m_float$VH() {
         return NewtonMaterialData.m_float$VH;
     }
@@ -67,12 +67,12 @@ public class NewtonMaterialData {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

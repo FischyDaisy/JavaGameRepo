@@ -6,14 +6,17 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class Newton_h  {
-
-    static {
-    	System.load(System.getProperty("user.dir") + "\\src\\com\\newtondll\\newton.dll");
-    }
-
-    static final SymbolLookup LIBRARIES = RuntimeHelper.lookup();    /* package-private */ Newton_h() {}
+	/* package-private */ Newton_h() {}
+    public static OfByte C_CHAR = Constants$root.C_CHAR$LAYOUT;
+    public static OfShort C_SHORT = Constants$root.C_SHORT$LAYOUT;
+    public static OfInt C_INT = Constants$root.C_LONG$LAYOUT;
+    public static OfInt C_LONG = Constants$root.C_LONG$LAYOUT;
+    public static OfLong C_LONG_LONG = Constants$root.C_LONG_LONG$LAYOUT;
+    public static OfFloat C_FLOAT = Constants$root.C_FLOAT$LAYOUT;
+    public static OfDouble C_DOUBLE = Constants$root.C_DOUBLE$LAYOUT;
+    public static OfAddress C_POINTER = Constants$root.C_POINTER$LAYOUT;
     public static int NEWTON_MAJOR_VERSION() {
         return (int)3L;
     }
@@ -122,7 +125,7 @@ public class Newton_h  {
     public static void NewtonSetMemorySystem ( Addressable malloc,  Addressable free) {
         var mh$ = RuntimeHelper.requireNonNull(constants$19.NewtonSetMemorySystem$MH, "NewtonSetMemorySystem");
         try {
-            mh$.invokeExact(malloc.address(), free.address());
+            mh$.invokeExact(malloc, free);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -144,7 +147,7 @@ public class Newton_h  {
     public static void NewtonDestroy ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$19.NewtonDestroy$MH, "NewtonDestroy");
         try {
-            mh$.invokeExact(newtonWorld.address());
+            mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -155,7 +158,7 @@ public class Newton_h  {
     public static void NewtonDestroyAllBodies ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$19.NewtonDestroyAllBodies$MH, "NewtonDestroyAllBodies");
         try {
-            mh$.invokeExact(newtonWorld.address());
+            mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -166,7 +169,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonGetPostUpdateCallback ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$19.NewtonGetPostUpdateCallback$MH, "NewtonGetPostUpdateCallback");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -177,7 +180,7 @@ public class Newton_h  {
     public static void NewtonSetPostUpdateCallback ( Addressable newtonWorld,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$20.NewtonSetPostUpdateCallback$MH, "NewtonSetPostUpdateCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), callback.address());
+            mh$.invokeExact(newtonWorld, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -199,7 +202,7 @@ public class Newton_h  {
     public static void NewtonFree ( Addressable ptr) {
         var mh$ = RuntimeHelper.requireNonNull(constants$20.NewtonFree$MH, "NewtonFree");
         try {
-            mh$.invokeExact(ptr.address());
+            mh$.invokeExact(ptr);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -210,7 +213,7 @@ public class Newton_h  {
     public static void NewtonLoadPlugins ( Addressable newtonWorld,  Addressable plugInPath) {
         var mh$ = RuntimeHelper.requireNonNull(constants$20.NewtonLoadPlugins$MH, "NewtonLoadPlugins");
         try {
-            mh$.invokeExact(newtonWorld.address(), plugInPath.address());
+            mh$.invokeExact(newtonWorld, plugInPath);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -221,7 +224,7 @@ public class Newton_h  {
     public static void NewtonUnloadPlugins ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$20.NewtonUnloadPlugins$MH, "NewtonUnloadPlugins");
         try {
-            mh$.invokeExact(newtonWorld.address());
+            mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -232,7 +235,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCurrentPlugin ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$20.NewtonCurrentPlugin$MH, "NewtonCurrentPlugin");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -243,7 +246,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonGetFirstPlugin ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$21.NewtonGetFirstPlugin$MH, "NewtonGetFirstPlugin");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -254,7 +257,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonGetPreferedPlugin ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$21.NewtonGetPreferedPlugin$MH, "NewtonGetPreferedPlugin");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -265,7 +268,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonGetNextPlugin ( Addressable newtonWorld,  Addressable plugin) {
         var mh$ = RuntimeHelper.requireNonNull(constants$21.NewtonGetNextPlugin$MH, "NewtonGetNextPlugin");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), plugin.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, plugin);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -276,7 +279,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonGetPluginString ( Addressable newtonWorld,  Addressable plugin) {
         var mh$ = RuntimeHelper.requireNonNull(constants$21.NewtonGetPluginString$MH, "NewtonGetPluginString");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), plugin.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, plugin);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -287,7 +290,7 @@ public class Newton_h  {
     public static void NewtonSelectPlugin ( Addressable newtonWorld,  Addressable plugin) {
         var mh$ = RuntimeHelper.requireNonNull(constants$21.NewtonSelectPlugin$MH, "NewtonSelectPlugin");
         try {
-            mh$.invokeExact(newtonWorld.address(), plugin.address());
+            mh$.invokeExact(newtonWorld, plugin);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -298,7 +301,7 @@ public class Newton_h  {
     public static float NewtonGetContactMergeTolerance ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$21.NewtonGetContactMergeTolerance$MH, "NewtonGetContactMergeTolerance");
         try {
-            return (float)mh$.invokeExact(newtonWorld.address());
+            return (float)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -309,7 +312,7 @@ public class Newton_h  {
     public static void NewtonSetContactMergeTolerance ( Addressable newtonWorld,  float tolerance) {
         var mh$ = RuntimeHelper.requireNonNull(constants$22.NewtonSetContactMergeTolerance$MH, "NewtonSetContactMergeTolerance");
         try {
-            mh$.invokeExact(newtonWorld.address(), tolerance);
+            mh$.invokeExact(newtonWorld, tolerance);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -320,7 +323,7 @@ public class Newton_h  {
     public static void NewtonInvalidateCache ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$22.NewtonInvalidateCache$MH, "NewtonInvalidateCache");
         try {
-            mh$.invokeExact(newtonWorld.address());
+            mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -331,7 +334,7 @@ public class Newton_h  {
     public static void NewtonSetSolverIterations ( Addressable newtonWorld,  int model) {
         var mh$ = RuntimeHelper.requireNonNull(constants$22.NewtonSetSolverIterations$MH, "NewtonSetSolverIterations");
         try {
-            mh$.invokeExact(newtonWorld.address(), model);
+            mh$.invokeExact(newtonWorld, model);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -342,7 +345,7 @@ public class Newton_h  {
     public static int NewtonGetSolverIterations ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$22.NewtonGetSolverIterations$MH, "NewtonGetSolverIterations");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address());
+            return (int)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -353,7 +356,7 @@ public class Newton_h  {
     public static void NewtonSetParallelSolverOnLargeIsland ( Addressable newtonWorld,  int mode) {
         var mh$ = RuntimeHelper.requireNonNull(constants$22.NewtonSetParallelSolverOnLargeIsland$MH, "NewtonSetParallelSolverOnLargeIsland");
         try {
-            mh$.invokeExact(newtonWorld.address(), mode);
+            mh$.invokeExact(newtonWorld, mode);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -364,7 +367,7 @@ public class Newton_h  {
     public static int NewtonGetParallelSolverOnLargeIsland ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$22.NewtonGetParallelSolverOnLargeIsland$MH, "NewtonGetParallelSolverOnLargeIsland");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address());
+            return (int)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -375,7 +378,7 @@ public class Newton_h  {
     public static int NewtonGetBroadphaseAlgorithm ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$23.NewtonGetBroadphaseAlgorithm$MH, "NewtonGetBroadphaseAlgorithm");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address());
+            return (int)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -386,7 +389,7 @@ public class Newton_h  {
     public static void NewtonSelectBroadphaseAlgorithm ( Addressable newtonWorld,  int algorithmType) {
         var mh$ = RuntimeHelper.requireNonNull(constants$23.NewtonSelectBroadphaseAlgorithm$MH, "NewtonSelectBroadphaseAlgorithm");
         try {
-            mh$.invokeExact(newtonWorld.address(), algorithmType);
+            mh$.invokeExact(newtonWorld, algorithmType);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -397,7 +400,7 @@ public class Newton_h  {
     public static void NewtonResetBroadphase ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$23.NewtonResetBroadphase$MH, "NewtonResetBroadphase");
         try {
-            mh$.invokeExact(newtonWorld.address());
+            mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -408,7 +411,7 @@ public class Newton_h  {
     public static void NewtonUpdate ( Addressable newtonWorld,  float timestep) {
         var mh$ = RuntimeHelper.requireNonNull(constants$23.NewtonUpdate$MH, "NewtonUpdate");
         try {
-            mh$.invokeExact(newtonWorld.address(), timestep);
+            mh$.invokeExact(newtonWorld, timestep);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -419,7 +422,7 @@ public class Newton_h  {
     public static void NewtonUpdateAsync ( Addressable newtonWorld,  float timestep) {
         var mh$ = RuntimeHelper.requireNonNull(constants$23.NewtonUpdateAsync$MH, "NewtonUpdateAsync");
         try {
-            mh$.invokeExact(newtonWorld.address(), timestep);
+            mh$.invokeExact(newtonWorld, timestep);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -430,7 +433,7 @@ public class Newton_h  {
     public static void NewtonWaitForUpdateToFinish ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$23.NewtonWaitForUpdateToFinish$MH, "NewtonWaitForUpdateToFinish");
         try {
-            mh$.invokeExact(newtonWorld.address());
+            mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -441,7 +444,7 @@ public class Newton_h  {
     public static int NewtonGetNumberOfSubsteps ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$24.NewtonGetNumberOfSubsteps$MH, "NewtonGetNumberOfSubsteps");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address());
+            return (int)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -452,7 +455,7 @@ public class Newton_h  {
     public static void NewtonSetNumberOfSubsteps ( Addressable newtonWorld,  int subSteps) {
         var mh$ = RuntimeHelper.requireNonNull(constants$24.NewtonSetNumberOfSubsteps$MH, "NewtonSetNumberOfSubsteps");
         try {
-            mh$.invokeExact(newtonWorld.address(), subSteps);
+            mh$.invokeExact(newtonWorld, subSteps);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -463,7 +466,7 @@ public class Newton_h  {
     public static float NewtonGetLastUpdateTime ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$24.NewtonGetLastUpdateTime$MH, "NewtonGetLastUpdateTime");
         try {
-            return (float)mh$.invokeExact(newtonWorld.address());
+            return (float)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -474,7 +477,7 @@ public class Newton_h  {
     public static void NewtonSerializeToFile ( Addressable newtonWorld,  Addressable filename,  Addressable bodyCallback,  Addressable bodyUserData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$24.NewtonSerializeToFile$MH, "NewtonSerializeToFile");
         try {
-            mh$.invokeExact(newtonWorld.address(), filename.address(), bodyCallback.address(), bodyUserData.address());
+            mh$.invokeExact(newtonWorld, filename, bodyCallback, bodyUserData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -485,7 +488,7 @@ public class Newton_h  {
     public static void NewtonDeserializeFromFile ( Addressable newtonWorld,  Addressable filename,  Addressable bodyCallback,  Addressable bodyUserData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$24.NewtonDeserializeFromFile$MH, "NewtonDeserializeFromFile");
         try {
-            mh$.invokeExact(newtonWorld.address(), filename.address(), bodyCallback.address(), bodyUserData.address());
+            mh$.invokeExact(newtonWorld, filename, bodyCallback, bodyUserData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -496,7 +499,7 @@ public class Newton_h  {
     public static void NewtonSerializeScene ( Addressable newtonWorld,  Addressable bodyCallback,  Addressable bodyUserData,  Addressable serializeCallback,  Addressable serializeHandle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$24.NewtonSerializeScene$MH, "NewtonSerializeScene");
         try {
-            mh$.invokeExact(newtonWorld.address(), bodyCallback.address(), bodyUserData.address(), serializeCallback.address(), serializeHandle.address());
+            mh$.invokeExact(newtonWorld, bodyCallback, bodyUserData, serializeCallback, serializeHandle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -507,7 +510,7 @@ public class Newton_h  {
     public static void NewtonDeserializeScene ( Addressable newtonWorld,  Addressable bodyCallback,  Addressable bodyUserData,  Addressable serializeCallback,  Addressable serializeHandle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$25.NewtonDeserializeScene$MH, "NewtonDeserializeScene");
         try {
-            mh$.invokeExact(newtonWorld.address(), bodyCallback.address(), bodyUserData.address(), serializeCallback.address(), serializeHandle.address());
+            mh$.invokeExact(newtonWorld, bodyCallback, bodyUserData, serializeCallback, serializeHandle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -518,7 +521,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonFindSerializedBody ( Addressable newtonWorld,  int bodySerializedID) {
         var mh$ = RuntimeHelper.requireNonNull(constants$25.NewtonFindSerializedBody$MH, "NewtonFindSerializedBody");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), bodySerializedID);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, bodySerializedID);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -529,7 +532,7 @@ public class Newton_h  {
     public static void NewtonSetJointSerializationCallbacks ( Addressable newtonWorld,  Addressable serializeJoint,  Addressable deserializeJoint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$25.NewtonSetJointSerializationCallbacks$MH, "NewtonSetJointSerializationCallbacks");
         try {
-            mh$.invokeExact(newtonWorld.address(), serializeJoint.address(), deserializeJoint.address());
+            mh$.invokeExact(newtonWorld, serializeJoint, deserializeJoint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -540,7 +543,7 @@ public class Newton_h  {
     public static void NewtonGetJointSerializationCallbacks ( Addressable newtonWorld,  Addressable serializeJoint,  Addressable deserializeJoint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$25.NewtonGetJointSerializationCallbacks$MH, "NewtonGetJointSerializationCallbacks");
         try {
-            mh$.invokeExact(newtonWorld.address(), serializeJoint.address(), deserializeJoint.address());
+            mh$.invokeExact(newtonWorld, serializeJoint, deserializeJoint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -551,7 +554,7 @@ public class Newton_h  {
     public static void NewtonWorldCriticalSectionLock ( Addressable newtonWorld,  int threadIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$25.NewtonWorldCriticalSectionLock$MH, "NewtonWorldCriticalSectionLock");
         try {
-            mh$.invokeExact(newtonWorld.address(), threadIndex);
+            mh$.invokeExact(newtonWorld, threadIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -562,7 +565,7 @@ public class Newton_h  {
     public static void NewtonWorldCriticalSectionUnlock ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$25.NewtonWorldCriticalSectionUnlock$MH, "NewtonWorldCriticalSectionUnlock");
         try {
-            mh$.invokeExact(newtonWorld.address());
+            mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -573,7 +576,7 @@ public class Newton_h  {
     public static void NewtonSetThreadsCount ( Addressable newtonWorld,  int threads) {
         var mh$ = RuntimeHelper.requireNonNull(constants$26.NewtonSetThreadsCount$MH, "NewtonSetThreadsCount");
         try {
-            mh$.invokeExact(newtonWorld.address(), threads);
+            mh$.invokeExact(newtonWorld, threads);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -584,7 +587,7 @@ public class Newton_h  {
     public static int NewtonGetThreadsCount ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$26.NewtonGetThreadsCount$MH, "NewtonGetThreadsCount");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address());
+            return (int)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -595,7 +598,7 @@ public class Newton_h  {
     public static int NewtonGetMaxThreadsCount ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$26.NewtonGetMaxThreadsCount$MH, "NewtonGetMaxThreadsCount");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address());
+            return (int)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -606,7 +609,7 @@ public class Newton_h  {
     public static void NewtonDispachThreadJob ( Addressable newtonWorld,  Addressable task,  Addressable usedData,  Addressable functionName) {
         var mh$ = RuntimeHelper.requireNonNull(constants$26.NewtonDispachThreadJob$MH, "NewtonDispachThreadJob");
         try {
-            mh$.invokeExact(newtonWorld.address(), task.address(), usedData.address(), functionName.address());
+            mh$.invokeExact(newtonWorld, task, usedData, functionName);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -617,7 +620,7 @@ public class Newton_h  {
     public static void NewtonSyncThreadJobs ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$26.NewtonSyncThreadJobs$MH, "NewtonSyncThreadJobs");
         try {
-            mh$.invokeExact(newtonWorld.address());
+            mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -628,7 +631,7 @@ public class Newton_h  {
     public static int NewtonAtomicAdd ( Addressable ptr,  int value) {
         var mh$ = RuntimeHelper.requireNonNull(constants$26.NewtonAtomicAdd$MH, "NewtonAtomicAdd");
         try {
-            return (int)mh$.invokeExact(ptr.address(), value);
+            return (int)mh$.invokeExact(ptr, value);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -639,7 +642,7 @@ public class Newton_h  {
     public static int NewtonAtomicSwap ( Addressable ptr,  int value) {
         var mh$ = RuntimeHelper.requireNonNull(constants$27.NewtonAtomicSwap$MH, "NewtonAtomicSwap");
         try {
-            return (int)mh$.invokeExact(ptr.address(), value);
+            return (int)mh$.invokeExact(ptr, value);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -661,7 +664,7 @@ public class Newton_h  {
     public static void NewtonSetIslandUpdateEvent ( Addressable newtonWorld,  Addressable islandUpdate) {
         var mh$ = RuntimeHelper.requireNonNull(constants$27.NewtonSetIslandUpdateEvent$MH, "NewtonSetIslandUpdateEvent");
         try {
-            mh$.invokeExact(newtonWorld.address(), islandUpdate.address());
+            mh$.invokeExact(newtonWorld, islandUpdate);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -672,7 +675,7 @@ public class Newton_h  {
     public static void NewtonWorldForEachJointDo ( Addressable newtonWorld,  Addressable callback,  Addressable userData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$27.NewtonWorldForEachJointDo$MH, "NewtonWorldForEachJointDo");
         try {
-            mh$.invokeExact(newtonWorld.address(), callback.address(), userData.address());
+            mh$.invokeExact(newtonWorld, callback, userData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -683,7 +686,7 @@ public class Newton_h  {
     public static void NewtonWorldForEachBodyInAABBDo ( Addressable newtonWorld,  Addressable p0,  Addressable p1,  Addressable callback,  Addressable userData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$27.NewtonWorldForEachBodyInAABBDo$MH, "NewtonWorldForEachBodyInAABBDo");
         try {
-            mh$.invokeExact(newtonWorld.address(), p0.address(), p1.address(), callback.address(), userData.address());
+            mh$.invokeExact(newtonWorld, p0, p1, callback, userData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -694,7 +697,7 @@ public class Newton_h  {
     public static void NewtonWorldSetUserData ( Addressable newtonWorld,  Addressable userData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$27.NewtonWorldSetUserData$MH, "NewtonWorldSetUserData");
         try {
-            mh$.invokeExact(newtonWorld.address(), userData.address());
+            mh$.invokeExact(newtonWorld, userData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -705,7 +708,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonWorldGetUserData ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$28.NewtonWorldGetUserData$MH, "NewtonWorldGetUserData");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -716,7 +719,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonWorldAddListener ( Addressable newtonWorld,  Addressable nameId,  Addressable listenerUserData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$28.NewtonWorldAddListener$MH, "NewtonWorldAddListener");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), nameId.address(), listenerUserData.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, nameId, listenerUserData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -727,7 +730,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonWorldGetListener ( Addressable newtonWorld,  Addressable nameId) {
         var mh$ = RuntimeHelper.requireNonNull(constants$28.NewtonWorldGetListener$MH, "NewtonWorldGetListener");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), nameId.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, nameId);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -738,7 +741,7 @@ public class Newton_h  {
     public static void NewtonWorldListenerSetDebugCallback ( Addressable newtonWorld,  Addressable listener,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$28.NewtonWorldListenerSetDebugCallback$MH, "NewtonWorldListenerSetDebugCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), listener.address(), callback.address());
+            mh$.invokeExact(newtonWorld, listener, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -749,7 +752,7 @@ public class Newton_h  {
     public static void NewtonWorldListenerSetPostStepCallback ( Addressable newtonWorld,  Addressable listener,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$28.NewtonWorldListenerSetPostStepCallback$MH, "NewtonWorldListenerSetPostStepCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), listener.address(), callback.address());
+            mh$.invokeExact(newtonWorld, listener, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -760,7 +763,7 @@ public class Newton_h  {
     public static void NewtonWorldListenerSetPreUpdateCallback ( Addressable newtonWorld,  Addressable listener,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$28.NewtonWorldListenerSetPreUpdateCallback$MH, "NewtonWorldListenerSetPreUpdateCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), listener.address(), callback.address());
+            mh$.invokeExact(newtonWorld, listener, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -771,7 +774,7 @@ public class Newton_h  {
     public static void NewtonWorldListenerSetPostUpdateCallback ( Addressable newtonWorld,  Addressable listener,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$29.NewtonWorldListenerSetPostUpdateCallback$MH, "NewtonWorldListenerSetPostUpdateCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), listener.address(), callback.address());
+            mh$.invokeExact(newtonWorld, listener, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -782,7 +785,7 @@ public class Newton_h  {
     public static void NewtonWorldListenerSetDestructorCallback ( Addressable newtonWorld,  Addressable listener,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$29.NewtonWorldListenerSetDestructorCallback$MH, "NewtonWorldListenerSetDestructorCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), listener.address(), callback.address());
+            mh$.invokeExact(newtonWorld, listener, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -793,7 +796,7 @@ public class Newton_h  {
     public static void NewtonWorldListenerSetBodyDestroyCallback ( Addressable newtonWorld,  Addressable listener,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$29.NewtonWorldListenerSetBodyDestroyCallback$MH, "NewtonWorldListenerSetBodyDestroyCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), listener.address(), callback.address());
+            mh$.invokeExact(newtonWorld, listener, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -804,7 +807,7 @@ public class Newton_h  {
     public static void NewtonWorldListenerDebug ( Addressable newtonWorld,  Addressable context) {
         var mh$ = RuntimeHelper.requireNonNull(constants$29.NewtonWorldListenerDebug$MH, "NewtonWorldListenerDebug");
         try {
-            mh$.invokeExact(newtonWorld.address(), context.address());
+            mh$.invokeExact(newtonWorld, context);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -815,7 +818,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonWorldGetListenerUserData ( Addressable newtonWorld,  Addressable listener) {
         var mh$ = RuntimeHelper.requireNonNull(constants$29.NewtonWorldGetListenerUserData$MH, "NewtonWorldGetListenerUserData");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), listener.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, listener);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -826,7 +829,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonWorldListenerGetBodyDestroyCallback ( Addressable newtonWorld,  Addressable listener) {
         var mh$ = RuntimeHelper.requireNonNull(constants$29.NewtonWorldListenerGetBodyDestroyCallback$MH, "NewtonWorldListenerGetBodyDestroyCallback");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), listener.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, listener);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -837,7 +840,7 @@ public class Newton_h  {
     public static void NewtonWorldSetDestructorCallback ( Addressable newtonWorld,  Addressable destructor) {
         var mh$ = RuntimeHelper.requireNonNull(constants$30.NewtonWorldSetDestructorCallback$MH, "NewtonWorldSetDestructorCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), destructor.address());
+            mh$.invokeExact(newtonWorld, destructor);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -848,7 +851,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonWorldGetDestructorCallback ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$30.NewtonWorldGetDestructorCallback$MH, "NewtonWorldGetDestructorCallback");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -859,7 +862,7 @@ public class Newton_h  {
     public static void NewtonWorldSetCollisionConstructorDestructorCallback ( Addressable newtonWorld,  Addressable constructor,  Addressable destructor) {
         var mh$ = RuntimeHelper.requireNonNull(constants$30.NewtonWorldSetCollisionConstructorDestructorCallback$MH, "NewtonWorldSetCollisionConstructorDestructorCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), constructor.address(), destructor.address());
+            mh$.invokeExact(newtonWorld, constructor, destructor);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -870,7 +873,7 @@ public class Newton_h  {
     public static void NewtonWorldSetCreateDestroyContactCallback ( Addressable newtonWorld,  Addressable createContact,  Addressable destroyContact) {
         var mh$ = RuntimeHelper.requireNonNull(constants$30.NewtonWorldSetCreateDestroyContactCallback$MH, "NewtonWorldSetCreateDestroyContactCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), createContact.address(), destroyContact.address());
+            mh$.invokeExact(newtonWorld, createContact, destroyContact);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -881,7 +884,7 @@ public class Newton_h  {
     public static void NewtonWorldRayCast ( Addressable newtonWorld,  Addressable p0,  Addressable p1,  Addressable filter,  Addressable userData,  Addressable prefilter,  int threadIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$30.NewtonWorldRayCast$MH, "NewtonWorldRayCast");
         try {
-            mh$.invokeExact(newtonWorld.address(), p0.address(), p1.address(), filter.address(), userData.address(), prefilter.address(), threadIndex);
+            mh$.invokeExact(newtonWorld, p0, p1, filter, userData, prefilter, threadIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -892,7 +895,7 @@ public class Newton_h  {
     public static int NewtonWorldConvexCast ( Addressable newtonWorld,  Addressable matrix,  Addressable target,  Addressable shape,  Addressable param,  Addressable userData,  Addressable prefilter,  Addressable info,  int maxContactsCount,  int threadIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$30.NewtonWorldConvexCast$MH, "NewtonWorldConvexCast");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address(), matrix.address(), target.address(), shape.address(), param.address(), userData.address(), prefilter.address(), info.address(), maxContactsCount, threadIndex);
+            return (int)mh$.invokeExact(newtonWorld, matrix, target, shape, param, userData, prefilter, info, maxContactsCount, threadIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -903,7 +906,7 @@ public class Newton_h  {
     public static int NewtonWorldCollide ( Addressable newtonWorld,  Addressable matrix,  Addressable shape,  Addressable userData,  Addressable prefilter,  Addressable info,  int maxContactsCount,  int threadIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$31.NewtonWorldCollide$MH, "NewtonWorldCollide");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address(), matrix.address(), shape.address(), userData.address(), prefilter.address(), info.address(), maxContactsCount, threadIndex);
+            return (int)mh$.invokeExact(newtonWorld, matrix, shape, userData, prefilter, info, maxContactsCount, threadIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -914,7 +917,7 @@ public class Newton_h  {
     public static int NewtonWorldGetBodyCount ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$31.NewtonWorldGetBodyCount$MH, "NewtonWorldGetBodyCount");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address());
+            return (int)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -925,7 +928,7 @@ public class Newton_h  {
     public static int NewtonWorldGetConstraintCount ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$31.NewtonWorldGetConstraintCount$MH, "NewtonWorldGetConstraintCount");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address());
+            return (int)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -936,7 +939,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonWorldFindJoint ( Addressable body0,  Addressable body1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$31.NewtonWorldFindJoint$MH, "NewtonWorldFindJoint");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body0.address(), body1.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body0, body1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -947,7 +950,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonIslandGetBody ( Addressable island,  int bodyIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$31.NewtonIslandGetBody$MH, "NewtonIslandGetBody");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(island.address(), bodyIndex);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(island, bodyIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -958,7 +961,7 @@ public class Newton_h  {
     public static void NewtonIslandGetBodyAABB ( Addressable island,  int bodyIndex,  Addressable p0,  Addressable p1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$31.NewtonIslandGetBodyAABB$MH, "NewtonIslandGetBodyAABB");
         try {
-            mh$.invokeExact(island.address(), bodyIndex, p0.address(), p1.address());
+            mh$.invokeExact(island, bodyIndex, p0, p1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -969,7 +972,7 @@ public class Newton_h  {
     public static int NewtonMaterialCreateGroupID ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$32.NewtonMaterialCreateGroupID$MH, "NewtonMaterialCreateGroupID");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address());
+            return (int)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -980,7 +983,7 @@ public class Newton_h  {
     public static int NewtonMaterialGetDefaultGroupID ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$32.NewtonMaterialGetDefaultGroupID$MH, "NewtonMaterialGetDefaultGroupID");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address());
+            return (int)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -991,7 +994,7 @@ public class Newton_h  {
     public static void NewtonMaterialDestroyAllGroupID ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$32.NewtonMaterialDestroyAllGroupID$MH, "NewtonMaterialDestroyAllGroupID");
         try {
-            mh$.invokeExact(newtonWorld.address());
+            mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1002,7 +1005,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMaterialGetUserData ( Addressable newtonWorld,  int id0,  int id1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$32.NewtonMaterialGetUserData$MH, "NewtonMaterialGetUserData");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), id0, id1);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, id0, id1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1013,7 +1016,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetSurfaceThickness ( Addressable newtonWorld,  int id0,  int id1,  float thickness) {
         var mh$ = RuntimeHelper.requireNonNull(constants$32.NewtonMaterialSetSurfaceThickness$MH, "NewtonMaterialSetSurfaceThickness");
         try {
-            mh$.invokeExact(newtonWorld.address(), id0, id1, thickness);
+            mh$.invokeExact(newtonWorld, id0, id1, thickness);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1024,7 +1027,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetCallbackUserData ( Addressable newtonWorld,  int id0,  int id1,  Addressable userData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$32.NewtonMaterialSetCallbackUserData$MH, "NewtonMaterialSetCallbackUserData");
         try {
-            mh$.invokeExact(newtonWorld.address(), id0, id1, userData.address());
+            mh$.invokeExact(newtonWorld, id0, id1, userData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1035,7 +1038,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactGenerationCallback ( Addressable newtonWorld,  int id0,  int id1,  Addressable contactGeneration) {
         var mh$ = RuntimeHelper.requireNonNull(constants$33.NewtonMaterialSetContactGenerationCallback$MH, "NewtonMaterialSetContactGenerationCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), id0, id1, contactGeneration.address());
+            mh$.invokeExact(newtonWorld, id0, id1, contactGeneration);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1046,7 +1049,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetCompoundCollisionCallback ( Addressable newtonWorld,  int id0,  int id1,  Addressable compoundAabbOverlap) {
         var mh$ = RuntimeHelper.requireNonNull(constants$33.NewtonMaterialSetCompoundCollisionCallback$MH, "NewtonMaterialSetCompoundCollisionCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), id0, id1, compoundAabbOverlap.address());
+            mh$.invokeExact(newtonWorld, id0, id1, compoundAabbOverlap);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1057,7 +1060,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetCollisionCallback ( Addressable newtonWorld,  int id0,  int id1,  Addressable aabbOverlap,  Addressable process) {
         var mh$ = RuntimeHelper.requireNonNull(constants$33.NewtonMaterialSetCollisionCallback$MH, "NewtonMaterialSetCollisionCallback");
         try {
-            mh$.invokeExact(newtonWorld.address(), id0, id1, aabbOverlap.address(), process.address());
+            mh$.invokeExact(newtonWorld, id0, id1, aabbOverlap, process);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1068,7 +1071,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetDefaultSoftness ( Addressable newtonWorld,  int id0,  int id1,  float value) {
         var mh$ = RuntimeHelper.requireNonNull(constants$33.NewtonMaterialSetDefaultSoftness$MH, "NewtonMaterialSetDefaultSoftness");
         try {
-            mh$.invokeExact(newtonWorld.address(), id0, id1, value);
+            mh$.invokeExact(newtonWorld, id0, id1, value);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1079,7 +1082,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetDefaultElasticity ( Addressable newtonWorld,  int id0,  int id1,  float elasticCoef) {
         var mh$ = RuntimeHelper.requireNonNull(constants$33.NewtonMaterialSetDefaultElasticity$MH, "NewtonMaterialSetDefaultElasticity");
         try {
-            mh$.invokeExact(newtonWorld.address(), id0, id1, elasticCoef);
+            mh$.invokeExact(newtonWorld, id0, id1, elasticCoef);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1090,7 +1093,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetDefaultCollidable ( Addressable newtonWorld,  int id0,  int id1,  int state) {
         var mh$ = RuntimeHelper.requireNonNull(constants$33.NewtonMaterialSetDefaultCollidable$MH, "NewtonMaterialSetDefaultCollidable");
         try {
-            mh$.invokeExact(newtonWorld.address(), id0, id1, state);
+            mh$.invokeExact(newtonWorld, id0, id1, state);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1101,7 +1104,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetDefaultFriction ( Addressable newtonWorld,  int id0,  int id1,  float staticFriction,  float kineticFriction) {
         var mh$ = RuntimeHelper.requireNonNull(constants$34.NewtonMaterialSetDefaultFriction$MH, "NewtonMaterialSetDefaultFriction");
         try {
-            mh$.invokeExact(newtonWorld.address(), id0, id1, staticFriction, kineticFriction);
+            mh$.invokeExact(newtonWorld, id0, id1, staticFriction, kineticFriction);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1112,7 +1115,7 @@ public class Newton_h  {
     public static void NewtonMaterialJointResetIntraJointCollision ( Addressable newtonWorld,  int id0,  int id1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$34.NewtonMaterialJointResetIntraJointCollision$MH, "NewtonMaterialJointResetIntraJointCollision");
         try {
-            mh$.invokeExact(newtonWorld.address(), id0, id1);
+            mh$.invokeExact(newtonWorld, id0, id1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1123,7 +1126,7 @@ public class Newton_h  {
     public static void NewtonMaterialJointResetSelftJointCollision ( Addressable newtonWorld,  int id0,  int id1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$34.NewtonMaterialJointResetSelftJointCollision$MH, "NewtonMaterialJointResetSelftJointCollision");
         try {
-            mh$.invokeExact(newtonWorld.address(), id0, id1);
+            mh$.invokeExact(newtonWorld, id0, id1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1134,7 +1137,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonWorldGetFirstMaterial ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$34.NewtonWorldGetFirstMaterial$MH, "NewtonWorldGetFirstMaterial");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1145,7 +1148,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonWorldGetNextMaterial ( Addressable newtonWorld,  Addressable material) {
         var mh$ = RuntimeHelper.requireNonNull(constants$34.NewtonWorldGetNextMaterial$MH, "NewtonWorldGetNextMaterial");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), material.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, material);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1156,7 +1159,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonWorldGetFirstBody ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$34.NewtonWorldGetFirstBody$MH, "NewtonWorldGetFirstBody");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1167,7 +1170,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonWorldGetNextBody ( Addressable newtonWorld,  Addressable curBody) {
         var mh$ = RuntimeHelper.requireNonNull(constants$35.NewtonWorldGetNextBody$MH, "NewtonWorldGetNextBody");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), curBody.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, curBody);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1178,7 +1181,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMaterialGetMaterialPairUserData ( Addressable material) {
         var mh$ = RuntimeHelper.requireNonNull(constants$35.NewtonMaterialGetMaterialPairUserData$MH, "NewtonMaterialGetMaterialPairUserData");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(material.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(material);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1189,7 +1192,7 @@ public class Newton_h  {
     public static int NewtonMaterialGetContactFaceAttribute ( Addressable material) {
         var mh$ = RuntimeHelper.requireNonNull(constants$35.NewtonMaterialGetContactFaceAttribute$MH, "NewtonMaterialGetContactFaceAttribute");
         try {
-            return (int)mh$.invokeExact(material.address());
+            return (int)mh$.invokeExact(material);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1200,7 +1203,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMaterialGetBodyCollidingShape ( Addressable material,  Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$35.NewtonMaterialGetBodyCollidingShape$MH, "NewtonMaterialGetBodyCollidingShape");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(material.address(), body.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(material, body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1211,7 +1214,7 @@ public class Newton_h  {
     public static float NewtonMaterialGetContactNormalSpeed ( Addressable material) {
         var mh$ = RuntimeHelper.requireNonNull(constants$35.NewtonMaterialGetContactNormalSpeed$MH, "NewtonMaterialGetContactNormalSpeed");
         try {
-            return (float)mh$.invokeExact(material.address());
+            return (float)mh$.invokeExact(material);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1222,7 +1225,7 @@ public class Newton_h  {
     public static void NewtonMaterialGetContactForce ( Addressable material,  Addressable body,  Addressable force) {
         var mh$ = RuntimeHelper.requireNonNull(constants$35.NewtonMaterialGetContactForce$MH, "NewtonMaterialGetContactForce");
         try {
-            mh$.invokeExact(material.address(), body.address(), force.address());
+            mh$.invokeExact(material, body, force);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1233,7 +1236,7 @@ public class Newton_h  {
     public static void NewtonMaterialGetContactPositionAndNormal ( Addressable material,  Addressable body,  Addressable posit,  Addressable normal) {
         var mh$ = RuntimeHelper.requireNonNull(constants$36.NewtonMaterialGetContactPositionAndNormal$MH, "NewtonMaterialGetContactPositionAndNormal");
         try {
-            mh$.invokeExact(material.address(), body.address(), posit.address(), normal.address());
+            mh$.invokeExact(material, body, posit, normal);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1244,7 +1247,7 @@ public class Newton_h  {
     public static void NewtonMaterialGetContactTangentDirections ( Addressable material,  Addressable body,  Addressable dir0,  Addressable dir1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$36.NewtonMaterialGetContactTangentDirections$MH, "NewtonMaterialGetContactTangentDirections");
         try {
-            mh$.invokeExact(material.address(), body.address(), dir0.address(), dir1.address());
+            mh$.invokeExact(material, body, dir0, dir1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1255,7 +1258,7 @@ public class Newton_h  {
     public static float NewtonMaterialGetContactTangentSpeed ( Addressable material,  int index) {
         var mh$ = RuntimeHelper.requireNonNull(constants$36.NewtonMaterialGetContactTangentSpeed$MH, "NewtonMaterialGetContactTangentSpeed");
         try {
-            return (float)mh$.invokeExact(material.address(), index);
+            return (float)mh$.invokeExact(material, index);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1266,7 +1269,7 @@ public class Newton_h  {
     public static float NewtonMaterialGetContactMaxNormalImpact ( Addressable material) {
         var mh$ = RuntimeHelper.requireNonNull(constants$36.NewtonMaterialGetContactMaxNormalImpact$MH, "NewtonMaterialGetContactMaxNormalImpact");
         try {
-            return (float)mh$.invokeExact(material.address());
+            return (float)mh$.invokeExact(material);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1277,7 +1280,7 @@ public class Newton_h  {
     public static float NewtonMaterialGetContactMaxTangentImpact ( Addressable material,  int index) {
         var mh$ = RuntimeHelper.requireNonNull(constants$36.NewtonMaterialGetContactMaxTangentImpact$MH, "NewtonMaterialGetContactMaxTangentImpact");
         try {
-            return (float)mh$.invokeExact(material.address(), index);
+            return (float)mh$.invokeExact(material, index);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1288,7 +1291,7 @@ public class Newton_h  {
     public static float NewtonMaterialGetContactPenetration ( Addressable material) {
         var mh$ = RuntimeHelper.requireNonNull(constants$36.NewtonMaterialGetContactPenetration$MH, "NewtonMaterialGetContactPenetration");
         try {
-            return (float)mh$.invokeExact(material.address());
+            return (float)mh$.invokeExact(material);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1299,7 +1302,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetAsSoftContact ( Addressable material,  float relaxation) {
         var mh$ = RuntimeHelper.requireNonNull(constants$37.NewtonMaterialSetAsSoftContact$MH, "NewtonMaterialSetAsSoftContact");
         try {
-            mh$.invokeExact(material.address(), relaxation);
+            mh$.invokeExact(material, relaxation);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1310,7 +1313,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactSoftness ( Addressable material,  float softness) {
         var mh$ = RuntimeHelper.requireNonNull(constants$37.NewtonMaterialSetContactSoftness$MH, "NewtonMaterialSetContactSoftness");
         try {
-            mh$.invokeExact(material.address(), softness);
+            mh$.invokeExact(material, softness);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1321,7 +1324,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactThickness ( Addressable material,  float thickness) {
         var mh$ = RuntimeHelper.requireNonNull(constants$37.NewtonMaterialSetContactThickness$MH, "NewtonMaterialSetContactThickness");
         try {
-            mh$.invokeExact(material.address(), thickness);
+            mh$.invokeExact(material, thickness);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1332,7 +1335,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactElasticity ( Addressable material,  float restitution) {
         var mh$ = RuntimeHelper.requireNonNull(constants$37.NewtonMaterialSetContactElasticity$MH, "NewtonMaterialSetContactElasticity");
         try {
-            mh$.invokeExact(material.address(), restitution);
+            mh$.invokeExact(material, restitution);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1343,7 +1346,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactFrictionState ( Addressable material,  int state,  int index) {
         var mh$ = RuntimeHelper.requireNonNull(constants$37.NewtonMaterialSetContactFrictionState$MH, "NewtonMaterialSetContactFrictionState");
         try {
-            mh$.invokeExact(material.address(), state, index);
+            mh$.invokeExact(material, state, index);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1354,7 +1357,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactFrictionCoef ( Addressable material,  float staticFrictionCoef,  float kineticFrictionCoef,  int index) {
         var mh$ = RuntimeHelper.requireNonNull(constants$37.NewtonMaterialSetContactFrictionCoef$MH, "NewtonMaterialSetContactFrictionCoef");
         try {
-            mh$.invokeExact(material.address(), staticFrictionCoef, kineticFrictionCoef, index);
+            mh$.invokeExact(material, staticFrictionCoef, kineticFrictionCoef, index);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1365,7 +1368,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactNormalAcceleration ( Addressable material,  float accel) {
         var mh$ = RuntimeHelper.requireNonNull(constants$38.NewtonMaterialSetContactNormalAcceleration$MH, "NewtonMaterialSetContactNormalAcceleration");
         try {
-            mh$.invokeExact(material.address(), accel);
+            mh$.invokeExact(material, accel);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1376,7 +1379,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactNormalDirection ( Addressable material,  Addressable directionVector) {
         var mh$ = RuntimeHelper.requireNonNull(constants$38.NewtonMaterialSetContactNormalDirection$MH, "NewtonMaterialSetContactNormalDirection");
         try {
-            mh$.invokeExact(material.address(), directionVector.address());
+            mh$.invokeExact(material, directionVector);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1387,7 +1390,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactPosition ( Addressable material,  Addressable position) {
         var mh$ = RuntimeHelper.requireNonNull(constants$38.NewtonMaterialSetContactPosition$MH, "NewtonMaterialSetContactPosition");
         try {
-            mh$.invokeExact(material.address(), position.address());
+            mh$.invokeExact(material, position);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1398,7 +1401,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactTangentFriction ( Addressable material,  float friction,  int index) {
         var mh$ = RuntimeHelper.requireNonNull(constants$38.NewtonMaterialSetContactTangentFriction$MH, "NewtonMaterialSetContactTangentFriction");
         try {
-            mh$.invokeExact(material.address(), friction, index);
+            mh$.invokeExact(material, friction, index);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1409,7 +1412,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactTangentAcceleration ( Addressable material,  float accel,  int index) {
         var mh$ = RuntimeHelper.requireNonNull(constants$38.NewtonMaterialSetContactTangentAcceleration$MH, "NewtonMaterialSetContactTangentAcceleration");
         try {
-            mh$.invokeExact(material.address(), accel, index);
+            mh$.invokeExact(material, accel, index);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1420,7 +1423,7 @@ public class Newton_h  {
     public static void NewtonMaterialContactRotateTangentDirections ( Addressable material,  Addressable directionVector) {
         var mh$ = RuntimeHelper.requireNonNull(constants$38.NewtonMaterialContactRotateTangentDirections$MH, "NewtonMaterialContactRotateTangentDirections");
         try {
-            mh$.invokeExact(material.address(), directionVector.address());
+            mh$.invokeExact(material, directionVector);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1431,7 +1434,7 @@ public class Newton_h  {
     public static float NewtonMaterialGetContactPruningTolerance ( Addressable contactJoint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$39.NewtonMaterialGetContactPruningTolerance$MH, "NewtonMaterialGetContactPruningTolerance");
         try {
-            return (float)mh$.invokeExact(contactJoint.address());
+            return (float)mh$.invokeExact(contactJoint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1442,7 +1445,7 @@ public class Newton_h  {
     public static void NewtonMaterialSetContactPruningTolerance ( Addressable contactJoint,  float tolerance) {
         var mh$ = RuntimeHelper.requireNonNull(constants$39.NewtonMaterialSetContactPruningTolerance$MH, "NewtonMaterialSetContactPruningTolerance");
         try {
-            mh$.invokeExact(contactJoint.address(), tolerance);
+            mh$.invokeExact(contactJoint, tolerance);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1453,7 +1456,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateNull ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$39.NewtonCreateNull$MH, "NewtonCreateNull");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1464,7 +1467,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateSphere ( Addressable newtonWorld,  float radius,  int shapeID,  Addressable offsetMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$39.NewtonCreateSphere$MH, "NewtonCreateSphere");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), radius, shapeID, offsetMatrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, radius, shapeID, offsetMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1475,7 +1478,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateBox ( Addressable newtonWorld,  float dx,  float dy,  float dz,  int shapeID,  Addressable offsetMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$39.NewtonCreateBox$MH, "NewtonCreateBox");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), dx, dy, dz, shapeID, offsetMatrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, dx, dy, dz, shapeID, offsetMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1486,7 +1489,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateCone ( Addressable newtonWorld,  float radius,  float height,  int shapeID,  Addressable offsetMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$39.NewtonCreateCone$MH, "NewtonCreateCone");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), radius, height, shapeID, offsetMatrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, radius, height, shapeID, offsetMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1497,7 +1500,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateCapsule ( Addressable newtonWorld,  float radius0,  float radius1,  float height,  int shapeID,  Addressable offsetMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$40.NewtonCreateCapsule$MH, "NewtonCreateCapsule");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), radius0, radius1, height, shapeID, offsetMatrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, radius0, radius1, height, shapeID, offsetMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1508,7 +1511,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateCylinder ( Addressable newtonWorld,  float radio0,  float radio1,  float height,  int shapeID,  Addressable offsetMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$40.NewtonCreateCylinder$MH, "NewtonCreateCylinder");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), radio0, radio1, height, shapeID, offsetMatrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, radio0, radio1, height, shapeID, offsetMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1519,7 +1522,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateChamferCylinder ( Addressable newtonWorld,  float radius,  float height,  int shapeID,  Addressable offsetMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$40.NewtonCreateChamferCylinder$MH, "NewtonCreateChamferCylinder");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), radius, height, shapeID, offsetMatrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, radius, height, shapeID, offsetMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1530,7 +1533,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateConvexHull ( Addressable newtonWorld,  int count,  Addressable vertexCloud,  int strideInBytes,  float tolerance,  int shapeID,  Addressable offsetMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$40.NewtonCreateConvexHull$MH, "NewtonCreateConvexHull");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), count, vertexCloud.address(), strideInBytes, tolerance, shapeID, offsetMatrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, count, vertexCloud, strideInBytes, tolerance, shapeID, offsetMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1541,7 +1544,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateConvexHullFromMesh ( Addressable newtonWorld,  Addressable mesh,  float tolerance,  int shapeID) {
         var mh$ = RuntimeHelper.requireNonNull(constants$40.NewtonCreateConvexHullFromMesh$MH, "NewtonCreateConvexHullFromMesh");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), mesh.address(), tolerance, shapeID);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, mesh, tolerance, shapeID);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1552,7 +1555,7 @@ public class Newton_h  {
     public static int NewtonCollisionGetMode ( Addressable convexCollision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$40.NewtonCollisionGetMode$MH, "NewtonCollisionGetMode");
         try {
-            return (int)mh$.invokeExact(convexCollision.address());
+            return (int)mh$.invokeExact(convexCollision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1563,7 +1566,7 @@ public class Newton_h  {
     public static void NewtonCollisionSetMode ( Addressable convexCollision,  int mode) {
         var mh$ = RuntimeHelper.requireNonNull(constants$41.NewtonCollisionSetMode$MH, "NewtonCollisionSetMode");
         try {
-            mh$.invokeExact(convexCollision.address(), mode);
+            mh$.invokeExact(convexCollision, mode);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1574,7 +1577,7 @@ public class Newton_h  {
     public static int NewtonConvexHullGetFaceIndices ( Addressable convexHullCollision,  int face,  Addressable faceIndices) {
         var mh$ = RuntimeHelper.requireNonNull(constants$41.NewtonConvexHullGetFaceIndices$MH, "NewtonConvexHullGetFaceIndices");
         try {
-            return (int)mh$.invokeExact(convexHullCollision.address(), face, faceIndices.address());
+            return (int)mh$.invokeExact(convexHullCollision, face, faceIndices);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1585,7 +1588,7 @@ public class Newton_h  {
     public static int NewtonConvexHullGetVertexData ( Addressable convexHullCollision,  Addressable vertexData,  Addressable strideInBytes) {
         var mh$ = RuntimeHelper.requireNonNull(constants$41.NewtonConvexHullGetVertexData$MH, "NewtonConvexHullGetVertexData");
         try {
-            return (int)mh$.invokeExact(convexHullCollision.address(), vertexData.address(), strideInBytes.address());
+            return (int)mh$.invokeExact(convexHullCollision, vertexData, strideInBytes);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1596,7 +1599,7 @@ public class Newton_h  {
     public static float NewtonConvexCollisionCalculateVolume ( Addressable convexCollision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$41.NewtonConvexCollisionCalculateVolume$MH, "NewtonConvexCollisionCalculateVolume");
         try {
-            return (float)mh$.invokeExact(convexCollision.address());
+            return (float)mh$.invokeExact(convexCollision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1607,7 +1610,7 @@ public class Newton_h  {
     public static void NewtonConvexCollisionCalculateInertialMatrix ( Addressable convexCollision,  Addressable inertia,  Addressable origin) {
         var mh$ = RuntimeHelper.requireNonNull(constants$41.NewtonConvexCollisionCalculateInertialMatrix$MH, "NewtonConvexCollisionCalculateInertialMatrix");
         try {
-            mh$.invokeExact(convexCollision.address(), inertia.address(), origin.address());
+            mh$.invokeExact(convexCollision, inertia, origin);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1618,7 +1621,7 @@ public class Newton_h  {
     public static float NewtonConvexCollisionCalculateBuoyancyVolume ( Addressable convexCollision,  Addressable matrix,  Addressable fluidPlane,  Addressable centerOfBuoyancy) {
         var mh$ = RuntimeHelper.requireNonNull(constants$41.NewtonConvexCollisionCalculateBuoyancyVolume$MH, "NewtonConvexCollisionCalculateBuoyancyVolume");
         try {
-            return (float)mh$.invokeExact(convexCollision.address(), matrix.address(), fluidPlane.address(), centerOfBuoyancy.address());
+            return (float)mh$.invokeExact(convexCollision, matrix, fluidPlane, centerOfBuoyancy);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1629,7 +1632,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCollisionDataPointer ( Addressable convexCollision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$42.NewtonCollisionDataPointer$MH, "NewtonCollisionDataPointer");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(convexCollision.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(convexCollision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1640,7 +1643,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateCompoundCollision ( Addressable newtonWorld,  int shapeID) {
         var mh$ = RuntimeHelper.requireNonNull(constants$42.NewtonCreateCompoundCollision$MH, "NewtonCreateCompoundCollision");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), shapeID);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, shapeID);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1651,7 +1654,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateCompoundCollisionFromMesh ( Addressable newtonWorld,  Addressable mesh,  float hullTolerance,  int shapeID,  int subShapeID) {
         var mh$ = RuntimeHelper.requireNonNull(constants$42.NewtonCreateCompoundCollisionFromMesh$MH, "NewtonCreateCompoundCollisionFromMesh");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), mesh.address(), hullTolerance, shapeID, subShapeID);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, mesh, hullTolerance, shapeID, subShapeID);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1662,7 +1665,7 @@ public class Newton_h  {
     public static void NewtonCompoundCollisionBeginAddRemove ( Addressable compoundCollision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$42.NewtonCompoundCollisionBeginAddRemove$MH, "NewtonCompoundCollisionBeginAddRemove");
         try {
-            mh$.invokeExact(compoundCollision.address());
+            mh$.invokeExact(compoundCollision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1673,7 +1676,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCompoundCollisionAddSubCollision ( Addressable compoundCollision,  Addressable convexCollision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$42.NewtonCompoundCollisionAddSubCollision$MH, "NewtonCompoundCollisionAddSubCollision");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(compoundCollision.address(), convexCollision.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(compoundCollision, convexCollision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1684,7 +1687,7 @@ public class Newton_h  {
     public static void NewtonCompoundCollisionRemoveSubCollision ( Addressable compoundCollision,  Addressable collisionNode) {
         var mh$ = RuntimeHelper.requireNonNull(constants$42.NewtonCompoundCollisionRemoveSubCollision$MH, "NewtonCompoundCollisionRemoveSubCollision");
         try {
-            mh$.invokeExact(compoundCollision.address(), collisionNode.address());
+            mh$.invokeExact(compoundCollision, collisionNode);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1695,7 +1698,7 @@ public class Newton_h  {
     public static void NewtonCompoundCollisionRemoveSubCollisionByIndex ( Addressable compoundCollision,  int nodeIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$43.NewtonCompoundCollisionRemoveSubCollisionByIndex$MH, "NewtonCompoundCollisionRemoveSubCollisionByIndex");
         try {
-            mh$.invokeExact(compoundCollision.address(), nodeIndex);
+            mh$.invokeExact(compoundCollision, nodeIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1706,7 +1709,7 @@ public class Newton_h  {
     public static void NewtonCompoundCollisionSetSubCollisionMatrix ( Addressable compoundCollision,  Addressable collisionNode,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$43.NewtonCompoundCollisionSetSubCollisionMatrix$MH, "NewtonCompoundCollisionSetSubCollisionMatrix");
         try {
-            mh$.invokeExact(compoundCollision.address(), collisionNode.address(), matrix.address());
+            mh$.invokeExact(compoundCollision, collisionNode, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1717,7 +1720,7 @@ public class Newton_h  {
     public static void NewtonCompoundCollisionEndAddRemove ( Addressable compoundCollision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$43.NewtonCompoundCollisionEndAddRemove$MH, "NewtonCompoundCollisionEndAddRemove");
         try {
-            mh$.invokeExact(compoundCollision.address());
+            mh$.invokeExact(compoundCollision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1728,7 +1731,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCompoundCollisionGetFirstNode ( Addressable compoundCollision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$43.NewtonCompoundCollisionGetFirstNode$MH, "NewtonCompoundCollisionGetFirstNode");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(compoundCollision.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(compoundCollision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1739,7 +1742,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCompoundCollisionGetNextNode ( Addressable compoundCollision,  Addressable collisionNode) {
         var mh$ = RuntimeHelper.requireNonNull(constants$43.NewtonCompoundCollisionGetNextNode$MH, "NewtonCompoundCollisionGetNextNode");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(compoundCollision.address(), collisionNode.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(compoundCollision, collisionNode);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1750,7 +1753,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCompoundCollisionGetNodeByIndex ( Addressable compoundCollision,  int index) {
         var mh$ = RuntimeHelper.requireNonNull(constants$43.NewtonCompoundCollisionGetNodeByIndex$MH, "NewtonCompoundCollisionGetNodeByIndex");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(compoundCollision.address(), index);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(compoundCollision, index);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1761,7 +1764,7 @@ public class Newton_h  {
     public static int NewtonCompoundCollisionGetNodeIndex ( Addressable compoundCollision,  Addressable collisionNode) {
         var mh$ = RuntimeHelper.requireNonNull(constants$44.NewtonCompoundCollisionGetNodeIndex$MH, "NewtonCompoundCollisionGetNodeIndex");
         try {
-            return (int)mh$.invokeExact(compoundCollision.address(), collisionNode.address());
+            return (int)mh$.invokeExact(compoundCollision, collisionNode);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1772,7 +1775,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCompoundCollisionGetCollisionFromNode ( Addressable compoundCollision,  Addressable collisionNode) {
         var mh$ = RuntimeHelper.requireNonNull(constants$44.NewtonCompoundCollisionGetCollisionFromNode$MH, "NewtonCompoundCollisionGetCollisionFromNode");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(compoundCollision.address(), collisionNode.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(compoundCollision, collisionNode);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1783,7 +1786,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateFracturedCompoundCollision ( Addressable newtonWorld,  Addressable solidMesh,  int shapeID,  int fracturePhysicsMaterialID,  int pointcloudCount,  Addressable vertexCloud,  int strideInBytes,  int materialID,  Addressable textureMatrix,  Addressable regenerateMainMeshCallback,  Addressable emitFracturedCompound,  Addressable emitFracfuredChunk) {
         var mh$ = RuntimeHelper.requireNonNull(constants$44.NewtonCreateFracturedCompoundCollision$MH, "NewtonCreateFracturedCompoundCollision");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), solidMesh.address(), shapeID, fracturePhysicsMaterialID, pointcloudCount, vertexCloud.address(), strideInBytes, materialID, textureMatrix.address(), regenerateMainMeshCallback.address(), emitFracturedCompound.address(), emitFracfuredChunk.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, solidMesh, shapeID, fracturePhysicsMaterialID, pointcloudCount, vertexCloud, strideInBytes, materialID, textureMatrix, regenerateMainMeshCallback, emitFracturedCompound, emitFracfuredChunk);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1794,7 +1797,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonFracturedCompoundPlaneClip ( Addressable fracturedCompound,  Addressable plane) {
         var mh$ = RuntimeHelper.requireNonNull(constants$44.NewtonFracturedCompoundPlaneClip$MH, "NewtonFracturedCompoundPlaneClip");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound.address(), plane.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound, plane);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1805,7 +1808,7 @@ public class Newton_h  {
     public static void NewtonFracturedCompoundSetCallbacks ( Addressable fracturedCompound,  Addressable regenerateMainMeshCallback,  Addressable emitFracturedCompound,  Addressable emitFracfuredChunk) {
         var mh$ = RuntimeHelper.requireNonNull(constants$44.NewtonFracturedCompoundSetCallbacks$MH, "NewtonFracturedCompoundSetCallbacks");
         try {
-            mh$.invokeExact(fracturedCompound.address(), regenerateMainMeshCallback.address(), emitFracturedCompound.address(), emitFracfuredChunk.address());
+            mh$.invokeExact(fracturedCompound, regenerateMainMeshCallback, emitFracturedCompound, emitFracfuredChunk);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1816,7 +1819,7 @@ public class Newton_h  {
     public static int NewtonFracturedCompoundIsNodeFreeToDetach ( Addressable fracturedCompound,  Addressable collisionNode) {
         var mh$ = RuntimeHelper.requireNonNull(constants$44.NewtonFracturedCompoundIsNodeFreeToDetach$MH, "NewtonFracturedCompoundIsNodeFreeToDetach");
         try {
-            return (int)mh$.invokeExact(fracturedCompound.address(), collisionNode.address());
+            return (int)mh$.invokeExact(fracturedCompound, collisionNode);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1827,7 +1830,7 @@ public class Newton_h  {
     public static int NewtonFracturedCompoundNeighborNodeList ( Addressable fracturedCompound,  Addressable collisionNode,  Addressable list,  int maxCount) {
         var mh$ = RuntimeHelper.requireNonNull(constants$45.NewtonFracturedCompoundNeighborNodeList$MH, "NewtonFracturedCompoundNeighborNodeList");
         try {
-            return (int)mh$.invokeExact(fracturedCompound.address(), collisionNode.address(), list.address(), maxCount);
+            return (int)mh$.invokeExact(fracturedCompound, collisionNode, list, maxCount);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1838,7 +1841,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonFracturedCompoundGetMainMesh ( Addressable fracturedCompound) {
         var mh$ = RuntimeHelper.requireNonNull(constants$45.NewtonFracturedCompoundGetMainMesh$MH, "NewtonFracturedCompoundGetMainMesh");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1849,7 +1852,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonFracturedCompoundGetFirstSubMesh ( Addressable fracturedCompound) {
         var mh$ = RuntimeHelper.requireNonNull(constants$45.NewtonFracturedCompoundGetFirstSubMesh$MH, "NewtonFracturedCompoundGetFirstSubMesh");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1860,7 +1863,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonFracturedCompoundGetNextSubMesh ( Addressable fracturedCompound,  Addressable subMesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$45.NewtonFracturedCompoundGetNextSubMesh$MH, "NewtonFracturedCompoundGetNextSubMesh");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound.address(), subMesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound, subMesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1871,7 +1874,7 @@ public class Newton_h  {
     public static int NewtonFracturedCompoundCollisionGetVertexCount ( Addressable fracturedCompound,  Addressable meshOwner) {
         var mh$ = RuntimeHelper.requireNonNull(constants$45.NewtonFracturedCompoundCollisionGetVertexCount$MH, "NewtonFracturedCompoundCollisionGetVertexCount");
         try {
-            return (int)mh$.invokeExact(fracturedCompound.address(), meshOwner.address());
+            return (int)mh$.invokeExact(fracturedCompound, meshOwner);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1882,7 +1885,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonFracturedCompoundCollisionGetVertexPositions ( Addressable fracturedCompound,  Addressable meshOwner) {
         var mh$ = RuntimeHelper.requireNonNull(constants$45.NewtonFracturedCompoundCollisionGetVertexPositions$MH, "NewtonFracturedCompoundCollisionGetVertexPositions");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound.address(), meshOwner.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound, meshOwner);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1893,7 +1896,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonFracturedCompoundCollisionGetVertexNormals ( Addressable fracturedCompound,  Addressable meshOwner) {
         var mh$ = RuntimeHelper.requireNonNull(constants$46.NewtonFracturedCompoundCollisionGetVertexNormals$MH, "NewtonFracturedCompoundCollisionGetVertexNormals");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound.address(), meshOwner.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound, meshOwner);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1904,7 +1907,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonFracturedCompoundCollisionGetVertexUVs ( Addressable fracturedCompound,  Addressable meshOwner) {
         var mh$ = RuntimeHelper.requireNonNull(constants$46.NewtonFracturedCompoundCollisionGetVertexUVs$MH, "NewtonFracturedCompoundCollisionGetVertexUVs");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound.address(), meshOwner.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fracturedCompound, meshOwner);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1915,7 +1918,7 @@ public class Newton_h  {
     public static int NewtonFracturedCompoundMeshPartGetIndexStream ( Addressable fracturedCompound,  Addressable meshOwner,  Addressable segment,  Addressable index) {
         var mh$ = RuntimeHelper.requireNonNull(constants$46.NewtonFracturedCompoundMeshPartGetIndexStream$MH, "NewtonFracturedCompoundMeshPartGetIndexStream");
         try {
-            return (int)mh$.invokeExact(fracturedCompound.address(), meshOwner.address(), segment.address(), index.address());
+            return (int)mh$.invokeExact(fracturedCompound, meshOwner, segment, index);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1926,7 +1929,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonFracturedCompoundMeshPartGetFirstSegment ( Addressable fractureCompoundMeshPart) {
         var mh$ = RuntimeHelper.requireNonNull(constants$46.NewtonFracturedCompoundMeshPartGetFirstSegment$MH, "NewtonFracturedCompoundMeshPartGetFirstSegment");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fractureCompoundMeshPart.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fractureCompoundMeshPart);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1937,7 +1940,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonFracturedCompoundMeshPartGetNextSegment ( Addressable fractureCompoundMeshSegment) {
         var mh$ = RuntimeHelper.requireNonNull(constants$46.NewtonFracturedCompoundMeshPartGetNextSegment$MH, "NewtonFracturedCompoundMeshPartGetNextSegment");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fractureCompoundMeshSegment.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(fractureCompoundMeshSegment);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1948,7 +1951,7 @@ public class Newton_h  {
     public static int NewtonFracturedCompoundMeshPartGetMaterial ( Addressable fractureCompoundMeshSegment) {
         var mh$ = RuntimeHelper.requireNonNull(constants$46.NewtonFracturedCompoundMeshPartGetMaterial$MH, "NewtonFracturedCompoundMeshPartGetMaterial");
         try {
-            return (int)mh$.invokeExact(fractureCompoundMeshSegment.address());
+            return (int)mh$.invokeExact(fractureCompoundMeshSegment);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1959,7 +1962,7 @@ public class Newton_h  {
     public static int NewtonFracturedCompoundMeshPartGetIndexCount ( Addressable fractureCompoundMeshSegment) {
         var mh$ = RuntimeHelper.requireNonNull(constants$47.NewtonFracturedCompoundMeshPartGetIndexCount$MH, "NewtonFracturedCompoundMeshPartGetIndexCount");
         try {
-            return (int)mh$.invokeExact(fractureCompoundMeshSegment.address());
+            return (int)mh$.invokeExact(fractureCompoundMeshSegment);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1970,7 +1973,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateSceneCollision ( Addressable newtonWorld,  int shapeID) {
         var mh$ = RuntimeHelper.requireNonNull(constants$47.NewtonCreateSceneCollision$MH, "NewtonCreateSceneCollision");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), shapeID);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, shapeID);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1981,7 +1984,7 @@ public class Newton_h  {
     public static void NewtonSceneCollisionBeginAddRemove ( Addressable sceneCollision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$47.NewtonSceneCollisionBeginAddRemove$MH, "NewtonSceneCollisionBeginAddRemove");
         try {
-            mh$.invokeExact(sceneCollision.address());
+            mh$.invokeExact(sceneCollision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -1992,7 +1995,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonSceneCollisionAddSubCollision ( Addressable sceneCollision,  Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$47.NewtonSceneCollisionAddSubCollision$MH, "NewtonSceneCollisionAddSubCollision");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(sceneCollision.address(), collision.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(sceneCollision, collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2003,7 +2006,7 @@ public class Newton_h  {
     public static void NewtonSceneCollisionRemoveSubCollision ( Addressable compoundCollision,  Addressable collisionNode) {
         var mh$ = RuntimeHelper.requireNonNull(constants$47.NewtonSceneCollisionRemoveSubCollision$MH, "NewtonSceneCollisionRemoveSubCollision");
         try {
-            mh$.invokeExact(compoundCollision.address(), collisionNode.address());
+            mh$.invokeExact(compoundCollision, collisionNode);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2014,7 +2017,7 @@ public class Newton_h  {
     public static void NewtonSceneCollisionRemoveSubCollisionByIndex ( Addressable sceneCollision,  int nodeIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$47.NewtonSceneCollisionRemoveSubCollisionByIndex$MH, "NewtonSceneCollisionRemoveSubCollisionByIndex");
         try {
-            mh$.invokeExact(sceneCollision.address(), nodeIndex);
+            mh$.invokeExact(sceneCollision, nodeIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2025,7 +2028,7 @@ public class Newton_h  {
     public static void NewtonSceneCollisionSetSubCollisionMatrix ( Addressable sceneCollision,  Addressable collisionNode,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$48.NewtonSceneCollisionSetSubCollisionMatrix$MH, "NewtonSceneCollisionSetSubCollisionMatrix");
         try {
-            mh$.invokeExact(sceneCollision.address(), collisionNode.address(), matrix.address());
+            mh$.invokeExact(sceneCollision, collisionNode, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2036,7 +2039,7 @@ public class Newton_h  {
     public static void NewtonSceneCollisionEndAddRemove ( Addressable sceneCollision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$48.NewtonSceneCollisionEndAddRemove$MH, "NewtonSceneCollisionEndAddRemove");
         try {
-            mh$.invokeExact(sceneCollision.address());
+            mh$.invokeExact(sceneCollision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2047,7 +2050,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonSceneCollisionGetFirstNode ( Addressable sceneCollision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$48.NewtonSceneCollisionGetFirstNode$MH, "NewtonSceneCollisionGetFirstNode");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(sceneCollision.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(sceneCollision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2058,7 +2061,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonSceneCollisionGetNextNode ( Addressable sceneCollision,  Addressable collisionNode) {
         var mh$ = RuntimeHelper.requireNonNull(constants$48.NewtonSceneCollisionGetNextNode$MH, "NewtonSceneCollisionGetNextNode");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(sceneCollision.address(), collisionNode.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(sceneCollision, collisionNode);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2069,7 +2072,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonSceneCollisionGetNodeByIndex ( Addressable sceneCollision,  int index) {
         var mh$ = RuntimeHelper.requireNonNull(constants$48.NewtonSceneCollisionGetNodeByIndex$MH, "NewtonSceneCollisionGetNodeByIndex");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(sceneCollision.address(), index);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(sceneCollision, index);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2080,7 +2083,7 @@ public class Newton_h  {
     public static int NewtonSceneCollisionGetNodeIndex ( Addressable sceneCollision,  Addressable collisionNode) {
         var mh$ = RuntimeHelper.requireNonNull(constants$48.NewtonSceneCollisionGetNodeIndex$MH, "NewtonSceneCollisionGetNodeIndex");
         try {
-            return (int)mh$.invokeExact(sceneCollision.address(), collisionNode.address());
+            return (int)mh$.invokeExact(sceneCollision, collisionNode);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2091,7 +2094,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonSceneCollisionGetCollisionFromNode ( Addressable sceneCollision,  Addressable collisionNode) {
         var mh$ = RuntimeHelper.requireNonNull(constants$49.NewtonSceneCollisionGetCollisionFromNode$MH, "NewtonSceneCollisionGetCollisionFromNode");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(sceneCollision.address(), collisionNode.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(sceneCollision, collisionNode);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2102,7 +2105,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateUserMeshCollision ( Addressable newtonWorld,  Addressable minBox,  Addressable maxBox,  Addressable userData,  Addressable collideCallback,  Addressable rayHitCallback,  Addressable destroyCallback,  Addressable getInfoCallback,  Addressable getLocalAABBCallback,  Addressable facesInAABBCallback,  Addressable serializeCallback,  int shapeID) {
         var mh$ = RuntimeHelper.requireNonNull(constants$49.NewtonCreateUserMeshCollision$MH, "NewtonCreateUserMeshCollision");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), minBox.address(), maxBox.address(), userData.address(), collideCallback.address(), rayHitCallback.address(), destroyCallback.address(), getInfoCallback.address(), getLocalAABBCallback.address(), facesInAABBCallback.address(), serializeCallback.address(), shapeID);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, minBox, maxBox, userData, collideCallback, rayHitCallback, destroyCallback, getInfoCallback, getLocalAABBCallback, facesInAABBCallback, serializeCallback, shapeID);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2113,7 +2116,7 @@ public class Newton_h  {
     public static int NewtonUserMeshCollisionContinuousOverlapTest ( Addressable collideDescData,  Addressable continueCollisionHandle,  Addressable minAabb,  Addressable maxAabb) {
         var mh$ = RuntimeHelper.requireNonNull(constants$49.NewtonUserMeshCollisionContinuousOverlapTest$MH, "NewtonUserMeshCollisionContinuousOverlapTest");
         try {
-            return (int)mh$.invokeExact(collideDescData.address(), continueCollisionHandle.address(), minAabb.address(), maxAabb.address());
+            return (int)mh$.invokeExact(collideDescData, continueCollisionHandle, minAabb, maxAabb);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2124,7 +2127,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateCollisionFromSerialization ( Addressable newtonWorld,  Addressable deserializeFunction,  Addressable serializeHandle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$49.NewtonCreateCollisionFromSerialization$MH, "NewtonCreateCollisionFromSerialization");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), deserializeFunction.address(), serializeHandle.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, deserializeFunction, serializeHandle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2135,7 +2138,7 @@ public class Newton_h  {
     public static void NewtonCollisionSerialize ( Addressable newtonWorld,  Addressable collision,  Addressable serializeFunction,  Addressable serializeHandle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$49.NewtonCollisionSerialize$MH, "NewtonCollisionSerialize");
         try {
-            mh$.invokeExact(newtonWorld.address(), collision.address(), serializeFunction.address(), serializeHandle.address());
+            mh$.invokeExact(newtonWorld, collision, serializeFunction, serializeHandle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2146,7 +2149,7 @@ public class Newton_h  {
     public static void NewtonCollisionGetInfo ( Addressable collision,  Addressable collisionInfo) {
         var mh$ = RuntimeHelper.requireNonNull(constants$49.NewtonCollisionGetInfo$MH, "NewtonCollisionGetInfo");
         try {
-            mh$.invokeExact(collision.address(), collisionInfo.address());
+            mh$.invokeExact(collision, collisionInfo);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2157,7 +2160,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateHeightFieldCollision ( Addressable newtonWorld,  int width,  int height,  int gridsDiagonals,  int elevationdatType,  Addressable elevationMap,  Addressable attributeMap,  float verticalScale,  float horizontalScale_x,  float horizontalScale_z,  int shapeID) {
         var mh$ = RuntimeHelper.requireNonNull(constants$50.NewtonCreateHeightFieldCollision$MH, "NewtonCreateHeightFieldCollision");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), width, height, gridsDiagonals, elevationdatType, elevationMap.address(), attributeMap.address(), verticalScale, horizontalScale_x, horizontalScale_z, shapeID);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, width, height, gridsDiagonals, elevationdatType, elevationMap, attributeMap, verticalScale, horizontalScale_x, horizontalScale_z, shapeID);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2168,7 +2171,7 @@ public class Newton_h  {
     public static void NewtonHeightFieldSetUserRayCastCallback ( Addressable heightfieldCollision,  Addressable rayHitCallback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$50.NewtonHeightFieldSetUserRayCastCallback$MH, "NewtonHeightFieldSetUserRayCastCallback");
         try {
-            mh$.invokeExact(heightfieldCollision.address(), rayHitCallback.address());
+            mh$.invokeExact(heightfieldCollision, rayHitCallback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2179,7 +2182,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateTreeCollision ( Addressable newtonWorld,  int shapeID) {
         var mh$ = RuntimeHelper.requireNonNull(constants$50.NewtonCreateTreeCollision$MH, "NewtonCreateTreeCollision");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), shapeID);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, shapeID);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2190,7 +2193,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateTreeCollisionFromMesh ( Addressable newtonWorld,  Addressable mesh,  int shapeID) {
         var mh$ = RuntimeHelper.requireNonNull(constants$50.NewtonCreateTreeCollisionFromMesh$MH, "NewtonCreateTreeCollisionFromMesh");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), mesh.address(), shapeID);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, mesh, shapeID);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2201,7 +2204,7 @@ public class Newton_h  {
     public static void NewtonTreeCollisionSetUserRayCastCallback ( Addressable treeCollision,  Addressable rayHitCallback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$50.NewtonTreeCollisionSetUserRayCastCallback$MH, "NewtonTreeCollisionSetUserRayCastCallback");
         try {
-            mh$.invokeExact(treeCollision.address(), rayHitCallback.address());
+            mh$.invokeExact(treeCollision, rayHitCallback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2212,7 +2215,7 @@ public class Newton_h  {
     public static void NewtonTreeCollisionBeginBuild ( Addressable treeCollision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$50.NewtonTreeCollisionBeginBuild$MH, "NewtonTreeCollisionBeginBuild");
         try {
-            mh$.invokeExact(treeCollision.address());
+            mh$.invokeExact(treeCollision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2223,7 +2226,7 @@ public class Newton_h  {
     public static void NewtonTreeCollisionAddFace ( Addressable treeCollision,  int vertexCount,  Addressable vertexPtr,  int strideInBytes,  int faceAttribute) {
         var mh$ = RuntimeHelper.requireNonNull(constants$51.NewtonTreeCollisionAddFace$MH, "NewtonTreeCollisionAddFace");
         try {
-            mh$.invokeExact(treeCollision.address(), vertexCount, vertexPtr.address(), strideInBytes, faceAttribute);
+            mh$.invokeExact(treeCollision, vertexCount, vertexPtr, strideInBytes, faceAttribute);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2234,7 +2237,7 @@ public class Newton_h  {
     public static void NewtonTreeCollisionEndBuild ( Addressable treeCollision,  int optimize) {
         var mh$ = RuntimeHelper.requireNonNull(constants$51.NewtonTreeCollisionEndBuild$MH, "NewtonTreeCollisionEndBuild");
         try {
-            mh$.invokeExact(treeCollision.address(), optimize);
+            mh$.invokeExact(treeCollision, optimize);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2245,7 +2248,7 @@ public class Newton_h  {
     public static int NewtonTreeCollisionGetFaceAttribute ( Addressable treeCollision,  Addressable faceIndexArray,  int indexCount) {
         var mh$ = RuntimeHelper.requireNonNull(constants$51.NewtonTreeCollisionGetFaceAttribute$MH, "NewtonTreeCollisionGetFaceAttribute");
         try {
-            return (int)mh$.invokeExact(treeCollision.address(), faceIndexArray.address(), indexCount);
+            return (int)mh$.invokeExact(treeCollision, faceIndexArray, indexCount);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2256,7 +2259,7 @@ public class Newton_h  {
     public static void NewtonTreeCollisionSetFaceAttribute ( Addressable treeCollision,  Addressable faceIndexArray,  int indexCount,  int attribute) {
         var mh$ = RuntimeHelper.requireNonNull(constants$51.NewtonTreeCollisionSetFaceAttribute$MH, "NewtonTreeCollisionSetFaceAttribute");
         try {
-            mh$.invokeExact(treeCollision.address(), faceIndexArray.address(), indexCount, attribute);
+            mh$.invokeExact(treeCollision, faceIndexArray, indexCount, attribute);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2267,7 +2270,7 @@ public class Newton_h  {
     public static void NewtonTreeCollisionForEachFace ( Addressable treeCollision,  Addressable forEachFaceCallback,  Addressable context) {
         var mh$ = RuntimeHelper.requireNonNull(constants$51.NewtonTreeCollisionForEachFace$MH, "NewtonTreeCollisionForEachFace");
         try {
-            mh$.invokeExact(treeCollision.address(), forEachFaceCallback.address(), context.address());
+            mh$.invokeExact(treeCollision, forEachFaceCallback, context);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2278,7 +2281,7 @@ public class Newton_h  {
     public static int NewtonTreeCollisionGetVertexListTriangleListInAABB ( Addressable treeCollision,  Addressable p0,  Addressable p1,  Addressable vertexArray,  Addressable vertexCount,  Addressable vertexStrideInBytes,  Addressable indexList,  int maxIndexCount,  Addressable faceAttribute) {
         var mh$ = RuntimeHelper.requireNonNull(constants$51.NewtonTreeCollisionGetVertexListTriangleListInAABB$MH, "NewtonTreeCollisionGetVertexListTriangleListInAABB");
         try {
-            return (int)mh$.invokeExact(treeCollision.address(), p0.address(), p1.address(), vertexArray.address(), vertexCount.address(), vertexStrideInBytes.address(), indexList.address(), maxIndexCount, faceAttribute.address());
+            return (int)mh$.invokeExact(treeCollision, p0, p1, vertexArray, vertexCount, vertexStrideInBytes, indexList, maxIndexCount, faceAttribute);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2289,7 +2292,7 @@ public class Newton_h  {
     public static void NewtonStaticCollisionSetDebugCallback ( Addressable staticCollision,  Addressable userCallback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$52.NewtonStaticCollisionSetDebugCallback$MH, "NewtonStaticCollisionSetDebugCallback");
         try {
-            mh$.invokeExact(staticCollision.address(), userCallback.address());
+            mh$.invokeExact(staticCollision, userCallback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2300,7 +2303,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCollisionCreateInstance ( Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$52.NewtonCollisionCreateInstance$MH, "NewtonCollisionCreateInstance");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(collision.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2311,7 +2314,7 @@ public class Newton_h  {
     public static int NewtonCollisionGetType ( Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$52.NewtonCollisionGetType$MH, "NewtonCollisionGetType");
         try {
-            return (int)mh$.invokeExact(collision.address());
+            return (int)mh$.invokeExact(collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2322,7 +2325,7 @@ public class Newton_h  {
     public static int NewtonCollisionIsConvexShape ( Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$52.NewtonCollisionIsConvexShape$MH, "NewtonCollisionIsConvexShape");
         try {
-            return (int)mh$.invokeExact(collision.address());
+            return (int)mh$.invokeExact(collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2333,7 +2336,7 @@ public class Newton_h  {
     public static int NewtonCollisionIsStaticShape ( Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$52.NewtonCollisionIsStaticShape$MH, "NewtonCollisionIsStaticShape");
         try {
-            return (int)mh$.invokeExact(collision.address());
+            return (int)mh$.invokeExact(collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2344,7 +2347,7 @@ public class Newton_h  {
     public static void NewtonCollisionSetUserData ( Addressable collision,  Addressable userData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$52.NewtonCollisionSetUserData$MH, "NewtonCollisionSetUserData");
         try {
-            mh$.invokeExact(collision.address(), userData.address());
+            mh$.invokeExact(collision, userData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2355,7 +2358,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCollisionGetUserData ( Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$53.NewtonCollisionGetUserData$MH, "NewtonCollisionGetUserData");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(collision.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2366,7 +2369,7 @@ public class Newton_h  {
     public static void NewtonCollisionSetUserID ( Addressable collision,  long id) {
         var mh$ = RuntimeHelper.requireNonNull(constants$53.NewtonCollisionSetUserID$MH, "NewtonCollisionSetUserID");
         try {
-            mh$.invokeExact(collision.address(), id);
+            mh$.invokeExact(collision, id);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2377,7 +2380,7 @@ public class Newton_h  {
     public static long NewtonCollisionGetUserID ( Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$53.NewtonCollisionGetUserID$MH, "NewtonCollisionGetUserID");
         try {
-            return (long)mh$.invokeExact(collision.address());
+            return (long)mh$.invokeExact(collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2388,7 +2391,7 @@ public class Newton_h  {
     public static void NewtonCollisionGetMaterial ( Addressable collision,  Addressable userData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$53.NewtonCollisionGetMaterial$MH, "NewtonCollisionGetMaterial");
         try {
-            mh$.invokeExact(collision.address(), userData.address());
+            mh$.invokeExact(collision, userData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2399,7 +2402,7 @@ public class Newton_h  {
     public static void NewtonCollisionSetMaterial ( Addressable collision,  Addressable userData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$53.NewtonCollisionSetMaterial$MH, "NewtonCollisionSetMaterial");
         try {
-            mh$.invokeExact(collision.address(), userData.address());
+            mh$.invokeExact(collision, userData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2410,7 +2413,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCollisionGetSubCollisionHandle ( Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$53.NewtonCollisionGetSubCollisionHandle$MH, "NewtonCollisionGetSubCollisionHandle");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(collision.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2421,7 +2424,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCollisionGetParentInstance ( Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$54.NewtonCollisionGetParentInstance$MH, "NewtonCollisionGetParentInstance");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(collision.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2432,7 +2435,7 @@ public class Newton_h  {
     public static void NewtonCollisionSetMatrix ( Addressable collision,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$54.NewtonCollisionSetMatrix$MH, "NewtonCollisionSetMatrix");
         try {
-            mh$.invokeExact(collision.address(), matrix.address());
+            mh$.invokeExact(collision, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2443,7 +2446,7 @@ public class Newton_h  {
     public static void NewtonCollisionGetMatrix ( Addressable collision,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$54.NewtonCollisionGetMatrix$MH, "NewtonCollisionGetMatrix");
         try {
-            mh$.invokeExact(collision.address(), matrix.address());
+            mh$.invokeExact(collision, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2454,7 +2457,7 @@ public class Newton_h  {
     public static void NewtonCollisionSetScale ( Addressable collision,  float scaleX,  float scaleY,  float scaleZ) {
         var mh$ = RuntimeHelper.requireNonNull(constants$54.NewtonCollisionSetScale$MH, "NewtonCollisionSetScale");
         try {
-            mh$.invokeExact(collision.address(), scaleX, scaleY, scaleZ);
+            mh$.invokeExact(collision, scaleX, scaleY, scaleZ);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2465,7 +2468,7 @@ public class Newton_h  {
     public static void NewtonCollisionGetScale ( Addressable collision,  Addressable scaleX,  Addressable scaleY,  Addressable scaleZ) {
         var mh$ = RuntimeHelper.requireNonNull(constants$54.NewtonCollisionGetScale$MH, "NewtonCollisionGetScale");
         try {
-            mh$.invokeExact(collision.address(), scaleX.address(), scaleY.address(), scaleZ.address());
+            mh$.invokeExact(collision, scaleX, scaleY, scaleZ);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2476,7 +2479,7 @@ public class Newton_h  {
     public static void NewtonDestroyCollision ( Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$54.NewtonDestroyCollision$MH, "NewtonDestroyCollision");
         try {
-            mh$.invokeExact(collision.address());
+            mh$.invokeExact(collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2487,7 +2490,7 @@ public class Newton_h  {
     public static float NewtonCollisionGetSkinThickness ( Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$55.NewtonCollisionGetSkinThickness$MH, "NewtonCollisionGetSkinThickness");
         try {
-            return (float)mh$.invokeExact(collision.address());
+            return (float)mh$.invokeExact(collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2498,7 +2501,7 @@ public class Newton_h  {
     public static void NewtonCollisionSetSkinThickness ( Addressable collision,  float thickness) {
         var mh$ = RuntimeHelper.requireNonNull(constants$55.NewtonCollisionSetSkinThickness$MH, "NewtonCollisionSetSkinThickness");
         try {
-            mh$.invokeExact(collision.address(), thickness);
+            mh$.invokeExact(collision, thickness);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2509,7 +2512,7 @@ public class Newton_h  {
     public static int NewtonCollisionIntersectionTest ( Addressable newtonWorld,  Addressable collisionA,  Addressable matrixA,  Addressable collisionB,  Addressable matrixB,  int threadIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$55.NewtonCollisionIntersectionTest$MH, "NewtonCollisionIntersectionTest");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address(), collisionA.address(), matrixA.address(), collisionB.address(), matrixB.address(), threadIndex);
+            return (int)mh$.invokeExact(newtonWorld, collisionA, matrixA, collisionB, matrixB, threadIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2520,7 +2523,7 @@ public class Newton_h  {
     public static int NewtonCollisionPointDistance ( Addressable newtonWorld,  Addressable point,  Addressable collision,  Addressable matrix,  Addressable contact,  Addressable normal,  int threadIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$55.NewtonCollisionPointDistance$MH, "NewtonCollisionPointDistance");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address(), point.address(), collision.address(), matrix.address(), contact.address(), normal.address(), threadIndex);
+            return (int)mh$.invokeExact(newtonWorld, point, collision, matrix, contact, normal, threadIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2531,7 +2534,7 @@ public class Newton_h  {
     public static int NewtonCollisionClosestPoint ( Addressable newtonWorld,  Addressable collisionA,  Addressable matrixA,  Addressable collisionB,  Addressable matrixB,  Addressable contactA,  Addressable contactB,  Addressable normalAB,  int threadIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$55.NewtonCollisionClosestPoint$MH, "NewtonCollisionClosestPoint");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address(), collisionA.address(), matrixA.address(), collisionB.address(), matrixB.address(), contactA.address(), contactB.address(), normalAB.address(), threadIndex);
+            return (int)mh$.invokeExact(newtonWorld, collisionA, matrixA, collisionB, matrixB, contactA, contactB, normalAB, threadIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2542,7 +2545,7 @@ public class Newton_h  {
     public static int NewtonCollisionCollide ( Addressable newtonWorld,  int maxSize,  Addressable collisionA,  Addressable matrixA,  Addressable collisionB,  Addressable matrixB,  Addressable contacts,  Addressable normals,  Addressable penetration,  Addressable attributeA,  Addressable attributeB,  int threadIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$55.NewtonCollisionCollide$MH, "NewtonCollisionCollide");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address(), maxSize, collisionA.address(), matrixA.address(), collisionB.address(), matrixB.address(), contacts.address(), normals.address(), penetration.address(), attributeA.address(), attributeB.address(), threadIndex);
+            return (int)mh$.invokeExact(newtonWorld, maxSize, collisionA, matrixA, collisionB, matrixB, contacts, normals, penetration, attributeA, attributeB, threadIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2553,7 +2556,7 @@ public class Newton_h  {
     public static int NewtonCollisionCollideContinue ( Addressable newtonWorld,  int maxSize,  float timestep,  Addressable collisionA,  Addressable matrixA,  Addressable velocA,  Addressable omegaA,  Addressable collisionB,  Addressable matrixB,  Addressable velocB,  Addressable omegaB,  Addressable timeOfImpact,  Addressable contacts,  Addressable normals,  Addressable penetration,  Addressable attributeA,  Addressable attributeB,  int threadIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$56.NewtonCollisionCollideContinue$MH, "NewtonCollisionCollideContinue");
         try {
-            return (int)mh$.invokeExact(newtonWorld.address(), maxSize, timestep, collisionA.address(), matrixA.address(), velocA.address(), omegaA.address(), collisionB.address(), matrixB.address(), velocB.address(), omegaB.address(), timeOfImpact.address(), contacts.address(), normals.address(), penetration.address(), attributeA.address(), attributeB.address(), threadIndex);
+            return (int)mh$.invokeExact(newtonWorld, maxSize, timestep, collisionA, matrixA, velocA, omegaA, collisionB, matrixB, velocB, omegaB, timeOfImpact, contacts, normals, penetration, attributeA, attributeB, threadIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2564,7 +2567,7 @@ public class Newton_h  {
     public static void NewtonCollisionSupportVertex ( Addressable collision,  Addressable dir,  Addressable vertex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$56.NewtonCollisionSupportVertex$MH, "NewtonCollisionSupportVertex");
         try {
-            mh$.invokeExact(collision.address(), dir.address(), vertex.address());
+            mh$.invokeExact(collision, dir, vertex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2575,7 +2578,7 @@ public class Newton_h  {
     public static float NewtonCollisionRayCast ( Addressable collision,  Addressable p0,  Addressable p1,  Addressable normal,  Addressable attribute) {
         var mh$ = RuntimeHelper.requireNonNull(constants$56.NewtonCollisionRayCast$MH, "NewtonCollisionRayCast");
         try {
-            return (float)mh$.invokeExact(collision.address(), p0.address(), p1.address(), normal.address(), attribute.address());
+            return (float)mh$.invokeExact(collision, p0, p1, normal, attribute);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2586,7 +2589,7 @@ public class Newton_h  {
     public static void NewtonCollisionCalculateAABB ( Addressable collision,  Addressable matrix,  Addressable p0,  Addressable p1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$56.NewtonCollisionCalculateAABB$MH, "NewtonCollisionCalculateAABB");
         try {
-            mh$.invokeExact(collision.address(), matrix.address(), p0.address(), p1.address());
+            mh$.invokeExact(collision, matrix, p0, p1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2597,7 +2600,7 @@ public class Newton_h  {
     public static void NewtonCollisionForEachPolygonDo ( Addressable collision,  Addressable matrix,  Addressable callback,  Addressable userData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$56.NewtonCollisionForEachPolygonDo$MH, "NewtonCollisionForEachPolygonDo");
         try {
-            mh$.invokeExact(collision.address(), matrix.address(), callback.address(), userData.address());
+            mh$.invokeExact(collision, matrix, callback, userData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2608,7 +2611,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCollisionAggregateCreate ( Addressable world) {
         var mh$ = RuntimeHelper.requireNonNull(constants$56.NewtonCollisionAggregateCreate$MH, "NewtonCollisionAggregateCreate");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(world.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(world);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2619,7 +2622,7 @@ public class Newton_h  {
     public static void NewtonCollisionAggregateDestroy ( Addressable aggregate) {
         var mh$ = RuntimeHelper.requireNonNull(constants$57.NewtonCollisionAggregateDestroy$MH, "NewtonCollisionAggregateDestroy");
         try {
-            mh$.invokeExact(aggregate.address());
+            mh$.invokeExact(aggregate);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2630,7 +2633,7 @@ public class Newton_h  {
     public static void NewtonCollisionAggregateAddBody ( Addressable aggregate,  Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$57.NewtonCollisionAggregateAddBody$MH, "NewtonCollisionAggregateAddBody");
         try {
-            mh$.invokeExact(aggregate.address(), body.address());
+            mh$.invokeExact(aggregate, body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2641,7 +2644,7 @@ public class Newton_h  {
     public static void NewtonCollisionAggregateRemoveBody ( Addressable aggregate,  Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$57.NewtonCollisionAggregateRemoveBody$MH, "NewtonCollisionAggregateRemoveBody");
         try {
-            mh$.invokeExact(aggregate.address(), body.address());
+            mh$.invokeExact(aggregate, body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2652,7 +2655,7 @@ public class Newton_h  {
     public static int NewtonCollisionAggregateGetSelfCollision ( Addressable aggregate) {
         var mh$ = RuntimeHelper.requireNonNull(constants$57.NewtonCollisionAggregateGetSelfCollision$MH, "NewtonCollisionAggregateGetSelfCollision");
         try {
-            return (int)mh$.invokeExact(aggregate.address());
+            return (int)mh$.invokeExact(aggregate);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2663,7 +2666,7 @@ public class Newton_h  {
     public static void NewtonCollisionAggregateSetSelfCollision ( Addressable aggregate,  int state) {
         var mh$ = RuntimeHelper.requireNonNull(constants$57.NewtonCollisionAggregateSetSelfCollision$MH, "NewtonCollisionAggregateSetSelfCollision");
         try {
-            mh$.invokeExact(aggregate.address(), state);
+            mh$.invokeExact(aggregate, state);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2674,7 +2677,7 @@ public class Newton_h  {
     public static void NewtonSetEulerAngle ( Addressable eulersAngles,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$57.NewtonSetEulerAngle$MH, "NewtonSetEulerAngle");
         try {
-            mh$.invokeExact(eulersAngles.address(), matrix.address());
+            mh$.invokeExact(eulersAngles, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2685,7 +2688,7 @@ public class Newton_h  {
     public static void NewtonGetEulerAngle ( Addressable matrix,  Addressable eulersAngles0,  Addressable eulersAngles1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$58.NewtonGetEulerAngle$MH, "NewtonGetEulerAngle");
         try {
-            mh$.invokeExact(matrix.address(), eulersAngles0.address(), eulersAngles1.address());
+            mh$.invokeExact(matrix, eulersAngles0, eulersAngles1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2707,7 +2710,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateDynamicBody ( Addressable newtonWorld,  Addressable collision,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$58.NewtonCreateDynamicBody$MH, "NewtonCreateDynamicBody");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), collision.address(), matrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, collision, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2718,7 +2721,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateKinematicBody ( Addressable newtonWorld,  Addressable collision,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$58.NewtonCreateKinematicBody$MH, "NewtonCreateKinematicBody");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), collision.address(), matrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, collision, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2729,7 +2732,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateAsymetricDynamicBody ( Addressable newtonWorld,  Addressable collision,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$58.NewtonCreateAsymetricDynamicBody$MH, "NewtonCreateAsymetricDynamicBody");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), collision.address(), matrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, collision, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2740,7 +2743,7 @@ public class Newton_h  {
     public static void NewtonDestroyBody ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$58.NewtonDestroyBody$MH, "NewtonDestroyBody");
         try {
-            mh$.invokeExact(body.address());
+            mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2751,7 +2754,7 @@ public class Newton_h  {
     public static int NewtonBodyGetSimulationState ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$59.NewtonBodyGetSimulationState$MH, "NewtonBodyGetSimulationState");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2762,7 +2765,7 @@ public class Newton_h  {
     public static void NewtonBodySetSimulationState ( Addressable bodyPtr,  int state) {
         var mh$ = RuntimeHelper.requireNonNull(constants$59.NewtonBodySetSimulationState$MH, "NewtonBodySetSimulationState");
         try {
-            mh$.invokeExact(bodyPtr.address(), state);
+            mh$.invokeExact(bodyPtr, state);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2773,7 +2776,7 @@ public class Newton_h  {
     public static int NewtonBodyGetType ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$59.NewtonBodyGetType$MH, "NewtonBodyGetType");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2784,7 +2787,7 @@ public class Newton_h  {
     public static int NewtonBodyGetCollidable ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$59.NewtonBodyGetCollidable$MH, "NewtonBodyGetCollidable");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2795,7 +2798,7 @@ public class Newton_h  {
     public static void NewtonBodySetCollidable ( Addressable body,  int collidableState) {
         var mh$ = RuntimeHelper.requireNonNull(constants$59.NewtonBodySetCollidable$MH, "NewtonBodySetCollidable");
         try {
-            mh$.invokeExact(body.address(), collidableState);
+            mh$.invokeExact(body, collidableState);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2806,7 +2809,7 @@ public class Newton_h  {
     public static void NewtonBodyAddForce ( Addressable body,  Addressable force) {
         var mh$ = RuntimeHelper.requireNonNull(constants$59.NewtonBodyAddForce$MH, "NewtonBodyAddForce");
         try {
-            mh$.invokeExact(body.address(), force.address());
+            mh$.invokeExact(body, force);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2817,7 +2820,7 @@ public class Newton_h  {
     public static void NewtonBodyAddTorque ( Addressable body,  Addressable torque) {
         var mh$ = RuntimeHelper.requireNonNull(constants$60.NewtonBodyAddTorque$MH, "NewtonBodyAddTorque");
         try {
-            mh$.invokeExact(body.address(), torque.address());
+            mh$.invokeExact(body, torque);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2828,7 +2831,7 @@ public class Newton_h  {
     public static void NewtonBodySetCentreOfMass ( Addressable body,  Addressable com) {
         var mh$ = RuntimeHelper.requireNonNull(constants$60.NewtonBodySetCentreOfMass$MH, "NewtonBodySetCentreOfMass");
         try {
-            mh$.invokeExact(body.address(), com.address());
+            mh$.invokeExact(body, com);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2839,7 +2842,7 @@ public class Newton_h  {
     public static void NewtonBodySetMassMatrix ( Addressable body,  float mass,  float Ixx,  float Iyy,  float Izz) {
         var mh$ = RuntimeHelper.requireNonNull(constants$60.NewtonBodySetMassMatrix$MH, "NewtonBodySetMassMatrix");
         try {
-            mh$.invokeExact(body.address(), mass, Ixx, Iyy, Izz);
+            mh$.invokeExact(body, mass, Ixx, Iyy, Izz);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2850,7 +2853,7 @@ public class Newton_h  {
     public static void NewtonBodySetFullMassMatrix ( Addressable body,  float mass,  Addressable inertiaMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$60.NewtonBodySetFullMassMatrix$MH, "NewtonBodySetFullMassMatrix");
         try {
-            mh$.invokeExact(body.address(), mass, inertiaMatrix.address());
+            mh$.invokeExact(body, mass, inertiaMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2861,7 +2864,7 @@ public class Newton_h  {
     public static void NewtonBodySetMassProperties ( Addressable body,  float mass,  Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$60.NewtonBodySetMassProperties$MH, "NewtonBodySetMassProperties");
         try {
-            mh$.invokeExact(body.address(), mass, collision.address());
+            mh$.invokeExact(body, mass, collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2872,7 +2875,7 @@ public class Newton_h  {
     public static void NewtonBodySetMatrix ( Addressable body,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$60.NewtonBodySetMatrix$MH, "NewtonBodySetMatrix");
         try {
-            mh$.invokeExact(body.address(), matrix.address());
+            mh$.invokeExact(body, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2883,7 +2886,7 @@ public class Newton_h  {
     public static void NewtonBodySetMatrixNoSleep ( Addressable body,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$61.NewtonBodySetMatrixNoSleep$MH, "NewtonBodySetMatrixNoSleep");
         try {
-            mh$.invokeExact(body.address(), matrix.address());
+            mh$.invokeExact(body, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2894,7 +2897,7 @@ public class Newton_h  {
     public static void NewtonBodySetMatrixRecursive ( Addressable body,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$61.NewtonBodySetMatrixRecursive$MH, "NewtonBodySetMatrixRecursive");
         try {
-            mh$.invokeExact(body.address(), matrix.address());
+            mh$.invokeExact(body, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2905,7 +2908,7 @@ public class Newton_h  {
     public static void NewtonBodySetMaterialGroupID ( Addressable body,  int id) {
         var mh$ = RuntimeHelper.requireNonNull(constants$61.NewtonBodySetMaterialGroupID$MH, "NewtonBodySetMaterialGroupID");
         try {
-            mh$.invokeExact(body.address(), id);
+            mh$.invokeExact(body, id);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2916,7 +2919,7 @@ public class Newton_h  {
     public static void NewtonBodySetContinuousCollisionMode ( Addressable body,  int state) {
         var mh$ = RuntimeHelper.requireNonNull(constants$61.NewtonBodySetContinuousCollisionMode$MH, "NewtonBodySetContinuousCollisionMode");
         try {
-            mh$.invokeExact(body.address(), state);
+            mh$.invokeExact(body, state);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2927,7 +2930,7 @@ public class Newton_h  {
     public static void NewtonBodySetJointRecursiveCollision ( Addressable body,  int state) {
         var mh$ = RuntimeHelper.requireNonNull(constants$61.NewtonBodySetJointRecursiveCollision$MH, "NewtonBodySetJointRecursiveCollision");
         try {
-            mh$.invokeExact(body.address(), state);
+            mh$.invokeExact(body, state);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2938,7 +2941,7 @@ public class Newton_h  {
     public static void NewtonBodySetOmega ( Addressable body,  Addressable omega) {
         var mh$ = RuntimeHelper.requireNonNull(constants$61.NewtonBodySetOmega$MH, "NewtonBodySetOmega");
         try {
-            mh$.invokeExact(body.address(), omega.address());
+            mh$.invokeExact(body, omega);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2949,7 +2952,7 @@ public class Newton_h  {
     public static void NewtonBodySetOmegaNoSleep ( Addressable body,  Addressable omega) {
         var mh$ = RuntimeHelper.requireNonNull(constants$62.NewtonBodySetOmegaNoSleep$MH, "NewtonBodySetOmegaNoSleep");
         try {
-            mh$.invokeExact(body.address(), omega.address());
+            mh$.invokeExact(body, omega);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2960,7 +2963,7 @@ public class Newton_h  {
     public static void NewtonBodySetVelocity ( Addressable body,  Addressable velocity) {
         var mh$ = RuntimeHelper.requireNonNull(constants$62.NewtonBodySetVelocity$MH, "NewtonBodySetVelocity");
         try {
-            mh$.invokeExact(body.address(), velocity.address());
+            mh$.invokeExact(body, velocity);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2971,7 +2974,7 @@ public class Newton_h  {
     public static void NewtonBodySetVelocityNoSleep ( Addressable body,  Addressable velocity) {
         var mh$ = RuntimeHelper.requireNonNull(constants$62.NewtonBodySetVelocityNoSleep$MH, "NewtonBodySetVelocityNoSleep");
         try {
-            mh$.invokeExact(body.address(), velocity.address());
+            mh$.invokeExact(body, velocity);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2982,7 +2985,7 @@ public class Newton_h  {
     public static void NewtonBodySetForce ( Addressable body,  Addressable force) {
         var mh$ = RuntimeHelper.requireNonNull(constants$62.NewtonBodySetForce$MH, "NewtonBodySetForce");
         try {
-            mh$.invokeExact(body.address(), force.address());
+            mh$.invokeExact(body, force);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -2993,7 +2996,7 @@ public class Newton_h  {
     public static void NewtonBodySetTorque ( Addressable body,  Addressable torque) {
         var mh$ = RuntimeHelper.requireNonNull(constants$62.NewtonBodySetTorque$MH, "NewtonBodySetTorque");
         try {
-            mh$.invokeExact(body.address(), torque.address());
+            mh$.invokeExact(body, torque);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3004,7 +3007,7 @@ public class Newton_h  {
     public static void NewtonBodySetLinearDamping ( Addressable body,  float linearDamp) {
         var mh$ = RuntimeHelper.requireNonNull(constants$62.NewtonBodySetLinearDamping$MH, "NewtonBodySetLinearDamping");
         try {
-            mh$.invokeExact(body.address(), linearDamp);
+            mh$.invokeExact(body, linearDamp);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3015,7 +3018,7 @@ public class Newton_h  {
     public static void NewtonBodySetAngularDamping ( Addressable body,  Addressable angularDamp) {
         var mh$ = RuntimeHelper.requireNonNull(constants$63.NewtonBodySetAngularDamping$MH, "NewtonBodySetAngularDamping");
         try {
-            mh$.invokeExact(body.address(), angularDamp.address());
+            mh$.invokeExact(body, angularDamp);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3026,7 +3029,7 @@ public class Newton_h  {
     public static void NewtonBodySetCollision ( Addressable body,  Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$63.NewtonBodySetCollision$MH, "NewtonBodySetCollision");
         try {
-            mh$.invokeExact(body.address(), collision.address());
+            mh$.invokeExact(body, collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3037,7 +3040,7 @@ public class Newton_h  {
     public static void NewtonBodySetCollisionScale ( Addressable body,  float scaleX,  float scaleY,  float scaleZ) {
         var mh$ = RuntimeHelper.requireNonNull(constants$63.NewtonBodySetCollisionScale$MH, "NewtonBodySetCollisionScale");
         try {
-            mh$.invokeExact(body.address(), scaleX, scaleY, scaleZ);
+            mh$.invokeExact(body, scaleX, scaleY, scaleZ);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3048,7 +3051,7 @@ public class Newton_h  {
     public static int NewtonBodyGetSleepState ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$63.NewtonBodyGetSleepState$MH, "NewtonBodyGetSleepState");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3059,7 +3062,7 @@ public class Newton_h  {
     public static void NewtonBodySetSleepState ( Addressable body,  int state) {
         var mh$ = RuntimeHelper.requireNonNull(constants$63.NewtonBodySetSleepState$MH, "NewtonBodySetSleepState");
         try {
-            mh$.invokeExact(body.address(), state);
+            mh$.invokeExact(body, state);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3070,7 +3073,7 @@ public class Newton_h  {
     public static int NewtonBodyGetAutoSleep ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$63.NewtonBodyGetAutoSleep$MH, "NewtonBodyGetAutoSleep");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3081,7 +3084,7 @@ public class Newton_h  {
     public static void NewtonBodySetAutoSleep ( Addressable body,  int state) {
         var mh$ = RuntimeHelper.requireNonNull(constants$64.NewtonBodySetAutoSleep$MH, "NewtonBodySetAutoSleep");
         try {
-            mh$.invokeExact(body.address(), state);
+            mh$.invokeExact(body, state);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3092,7 +3095,7 @@ public class Newton_h  {
     public static int NewtonBodyGetFreezeState ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$64.NewtonBodyGetFreezeState$MH, "NewtonBodyGetFreezeState");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3103,7 +3106,7 @@ public class Newton_h  {
     public static void NewtonBodySetFreezeState ( Addressable body,  int state) {
         var mh$ = RuntimeHelper.requireNonNull(constants$64.NewtonBodySetFreezeState$MH, "NewtonBodySetFreezeState");
         try {
-            mh$.invokeExact(body.address(), state);
+            mh$.invokeExact(body, state);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3114,7 +3117,7 @@ public class Newton_h  {
     public static int NewtonBodyGetGyroscopicTorque ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$64.NewtonBodyGetGyroscopicTorque$MH, "NewtonBodyGetGyroscopicTorque");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3125,7 +3128,7 @@ public class Newton_h  {
     public static void NewtonBodySetGyroscopicTorque ( Addressable body,  int state) {
         var mh$ = RuntimeHelper.requireNonNull(constants$64.NewtonBodySetGyroscopicTorque$MH, "NewtonBodySetGyroscopicTorque");
         try {
-            mh$.invokeExact(body.address(), state);
+            mh$.invokeExact(body, state);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3136,7 +3139,7 @@ public class Newton_h  {
     public static void NewtonBodySetDestructorCallback ( Addressable body,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$64.NewtonBodySetDestructorCallback$MH, "NewtonBodySetDestructorCallback");
         try {
-            mh$.invokeExact(body.address(), callback.address());
+            mh$.invokeExact(body, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3147,7 +3150,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonBodyGetDestructorCallback ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$65.NewtonBodyGetDestructorCallback$MH, "NewtonBodyGetDestructorCallback");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3158,7 +3161,7 @@ public class Newton_h  {
     public static void NewtonBodySetTransformCallback ( Addressable body,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$65.NewtonBodySetTransformCallback$MH, "NewtonBodySetTransformCallback");
         try {
-            mh$.invokeExact(body.address(), callback.address());
+            mh$.invokeExact(body, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3169,7 +3172,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonBodyGetTransformCallback ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$65.NewtonBodyGetTransformCallback$MH, "NewtonBodyGetTransformCallback");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3180,7 +3183,7 @@ public class Newton_h  {
     public static void NewtonBodySetForceAndTorqueCallback ( Addressable body,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$65.NewtonBodySetForceAndTorqueCallback$MH, "NewtonBodySetForceAndTorqueCallback");
         try {
-            mh$.invokeExact(body.address(), callback.address());
+            mh$.invokeExact(body, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3191,7 +3194,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonBodyGetForceAndTorqueCallback ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$65.NewtonBodyGetForceAndTorqueCallback$MH, "NewtonBodyGetForceAndTorqueCallback");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3202,7 +3205,7 @@ public class Newton_h  {
     public static int NewtonBodyGetID ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$65.NewtonBodyGetID$MH, "NewtonBodyGetID");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3213,7 +3216,7 @@ public class Newton_h  {
     public static void NewtonBodySetUserData ( Addressable body,  Addressable userData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$66.NewtonBodySetUserData$MH, "NewtonBodySetUserData");
         try {
-            mh$.invokeExact(body.address(), userData.address());
+            mh$.invokeExact(body, userData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3224,7 +3227,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonBodyGetUserData ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$66.NewtonBodyGetUserData$MH, "NewtonBodyGetUserData");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3235,7 +3238,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonBodyGetWorld ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$66.NewtonBodyGetWorld$MH, "NewtonBodyGetWorld");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3246,7 +3249,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonBodyGetCollision ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$66.NewtonBodyGetCollision$MH, "NewtonBodyGetCollision");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3257,7 +3260,7 @@ public class Newton_h  {
     public static int NewtonBodyGetMaterialGroupID ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$66.NewtonBodyGetMaterialGroupID$MH, "NewtonBodyGetMaterialGroupID");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3268,7 +3271,7 @@ public class Newton_h  {
     public static int NewtonBodyGetSerializedID ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$66.NewtonBodyGetSerializedID$MH, "NewtonBodyGetSerializedID");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3279,7 +3282,7 @@ public class Newton_h  {
     public static int NewtonBodyGetContinuousCollisionMode ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$67.NewtonBodyGetContinuousCollisionMode$MH, "NewtonBodyGetContinuousCollisionMode");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3290,7 +3293,7 @@ public class Newton_h  {
     public static int NewtonBodyGetJointRecursiveCollision ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$67.NewtonBodyGetJointRecursiveCollision$MH, "NewtonBodyGetJointRecursiveCollision");
         try {
-            return (int)mh$.invokeExact(body.address());
+            return (int)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3301,7 +3304,7 @@ public class Newton_h  {
     public static void NewtonBodyGetPosition ( Addressable body,  Addressable pos) {
         var mh$ = RuntimeHelper.requireNonNull(constants$67.NewtonBodyGetPosition$MH, "NewtonBodyGetPosition");
         try {
-            mh$.invokeExact(body.address(), pos.address());
+            mh$.invokeExact(body, pos);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3312,7 +3315,7 @@ public class Newton_h  {
     public static void NewtonBodyGetMatrix ( Addressable body,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$67.NewtonBodyGetMatrix$MH, "NewtonBodyGetMatrix");
         try {
-            mh$.invokeExact(body.address(), matrix.address());
+            mh$.invokeExact(body, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3323,7 +3326,7 @@ public class Newton_h  {
     public static void NewtonBodyGetRotation ( Addressable body,  Addressable rotation) {
         var mh$ = RuntimeHelper.requireNonNull(constants$67.NewtonBodyGetRotation$MH, "NewtonBodyGetRotation");
         try {
-            mh$.invokeExact(body.address(), rotation.address());
+            mh$.invokeExact(body, rotation);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3334,7 +3337,7 @@ public class Newton_h  {
     public static void NewtonBodyGetMass ( Addressable body,  Addressable mass,  Addressable Ixx,  Addressable Iyy,  Addressable Izz) {
         var mh$ = RuntimeHelper.requireNonNull(constants$67.NewtonBodyGetMass$MH, "NewtonBodyGetMass");
         try {
-            mh$.invokeExact(body.address(), mass.address(), Ixx.address(), Iyy.address(), Izz.address());
+            mh$.invokeExact(body, mass, Ixx, Iyy, Izz);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3345,7 +3348,7 @@ public class Newton_h  {
     public static void NewtonBodyGetInvMass ( Addressable body,  Addressable invMass,  Addressable invIxx,  Addressable invIyy,  Addressable invIzz) {
         var mh$ = RuntimeHelper.requireNonNull(constants$68.NewtonBodyGetInvMass$MH, "NewtonBodyGetInvMass");
         try {
-            mh$.invokeExact(body.address(), invMass.address(), invIxx.address(), invIyy.address(), invIzz.address());
+            mh$.invokeExact(body, invMass, invIxx, invIyy, invIzz);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3356,7 +3359,7 @@ public class Newton_h  {
     public static void NewtonBodyGetInertiaMatrix ( Addressable body,  Addressable inertiaMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$68.NewtonBodyGetInertiaMatrix$MH, "NewtonBodyGetInertiaMatrix");
         try {
-            mh$.invokeExact(body.address(), inertiaMatrix.address());
+            mh$.invokeExact(body, inertiaMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3367,7 +3370,7 @@ public class Newton_h  {
     public static void NewtonBodyGetInvInertiaMatrix ( Addressable body,  Addressable invInertiaMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$68.NewtonBodyGetInvInertiaMatrix$MH, "NewtonBodyGetInvInertiaMatrix");
         try {
-            mh$.invokeExact(body.address(), invInertiaMatrix.address());
+            mh$.invokeExact(body, invInertiaMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3378,7 +3381,7 @@ public class Newton_h  {
     public static void NewtonBodyGetOmega ( Addressable body,  Addressable vector) {
         var mh$ = RuntimeHelper.requireNonNull(constants$68.NewtonBodyGetOmega$MH, "NewtonBodyGetOmega");
         try {
-            mh$.invokeExact(body.address(), vector.address());
+            mh$.invokeExact(body, vector);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3389,7 +3392,7 @@ public class Newton_h  {
     public static void NewtonBodyGetVelocity ( Addressable body,  Addressable vector) {
         var mh$ = RuntimeHelper.requireNonNull(constants$68.NewtonBodyGetVelocity$MH, "NewtonBodyGetVelocity");
         try {
-            mh$.invokeExact(body.address(), vector.address());
+            mh$.invokeExact(body, vector);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3400,7 +3403,7 @@ public class Newton_h  {
     public static void NewtonBodyGetAlpha ( Addressable body,  Addressable vector) {
         var mh$ = RuntimeHelper.requireNonNull(constants$68.NewtonBodyGetAlpha$MH, "NewtonBodyGetAlpha");
         try {
-            mh$.invokeExact(body.address(), vector.address());
+            mh$.invokeExact(body, vector);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3411,7 +3414,7 @@ public class Newton_h  {
     public static void NewtonBodyGetAcceleration ( Addressable body,  Addressable vector) {
         var mh$ = RuntimeHelper.requireNonNull(constants$69.NewtonBodyGetAcceleration$MH, "NewtonBodyGetAcceleration");
         try {
-            mh$.invokeExact(body.address(), vector.address());
+            mh$.invokeExact(body, vector);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3422,7 +3425,7 @@ public class Newton_h  {
     public static void NewtonBodyGetForce ( Addressable body,  Addressable vector) {
         var mh$ = RuntimeHelper.requireNonNull(constants$69.NewtonBodyGetForce$MH, "NewtonBodyGetForce");
         try {
-            mh$.invokeExact(body.address(), vector.address());
+            mh$.invokeExact(body, vector);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3433,7 +3436,7 @@ public class Newton_h  {
     public static void NewtonBodyGetTorque ( Addressable body,  Addressable vector) {
         var mh$ = RuntimeHelper.requireNonNull(constants$69.NewtonBodyGetTorque$MH, "NewtonBodyGetTorque");
         try {
-            mh$.invokeExact(body.address(), vector.address());
+            mh$.invokeExact(body, vector);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3444,7 +3447,7 @@ public class Newton_h  {
     public static void NewtonBodyGetCentreOfMass ( Addressable body,  Addressable com) {
         var mh$ = RuntimeHelper.requireNonNull(constants$69.NewtonBodyGetCentreOfMass$MH, "NewtonBodyGetCentreOfMass");
         try {
-            mh$.invokeExact(body.address(), com.address());
+            mh$.invokeExact(body, com);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3455,7 +3458,7 @@ public class Newton_h  {
     public static void NewtonBodyGetPointVelocity ( Addressable body,  Addressable point,  Addressable velocOut) {
         var mh$ = RuntimeHelper.requireNonNull(constants$69.NewtonBodyGetPointVelocity$MH, "NewtonBodyGetPointVelocity");
         try {
-            mh$.invokeExact(body.address(), point.address(), velocOut.address());
+            mh$.invokeExact(body, point, velocOut);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3466,7 +3469,7 @@ public class Newton_h  {
     public static void NewtonBodyApplyImpulsePair ( Addressable body,  Addressable linearImpulse,  Addressable angularImpulse,  float timestep) {
         var mh$ = RuntimeHelper.requireNonNull(constants$69.NewtonBodyApplyImpulsePair$MH, "NewtonBodyApplyImpulsePair");
         try {
-            mh$.invokeExact(body.address(), linearImpulse.address(), angularImpulse.address(), timestep);
+            mh$.invokeExact(body, linearImpulse, angularImpulse, timestep);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3477,7 +3480,7 @@ public class Newton_h  {
     public static void NewtonBodyAddImpulse ( Addressable body,  Addressable pointDeltaVeloc,  Addressable pointPosit,  float timestep) {
         var mh$ = RuntimeHelper.requireNonNull(constants$70.NewtonBodyAddImpulse$MH, "NewtonBodyAddImpulse");
         try {
-            mh$.invokeExact(body.address(), pointDeltaVeloc.address(), pointPosit.address(), timestep);
+            mh$.invokeExact(body, pointDeltaVeloc, pointPosit, timestep);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3488,7 +3491,7 @@ public class Newton_h  {
     public static void NewtonBodyApplyImpulseArray ( Addressable body,  int impuleCount,  int strideInByte,  Addressable impulseArray,  Addressable pointArray,  float timestep) {
         var mh$ = RuntimeHelper.requireNonNull(constants$70.NewtonBodyApplyImpulseArray$MH, "NewtonBodyApplyImpulseArray");
         try {
-            mh$.invokeExact(body.address(), impuleCount, strideInByte, impulseArray.address(), pointArray.address(), timestep);
+            mh$.invokeExact(body, impuleCount, strideInByte, impulseArray, pointArray, timestep);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3499,7 +3502,7 @@ public class Newton_h  {
     public static void NewtonBodyIntegrateVelocity ( Addressable body,  float timestep) {
         var mh$ = RuntimeHelper.requireNonNull(constants$70.NewtonBodyIntegrateVelocity$MH, "NewtonBodyIntegrateVelocity");
         try {
-            mh$.invokeExact(body.address(), timestep);
+            mh$.invokeExact(body, timestep);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3510,7 +3513,7 @@ public class Newton_h  {
     public static float NewtonBodyGetLinearDamping ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$70.NewtonBodyGetLinearDamping$MH, "NewtonBodyGetLinearDamping");
         try {
-            return (float)mh$.invokeExact(body.address());
+            return (float)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3521,7 +3524,7 @@ public class Newton_h  {
     public static void NewtonBodyGetAngularDamping ( Addressable body,  Addressable vector) {
         var mh$ = RuntimeHelper.requireNonNull(constants$70.NewtonBodyGetAngularDamping$MH, "NewtonBodyGetAngularDamping");
         try {
-            mh$.invokeExact(body.address(), vector.address());
+            mh$.invokeExact(body, vector);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3532,7 +3535,7 @@ public class Newton_h  {
     public static void NewtonBodyGetAABB ( Addressable body,  Addressable p0,  Addressable p1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$70.NewtonBodyGetAABB$MH, "NewtonBodyGetAABB");
         try {
-            mh$.invokeExact(body.address(), p0.address(), p1.address());
+            mh$.invokeExact(body, p0, p1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3543,7 +3546,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonBodyGetFirstJoint ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$71.NewtonBodyGetFirstJoint$MH, "NewtonBodyGetFirstJoint");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3554,7 +3557,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonBodyGetNextJoint ( Addressable body,  Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$71.NewtonBodyGetNextJoint$MH, "NewtonBodyGetNextJoint");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body.address(), joint.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body, joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3565,7 +3568,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonBodyGetFirstContactJoint ( Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$71.NewtonBodyGetFirstContactJoint$MH, "NewtonBodyGetFirstContactJoint");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3576,7 +3579,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonBodyGetNextContactJoint ( Addressable body,  Addressable contactJoint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$71.NewtonBodyGetNextContactJoint$MH, "NewtonBodyGetNextContactJoint");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body.address(), contactJoint.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body, contactJoint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3587,7 +3590,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonBodyFindContact ( Addressable body0,  Addressable body1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$71.NewtonBodyFindContact$MH, "NewtonBodyFindContact");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body0.address(), body1.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(body0, body1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3598,7 +3601,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonContactJointGetFirstContact ( Addressable contactJoint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$71.NewtonContactJointGetFirstContact$MH, "NewtonContactJointGetFirstContact");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contactJoint.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contactJoint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3609,7 +3612,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonContactJointGetNextContact ( Addressable contactJoint,  Addressable contact) {
         var mh$ = RuntimeHelper.requireNonNull(constants$72.NewtonContactJointGetNextContact$MH, "NewtonContactJointGetNextContact");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contactJoint.address(), contact.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contactJoint, contact);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3620,7 +3623,7 @@ public class Newton_h  {
     public static int NewtonContactJointGetContactCount ( Addressable contactJoint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$72.NewtonContactJointGetContactCount$MH, "NewtonContactJointGetContactCount");
         try {
-            return (int)mh$.invokeExact(contactJoint.address());
+            return (int)mh$.invokeExact(contactJoint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3631,7 +3634,7 @@ public class Newton_h  {
     public static void NewtonContactJointRemoveContact ( Addressable contactJoint,  Addressable contact) {
         var mh$ = RuntimeHelper.requireNonNull(constants$72.NewtonContactJointRemoveContact$MH, "NewtonContactJointRemoveContact");
         try {
-            mh$.invokeExact(contactJoint.address(), contact.address());
+            mh$.invokeExact(contactJoint, contact);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3642,7 +3645,7 @@ public class Newton_h  {
     public static float NewtonContactJointGetClosestDistance ( Addressable contactJoint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$72.NewtonContactJointGetClosestDistance$MH, "NewtonContactJointGetClosestDistance");
         try {
-            return (float)mh$.invokeExact(contactJoint.address());
+            return (float)mh$.invokeExact(contactJoint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3653,7 +3656,7 @@ public class Newton_h  {
     public static void NewtonContactJointResetSelftJointCollision ( Addressable contactJoint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$72.NewtonContactJointResetSelftJointCollision$MH, "NewtonContactJointResetSelftJointCollision");
         try {
-            mh$.invokeExact(contactJoint.address());
+            mh$.invokeExact(contactJoint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3664,7 +3667,7 @@ public class Newton_h  {
     public static void NewtonContactJointResetIntraJointCollision ( Addressable contactJoint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$72.NewtonContactJointResetIntraJointCollision$MH, "NewtonContactJointResetIntraJointCollision");
         try {
-            mh$.invokeExact(contactJoint.address());
+            mh$.invokeExact(contactJoint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3675,7 +3678,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonContactGetMaterial ( Addressable contact) {
         var mh$ = RuntimeHelper.requireNonNull(constants$73.NewtonContactGetMaterial$MH, "NewtonContactGetMaterial");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contact.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contact);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3686,7 +3689,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonContactGetCollision0 ( Addressable contact) {
         var mh$ = RuntimeHelper.requireNonNull(constants$73.NewtonContactGetCollision0$MH, "NewtonContactGetCollision0");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contact.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contact);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3697,7 +3700,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonContactGetCollision1 ( Addressable contact) {
         var mh$ = RuntimeHelper.requireNonNull(constants$73.NewtonContactGetCollision1$MH, "NewtonContactGetCollision1");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contact.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contact);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3708,7 +3711,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonContactGetCollisionID0 ( Addressable contact) {
         var mh$ = RuntimeHelper.requireNonNull(constants$73.NewtonContactGetCollisionID0$MH, "NewtonContactGetCollisionID0");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contact.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contact);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3719,7 +3722,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonContactGetCollisionID1 ( Addressable contact) {
         var mh$ = RuntimeHelper.requireNonNull(constants$73.NewtonContactGetCollisionID1$MH, "NewtonContactGetCollisionID1");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contact.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(contact);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3730,7 +3733,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonJointGetUserData ( Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$73.NewtonJointGetUserData$MH, "NewtonJointGetUserData");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(joint.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3741,7 +3744,7 @@ public class Newton_h  {
     public static void NewtonJointSetUserData ( Addressable joint,  Addressable userData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$74.NewtonJointSetUserData$MH, "NewtonJointSetUserData");
         try {
-            mh$.invokeExact(joint.address(), userData.address());
+            mh$.invokeExact(joint, userData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3752,7 +3755,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonJointGetBody0 ( Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$74.NewtonJointGetBody0$MH, "NewtonJointGetBody0");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(joint.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3763,7 +3766,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonJointGetBody1 ( Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$74.NewtonJointGetBody1$MH, "NewtonJointGetBody1");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(joint.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3774,7 +3777,7 @@ public class Newton_h  {
     public static void NewtonJointGetInfo ( Addressable joint,  Addressable info) {
         var mh$ = RuntimeHelper.requireNonNull(constants$74.NewtonJointGetInfo$MH, "NewtonJointGetInfo");
         try {
-            mh$.invokeExact(joint.address(), info.address());
+            mh$.invokeExact(joint, info);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3785,7 +3788,7 @@ public class Newton_h  {
     public static int NewtonJointGetCollisionState ( Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$74.NewtonJointGetCollisionState$MH, "NewtonJointGetCollisionState");
         try {
-            return (int)mh$.invokeExact(joint.address());
+            return (int)mh$.invokeExact(joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3796,7 +3799,7 @@ public class Newton_h  {
     public static void NewtonJointSetCollisionState ( Addressable joint,  int state) {
         var mh$ = RuntimeHelper.requireNonNull(constants$74.NewtonJointSetCollisionState$MH, "NewtonJointSetCollisionState");
         try {
-            mh$.invokeExact(joint.address(), state);
+            mh$.invokeExact(joint, state);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3807,7 +3810,7 @@ public class Newton_h  {
     public static float NewtonJointGetStiffness ( Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$75.NewtonJointGetStiffness$MH, "NewtonJointGetStiffness");
         try {
-            return (float)mh$.invokeExact(joint.address());
+            return (float)mh$.invokeExact(joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3818,7 +3821,7 @@ public class Newton_h  {
     public static void NewtonJointSetStiffness ( Addressable joint,  float state) {
         var mh$ = RuntimeHelper.requireNonNull(constants$75.NewtonJointSetStiffness$MH, "NewtonJointSetStiffness");
         try {
-            mh$.invokeExact(joint.address(), state);
+            mh$.invokeExact(joint, state);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3829,7 +3832,7 @@ public class Newton_h  {
     public static void NewtonDestroyJoint ( Addressable newtonWorld,  Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$75.NewtonDestroyJoint$MH, "NewtonDestroyJoint");
         try {
-            mh$.invokeExact(newtonWorld.address(), joint.address());
+            mh$.invokeExact(newtonWorld, joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3840,7 +3843,7 @@ public class Newton_h  {
     public static void NewtonJointSetDestructor ( Addressable joint,  Addressable destructor) {
         var mh$ = RuntimeHelper.requireNonNull(constants$75.NewtonJointSetDestructor$MH, "NewtonJointSetDestructor");
         try {
-            mh$.invokeExact(joint.address(), destructor.address());
+            mh$.invokeExact(joint, destructor);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3851,7 +3854,7 @@ public class Newton_h  {
     public static int NewtonJointIsActive ( Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$75.NewtonJointIsActive$MH, "NewtonJointIsActive");
         try {
-            return (int)mh$.invokeExact(joint.address());
+            return (int)mh$.invokeExact(joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3862,7 +3865,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateMassSpringDamperSystem ( Addressable newtonWorld,  int shapeID,  Addressable points,  int pointCount,  int strideInBytes,  Addressable pointMass,  Addressable links,  int linksCount,  Addressable linksSpring,  Addressable linksDamper) {
         var mh$ = RuntimeHelper.requireNonNull(constants$75.NewtonCreateMassSpringDamperSystem$MH, "NewtonCreateMassSpringDamperSystem");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), shapeID, points.address(), pointCount, strideInBytes, pointMass.address(), links.address(), linksCount, linksSpring.address(), linksDamper.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, shapeID, points, pointCount, strideInBytes, pointMass, links, linksCount, linksSpring, linksDamper);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3873,7 +3876,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonCreateDeformableSolid ( Addressable newtonWorld,  Addressable mesh,  int shapeID) {
         var mh$ = RuntimeHelper.requireNonNull(constants$76.NewtonCreateDeformableSolid$MH, "NewtonCreateDeformableSolid");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), mesh.address(), shapeID);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, mesh, shapeID);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3884,7 +3887,7 @@ public class Newton_h  {
     public static int NewtonDeformableMeshGetParticleCount ( Addressable deformableMesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$76.NewtonDeformableMeshGetParticleCount$MH, "NewtonDeformableMeshGetParticleCount");
         try {
-            return (int)mh$.invokeExact(deformableMesh.address());
+            return (int)mh$.invokeExact(deformableMesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3895,7 +3898,7 @@ public class Newton_h  {
     public static int NewtonDeformableMeshGetParticleStrideInBytes ( Addressable deformableMesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$76.NewtonDeformableMeshGetParticleStrideInBytes$MH, "NewtonDeformableMeshGetParticleStrideInBytes");
         try {
-            return (int)mh$.invokeExact(deformableMesh.address());
+            return (int)mh$.invokeExact(deformableMesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3906,7 +3909,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonDeformableMeshGetParticleArray ( Addressable deformableMesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$76.NewtonDeformableMeshGetParticleArray$MH, "NewtonDeformableMeshGetParticleArray");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(deformableMesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(deformableMesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3917,7 +3920,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonConstraintCreateBall ( Addressable newtonWorld,  Addressable pivotPoint,  Addressable childBody,  Addressable parentBody) {
         var mh$ = RuntimeHelper.requireNonNull(constants$76.NewtonConstraintCreateBall$MH, "NewtonConstraintCreateBall");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), pivotPoint.address(), childBody.address(), parentBody.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, pivotPoint, childBody, parentBody);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3928,7 +3931,7 @@ public class Newton_h  {
     public static void NewtonBallSetUserCallback ( Addressable ball,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$76.NewtonBallSetUserCallback$MH, "NewtonBallSetUserCallback");
         try {
-            mh$.invokeExact(ball.address(), callback.address());
+            mh$.invokeExact(ball, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3939,7 +3942,7 @@ public class Newton_h  {
     public static void NewtonBallGetJointAngle ( Addressable ball,  Addressable angle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$77.NewtonBallGetJointAngle$MH, "NewtonBallGetJointAngle");
         try {
-            mh$.invokeExact(ball.address(), angle.address());
+            mh$.invokeExact(ball, angle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3950,7 +3953,7 @@ public class Newton_h  {
     public static void NewtonBallGetJointOmega ( Addressable ball,  Addressable omega) {
         var mh$ = RuntimeHelper.requireNonNull(constants$77.NewtonBallGetJointOmega$MH, "NewtonBallGetJointOmega");
         try {
-            mh$.invokeExact(ball.address(), omega.address());
+            mh$.invokeExact(ball, omega);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3961,7 +3964,7 @@ public class Newton_h  {
     public static void NewtonBallGetJointForce ( Addressable ball,  Addressable force) {
         var mh$ = RuntimeHelper.requireNonNull(constants$77.NewtonBallGetJointForce$MH, "NewtonBallGetJointForce");
         try {
-            mh$.invokeExact(ball.address(), force.address());
+            mh$.invokeExact(ball, force);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3972,7 +3975,7 @@ public class Newton_h  {
     public static void NewtonBallSetConeLimits ( Addressable ball,  Addressable pin,  float maxConeAngle,  float maxTwistAngle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$77.NewtonBallSetConeLimits$MH, "NewtonBallSetConeLimits");
         try {
-            mh$.invokeExact(ball.address(), pin.address(), maxConeAngle, maxTwistAngle);
+            mh$.invokeExact(ball, pin, maxConeAngle, maxTwistAngle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3983,7 +3986,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonConstraintCreateHinge ( Addressable newtonWorld,  Addressable pivotPoint,  Addressable pinDir,  Addressable childBody,  Addressable parentBody) {
         var mh$ = RuntimeHelper.requireNonNull(constants$77.NewtonConstraintCreateHinge$MH, "NewtonConstraintCreateHinge");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), pivotPoint.address(), pinDir.address(), childBody.address(), parentBody.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, pivotPoint, pinDir, childBody, parentBody);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -3994,7 +3997,7 @@ public class Newton_h  {
     public static void NewtonHingeSetUserCallback ( Addressable hinge,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$77.NewtonHingeSetUserCallback$MH, "NewtonHingeSetUserCallback");
         try {
-            mh$.invokeExact(hinge.address(), callback.address());
+            mh$.invokeExact(hinge, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4005,7 +4008,7 @@ public class Newton_h  {
     public static float NewtonHingeGetJointAngle ( Addressable hinge) {
         var mh$ = RuntimeHelper.requireNonNull(constants$78.NewtonHingeGetJointAngle$MH, "NewtonHingeGetJointAngle");
         try {
-            return (float)mh$.invokeExact(hinge.address());
+            return (float)mh$.invokeExact(hinge);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4016,7 +4019,7 @@ public class Newton_h  {
     public static float NewtonHingeGetJointOmega ( Addressable hinge) {
         var mh$ = RuntimeHelper.requireNonNull(constants$78.NewtonHingeGetJointOmega$MH, "NewtonHingeGetJointOmega");
         try {
-            return (float)mh$.invokeExact(hinge.address());
+            return (float)mh$.invokeExact(hinge);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4027,7 +4030,7 @@ public class Newton_h  {
     public static void NewtonHingeGetJointForce ( Addressable hinge,  Addressable force) {
         var mh$ = RuntimeHelper.requireNonNull(constants$78.NewtonHingeGetJointForce$MH, "NewtonHingeGetJointForce");
         try {
-            mh$.invokeExact(hinge.address(), force.address());
+            mh$.invokeExact(hinge, force);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4038,7 +4041,7 @@ public class Newton_h  {
     public static float NewtonHingeCalculateStopAlpha ( Addressable hinge,  Addressable desc,  float angle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$78.NewtonHingeCalculateStopAlpha$MH, "NewtonHingeCalculateStopAlpha");
         try {
-            return (float)mh$.invokeExact(hinge.address(), desc.address(), angle);
+            return (float)mh$.invokeExact(hinge, desc, angle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4049,7 +4052,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonConstraintCreateSlider ( Addressable newtonWorld,  Addressable pivotPoint,  Addressable pinDir,  Addressable childBody,  Addressable parentBody) {
         var mh$ = RuntimeHelper.requireNonNull(constants$78.NewtonConstraintCreateSlider$MH, "NewtonConstraintCreateSlider");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), pivotPoint.address(), pinDir.address(), childBody.address(), parentBody.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, pivotPoint, pinDir, childBody, parentBody);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4060,7 +4063,7 @@ public class Newton_h  {
     public static void NewtonSliderSetUserCallback ( Addressable slider,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$78.NewtonSliderSetUserCallback$MH, "NewtonSliderSetUserCallback");
         try {
-            mh$.invokeExact(slider.address(), callback.address());
+            mh$.invokeExact(slider, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4071,7 +4074,7 @@ public class Newton_h  {
     public static float NewtonSliderGetJointPosit ( Addressable slider) {
         var mh$ = RuntimeHelper.requireNonNull(constants$79.NewtonSliderGetJointPosit$MH, "NewtonSliderGetJointPosit");
         try {
-            return (float)mh$.invokeExact(slider.address());
+            return (float)mh$.invokeExact(slider);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4082,7 +4085,7 @@ public class Newton_h  {
     public static float NewtonSliderGetJointVeloc ( Addressable slider) {
         var mh$ = RuntimeHelper.requireNonNull(constants$79.NewtonSliderGetJointVeloc$MH, "NewtonSliderGetJointVeloc");
         try {
-            return (float)mh$.invokeExact(slider.address());
+            return (float)mh$.invokeExact(slider);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4093,7 +4096,7 @@ public class Newton_h  {
     public static void NewtonSliderGetJointForce ( Addressable slider,  Addressable force) {
         var mh$ = RuntimeHelper.requireNonNull(constants$79.NewtonSliderGetJointForce$MH, "NewtonSliderGetJointForce");
         try {
-            mh$.invokeExact(slider.address(), force.address());
+            mh$.invokeExact(slider, force);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4104,7 +4107,7 @@ public class Newton_h  {
     public static float NewtonSliderCalculateStopAccel ( Addressable slider,  Addressable desc,  float position) {
         var mh$ = RuntimeHelper.requireNonNull(constants$79.NewtonSliderCalculateStopAccel$MH, "NewtonSliderCalculateStopAccel");
         try {
-            return (float)mh$.invokeExact(slider.address(), desc.address(), position);
+            return (float)mh$.invokeExact(slider, desc, position);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4115,7 +4118,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonConstraintCreateCorkscrew ( Addressable newtonWorld,  Addressable pivotPoint,  Addressable pinDir,  Addressable childBody,  Addressable parentBody) {
         var mh$ = RuntimeHelper.requireNonNull(constants$79.NewtonConstraintCreateCorkscrew$MH, "NewtonConstraintCreateCorkscrew");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), pivotPoint.address(), pinDir.address(), childBody.address(), parentBody.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, pivotPoint, pinDir, childBody, parentBody);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4126,7 +4129,7 @@ public class Newton_h  {
     public static void NewtonCorkscrewSetUserCallback ( Addressable corkscrew,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$79.NewtonCorkscrewSetUserCallback$MH, "NewtonCorkscrewSetUserCallback");
         try {
-            mh$.invokeExact(corkscrew.address(), callback.address());
+            mh$.invokeExact(corkscrew, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4137,7 +4140,7 @@ public class Newton_h  {
     public static float NewtonCorkscrewGetJointPosit ( Addressable corkscrew) {
         var mh$ = RuntimeHelper.requireNonNull(constants$80.NewtonCorkscrewGetJointPosit$MH, "NewtonCorkscrewGetJointPosit");
         try {
-            return (float)mh$.invokeExact(corkscrew.address());
+            return (float)mh$.invokeExact(corkscrew);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4148,7 +4151,7 @@ public class Newton_h  {
     public static float NewtonCorkscrewGetJointAngle ( Addressable corkscrew) {
         var mh$ = RuntimeHelper.requireNonNull(constants$80.NewtonCorkscrewGetJointAngle$MH, "NewtonCorkscrewGetJointAngle");
         try {
-            return (float)mh$.invokeExact(corkscrew.address());
+            return (float)mh$.invokeExact(corkscrew);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4159,7 +4162,7 @@ public class Newton_h  {
     public static float NewtonCorkscrewGetJointVeloc ( Addressable corkscrew) {
         var mh$ = RuntimeHelper.requireNonNull(constants$80.NewtonCorkscrewGetJointVeloc$MH, "NewtonCorkscrewGetJointVeloc");
         try {
-            return (float)mh$.invokeExact(corkscrew.address());
+            return (float)mh$.invokeExact(corkscrew);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4170,7 +4173,7 @@ public class Newton_h  {
     public static float NewtonCorkscrewGetJointOmega ( Addressable corkscrew) {
         var mh$ = RuntimeHelper.requireNonNull(constants$80.NewtonCorkscrewGetJointOmega$MH, "NewtonCorkscrewGetJointOmega");
         try {
-            return (float)mh$.invokeExact(corkscrew.address());
+            return (float)mh$.invokeExact(corkscrew);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4181,7 +4184,7 @@ public class Newton_h  {
     public static void NewtonCorkscrewGetJointForce ( Addressable corkscrew,  Addressable force) {
         var mh$ = RuntimeHelper.requireNonNull(constants$80.NewtonCorkscrewGetJointForce$MH, "NewtonCorkscrewGetJointForce");
         try {
-            mh$.invokeExact(corkscrew.address(), force.address());
+            mh$.invokeExact(corkscrew, force);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4192,7 +4195,7 @@ public class Newton_h  {
     public static float NewtonCorkscrewCalculateStopAlpha ( Addressable corkscrew,  Addressable desc,  float angle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$80.NewtonCorkscrewCalculateStopAlpha$MH, "NewtonCorkscrewCalculateStopAlpha");
         try {
-            return (float)mh$.invokeExact(corkscrew.address(), desc.address(), angle);
+            return (float)mh$.invokeExact(corkscrew, desc, angle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4203,7 +4206,7 @@ public class Newton_h  {
     public static float NewtonCorkscrewCalculateStopAccel ( Addressable corkscrew,  Addressable desc,  float position) {
         var mh$ = RuntimeHelper.requireNonNull(constants$81.NewtonCorkscrewCalculateStopAccel$MH, "NewtonCorkscrewCalculateStopAccel");
         try {
-            return (float)mh$.invokeExact(corkscrew.address(), desc.address(), position);
+            return (float)mh$.invokeExact(corkscrew, desc, position);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4214,7 +4217,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonConstraintCreateUniversal ( Addressable newtonWorld,  Addressable pivotPoint,  Addressable pinDir0,  Addressable pinDir1,  Addressable childBody,  Addressable parentBody) {
         var mh$ = RuntimeHelper.requireNonNull(constants$81.NewtonConstraintCreateUniversal$MH, "NewtonConstraintCreateUniversal");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), pivotPoint.address(), pinDir0.address(), pinDir1.address(), childBody.address(), parentBody.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, pivotPoint, pinDir0, pinDir1, childBody, parentBody);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4225,7 +4228,7 @@ public class Newton_h  {
     public static void NewtonUniversalSetUserCallback ( Addressable universal,  Addressable callback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$81.NewtonUniversalSetUserCallback$MH, "NewtonUniversalSetUserCallback");
         try {
-            mh$.invokeExact(universal.address(), callback.address());
+            mh$.invokeExact(universal, callback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4236,7 +4239,7 @@ public class Newton_h  {
     public static float NewtonUniversalGetJointAngle0 ( Addressable universal) {
         var mh$ = RuntimeHelper.requireNonNull(constants$81.NewtonUniversalGetJointAngle0$MH, "NewtonUniversalGetJointAngle0");
         try {
-            return (float)mh$.invokeExact(universal.address());
+            return (float)mh$.invokeExact(universal);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4247,7 +4250,7 @@ public class Newton_h  {
     public static float NewtonUniversalGetJointAngle1 ( Addressable universal) {
         var mh$ = RuntimeHelper.requireNonNull(constants$81.NewtonUniversalGetJointAngle1$MH, "NewtonUniversalGetJointAngle1");
         try {
-            return (float)mh$.invokeExact(universal.address());
+            return (float)mh$.invokeExact(universal);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4258,7 +4261,7 @@ public class Newton_h  {
     public static float NewtonUniversalGetJointOmega0 ( Addressable universal) {
         var mh$ = RuntimeHelper.requireNonNull(constants$81.NewtonUniversalGetJointOmega0$MH, "NewtonUniversalGetJointOmega0");
         try {
-            return (float)mh$.invokeExact(universal.address());
+            return (float)mh$.invokeExact(universal);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4269,7 +4272,7 @@ public class Newton_h  {
     public static float NewtonUniversalGetJointOmega1 ( Addressable universal) {
         var mh$ = RuntimeHelper.requireNonNull(constants$82.NewtonUniversalGetJointOmega1$MH, "NewtonUniversalGetJointOmega1");
         try {
-            return (float)mh$.invokeExact(universal.address());
+            return (float)mh$.invokeExact(universal);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4280,7 +4283,7 @@ public class Newton_h  {
     public static void NewtonUniversalGetJointForce ( Addressable universal,  Addressable force) {
         var mh$ = RuntimeHelper.requireNonNull(constants$82.NewtonUniversalGetJointForce$MH, "NewtonUniversalGetJointForce");
         try {
-            mh$.invokeExact(universal.address(), force.address());
+            mh$.invokeExact(universal, force);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4291,7 +4294,7 @@ public class Newton_h  {
     public static float NewtonUniversalCalculateStopAlpha0 ( Addressable universal,  Addressable desc,  float angle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$82.NewtonUniversalCalculateStopAlpha0$MH, "NewtonUniversalCalculateStopAlpha0");
         try {
-            return (float)mh$.invokeExact(universal.address(), desc.address(), angle);
+            return (float)mh$.invokeExact(universal, desc, angle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4302,7 +4305,7 @@ public class Newton_h  {
     public static float NewtonUniversalCalculateStopAlpha1 ( Addressable universal,  Addressable desc,  float angle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$82.NewtonUniversalCalculateStopAlpha1$MH, "NewtonUniversalCalculateStopAlpha1");
         try {
-            return (float)mh$.invokeExact(universal.address(), desc.address(), angle);
+            return (float)mh$.invokeExact(universal, desc, angle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4313,7 +4316,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonConstraintCreateUpVector ( Addressable newtonWorld,  Addressable pinDir,  Addressable body) {
         var mh$ = RuntimeHelper.requireNonNull(constants$82.NewtonConstraintCreateUpVector$MH, "NewtonConstraintCreateUpVector");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), pinDir.address(), body.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, pinDir, body);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4324,7 +4327,7 @@ public class Newton_h  {
     public static void NewtonUpVectorGetPin ( Addressable upVector,  Addressable pin) {
         var mh$ = RuntimeHelper.requireNonNull(constants$82.NewtonUpVectorGetPin$MH, "NewtonUpVectorGetPin");
         try {
-            mh$.invokeExact(upVector.address(), pin.address());
+            mh$.invokeExact(upVector, pin);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4335,7 +4338,7 @@ public class Newton_h  {
     public static void NewtonUpVectorSetPin ( Addressable upVector,  Addressable pin) {
         var mh$ = RuntimeHelper.requireNonNull(constants$83.NewtonUpVectorSetPin$MH, "NewtonUpVectorSetPin");
         try {
-            mh$.invokeExact(upVector.address(), pin.address());
+            mh$.invokeExact(upVector, pin);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4346,7 +4349,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonConstraintCreateUserJoint ( Addressable newtonWorld,  int maxDOF,  Addressable callback,  Addressable childBody,  Addressable parentBody) {
         var mh$ = RuntimeHelper.requireNonNull(constants$83.NewtonConstraintCreateUserJoint$MH, "NewtonConstraintCreateUserJoint");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), maxDOF, callback.address(), childBody.address(), parentBody.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, maxDOF, callback, childBody, parentBody);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4357,7 +4360,7 @@ public class Newton_h  {
     public static int NewtonUserJointGetSolverModel ( Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$83.NewtonUserJointGetSolverModel$MH, "NewtonUserJointGetSolverModel");
         try {
-            return (int)mh$.invokeExact(joint.address());
+            return (int)mh$.invokeExact(joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4368,7 +4371,7 @@ public class Newton_h  {
     public static void NewtonUserJointSetSolverModel ( Addressable joint,  int model) {
         var mh$ = RuntimeHelper.requireNonNull(constants$83.NewtonUserJointSetSolverModel$MH, "NewtonUserJointSetSolverModel");
         try {
-            mh$.invokeExact(joint.address(), model);
+            mh$.invokeExact(joint, model);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4379,7 +4382,7 @@ public class Newton_h  {
     public static void NewtonUserJointMassScale ( Addressable joint,  float scaleBody0,  float scaleBody1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$83.NewtonUserJointMassScale$MH, "NewtonUserJointMassScale");
         try {
-            mh$.invokeExact(joint.address(), scaleBody0, scaleBody1);
+            mh$.invokeExact(joint, scaleBody0, scaleBody1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4390,7 +4393,7 @@ public class Newton_h  {
     public static void NewtonUserJointSetFeedbackCollectorCallback ( Addressable joint,  Addressable getFeedback) {
         var mh$ = RuntimeHelper.requireNonNull(constants$83.NewtonUserJointSetFeedbackCollectorCallback$MH, "NewtonUserJointSetFeedbackCollectorCallback");
         try {
-            mh$.invokeExact(joint.address(), getFeedback.address());
+            mh$.invokeExact(joint, getFeedback);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4401,7 +4404,7 @@ public class Newton_h  {
     public static void NewtonUserJointAddLinearRow ( Addressable joint,  Addressable pivot0,  Addressable pivot1,  Addressable dir) {
         var mh$ = RuntimeHelper.requireNonNull(constants$84.NewtonUserJointAddLinearRow$MH, "NewtonUserJointAddLinearRow");
         try {
-            mh$.invokeExact(joint.address(), pivot0.address(), pivot1.address(), dir.address());
+            mh$.invokeExact(joint, pivot0, pivot1, dir);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4412,7 +4415,7 @@ public class Newton_h  {
     public static void NewtonUserJointAddAngularRow ( Addressable joint,  float relativeAngle,  Addressable dir) {
         var mh$ = RuntimeHelper.requireNonNull(constants$84.NewtonUserJointAddAngularRow$MH, "NewtonUserJointAddAngularRow");
         try {
-            mh$.invokeExact(joint.address(), relativeAngle, dir.address());
+            mh$.invokeExact(joint, relativeAngle, dir);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4423,7 +4426,7 @@ public class Newton_h  {
     public static void NewtonUserJointAddGeneralRow ( Addressable joint,  Addressable jacobian0,  Addressable jacobian1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$84.NewtonUserJointAddGeneralRow$MH, "NewtonUserJointAddGeneralRow");
         try {
-            mh$.invokeExact(joint.address(), jacobian0.address(), jacobian1.address());
+            mh$.invokeExact(joint, jacobian0, jacobian1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4434,7 +4437,7 @@ public class Newton_h  {
     public static void NewtonUserJointSetRowMinimumFriction ( Addressable joint,  float friction) {
         var mh$ = RuntimeHelper.requireNonNull(constants$84.NewtonUserJointSetRowMinimumFriction$MH, "NewtonUserJointSetRowMinimumFriction");
         try {
-            mh$.invokeExact(joint.address(), friction);
+            mh$.invokeExact(joint, friction);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4445,7 +4448,7 @@ public class Newton_h  {
     public static void NewtonUserJointSetRowMaximumFriction ( Addressable joint,  float friction) {
         var mh$ = RuntimeHelper.requireNonNull(constants$84.NewtonUserJointSetRowMaximumFriction$MH, "NewtonUserJointSetRowMaximumFriction");
         try {
-            mh$.invokeExact(joint.address(), friction);
+            mh$.invokeExact(joint, friction);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4456,7 +4459,7 @@ public class Newton_h  {
     public static float NewtonUserJointCalculateRowZeroAcceleration ( Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$84.NewtonUserJointCalculateRowZeroAcceleration$MH, "NewtonUserJointCalculateRowZeroAcceleration");
         try {
-            return (float)mh$.invokeExact(joint.address());
+            return (float)mh$.invokeExact(joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4467,7 +4470,7 @@ public class Newton_h  {
     public static float NewtonUserJointGetRowAcceleration ( Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$85.NewtonUserJointGetRowAcceleration$MH, "NewtonUserJointGetRowAcceleration");
         try {
-            return (float)mh$.invokeExact(joint.address());
+            return (float)mh$.invokeExact(joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4478,7 +4481,7 @@ public class Newton_h  {
     public static void NewtonUserJointGetRowJacobian ( Addressable joint,  Addressable linear0,  Addressable angula0,  Addressable linear1,  Addressable angula1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$85.NewtonUserJointGetRowJacobian$MH, "NewtonUserJointGetRowJacobian");
         try {
-            mh$.invokeExact(joint.address(), linear0.address(), angula0.address(), linear1.address(), angula1.address());
+            mh$.invokeExact(joint, linear0, angula0, linear1, angula1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4489,7 +4492,7 @@ public class Newton_h  {
     public static void NewtonUserJointSetRowAcceleration ( Addressable joint,  float acceleration) {
         var mh$ = RuntimeHelper.requireNonNull(constants$85.NewtonUserJointSetRowAcceleration$MH, "NewtonUserJointSetRowAcceleration");
         try {
-            mh$.invokeExact(joint.address(), acceleration);
+            mh$.invokeExact(joint, acceleration);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4500,7 +4503,7 @@ public class Newton_h  {
     public static void NewtonUserJointSetRowMassDependentSpringDamperAcceleration ( Addressable joint,  float spring,  float damper) {
         var mh$ = RuntimeHelper.requireNonNull(constants$85.NewtonUserJointSetRowMassDependentSpringDamperAcceleration$MH, "NewtonUserJointSetRowMassDependentSpringDamperAcceleration");
         try {
-            mh$.invokeExact(joint.address(), spring, damper);
+            mh$.invokeExact(joint, spring, damper);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4511,7 +4514,7 @@ public class Newton_h  {
     public static void NewtonUserJointSetRowMassIndependentSpringDamperAcceleration ( Addressable joint,  float rowStiffness,  float spring,  float damper) {
         var mh$ = RuntimeHelper.requireNonNull(constants$85.NewtonUserJointSetRowMassIndependentSpringDamperAcceleration$MH, "NewtonUserJointSetRowMassIndependentSpringDamperAcceleration");
         try {
-            mh$.invokeExact(joint.address(), rowStiffness, spring, damper);
+            mh$.invokeExact(joint, rowStiffness, spring, damper);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4522,7 +4525,7 @@ public class Newton_h  {
     public static void NewtonUserJointSetRowStiffness ( Addressable joint,  float stiffness) {
         var mh$ = RuntimeHelper.requireNonNull(constants$85.NewtonUserJointSetRowStiffness$MH, "NewtonUserJointSetRowStiffness");
         try {
-            mh$.invokeExact(joint.address(), stiffness);
+            mh$.invokeExact(joint, stiffness);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4533,7 +4536,7 @@ public class Newton_h  {
     public static int NewtonUserJoinRowsCount ( Addressable joint) {
         var mh$ = RuntimeHelper.requireNonNull(constants$86.NewtonUserJoinRowsCount$MH, "NewtonUserJoinRowsCount");
         try {
-            return (int)mh$.invokeExact(joint.address());
+            return (int)mh$.invokeExact(joint);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4544,7 +4547,7 @@ public class Newton_h  {
     public static void NewtonUserJointGetGeneralRow ( Addressable joint,  int index,  Addressable jacobian0,  Addressable jacobian1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$86.NewtonUserJointGetGeneralRow$MH, "NewtonUserJointGetGeneralRow");
         try {
-            mh$.invokeExact(joint.address(), index, jacobian0.address(), jacobian1.address());
+            mh$.invokeExact(joint, index, jacobian0, jacobian1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4555,7 +4558,7 @@ public class Newton_h  {
     public static float NewtonUserJointGetRowForce ( Addressable joint,  int row) {
         var mh$ = RuntimeHelper.requireNonNull(constants$86.NewtonUserJointGetRowForce$MH, "NewtonUserJointGetRowForce");
         try {
-            return (float)mh$.invokeExact(joint.address(), row);
+            return (float)mh$.invokeExact(joint, row);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4566,7 +4569,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshCreate ( Addressable newtonWorld) {
         var mh$ = RuntimeHelper.requireNonNull(constants$86.NewtonMeshCreate$MH, "NewtonMeshCreate");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4577,7 +4580,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshCreateFromMesh ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$86.NewtonMeshCreateFromMesh$MH, "NewtonMeshCreateFromMesh");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4588,7 +4591,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshCreateFromCollision ( Addressable collision) {
         var mh$ = RuntimeHelper.requireNonNull(constants$86.NewtonMeshCreateFromCollision$MH, "NewtonMeshCreateFromCollision");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(collision.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(collision);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4599,7 +4602,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshCreateTetrahedraIsoSurface ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$87.NewtonMeshCreateTetrahedraIsoSurface$MH, "NewtonMeshCreateTetrahedraIsoSurface");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4610,7 +4613,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshCreateConvexHull ( Addressable newtonWorld,  int pointCount,  Addressable vertexCloud,  int strideInBytes,  float tolerance) {
         var mh$ = RuntimeHelper.requireNonNull(constants$87.NewtonMeshCreateConvexHull$MH, "NewtonMeshCreateConvexHull");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), pointCount, vertexCloud.address(), strideInBytes, tolerance);
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, pointCount, vertexCloud, strideInBytes, tolerance);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4621,7 +4624,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshCreateVoronoiConvexDecomposition ( Addressable newtonWorld,  int pointCount,  Addressable vertexCloud,  int strideInBytes,  int materialID,  Addressable textureMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$87.NewtonMeshCreateVoronoiConvexDecomposition$MH, "NewtonMeshCreateVoronoiConvexDecomposition");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), pointCount, vertexCloud.address(), strideInBytes, materialID, textureMatrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, pointCount, vertexCloud, strideInBytes, materialID, textureMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4632,7 +4635,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshCreateFromSerialization ( Addressable newtonWorld,  Addressable deserializeFunction,  Addressable serializeHandle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$87.NewtonMeshCreateFromSerialization$MH, "NewtonMeshCreateFromSerialization");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), deserializeFunction.address(), serializeHandle.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, deserializeFunction, serializeHandle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4643,7 +4646,7 @@ public class Newton_h  {
     public static void NewtonMeshDestroy ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$87.NewtonMeshDestroy$MH, "NewtonMeshDestroy");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4654,7 +4657,7 @@ public class Newton_h  {
     public static void NewtonMeshSerialize ( Addressable mesh,  Addressable serializeFunction,  Addressable serializeHandle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$87.NewtonMeshSerialize$MH, "NewtonMeshSerialize");
         try {
-            mh$.invokeExact(mesh.address(), serializeFunction.address(), serializeHandle.address());
+            mh$.invokeExact(mesh, serializeFunction, serializeHandle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4665,7 +4668,7 @@ public class Newton_h  {
     public static void NewtonMeshSaveOFF ( Addressable mesh,  Addressable filename) {
         var mh$ = RuntimeHelper.requireNonNull(constants$88.NewtonMeshSaveOFF$MH, "NewtonMeshSaveOFF");
         try {
-            mh$.invokeExact(mesh.address(), filename.address());
+            mh$.invokeExact(mesh, filename);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4676,7 +4679,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshLoadOFF ( Addressable newtonWorld,  Addressable filename) {
         var mh$ = RuntimeHelper.requireNonNull(constants$88.NewtonMeshLoadOFF$MH, "NewtonMeshLoadOFF");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), filename.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, filename);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4687,7 +4690,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshLoadTetrahedraMesh ( Addressable newtonWorld,  Addressable filename) {
         var mh$ = RuntimeHelper.requireNonNull(constants$88.NewtonMeshLoadTetrahedraMesh$MH, "NewtonMeshLoadTetrahedraMesh");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld.address(), filename.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(newtonWorld, filename);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4698,7 +4701,7 @@ public class Newton_h  {
     public static void NewtonMeshFlipWinding ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$88.NewtonMeshFlipWinding$MH, "NewtonMeshFlipWinding");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4709,7 +4712,7 @@ public class Newton_h  {
     public static void NewtonMeshApplyTransform ( Addressable mesh,  Addressable matrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$88.NewtonMeshApplyTransform$MH, "NewtonMeshApplyTransform");
         try {
-            mh$.invokeExact(mesh.address(), matrix.address());
+            mh$.invokeExact(mesh, matrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4720,7 +4723,7 @@ public class Newton_h  {
     public static void NewtonMeshCalculateOOBB ( Addressable mesh,  Addressable matrix,  Addressable x,  Addressable y,  Addressable z) {
         var mh$ = RuntimeHelper.requireNonNull(constants$88.NewtonMeshCalculateOOBB$MH, "NewtonMeshCalculateOOBB");
         try {
-            mh$.invokeExact(mesh.address(), matrix.address(), x.address(), y.address(), z.address());
+            mh$.invokeExact(mesh, matrix, x, y, z);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4731,7 +4734,7 @@ public class Newton_h  {
     public static void NewtonMeshCalculateVertexNormals ( Addressable mesh,  float angleInRadians) {
         var mh$ = RuntimeHelper.requireNonNull(constants$89.NewtonMeshCalculateVertexNormals$MH, "NewtonMeshCalculateVertexNormals");
         try {
-            mh$.invokeExact(mesh.address(), angleInRadians);
+            mh$.invokeExact(mesh, angleInRadians);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4742,7 +4745,7 @@ public class Newton_h  {
     public static void NewtonMeshApplySphericalMapping ( Addressable mesh,  int material,  Addressable aligmentMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$89.NewtonMeshApplySphericalMapping$MH, "NewtonMeshApplySphericalMapping");
         try {
-            mh$.invokeExact(mesh.address(), material, aligmentMatrix.address());
+            mh$.invokeExact(mesh, material, aligmentMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4753,7 +4756,7 @@ public class Newton_h  {
     public static void NewtonMeshApplyCylindricalMapping ( Addressable mesh,  int cylinderMaterial,  int capMaterial,  Addressable aligmentMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$89.NewtonMeshApplyCylindricalMapping$MH, "NewtonMeshApplyCylindricalMapping");
         try {
-            mh$.invokeExact(mesh.address(), cylinderMaterial, capMaterial, aligmentMatrix.address());
+            mh$.invokeExact(mesh, cylinderMaterial, capMaterial, aligmentMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4764,7 +4767,7 @@ public class Newton_h  {
     public static void NewtonMeshApplyBoxMapping ( Addressable mesh,  int frontMaterial,  int sideMaterial,  int topMaterial,  Addressable aligmentMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$89.NewtonMeshApplyBoxMapping$MH, "NewtonMeshApplyBoxMapping");
         try {
-            mh$.invokeExact(mesh.address(), frontMaterial, sideMaterial, topMaterial, aligmentMatrix.address());
+            mh$.invokeExact(mesh, frontMaterial, sideMaterial, topMaterial, aligmentMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4775,7 +4778,7 @@ public class Newton_h  {
     public static void NewtonMeshApplyAngleBasedMapping ( Addressable mesh,  int material,  Addressable reportPrograssCallback,  Addressable reportPrgressUserData,  Addressable aligmentMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$89.NewtonMeshApplyAngleBasedMapping$MH, "NewtonMeshApplyAngleBasedMapping");
         try {
-            mh$.invokeExact(mesh.address(), material, reportPrograssCallback.address(), reportPrgressUserData.address(), aligmentMatrix.address());
+            mh$.invokeExact(mesh, material, reportPrograssCallback, reportPrgressUserData, aligmentMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4786,7 +4789,7 @@ public class Newton_h  {
     public static void NewtonCreateTetrahedraLinearBlendSkinWeightsChannel ( Addressable tetrahedraMesh,  Addressable skinMesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$89.NewtonCreateTetrahedraLinearBlendSkinWeightsChannel$MH, "NewtonCreateTetrahedraLinearBlendSkinWeightsChannel");
         try {
-            mh$.invokeExact(tetrahedraMesh.address(), skinMesh.address());
+            mh$.invokeExact(tetrahedraMesh, skinMesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4797,7 +4800,7 @@ public class Newton_h  {
     public static void NewtonMeshOptimize ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$90.NewtonMeshOptimize$MH, "NewtonMeshOptimize");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4808,7 +4811,7 @@ public class Newton_h  {
     public static void NewtonMeshOptimizePoints ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$90.NewtonMeshOptimizePoints$MH, "NewtonMeshOptimizePoints");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4819,7 +4822,7 @@ public class Newton_h  {
     public static void NewtonMeshOptimizeVertex ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$90.NewtonMeshOptimizeVertex$MH, "NewtonMeshOptimizeVertex");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4830,7 +4833,7 @@ public class Newton_h  {
     public static int NewtonMeshIsOpenMesh ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$90.NewtonMeshIsOpenMesh$MH, "NewtonMeshIsOpenMesh");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4841,7 +4844,7 @@ public class Newton_h  {
     public static void NewtonMeshFixTJoints ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$90.NewtonMeshFixTJoints$MH, "NewtonMeshFixTJoints");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4852,7 +4855,7 @@ public class Newton_h  {
     public static void NewtonMeshPolygonize ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$90.NewtonMeshPolygonize$MH, "NewtonMeshPolygonize");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4863,7 +4866,7 @@ public class Newton_h  {
     public static void NewtonMeshTriangulate ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$91.NewtonMeshTriangulate$MH, "NewtonMeshTriangulate");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4874,7 +4877,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshUnion ( Addressable mesh,  Addressable clipper,  Addressable clipperMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$91.NewtonMeshUnion$MH, "NewtonMeshUnion");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), clipper.address(), clipperMatrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, clipper, clipperMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4885,7 +4888,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshDifference ( Addressable mesh,  Addressable clipper,  Addressable clipperMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$91.NewtonMeshDifference$MH, "NewtonMeshDifference");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), clipper.address(), clipperMatrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, clipper, clipperMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4896,7 +4899,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshIntersection ( Addressable mesh,  Addressable clipper,  Addressable clipperMatrix) {
         var mh$ = RuntimeHelper.requireNonNull(constants$91.NewtonMeshIntersection$MH, "NewtonMeshIntersection");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), clipper.address(), clipperMatrix.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, clipper, clipperMatrix);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4907,7 +4910,7 @@ public class Newton_h  {
     public static void NewtonMeshClip ( Addressable mesh,  Addressable clipper,  Addressable clipperMatrix,  Addressable topMesh,  Addressable bottomMesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$91.NewtonMeshClip$MH, "NewtonMeshClip");
         try {
-            mh$.invokeExact(mesh.address(), clipper.address(), clipperMatrix.address(), topMesh.address(), bottomMesh.address());
+            mh$.invokeExact(mesh, clipper, clipperMatrix, topMesh, bottomMesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4918,7 +4921,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshConvexMeshIntersection ( Addressable mesh,  Addressable convexMesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$91.NewtonMeshConvexMeshIntersection$MH, "NewtonMeshConvexMeshIntersection");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), convexMesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, convexMesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4929,7 +4932,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshSimplify ( Addressable mesh,  int maxVertexCount,  Addressable reportPrograssCallback,  Addressable reportPrgressUserData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$92.NewtonMeshSimplify$MH, "NewtonMeshSimplify");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), maxVertexCount, reportPrograssCallback.address(), reportPrgressUserData.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, maxVertexCount, reportPrograssCallback, reportPrgressUserData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4940,7 +4943,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshApproximateConvexDecomposition ( Addressable mesh,  float maxConcavity,  float backFaceDistanceFactor,  int maxCount,  int maxVertexPerHull,  Addressable reportProgressCallback,  Addressable reportProgressUserData) {
         var mh$ = RuntimeHelper.requireNonNull(constants$92.NewtonMeshApproximateConvexDecomposition$MH, "NewtonMeshApproximateConvexDecomposition");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), maxConcavity, backFaceDistanceFactor, maxCount, maxVertexPerHull, reportProgressCallback.address(), reportProgressUserData.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, maxConcavity, backFaceDistanceFactor, maxCount, maxVertexPerHull, reportProgressCallback, reportProgressUserData);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4951,7 +4954,7 @@ public class Newton_h  {
     public static void NewtonRemoveUnusedVertices ( Addressable mesh,  Addressable vertexRemapTable) {
         var mh$ = RuntimeHelper.requireNonNull(constants$92.NewtonRemoveUnusedVertices$MH, "NewtonRemoveUnusedVertices");
         try {
-            mh$.invokeExact(mesh.address(), vertexRemapTable.address());
+            mh$.invokeExact(mesh, vertexRemapTable);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4962,7 +4965,7 @@ public class Newton_h  {
     public static void NewtonMeshBeginBuild ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$92.NewtonMeshBeginBuild$MH, "NewtonMeshBeginBuild");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4973,7 +4976,7 @@ public class Newton_h  {
     public static void NewtonMeshBeginFace ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$92.NewtonMeshBeginFace$MH, "NewtonMeshBeginFace");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4984,7 +4987,7 @@ public class Newton_h  {
     public static void NewtonMeshAddPoint ( Addressable mesh,  double x,  double y,  double z) {
         var mh$ = RuntimeHelper.requireNonNull(constants$92.NewtonMeshAddPoint$MH, "NewtonMeshAddPoint");
         try {
-            mh$.invokeExact(mesh.address(), x, y, z);
+            mh$.invokeExact(mesh, x, y, z);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -4995,7 +4998,7 @@ public class Newton_h  {
     public static void NewtonMeshAddLayer ( Addressable mesh,  int layerIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$93.NewtonMeshAddLayer$MH, "NewtonMeshAddLayer");
         try {
-            mh$.invokeExact(mesh.address(), layerIndex);
+            mh$.invokeExact(mesh, layerIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5006,7 +5009,7 @@ public class Newton_h  {
     public static void NewtonMeshAddMaterial ( Addressable mesh,  int materialIndex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$93.NewtonMeshAddMaterial$MH, "NewtonMeshAddMaterial");
         try {
-            mh$.invokeExact(mesh.address(), materialIndex);
+            mh$.invokeExact(mesh, materialIndex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5017,7 +5020,7 @@ public class Newton_h  {
     public static void NewtonMeshAddNormal ( Addressable mesh,  float x,  float y,  float z) {
         var mh$ = RuntimeHelper.requireNonNull(constants$93.NewtonMeshAddNormal$MH, "NewtonMeshAddNormal");
         try {
-            mh$.invokeExact(mesh.address(), x, y, z);
+            mh$.invokeExact(mesh, x, y, z);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5028,7 +5031,7 @@ public class Newton_h  {
     public static void NewtonMeshAddBinormal ( Addressable mesh,  float x,  float y,  float z) {
         var mh$ = RuntimeHelper.requireNonNull(constants$93.NewtonMeshAddBinormal$MH, "NewtonMeshAddBinormal");
         try {
-            mh$.invokeExact(mesh.address(), x, y, z);
+            mh$.invokeExact(mesh, x, y, z);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5039,7 +5042,7 @@ public class Newton_h  {
     public static void NewtonMeshAddUV0 ( Addressable mesh,  float u,  float v) {
         var mh$ = RuntimeHelper.requireNonNull(constants$93.NewtonMeshAddUV0$MH, "NewtonMeshAddUV0");
         try {
-            mh$.invokeExact(mesh.address(), u, v);
+            mh$.invokeExact(mesh, u, v);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5050,7 +5053,7 @@ public class Newton_h  {
     public static void NewtonMeshAddUV1 ( Addressable mesh,  float u,  float v) {
         var mh$ = RuntimeHelper.requireNonNull(constants$93.NewtonMeshAddUV1$MH, "NewtonMeshAddUV1");
         try {
-            mh$.invokeExact(mesh.address(), u, v);
+            mh$.invokeExact(mesh, u, v);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5061,7 +5064,7 @@ public class Newton_h  {
     public static void NewtonMeshAddVertexColor ( Addressable mesh,  float r,  float g,  float b,  float a) {
         var mh$ = RuntimeHelper.requireNonNull(constants$94.NewtonMeshAddVertexColor$MH, "NewtonMeshAddVertexColor");
         try {
-            mh$.invokeExact(mesh.address(), r, g, b, a);
+            mh$.invokeExact(mesh, r, g, b, a);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5072,7 +5075,7 @@ public class Newton_h  {
     public static void NewtonMeshEndFace ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$94.NewtonMeshEndFace$MH, "NewtonMeshEndFace");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5083,7 +5086,7 @@ public class Newton_h  {
     public static void NewtonMeshEndBuild ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$94.NewtonMeshEndBuild$MH, "NewtonMeshEndBuild");
         try {
-            mh$.invokeExact(mesh.address());
+            mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5094,7 +5097,7 @@ public class Newton_h  {
     public static void NewtonMeshClearVertexFormat ( Addressable format) {
         var mh$ = RuntimeHelper.requireNonNull(constants$94.NewtonMeshClearVertexFormat$MH, "NewtonMeshClearVertexFormat");
         try {
-            mh$.invokeExact(format.address());
+            mh$.invokeExact(format);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5105,7 +5108,7 @@ public class Newton_h  {
     public static void NewtonMeshBuildFromVertexListIndexList ( Addressable mesh,  Addressable format) {
         var mh$ = RuntimeHelper.requireNonNull(constants$94.NewtonMeshBuildFromVertexListIndexList$MH, "NewtonMeshBuildFromVertexListIndexList");
         try {
-            mh$.invokeExact(mesh.address(), format.address());
+            mh$.invokeExact(mesh, format);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5116,7 +5119,7 @@ public class Newton_h  {
     public static int NewtonMeshGetPointCount ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$94.NewtonMeshGetPointCount$MH, "NewtonMeshGetPointCount");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5127,7 +5130,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshGetIndexToVertexMap ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$95.NewtonMeshGetIndexToVertexMap$MH, "NewtonMeshGetIndexToVertexMap");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5138,7 +5141,7 @@ public class Newton_h  {
     public static void NewtonMeshGetVertexDoubleChannel ( Addressable mesh,  int vertexStrideInByte,  Addressable outBuffer) {
         var mh$ = RuntimeHelper.requireNonNull(constants$95.NewtonMeshGetVertexDoubleChannel$MH, "NewtonMeshGetVertexDoubleChannel");
         try {
-            mh$.invokeExact(mesh.address(), vertexStrideInByte, outBuffer.address());
+            mh$.invokeExact(mesh, vertexStrideInByte, outBuffer);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5149,7 +5152,7 @@ public class Newton_h  {
     public static void NewtonMeshGetVertexChannel ( Addressable mesh,  int vertexStrideInByte,  Addressable outBuffer) {
         var mh$ = RuntimeHelper.requireNonNull(constants$95.NewtonMeshGetVertexChannel$MH, "NewtonMeshGetVertexChannel");
         try {
-            mh$.invokeExact(mesh.address(), vertexStrideInByte, outBuffer.address());
+            mh$.invokeExact(mesh, vertexStrideInByte, outBuffer);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5160,7 +5163,7 @@ public class Newton_h  {
     public static void NewtonMeshGetNormalChannel ( Addressable mesh,  int vertexStrideInByte,  Addressable outBuffer) {
         var mh$ = RuntimeHelper.requireNonNull(constants$95.NewtonMeshGetNormalChannel$MH, "NewtonMeshGetNormalChannel");
         try {
-            mh$.invokeExact(mesh.address(), vertexStrideInByte, outBuffer.address());
+            mh$.invokeExact(mesh, vertexStrideInByte, outBuffer);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5171,7 +5174,7 @@ public class Newton_h  {
     public static void NewtonMeshGetBinormalChannel ( Addressable mesh,  int vertexStrideInByte,  Addressable outBuffer) {
         var mh$ = RuntimeHelper.requireNonNull(constants$95.NewtonMeshGetBinormalChannel$MH, "NewtonMeshGetBinormalChannel");
         try {
-            mh$.invokeExact(mesh.address(), vertexStrideInByte, outBuffer.address());
+            mh$.invokeExact(mesh, vertexStrideInByte, outBuffer);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5182,7 +5185,7 @@ public class Newton_h  {
     public static void NewtonMeshGetUV0Channel ( Addressable mesh,  int vertexStrideInByte,  Addressable outBuffer) {
         var mh$ = RuntimeHelper.requireNonNull(constants$95.NewtonMeshGetUV0Channel$MH, "NewtonMeshGetUV0Channel");
         try {
-            mh$.invokeExact(mesh.address(), vertexStrideInByte, outBuffer.address());
+            mh$.invokeExact(mesh, vertexStrideInByte, outBuffer);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5193,7 +5196,7 @@ public class Newton_h  {
     public static void NewtonMeshGetUV1Channel ( Addressable mesh,  int vertexStrideInByte,  Addressable outBuffer) {
         var mh$ = RuntimeHelper.requireNonNull(constants$96.NewtonMeshGetUV1Channel$MH, "NewtonMeshGetUV1Channel");
         try {
-            mh$.invokeExact(mesh.address(), vertexStrideInByte, outBuffer.address());
+            mh$.invokeExact(mesh, vertexStrideInByte, outBuffer);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5204,7 +5207,7 @@ public class Newton_h  {
     public static void NewtonMeshGetVertexColorChannel ( Addressable mesh,  int vertexStrideInByte,  Addressable outBuffer) {
         var mh$ = RuntimeHelper.requireNonNull(constants$96.NewtonMeshGetVertexColorChannel$MH, "NewtonMeshGetVertexColorChannel");
         try {
-            mh$.invokeExact(mesh.address(), vertexStrideInByte, outBuffer.address());
+            mh$.invokeExact(mesh, vertexStrideInByte, outBuffer);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5215,7 +5218,7 @@ public class Newton_h  {
     public static int NewtonMeshHasNormalChannel ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$96.NewtonMeshHasNormalChannel$MH, "NewtonMeshHasNormalChannel");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5226,7 +5229,7 @@ public class Newton_h  {
     public static int NewtonMeshHasBinormalChannel ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$96.NewtonMeshHasBinormalChannel$MH, "NewtonMeshHasBinormalChannel");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5237,7 +5240,7 @@ public class Newton_h  {
     public static int NewtonMeshHasUV0Channel ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$96.NewtonMeshHasUV0Channel$MH, "NewtonMeshHasUV0Channel");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5248,7 +5251,7 @@ public class Newton_h  {
     public static int NewtonMeshHasUV1Channel ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$96.NewtonMeshHasUV1Channel$MH, "NewtonMeshHasUV1Channel");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5259,7 +5262,7 @@ public class Newton_h  {
     public static int NewtonMeshHasVertexColorChannel ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$97.NewtonMeshHasVertexColorChannel$MH, "NewtonMeshHasVertexColorChannel");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5270,7 +5273,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshBeginHandle ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$97.NewtonMeshBeginHandle$MH, "NewtonMeshBeginHandle");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5281,7 +5284,7 @@ public class Newton_h  {
     public static void NewtonMeshEndHandle ( Addressable mesh,  Addressable handle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$97.NewtonMeshEndHandle$MH, "NewtonMeshEndHandle");
         try {
-            mh$.invokeExact(mesh.address(), handle.address());
+            mh$.invokeExact(mesh, handle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5292,7 +5295,7 @@ public class Newton_h  {
     public static int NewtonMeshFirstMaterial ( Addressable mesh,  Addressable handle) {
         var mh$ = RuntimeHelper.requireNonNull(constants$97.NewtonMeshFirstMaterial$MH, "NewtonMeshFirstMaterial");
         try {
-            return (int)mh$.invokeExact(mesh.address(), handle.address());
+            return (int)mh$.invokeExact(mesh, handle);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5303,7 +5306,7 @@ public class Newton_h  {
     public static int NewtonMeshNextMaterial ( Addressable mesh,  Addressable handle,  int materialId) {
         var mh$ = RuntimeHelper.requireNonNull(constants$97.NewtonMeshNextMaterial$MH, "NewtonMeshNextMaterial");
         try {
-            return (int)mh$.invokeExact(mesh.address(), handle.address(), materialId);
+            return (int)mh$.invokeExact(mesh, handle, materialId);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5314,7 +5317,7 @@ public class Newton_h  {
     public static int NewtonMeshMaterialGetMaterial ( Addressable mesh,  Addressable handle,  int materialId) {
         var mh$ = RuntimeHelper.requireNonNull(constants$97.NewtonMeshMaterialGetMaterial$MH, "NewtonMeshMaterialGetMaterial");
         try {
-            return (int)mh$.invokeExact(mesh.address(), handle.address(), materialId);
+            return (int)mh$.invokeExact(mesh, handle, materialId);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5325,7 +5328,7 @@ public class Newton_h  {
     public static int NewtonMeshMaterialGetIndexCount ( Addressable mesh,  Addressable handle,  int materialId) {
         var mh$ = RuntimeHelper.requireNonNull(constants$98.NewtonMeshMaterialGetIndexCount$MH, "NewtonMeshMaterialGetIndexCount");
         try {
-            return (int)mh$.invokeExact(mesh.address(), handle.address(), materialId);
+            return (int)mh$.invokeExact(mesh, handle, materialId);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5336,7 +5339,7 @@ public class Newton_h  {
     public static void NewtonMeshMaterialGetIndexStream ( Addressable mesh,  Addressable handle,  int materialId,  Addressable index) {
         var mh$ = RuntimeHelper.requireNonNull(constants$98.NewtonMeshMaterialGetIndexStream$MH, "NewtonMeshMaterialGetIndexStream");
         try {
-            mh$.invokeExact(mesh.address(), handle.address(), materialId, index.address());
+            mh$.invokeExact(mesh, handle, materialId, index);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5347,7 +5350,7 @@ public class Newton_h  {
     public static void NewtonMeshMaterialGetIndexStreamShort ( Addressable mesh,  Addressable handle,  int materialId,  Addressable index) {
         var mh$ = RuntimeHelper.requireNonNull(constants$98.NewtonMeshMaterialGetIndexStreamShort$MH, "NewtonMeshMaterialGetIndexStreamShort");
         try {
-            mh$.invokeExact(mesh.address(), handle.address(), materialId, index.address());
+            mh$.invokeExact(mesh, handle, materialId, index);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5358,7 +5361,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshCreateFirstSingleSegment ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$98.NewtonMeshCreateFirstSingleSegment$MH, "NewtonMeshCreateFirstSingleSegment");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5369,7 +5372,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshCreateNextSingleSegment ( Addressable mesh,  Addressable segment) {
         var mh$ = RuntimeHelper.requireNonNull(constants$98.NewtonMeshCreateNextSingleSegment$MH, "NewtonMeshCreateNextSingleSegment");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), segment.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, segment);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5380,7 +5383,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshCreateFirstLayer ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$98.NewtonMeshCreateFirstLayer$MH, "NewtonMeshCreateFirstLayer");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5391,7 +5394,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshCreateNextLayer ( Addressable mesh,  Addressable segment) {
         var mh$ = RuntimeHelper.requireNonNull(constants$99.NewtonMeshCreateNextLayer$MH, "NewtonMeshCreateNextLayer");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), segment.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, segment);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5402,7 +5405,7 @@ public class Newton_h  {
     public static int NewtonMeshGetTotalFaceCount ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$99.NewtonMeshGetTotalFaceCount$MH, "NewtonMeshGetTotalFaceCount");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5413,7 +5416,7 @@ public class Newton_h  {
     public static int NewtonMeshGetTotalIndexCount ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$99.NewtonMeshGetTotalIndexCount$MH, "NewtonMeshGetTotalIndexCount");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5424,7 +5427,7 @@ public class Newton_h  {
     public static void NewtonMeshGetFaces ( Addressable mesh,  Addressable faceIndexCount,  Addressable faceMaterial,  Addressable faceIndices) {
         var mh$ = RuntimeHelper.requireNonNull(constants$99.NewtonMeshGetFaces$MH, "NewtonMeshGetFaces");
         try {
-            mh$.invokeExact(mesh.address(), faceIndexCount.address(), faceMaterial.address(), faceIndices.address());
+            mh$.invokeExact(mesh, faceIndexCount, faceMaterial, faceIndices);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5435,7 +5438,7 @@ public class Newton_h  {
     public static int NewtonMeshGetVertexCount ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$99.NewtonMeshGetVertexCount$MH, "NewtonMeshGetVertexCount");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5446,7 +5449,7 @@ public class Newton_h  {
     public static int NewtonMeshGetVertexStrideInByte ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$99.NewtonMeshGetVertexStrideInByte$MH, "NewtonMeshGetVertexStrideInByte");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5457,7 +5460,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshGetVertexArray ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$100.NewtonMeshGetVertexArray$MH, "NewtonMeshGetVertexArray");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5468,7 +5471,7 @@ public class Newton_h  {
     public static int NewtonMeshGetVertexBaseCount ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$100.NewtonMeshGetVertexBaseCount$MH, "NewtonMeshGetVertexBaseCount");
         try {
-            return (int)mh$.invokeExact(mesh.address());
+            return (int)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5479,7 +5482,7 @@ public class Newton_h  {
     public static void NewtonMeshSetVertexBaseCount ( Addressable mesh,  int baseCount) {
         var mh$ = RuntimeHelper.requireNonNull(constants$100.NewtonMeshSetVertexBaseCount$MH, "NewtonMeshSetVertexBaseCount");
         try {
-            mh$.invokeExact(mesh.address(), baseCount);
+            mh$.invokeExact(mesh, baseCount);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5490,7 +5493,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshGetFirstVertex ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$100.NewtonMeshGetFirstVertex$MH, "NewtonMeshGetFirstVertex");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5501,7 +5504,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshGetNextVertex ( Addressable mesh,  Addressable vertex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$100.NewtonMeshGetNextVertex$MH, "NewtonMeshGetNextVertex");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), vertex.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, vertex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5512,7 +5515,7 @@ public class Newton_h  {
     public static int NewtonMeshGetVertexIndex ( Addressable mesh,  Addressable vertex) {
         var mh$ = RuntimeHelper.requireNonNull(constants$100.NewtonMeshGetVertexIndex$MH, "NewtonMeshGetVertexIndex");
         try {
-            return (int)mh$.invokeExact(mesh.address(), vertex.address());
+            return (int)mh$.invokeExact(mesh, vertex);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5523,7 +5526,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshGetFirstPoint ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$101.NewtonMeshGetFirstPoint$MH, "NewtonMeshGetFirstPoint");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5534,7 +5537,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshGetNextPoint ( Addressable mesh,  Addressable point) {
         var mh$ = RuntimeHelper.requireNonNull(constants$101.NewtonMeshGetNextPoint$MH, "NewtonMeshGetNextPoint");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), point.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, point);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5545,7 +5548,7 @@ public class Newton_h  {
     public static int NewtonMeshGetPointIndex ( Addressable mesh,  Addressable point) {
         var mh$ = RuntimeHelper.requireNonNull(constants$101.NewtonMeshGetPointIndex$MH, "NewtonMeshGetPointIndex");
         try {
-            return (int)mh$.invokeExact(mesh.address(), point.address());
+            return (int)mh$.invokeExact(mesh, point);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5556,7 +5559,7 @@ public class Newton_h  {
     public static int NewtonMeshGetVertexIndexFromPoint ( Addressable mesh,  Addressable point) {
         var mh$ = RuntimeHelper.requireNonNull(constants$101.NewtonMeshGetVertexIndexFromPoint$MH, "NewtonMeshGetVertexIndexFromPoint");
         try {
-            return (int)mh$.invokeExact(mesh.address(), point.address());
+            return (int)mh$.invokeExact(mesh, point);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5567,7 +5570,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshGetFirstEdge ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$101.NewtonMeshGetFirstEdge$MH, "NewtonMeshGetFirstEdge");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5578,7 +5581,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshGetNextEdge ( Addressable mesh,  Addressable edge) {
         var mh$ = RuntimeHelper.requireNonNull(constants$101.NewtonMeshGetNextEdge$MH, "NewtonMeshGetNextEdge");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), edge.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, edge);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5589,7 +5592,7 @@ public class Newton_h  {
     public static void NewtonMeshGetEdgeIndices ( Addressable mesh,  Addressable edge,  Addressable v0,  Addressable v1) {
         var mh$ = RuntimeHelper.requireNonNull(constants$102.NewtonMeshGetEdgeIndices$MH, "NewtonMeshGetEdgeIndices");
         try {
-            mh$.invokeExact(mesh.address(), edge.address(), v0.address(), v1.address());
+            mh$.invokeExact(mesh, edge, v0, v1);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5600,7 +5603,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshGetFirstFace ( Addressable mesh) {
         var mh$ = RuntimeHelper.requireNonNull(constants$102.NewtonMeshGetFirstFace$MH, "NewtonMeshGetFirstFace");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5611,7 +5614,7 @@ public class Newton_h  {
     public static MemoryAddress NewtonMeshGetNextFace ( Addressable mesh,  Addressable face) {
         var mh$ = RuntimeHelper.requireNonNull(constants$102.NewtonMeshGetNextFace$MH, "NewtonMeshGetNextFace");
         try {
-            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh.address(), face.address());
+            return (jdk.incubator.foreign.MemoryAddress)mh$.invokeExact(mesh, face);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5622,7 +5625,7 @@ public class Newton_h  {
     public static int NewtonMeshIsFaceOpen ( Addressable mesh,  Addressable face) {
         var mh$ = RuntimeHelper.requireNonNull(constants$102.NewtonMeshIsFaceOpen$MH, "NewtonMeshIsFaceOpen");
         try {
-            return (int)mh$.invokeExact(mesh.address(), face.address());
+            return (int)mh$.invokeExact(mesh, face);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5633,7 +5636,7 @@ public class Newton_h  {
     public static int NewtonMeshGetFaceMaterial ( Addressable mesh,  Addressable face) {
         var mh$ = RuntimeHelper.requireNonNull(constants$102.NewtonMeshGetFaceMaterial$MH, "NewtonMeshGetFaceMaterial");
         try {
-            return (int)mh$.invokeExact(mesh.address(), face.address());
+            return (int)mh$.invokeExact(mesh, face);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5644,7 +5647,7 @@ public class Newton_h  {
     public static int NewtonMeshGetFaceIndexCount ( Addressable mesh,  Addressable face) {
         var mh$ = RuntimeHelper.requireNonNull(constants$102.NewtonMeshGetFaceIndexCount$MH, "NewtonMeshGetFaceIndexCount");
         try {
-            return (int)mh$.invokeExact(mesh.address(), face.address());
+            return (int)mh$.invokeExact(mesh, face);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5655,7 +5658,7 @@ public class Newton_h  {
     public static void NewtonMeshGetFaceIndices ( Addressable mesh,  Addressable face,  Addressable indices) {
         var mh$ = RuntimeHelper.requireNonNull(constants$103.NewtonMeshGetFaceIndices$MH, "NewtonMeshGetFaceIndices");
         try {
-            mh$.invokeExact(mesh.address(), face.address(), indices.address());
+            mh$.invokeExact(mesh, face, indices);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5666,7 +5669,7 @@ public class Newton_h  {
     public static void NewtonMeshGetFacePointIndices ( Addressable mesh,  Addressable face,  Addressable indices) {
         var mh$ = RuntimeHelper.requireNonNull(constants$103.NewtonMeshGetFacePointIndices$MH, "NewtonMeshGetFacePointIndices");
         try {
-            mh$.invokeExact(mesh.address(), face.address(), indices.address());
+            mh$.invokeExact(mesh, face, indices);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5677,7 +5680,7 @@ public class Newton_h  {
     public static void NewtonMeshCalculateFaceNormal ( Addressable mesh,  Addressable face,  Addressable normal) {
         var mh$ = RuntimeHelper.requireNonNull(constants$103.NewtonMeshCalculateFaceNormal$MH, "NewtonMeshCalculateFaceNormal");
         try {
-            mh$.invokeExact(mesh.address(), face.address(), normal.address());
+            mh$.invokeExact(mesh, face, normal);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -5688,7 +5691,7 @@ public class Newton_h  {
     public static void NewtonMeshSetFaceMaterial ( Addressable mesh,  Addressable face,  int matId) {
         var mh$ = RuntimeHelper.requireNonNull(constants$103.NewtonMeshSetFaceMaterial$MH, "NewtonMeshSetFaceMaterial");
         try {
-            mh$.invokeExact(mesh.address(), face.address(), matId);
+            mh$.invokeExact(mesh, face, matId);
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

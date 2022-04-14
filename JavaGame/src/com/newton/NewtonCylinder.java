@@ -12,6 +12,6 @@ public class NewtonCylinder extends NewtonCollision {
 	}
 	
 	public static NewtonCollision createCylinderCollision(NewtonWorld world, float radio0,  float radio1,  float height,  int shapeID,  Addressable offsetMatrix) {
-		return new NewtonCylinder(Newton_h.NewtonCreateCylinder(world, radio0, radio1, height, shapeID, offsetMatrix));
+		return new NewtonCylinder(Newton_h.NewtonCreateCylinder(world.address, radio0, radio1, height, shapeID, offsetMatrix));
 	}
 }

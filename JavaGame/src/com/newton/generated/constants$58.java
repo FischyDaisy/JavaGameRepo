@@ -6,67 +6,61 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$58 {
 
     static final FunctionDescriptor NewtonGetEulerAngle$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetEulerAngle$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetEulerAngle",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonGetEulerAngle",
         constants$58.NewtonGetEulerAngle$FUNC, false
     );
-    static final FunctionDescriptor NewtonCalculateSpringDamperAcceleration$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT
+    static final FunctionDescriptor NewtonCalculateSpringDamperAcceleration$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonCalculateSpringDamperAcceleration$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCalculateSpringDamperAcceleration",
-        "(FFFFF)F",
+        "NewtonCalculateSpringDamperAcceleration",
         constants$58.NewtonCalculateSpringDamperAcceleration$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateDynamicBody$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateDynamicBody$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateDynamicBody$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateDynamicBody",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateDynamicBody",
         constants$58.NewtonCreateDynamicBody$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateKinematicBody$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateKinematicBody$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateKinematicBody$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateKinematicBody",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateKinematicBody",
         constants$58.NewtonCreateKinematicBody$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateAsymetricDynamicBody$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateAsymetricDynamicBody$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateAsymetricDynamicBody$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateAsymetricDynamicBody",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateAsymetricDynamicBody",
         constants$58.NewtonCreateAsymetricDynamicBody$FUNC, false
     );
     static final FunctionDescriptor NewtonDestroyBody$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonDestroyBody$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonDestroyBody",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonDestroyBody",
         constants$58.NewtonDestroyBody$FUNC, false
     );
 }

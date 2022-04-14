@@ -10,7 +10,7 @@ public class NewtonKinematicBody extends NewtonBody {
 	}
 	
 	public static NewtonBody create(NewtonWorld world, NewtonCollision collision, Addressable matrix) {
-		return new NewtonKinematicBody(Newton_h.NewtonCreateKinematicBody(world, collision, matrix));
+		return new NewtonKinematicBody(Newton_h.NewtonCreateKinematicBody(world.address, collision.address, matrix));
 	}
 	
 	protected static NewtonBody wrapImpl(MemoryAddress address) {

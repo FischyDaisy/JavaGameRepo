@@ -6,38 +6,35 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$13 {
 
-    static final FunctionDescriptor NewtonOnAABBOverlap$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_FLOAT,
-        C_INT
+    static final FunctionDescriptor NewtonOnAABBOverlap$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonOnAABBOverlap$MH = RuntimeHelper.downcallHandle(
-        "(Ljdk/incubator/foreign/MemoryAddress;FI)I",
         constants$13.NewtonOnAABBOverlap$FUNC, false
     );
     static final FunctionDescriptor NewtonContactsProcess$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonContactsProcess$MH = RuntimeHelper.downcallHandle(
-        "(Ljdk/incubator/foreign/MemoryAddress;FI)V",
         constants$13.NewtonContactsProcess$FUNC, false
     );
-    static final FunctionDescriptor NewtonOnCompoundSubCollisionAABBOverlap$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_FLOAT,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonOnCompoundSubCollisionAABBOverlap$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonOnCompoundSubCollisionAABBOverlap$MH = RuntimeHelper.downcallHandle(
-        "(Ljdk/incubator/foreign/MemoryAddress;FLjdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)I",
         constants$13.NewtonOnCompoundSubCollisionAABBOverlap$FUNC, false
     );
 }

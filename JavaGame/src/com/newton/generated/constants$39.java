@@ -6,68 +6,62 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$39 {
 
-    static final FunctionDescriptor NewtonMaterialGetContactPruningTolerance$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMaterialGetContactPruningTolerance$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialGetContactPruningTolerance$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialGetContactPruningTolerance",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonMaterialGetContactPruningTolerance",
         constants$39.NewtonMaterialGetContactPruningTolerance$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetContactPruningTolerance$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactPruningTolerance$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactPruningTolerance",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonMaterialSetContactPruningTolerance",
         constants$39.NewtonMaterialSetContactPruningTolerance$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateNull$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateNull$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateNull$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateNull",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateNull",
         constants$39.NewtonCreateNull$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateSphere$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_FLOAT,
-        C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateSphere$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateSphere$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateSphere",
-        "(Ljdk/incubator/foreign/MemoryAddress;FILjdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateSphere",
         constants$39.NewtonCreateSphere$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateBox$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT,
-        C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateBox$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateBox$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateBox",
-        "(Ljdk/incubator/foreign/MemoryAddress;FFFILjdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateBox",
         constants$39.NewtonCreateBox$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateCone$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateCone$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateCone$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateCone",
-        "(Ljdk/incubator/foreign/MemoryAddress;FFILjdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateCone",
         constants$39.NewtonCreateCone$FUNC, false
     );
 }

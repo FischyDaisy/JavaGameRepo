@@ -6,57 +6,51 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$65 {
 
-    static final FunctionDescriptor NewtonBodyGetDestructorCallback$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonBodyGetDestructorCallback$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetDestructorCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetDestructorCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonBodyGetDestructorCallback",
         constants$65.NewtonBodyGetDestructorCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetTransformCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodySetTransformCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetTransformCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodySetTransformCallback",
         constants$65.NewtonBodySetTransformCallback$FUNC, false
     );
-    static final FunctionDescriptor NewtonBodyGetTransformCallback$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonBodyGetTransformCallback$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetTransformCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetTransformCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonBodyGetTransformCallback",
         constants$65.NewtonBodyGetTransformCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetForceAndTorqueCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodySetForceAndTorqueCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetForceAndTorqueCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodySetForceAndTorqueCallback",
         constants$65.NewtonBodySetForceAndTorqueCallback$FUNC, false
     );
-    static final FunctionDescriptor NewtonBodyGetForceAndTorqueCallback$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonBodyGetForceAndTorqueCallback$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetForceAndTorqueCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetForceAndTorqueCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonBodyGetForceAndTorqueCallback",
         constants$65.NewtonBodyGetForceAndTorqueCallback$FUNC, false
     );
-    static final FunctionDescriptor NewtonBodyGetID$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonBodyGetID$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetID$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetID",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonBodyGetID",
         constants$65.NewtonBodyGetID$FUNC, false
     );
 }

@@ -11,6 +11,6 @@ public class NewtonTreeCollision extends NewtonCollision {
 	}
 	
 	public static NewtonCollision createTreeCollision(NewtonWorld world, int shapeID) {
-		return new NewtonTreeCollision(Newton_h.NewtonCreateTreeCollision(world, shapeID));
+		return new NewtonTreeCollision(Newton_h.NewtonCreateTreeCollision(world.address, shapeID));
 	}
 }

@@ -6,58 +6,52 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$80 {
 
-    static final FunctionDescriptor NewtonCorkscrewGetJointPosit$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCorkscrewGetJointPosit$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCorkscrewGetJointPosit$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCorkscrewGetJointPosit",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonCorkscrewGetJointPosit",
         constants$80.NewtonCorkscrewGetJointPosit$FUNC, false
     );
-    static final FunctionDescriptor NewtonCorkscrewGetJointAngle$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCorkscrewGetJointAngle$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCorkscrewGetJointAngle$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCorkscrewGetJointAngle",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonCorkscrewGetJointAngle",
         constants$80.NewtonCorkscrewGetJointAngle$FUNC, false
     );
-    static final FunctionDescriptor NewtonCorkscrewGetJointVeloc$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCorkscrewGetJointVeloc$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCorkscrewGetJointVeloc$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCorkscrewGetJointVeloc",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonCorkscrewGetJointVeloc",
         constants$80.NewtonCorkscrewGetJointVeloc$FUNC, false
     );
-    static final FunctionDescriptor NewtonCorkscrewGetJointOmega$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCorkscrewGetJointOmega$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCorkscrewGetJointOmega$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCorkscrewGetJointOmega",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonCorkscrewGetJointOmega",
         constants$80.NewtonCorkscrewGetJointOmega$FUNC, false
     );
     static final FunctionDescriptor NewtonCorkscrewGetJointForce$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCorkscrewGetJointForce$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCorkscrewGetJointForce",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonCorkscrewGetJointForce",
         constants$80.NewtonCorkscrewGetJointForce$FUNC, false
     );
-    static final FunctionDescriptor NewtonCorkscrewCalculateStopAlpha$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER,
-        C_POINTER,
-        C_FLOAT
+    static final FunctionDescriptor NewtonCorkscrewCalculateStopAlpha$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonCorkscrewCalculateStopAlpha$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCorkscrewCalculateStopAlpha",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;F)F",
+        "NewtonCorkscrewCalculateStopAlpha",
         constants$80.NewtonCorkscrewCalculateStopAlpha$FUNC, false
     );
 }

@@ -6,67 +6,61 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$93 {
 
     static final FunctionDescriptor NewtonMeshAddLayer$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMeshAddLayer$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshAddLayer",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonMeshAddLayer",
         constants$93.NewtonMeshAddLayer$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshAddMaterial$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMeshAddMaterial$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshAddMaterial",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonMeshAddMaterial",
         constants$93.NewtonMeshAddMaterial$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshAddNormal$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMeshAddNormal$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshAddNormal",
-        "(Ljdk/incubator/foreign/MemoryAddress;FFF)V",
+        "NewtonMeshAddNormal",
         constants$93.NewtonMeshAddNormal$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshAddBinormal$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMeshAddBinormal$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshAddBinormal",
-        "(Ljdk/incubator/foreign/MemoryAddress;FFF)V",
+        "NewtonMeshAddBinormal",
         constants$93.NewtonMeshAddBinormal$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshAddUV0$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMeshAddUV0$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshAddUV0",
-        "(Ljdk/incubator/foreign/MemoryAddress;FF)V",
+        "NewtonMeshAddUV0",
         constants$93.NewtonMeshAddUV0$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshAddUV1$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMeshAddUV1$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshAddUV1",
-        "(Ljdk/incubator/foreign/MemoryAddress;FF)V",
+        "NewtonMeshAddUV1",
         constants$93.NewtonMeshAddUV1$FUNC, false
     );
 }

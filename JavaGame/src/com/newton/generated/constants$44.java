@@ -6,73 +6,67 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$44 {
 
-    static final FunctionDescriptor NewtonCompoundCollisionGetNodeIndex$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonCompoundCollisionGetNodeIndex$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCompoundCollisionGetNodeIndex$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCompoundCollisionGetNodeIndex",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonCompoundCollisionGetNodeIndex",
         constants$44.NewtonCompoundCollisionGetNodeIndex$FUNC, false
     );
-    static final FunctionDescriptor NewtonCompoundCollisionGetCollisionFromNode$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonCompoundCollisionGetCollisionFromNode$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCompoundCollisionGetCollisionFromNode$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCompoundCollisionGetCollisionFromNode",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCompoundCollisionGetCollisionFromNode",
         constants$44.NewtonCompoundCollisionGetCollisionFromNode$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateFracturedCompoundCollision$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_INT,
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateFracturedCompoundCollision$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateFracturedCompoundCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateFracturedCompoundCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;IIILjdk/incubator/foreign/MemoryAddress;IILjdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateFracturedCompoundCollision",
         constants$44.NewtonCreateFracturedCompoundCollision$FUNC, false
     );
-    static final FunctionDescriptor NewtonFracturedCompoundPlaneClip$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonFracturedCompoundPlaneClip$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonFracturedCompoundPlaneClip$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonFracturedCompoundPlaneClip",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonFracturedCompoundPlaneClip",
         constants$44.NewtonFracturedCompoundPlaneClip$FUNC, false
     );
     static final FunctionDescriptor NewtonFracturedCompoundSetCallbacks$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonFracturedCompoundSetCallbacks$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonFracturedCompoundSetCallbacks",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonFracturedCompoundSetCallbacks",
         constants$44.NewtonFracturedCompoundSetCallbacks$FUNC, false
     );
-    static final FunctionDescriptor NewtonFracturedCompoundIsNodeFreeToDetach$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonFracturedCompoundIsNodeFreeToDetach$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonFracturedCompoundIsNodeFreeToDetach$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonFracturedCompoundIsNodeFreeToDetach",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonFracturedCompoundIsNodeFreeToDetach",
         constants$44.NewtonFracturedCompoundIsNodeFreeToDetach$FUNC, false
     );
 }

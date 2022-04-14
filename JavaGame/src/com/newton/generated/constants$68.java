@@ -6,64 +6,58 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$68 {
 
     static final FunctionDescriptor NewtonBodyGetInvMass$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetInvMass$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetInvMass",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodyGetInvMass",
         constants$68.NewtonBodyGetInvMass$FUNC, false
     );
     static final FunctionDescriptor NewtonBodyGetInertiaMatrix$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetInertiaMatrix$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetInertiaMatrix",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodyGetInertiaMatrix",
         constants$68.NewtonBodyGetInertiaMatrix$FUNC, false
     );
     static final FunctionDescriptor NewtonBodyGetInvInertiaMatrix$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetInvInertiaMatrix$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetInvInertiaMatrix",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodyGetInvInertiaMatrix",
         constants$68.NewtonBodyGetInvInertiaMatrix$FUNC, false
     );
     static final FunctionDescriptor NewtonBodyGetOmega$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetOmega$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetOmega",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodyGetOmega",
         constants$68.NewtonBodyGetOmega$FUNC, false
     );
     static final FunctionDescriptor NewtonBodyGetVelocity$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetVelocity$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetVelocity",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodyGetVelocity",
         constants$68.NewtonBodyGetVelocity$FUNC, false
     );
     static final FunctionDescriptor NewtonBodyGetAlpha$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetAlpha$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetAlpha",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodyGetAlpha",
         constants$68.NewtonBodyGetAlpha$FUNC, false
     );
 }

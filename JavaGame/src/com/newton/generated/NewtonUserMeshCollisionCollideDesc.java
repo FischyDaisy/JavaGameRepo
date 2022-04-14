@@ -6,25 +6,25 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonUserMeshCollisionCollideDesc {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        MemoryLayout.sequenceLayout(4, C_FLOAT).withName("m_boxP0"),
-        MemoryLayout.sequenceLayout(4, C_FLOAT).withName("m_boxP1"),
-        MemoryLayout.sequenceLayout(4, C_FLOAT).withName("m_boxDistanceTravel"),
-        C_INT.withName("m_threadNumber"),
-        C_INT.withName("m_faceCount"),
-        C_INT.withName("m_vertexStrideInBytes"),
-        C_FLOAT.withName("m_skinThickness"),
-        C_POINTER.withName("m_userData"),
-        C_POINTER.withName("m_objBody"),
-        C_POINTER.withName("m_polySoupBody"),
-        C_POINTER.withName("m_objCollision"),
-        C_POINTER.withName("m_polySoupCollision"),
-        C_POINTER.withName("m_vertex"),
-        C_POINTER.withName("m_faceIndexCount"),
-        C_POINTER.withName("m_faceVertexIndex")
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        MemoryLayout.sequenceLayout(4, Constants$root.C_FLOAT$LAYOUT).withName("m_boxP0"),
+        MemoryLayout.sequenceLayout(4, Constants$root.C_FLOAT$LAYOUT).withName("m_boxP1"),
+        MemoryLayout.sequenceLayout(4, Constants$root.C_FLOAT$LAYOUT).withName("m_boxDistanceTravel"),
+        Constants$root.C_LONG$LAYOUT.withName("m_threadNumber"),
+        Constants$root.C_LONG$LAYOUT.withName("m_faceCount"),
+        Constants$root.C_LONG$LAYOUT.withName("m_vertexStrideInBytes"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_skinThickness"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_userData"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_objBody"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_polySoupBody"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_objCollision"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_polySoupCollision"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_vertex"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_faceIndexCount"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_faceVertexIndex")
     ).withName("NewtonUserMeshCollisionCollideDesc");
     public static MemoryLayout $LAYOUT() {
         return NewtonUserMeshCollisionCollideDesc.$struct$LAYOUT;
@@ -38,7 +38,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static MemorySegment m_boxDistanceTravel$slice(MemorySegment seg) {
         return seg.asSlice(32, 16);
     }
-    static final VarHandle m_threadNumber$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_threadNumber"));
+    static final VarHandle m_threadNumber$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_threadNumber"));
     public static VarHandle m_threadNumber$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_threadNumber$VH;
     }
@@ -54,7 +54,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static void m_threadNumber$set(MemorySegment seg, long index, int x) {
         NewtonUserMeshCollisionCollideDesc.m_threadNumber$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_faceCount$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_faceCount"));
+    static final VarHandle m_faceCount$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_faceCount"));
     public static VarHandle m_faceCount$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_faceCount$VH;
     }
@@ -70,7 +70,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static void m_faceCount$set(MemorySegment seg, long index, int x) {
         NewtonUserMeshCollisionCollideDesc.m_faceCount$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_vertexStrideInBytes$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_vertexStrideInBytes"));
+    static final VarHandle m_vertexStrideInBytes$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_vertexStrideInBytes"));
     public static VarHandle m_vertexStrideInBytes$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_vertexStrideInBytes$VH;
     }
@@ -86,7 +86,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static void m_vertexStrideInBytes$set(MemorySegment seg, long index, int x) {
         NewtonUserMeshCollisionCollideDesc.m_vertexStrideInBytes$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_skinThickness$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_skinThickness"));
+    static final VarHandle m_skinThickness$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_skinThickness"));
     public static VarHandle m_skinThickness$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_skinThickness$VH;
     }
@@ -102,7 +102,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static void m_skinThickness$set(MemorySegment seg, long index, float x) {
         NewtonUserMeshCollisionCollideDesc.m_skinThickness$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_userData$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_userData")));
+    static final VarHandle m_userData$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_userData"));
     public static VarHandle m_userData$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_userData$VH;
     }
@@ -118,7 +118,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static void m_userData$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonUserMeshCollisionCollideDesc.m_userData$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_objBody$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_objBody")));
+    static final VarHandle m_objBody$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_objBody"));
     public static VarHandle m_objBody$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_objBody$VH;
     }
@@ -134,7 +134,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static void m_objBody$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonUserMeshCollisionCollideDesc.m_objBody$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_polySoupBody$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_polySoupBody")));
+    static final VarHandle m_polySoupBody$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_polySoupBody"));
     public static VarHandle m_polySoupBody$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_polySoupBody$VH;
     }
@@ -150,7 +150,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static void m_polySoupBody$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonUserMeshCollisionCollideDesc.m_polySoupBody$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_objCollision$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_objCollision")));
+    static final VarHandle m_objCollision$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_objCollision"));
     public static VarHandle m_objCollision$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_objCollision$VH;
     }
@@ -166,7 +166,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static void m_objCollision$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonUserMeshCollisionCollideDesc.m_objCollision$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_polySoupCollision$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_polySoupCollision")));
+    static final VarHandle m_polySoupCollision$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_polySoupCollision"));
     public static VarHandle m_polySoupCollision$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_polySoupCollision$VH;
     }
@@ -182,7 +182,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static void m_polySoupCollision$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonUserMeshCollisionCollideDesc.m_polySoupCollision$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_vertex$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_vertex")));
+    static final VarHandle m_vertex$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_vertex"));
     public static VarHandle m_vertex$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_vertex$VH;
     }
@@ -198,7 +198,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static void m_vertex$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonUserMeshCollisionCollideDesc.m_vertex$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_faceIndexCount$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_faceIndexCount")));
+    static final VarHandle m_faceIndexCount$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_faceIndexCount"));
     public static VarHandle m_faceIndexCount$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_faceIndexCount$VH;
     }
@@ -214,7 +214,7 @@ public class NewtonUserMeshCollisionCollideDesc {
     public static void m_faceIndexCount$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonUserMeshCollisionCollideDesc.m_faceIndexCount$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_faceVertexIndex$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_faceVertexIndex")));
+    static final VarHandle m_faceVertexIndex$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_faceVertexIndex"));
     public static VarHandle m_faceVertexIndex$VH() {
         return NewtonUserMeshCollisionCollideDesc.m_faceVertexIndex$VH;
     }
@@ -232,12 +232,12 @@ public class NewtonUserMeshCollisionCollideDesc {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

@@ -6,66 +6,60 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$91 {
 
     static final FunctionDescriptor NewtonMeshTriangulate$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshTriangulate$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshTriangulate",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMeshTriangulate",
         constants$91.NewtonMeshTriangulate$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshUnion$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshUnion$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshUnion$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshUnion",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMeshUnion",
         constants$91.NewtonMeshUnion$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshDifference$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshDifference$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshDifference$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshDifference",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMeshDifference",
         constants$91.NewtonMeshDifference$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshIntersection$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshIntersection$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshIntersection$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshIntersection",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMeshIntersection",
         constants$91.NewtonMeshIntersection$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshClip$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshClip$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshClip",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMeshClip",
         constants$91.NewtonMeshClip$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshConvexMeshIntersection$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshConvexMeshIntersection$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshConvexMeshIntersection$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshConvexMeshIntersection",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMeshConvexMeshIntersection",
         constants$91.NewtonMeshConvexMeshIntersection$FUNC, false
     );
 }

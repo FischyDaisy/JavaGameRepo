@@ -11,6 +11,6 @@ public class NewtonConvexHull extends NewtonCollision {
 	}
 	
 	public static NewtonCollision createConvexHullCollision(NewtonWorld world, int count,  Addressable vertexCloud,  int strideInBytes,  float tolerance,  int shapeID,  Addressable offsetMatrix) {
-		return new NewtonConvexHull(Newton_h.NewtonCreateConvexHull(world, count, vertexCloud, strideInBytes, tolerance, shapeID, offsetMatrix));
+		return new NewtonConvexHull(Newton_h.NewtonCreateConvexHull(world.address, count, vertexCloud, strideInBytes, tolerance, shapeID, offsetMatrix));
 	}
 }

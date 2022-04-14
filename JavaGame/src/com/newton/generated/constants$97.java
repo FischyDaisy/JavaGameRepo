@@ -6,61 +6,55 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$97 {
 
-    static final FunctionDescriptor NewtonMeshHasVertexColorChannel$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshHasVertexColorChannel$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshHasVertexColorChannel$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshHasVertexColorChannel",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshHasVertexColorChannel",
         constants$97.NewtonMeshHasVertexColorChannel$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshBeginHandle$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshBeginHandle$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshBeginHandle$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshBeginHandle",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMeshBeginHandle",
         constants$97.NewtonMeshBeginHandle$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshEndHandle$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshEndHandle$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshEndHandle",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMeshEndHandle",
         constants$97.NewtonMeshEndHandle$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshFirstMaterial$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshFirstMaterial$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshFirstMaterial$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshFirstMaterial",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshFirstMaterial",
         constants$97.NewtonMeshFirstMaterial$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshNextMaterial$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonMeshNextMaterial$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMeshNextMaterial$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshNextMaterial",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)I",
+        "NewtonMeshNextMaterial",
         constants$97.NewtonMeshNextMaterial$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshMaterialGetMaterial$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonMeshMaterialGetMaterial$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMeshMaterialGetMaterial$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshMaterialGetMaterial",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)I",
+        "NewtonMeshMaterialGetMaterial",
         constants$97.NewtonMeshMaterialGetMaterial$FUNC, false
     );
 }

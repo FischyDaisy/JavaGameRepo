@@ -6,68 +6,62 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$92 {
 
-    static final FunctionDescriptor NewtonMeshSimplify$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_INT,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshSimplify$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshSimplify$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshSimplify",
-        "(Ljdk/incubator/foreign/MemoryAddress;ILjdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMeshSimplify",
         constants$92.NewtonMeshSimplify$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshApproximateConvexDecomposition$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_INT,
-        C_INT,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshApproximateConvexDecomposition$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshApproximateConvexDecomposition$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshApproximateConvexDecomposition",
-        "(Ljdk/incubator/foreign/MemoryAddress;FFIILjdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMeshApproximateConvexDecomposition",
         constants$92.NewtonMeshApproximateConvexDecomposition$FUNC, false
     );
     static final FunctionDescriptor NewtonRemoveUnusedVertices$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonRemoveUnusedVertices$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonRemoveUnusedVertices",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonRemoveUnusedVertices",
         constants$92.NewtonRemoveUnusedVertices$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshBeginBuild$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshBeginBuild$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshBeginBuild",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMeshBeginBuild",
         constants$92.NewtonMeshBeginBuild$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshBeginFace$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshBeginFace$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshBeginFace",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMeshBeginFace",
         constants$92.NewtonMeshBeginFace$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshAddPoint$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_DOUBLE,
-        C_DOUBLE,
-        C_DOUBLE
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_DOUBLE$LAYOUT,
+        Constants$root.C_DOUBLE$LAYOUT,
+        Constants$root.C_DOUBLE$LAYOUT
     );
     static final MethodHandle NewtonMeshAddPoint$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshAddPoint",
-        "(Ljdk/incubator/foreign/MemoryAddress;DDD)V",
+        "NewtonMeshAddPoint",
         constants$92.NewtonMeshAddPoint$FUNC, false
     );
 }

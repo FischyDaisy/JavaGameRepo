@@ -6,31 +6,28 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$17 {
 
     static final FunctionDescriptor NewtonUserBilateralCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonUserBilateralCallback$MH = RuntimeHelper.downcallHandle(
-        "(Ljdk/incubator/foreign/MemoryAddress;FI)V",
         constants$17.NewtonUserBilateralCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonUserBilateralGetInfoCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonUserBilateralGetInfoCallback$MH = RuntimeHelper.downcallHandle(
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
         constants$17.NewtonUserBilateralGetInfoCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonConstraintDestructor$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonConstraintDestructor$MH = RuntimeHelper.downcallHandle(
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
         constants$17.NewtonConstraintDestructor$FUNC, false
     );
 }

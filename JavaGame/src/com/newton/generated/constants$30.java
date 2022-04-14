@@ -6,75 +6,69 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$30 {
 
     static final FunctionDescriptor NewtonWorldSetDestructorCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldSetDestructorCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldSetDestructorCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonWorldSetDestructorCallback",
         constants$30.NewtonWorldSetDestructorCallback$FUNC, false
     );
-    static final FunctionDescriptor NewtonWorldGetDestructorCallback$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonWorldGetDestructorCallback$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldGetDestructorCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldGetDestructorCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonWorldGetDestructorCallback",
         constants$30.NewtonWorldGetDestructorCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonWorldSetCollisionConstructorDestructorCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldSetCollisionConstructorDestructorCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldSetCollisionConstructorDestructorCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonWorldSetCollisionConstructorDestructorCallback",
         constants$30.NewtonWorldSetCollisionConstructorDestructorCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonWorldSetCreateDestroyContactCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldSetCreateDestroyContactCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldSetCreateDestroyContactCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonWorldSetCreateDestroyContactCallback",
         constants$30.NewtonWorldSetCreateDestroyContactCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonWorldRayCast$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonWorldRayCast$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldRayCast",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonWorldRayCast",
         constants$30.NewtonWorldRayCast$FUNC, false
     );
-    static final FunctionDescriptor NewtonWorldConvexCast$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_INT,
-        C_INT
+    static final FunctionDescriptor NewtonWorldConvexCast$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonWorldConvexCast$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldConvexCast",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;II)I",
+        "NewtonWorldConvexCast",
         constants$30.NewtonWorldConvexCast$FUNC, false
     );
 }

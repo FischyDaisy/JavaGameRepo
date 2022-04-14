@@ -6,26 +6,26 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonCollisionMaterial {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        C_LONG_LONG.withName("m_userId"),
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        Constants$root.C_LONG_LONG$LAYOUT.withName("m_userId"),
         MemoryLayout.unionLayout(
-            C_POINTER.withName("m_ptr"),
-            C_LONG_LONG.withName("m_int"),
-            C_FLOAT.withName("m_float")
+            Constants$root.C_POINTER$LAYOUT.withName("m_ptr"),
+            Constants$root.C_LONG_LONG$LAYOUT.withName("m_int"),
+            Constants$root.C_FLOAT$LAYOUT.withName("m_float")
         ).withName("m_userData"),
         MemoryLayout.sequenceLayout(6, MemoryLayout.unionLayout(
-            C_POINTER.withName("m_ptr"),
-            C_LONG_LONG.withName("m_int"),
-            C_FLOAT.withName("m_float")
+            Constants$root.C_POINTER$LAYOUT.withName("m_ptr"),
+            Constants$root.C_LONG_LONG$LAYOUT.withName("m_int"),
+            Constants$root.C_FLOAT$LAYOUT.withName("m_float")
         )).withName("m_userParam")
     ).withName("NewtonCollisionMaterial");
     public static MemoryLayout $LAYOUT() {
         return NewtonCollisionMaterial.$struct$LAYOUT;
     }
-    static final VarHandle m_userId$VH = $struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_userId"));
+    static final VarHandle m_userId$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_userId"));
     public static VarHandle m_userId$VH() {
         return NewtonCollisionMaterial.m_userId$VH;
     }
@@ -49,12 +49,12 @@ public class NewtonCollisionMaterial {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

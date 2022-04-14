@@ -6,63 +6,57 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$32 {
 
-    static final FunctionDescriptor NewtonMaterialCreateGroupID$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMaterialCreateGroupID$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialCreateGroupID$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialCreateGroupID",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMaterialCreateGroupID",
         constants$32.NewtonMaterialCreateGroupID$FUNC, false
     );
-    static final FunctionDescriptor NewtonMaterialGetDefaultGroupID$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMaterialGetDefaultGroupID$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialGetDefaultGroupID$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialGetDefaultGroupID",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMaterialGetDefaultGroupID",
         constants$32.NewtonMaterialGetDefaultGroupID$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialDestroyAllGroupID$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialDestroyAllGroupID$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialDestroyAllGroupID",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMaterialDestroyAllGroupID",
         constants$32.NewtonMaterialDestroyAllGroupID$FUNC, false
     );
-    static final FunctionDescriptor NewtonMaterialGetUserData$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_INT,
-        C_INT
+    static final FunctionDescriptor NewtonMaterialGetUserData$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMaterialGetUserData$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialGetUserData",
-        "(Ljdk/incubator/foreign/MemoryAddress;II)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMaterialGetUserData",
         constants$32.NewtonMaterialGetUserData$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetSurfaceThickness$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetSurfaceThickness$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetSurfaceThickness",
-        "(Ljdk/incubator/foreign/MemoryAddress;IIF)V",
+        "NewtonMaterialSetSurfaceThickness",
         constants$32.NewtonMaterialSetSurfaceThickness$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetCallbackUserData$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetCallbackUserData$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetCallbackUserData",
-        "(Ljdk/incubator/foreign/MemoryAddress;IILjdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMaterialSetCallbackUserData",
         constants$32.NewtonMaterialSetCallbackUserData$FUNC, false
     );
 }

@@ -6,63 +6,57 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$82 {
 
-    static final FunctionDescriptor NewtonUniversalGetJointOmega1$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonUniversalGetJointOmega1$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonUniversalGetJointOmega1$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUniversalGetJointOmega1",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonUniversalGetJointOmega1",
         constants$82.NewtonUniversalGetJointOmega1$FUNC, false
     );
     static final FunctionDescriptor NewtonUniversalGetJointForce$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonUniversalGetJointForce$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUniversalGetJointForce",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonUniversalGetJointForce",
         constants$82.NewtonUniversalGetJointForce$FUNC, false
     );
-    static final FunctionDescriptor NewtonUniversalCalculateStopAlpha0$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER,
-        C_POINTER,
-        C_FLOAT
+    static final FunctionDescriptor NewtonUniversalCalculateStopAlpha0$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonUniversalCalculateStopAlpha0$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUniversalCalculateStopAlpha0",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;F)F",
+        "NewtonUniversalCalculateStopAlpha0",
         constants$82.NewtonUniversalCalculateStopAlpha0$FUNC, false
     );
-    static final FunctionDescriptor NewtonUniversalCalculateStopAlpha1$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER,
-        C_POINTER,
-        C_FLOAT
+    static final FunctionDescriptor NewtonUniversalCalculateStopAlpha1$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonUniversalCalculateStopAlpha1$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUniversalCalculateStopAlpha1",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;F)F",
+        "NewtonUniversalCalculateStopAlpha1",
         constants$82.NewtonUniversalCalculateStopAlpha1$FUNC, false
     );
-    static final FunctionDescriptor NewtonConstraintCreateUpVector$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonConstraintCreateUpVector$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonConstraintCreateUpVector$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonConstraintCreateUpVector",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonConstraintCreateUpVector",
         constants$82.NewtonConstraintCreateUpVector$FUNC, false
     );
     static final FunctionDescriptor NewtonUpVectorGetPin$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonUpVectorGetPin$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUpVectorGetPin",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonUpVectorGetPin",
         constants$82.NewtonUpVectorGetPin$FUNC, false
     );
 }

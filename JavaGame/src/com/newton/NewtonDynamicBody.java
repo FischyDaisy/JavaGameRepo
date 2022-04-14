@@ -11,7 +11,7 @@ public class NewtonDynamicBody extends NewtonBody {
 	}
 	
 	public static NewtonBody create(NewtonWorld world, NewtonCollision collision, Addressable matrix) {
-		return new NewtonDynamicBody(Newton_h.NewtonCreateDynamicBody(world, collision, matrix));
+		return new NewtonDynamicBody(Newton_h.NewtonCreateDynamicBody(world.address, collision.address, matrix));
 	}
 	
 	protected static NewtonBody wrapImpl(MemoryAddress address) {

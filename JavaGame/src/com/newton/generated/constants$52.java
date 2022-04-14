@@ -6,57 +6,51 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$52 {
 
     static final FunctionDescriptor NewtonStaticCollisionSetDebugCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonStaticCollisionSetDebugCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonStaticCollisionSetDebugCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonStaticCollisionSetDebugCallback",
         constants$52.NewtonStaticCollisionSetDebugCallback$FUNC, false
     );
-    static final FunctionDescriptor NewtonCollisionCreateInstance$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonCollisionCreateInstance$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCollisionCreateInstance$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionCreateInstance",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCollisionCreateInstance",
         constants$52.NewtonCollisionCreateInstance$FUNC, false
     );
-    static final FunctionDescriptor NewtonCollisionGetType$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCollisionGetType$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCollisionGetType$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionGetType",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonCollisionGetType",
         constants$52.NewtonCollisionGetType$FUNC, false
     );
-    static final FunctionDescriptor NewtonCollisionIsConvexShape$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCollisionIsConvexShape$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCollisionIsConvexShape$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionIsConvexShape",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonCollisionIsConvexShape",
         constants$52.NewtonCollisionIsConvexShape$FUNC, false
     );
-    static final FunctionDescriptor NewtonCollisionIsStaticShape$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCollisionIsStaticShape$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCollisionIsStaticShape$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionIsStaticShape",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonCollisionIsStaticShape",
         constants$52.NewtonCollisionIsStaticShape$FUNC, false
     );
     static final FunctionDescriptor NewtonCollisionSetUserData$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCollisionSetUserData$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionSetUserData",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonCollisionSetUserData",
         constants$52.NewtonCollisionSetUserData$FUNC, false
     );
 }

@@ -6,58 +6,52 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$59 {
 
-    static final FunctionDescriptor NewtonBodyGetSimulationState$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonBodyGetSimulationState$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetSimulationState$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetSimulationState",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonBodyGetSimulationState",
         constants$59.NewtonBodyGetSimulationState$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetSimulationState$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonBodySetSimulationState$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetSimulationState",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonBodySetSimulationState",
         constants$59.NewtonBodySetSimulationState$FUNC, false
     );
-    static final FunctionDescriptor NewtonBodyGetType$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonBodyGetType$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetType$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetType",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonBodyGetType",
         constants$59.NewtonBodyGetType$FUNC, false
     );
-    static final FunctionDescriptor NewtonBodyGetCollidable$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonBodyGetCollidable$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyGetCollidable$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyGetCollidable",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonBodyGetCollidable",
         constants$59.NewtonBodyGetCollidable$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetCollidable$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonBodySetCollidable$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetCollidable",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonBodySetCollidable",
         constants$59.NewtonBodySetCollidable$FUNC, false
     );
     static final FunctionDescriptor NewtonBodyAddForce$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyAddForce$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyAddForce",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodyAddForce",
         constants$59.NewtonBodyAddForce$FUNC, false
     );
 }

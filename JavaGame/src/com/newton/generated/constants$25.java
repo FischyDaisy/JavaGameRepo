@@ -6,65 +6,59 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$25 {
 
     static final FunctionDescriptor NewtonDeserializeScene$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonDeserializeScene$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonDeserializeScene",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonDeserializeScene",
         constants$25.NewtonDeserializeScene$FUNC, false
     );
-    static final FunctionDescriptor NewtonFindSerializedBody$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonFindSerializedBody$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonFindSerializedBody$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonFindSerializedBody",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonFindSerializedBody",
         constants$25.NewtonFindSerializedBody$FUNC, false
     );
     static final FunctionDescriptor NewtonSetJointSerializationCallbacks$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSetJointSerializationCallbacks$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSetJointSerializationCallbacks",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonSetJointSerializationCallbacks",
         constants$25.NewtonSetJointSerializationCallbacks$FUNC, false
     );
     static final FunctionDescriptor NewtonGetJointSerializationCallbacks$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetJointSerializationCallbacks$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetJointSerializationCallbacks",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonGetJointSerializationCallbacks",
         constants$25.NewtonGetJointSerializationCallbacks$FUNC, false
     );
     static final FunctionDescriptor NewtonWorldCriticalSectionLock$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonWorldCriticalSectionLock$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldCriticalSectionLock",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonWorldCriticalSectionLock",
         constants$25.NewtonWorldCriticalSectionLock$FUNC, false
     );
     static final FunctionDescriptor NewtonWorldCriticalSectionUnlock$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldCriticalSectionUnlock$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldCriticalSectionUnlock",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonWorldCriticalSectionUnlock",
         constants$25.NewtonWorldCriticalSectionUnlock$FUNC, false
     );
 }

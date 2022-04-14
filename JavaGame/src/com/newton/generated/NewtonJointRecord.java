@@ -6,21 +6,21 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonJointRecord {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        MemoryLayout.sequenceLayout(4, MemoryLayout.sequenceLayout(4, C_FLOAT)).withName("m_attachmenMatrix_0"),
-        MemoryLayout.sequenceLayout(4, MemoryLayout.sequenceLayout(4, C_FLOAT)).withName("m_attachmenMatrix_1"),
-        MemoryLayout.sequenceLayout(3, C_FLOAT).withName("m_minLinearDof"),
-        MemoryLayout.sequenceLayout(3, C_FLOAT).withName("m_maxLinearDof"),
-        MemoryLayout.sequenceLayout(3, C_FLOAT).withName("m_minAngularDof"),
-        MemoryLayout.sequenceLayout(3, C_FLOAT).withName("m_maxAngularDof"),
-        C_POINTER.withName("m_attachBody_0"),
-        C_POINTER.withName("m_attachBody_1"),
-        MemoryLayout.sequenceLayout(64, C_FLOAT).withName("m_extraParameters"),
-        C_INT.withName("m_bodiesCollisionOn"),
-        MemoryLayout.sequenceLayout(128, C_CHAR).withName("m_descriptionType"),
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        MemoryLayout.sequenceLayout(4, MemoryLayout.sequenceLayout(4, Constants$root.C_FLOAT$LAYOUT)).withName("m_attachmenMatrix_0"),
+        MemoryLayout.sequenceLayout(4, MemoryLayout.sequenceLayout(4, Constants$root.C_FLOAT$LAYOUT)).withName("m_attachmenMatrix_1"),
+        MemoryLayout.sequenceLayout(3, Constants$root.C_FLOAT$LAYOUT).withName("m_minLinearDof"),
+        MemoryLayout.sequenceLayout(3, Constants$root.C_FLOAT$LAYOUT).withName("m_maxLinearDof"),
+        MemoryLayout.sequenceLayout(3, Constants$root.C_FLOAT$LAYOUT).withName("m_minAngularDof"),
+        MemoryLayout.sequenceLayout(3, Constants$root.C_FLOAT$LAYOUT).withName("m_maxAngularDof"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_attachBody_0"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_attachBody_1"),
+        MemoryLayout.sequenceLayout(64, Constants$root.C_FLOAT$LAYOUT).withName("m_extraParameters"),
+        Constants$root.C_LONG$LAYOUT.withName("m_bodiesCollisionOn"),
+        MemoryLayout.sequenceLayout(128, Constants$root.C_CHAR$LAYOUT).withName("m_descriptionType"),
         MemoryLayout.paddingLayout(32)
     ).withName("NewtonJointRecord");
     public static MemoryLayout $LAYOUT() {
@@ -44,7 +44,7 @@ public class NewtonJointRecord {
     public static MemorySegment m_maxAngularDof$slice(MemorySegment seg) {
         return seg.asSlice(164, 12);
     }
-    static final VarHandle m_attachBody_0$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_attachBody_0")));
+    static final VarHandle m_attachBody_0$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_attachBody_0"));
     public static VarHandle m_attachBody_0$VH() {
         return NewtonJointRecord.m_attachBody_0$VH;
     }
@@ -60,7 +60,7 @@ public class NewtonJointRecord {
     public static void m_attachBody_0$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonJointRecord.m_attachBody_0$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_attachBody_1$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_attachBody_1")));
+    static final VarHandle m_attachBody_1$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_attachBody_1"));
     public static VarHandle m_attachBody_1$VH() {
         return NewtonJointRecord.m_attachBody_1$VH;
     }
@@ -79,7 +79,7 @@ public class NewtonJointRecord {
     public static MemorySegment m_extraParameters$slice(MemorySegment seg) {
         return seg.asSlice(192, 256);
     }
-    static final VarHandle m_bodiesCollisionOn$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_bodiesCollisionOn"));
+    static final VarHandle m_bodiesCollisionOn$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_bodiesCollisionOn"));
     public static VarHandle m_bodiesCollisionOn$VH() {
         return NewtonJointRecord.m_bodiesCollisionOn$VH;
     }
@@ -100,12 +100,12 @@ public class NewtonJointRecord {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

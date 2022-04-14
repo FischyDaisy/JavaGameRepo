@@ -6,60 +6,54 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$26 {
 
     static final FunctionDescriptor NewtonSetThreadsCount$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonSetThreadsCount$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSetThreadsCount",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonSetThreadsCount",
         constants$26.NewtonSetThreadsCount$FUNC, false
     );
-    static final FunctionDescriptor NewtonGetThreadsCount$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonGetThreadsCount$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetThreadsCount$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetThreadsCount",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonGetThreadsCount",
         constants$26.NewtonGetThreadsCount$FUNC, false
     );
-    static final FunctionDescriptor NewtonGetMaxThreadsCount$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonGetMaxThreadsCount$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetMaxThreadsCount$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetMaxThreadsCount",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonGetMaxThreadsCount",
         constants$26.NewtonGetMaxThreadsCount$FUNC, false
     );
     static final FunctionDescriptor NewtonDispachThreadJob$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonDispachThreadJob$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonDispachThreadJob",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonDispachThreadJob",
         constants$26.NewtonDispachThreadJob$FUNC, false
     );
     static final FunctionDescriptor NewtonSyncThreadJobs$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSyncThreadJobs$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSyncThreadJobs",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonSyncThreadJobs",
         constants$26.NewtonSyncThreadJobs$FUNC, false
     );
-    static final FunctionDescriptor NewtonAtomicAdd$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonAtomicAdd$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonAtomicAdd$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonAtomicAdd",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)I",
+        "NewtonAtomicAdd",
         constants$26.NewtonAtomicAdd$FUNC, false
     );
 }

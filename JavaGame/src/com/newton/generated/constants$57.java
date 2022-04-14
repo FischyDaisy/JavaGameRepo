@@ -6,59 +6,53 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$57 {
 
     static final FunctionDescriptor NewtonCollisionAggregateDestroy$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCollisionAggregateDestroy$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionAggregateDestroy",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonCollisionAggregateDestroy",
         constants$57.NewtonCollisionAggregateDestroy$FUNC, false
     );
     static final FunctionDescriptor NewtonCollisionAggregateAddBody$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCollisionAggregateAddBody$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionAggregateAddBody",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonCollisionAggregateAddBody",
         constants$57.NewtonCollisionAggregateAddBody$FUNC, false
     );
     static final FunctionDescriptor NewtonCollisionAggregateRemoveBody$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCollisionAggregateRemoveBody$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionAggregateRemoveBody",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonCollisionAggregateRemoveBody",
         constants$57.NewtonCollisionAggregateRemoveBody$FUNC, false
     );
-    static final FunctionDescriptor NewtonCollisionAggregateGetSelfCollision$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCollisionAggregateGetSelfCollision$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCollisionAggregateGetSelfCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionAggregateGetSelfCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonCollisionAggregateGetSelfCollision",
         constants$57.NewtonCollisionAggregateGetSelfCollision$FUNC, false
     );
     static final FunctionDescriptor NewtonCollisionAggregateSetSelfCollision$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonCollisionAggregateSetSelfCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionAggregateSetSelfCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonCollisionAggregateSetSelfCollision",
         constants$57.NewtonCollisionAggregateSetSelfCollision$FUNC, false
     );
     static final FunctionDescriptor NewtonSetEulerAngle$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSetEulerAngle$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSetEulerAngle",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonSetEulerAngle",
         constants$57.NewtonSetEulerAngle$FUNC, false
     );
 }

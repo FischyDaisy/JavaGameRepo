@@ -6,18 +6,18 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonBoxParam {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        C_FLOAT.withName("m_x"),
-        C_FLOAT.withName("m_y"),
-        C_FLOAT.withName("m_z")
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        Constants$root.C_FLOAT$LAYOUT.withName("m_x"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_y"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_z")
     ).withName("NewtonBoxParam");
     public static MemoryLayout $LAYOUT() {
         return NewtonBoxParam.$struct$LAYOUT;
     }
-    static final VarHandle m_x$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_x"));
+    static final VarHandle m_x$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_x"));
     public static VarHandle m_x$VH() {
         return NewtonBoxParam.m_x$VH;
     }
@@ -33,7 +33,7 @@ public class NewtonBoxParam {
     public static void m_x$set(MemorySegment seg, long index, float x) {
         NewtonBoxParam.m_x$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_y$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_y"));
+    static final VarHandle m_y$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_y"));
     public static VarHandle m_y$VH() {
         return NewtonBoxParam.m_y$VH;
     }
@@ -49,7 +49,7 @@ public class NewtonBoxParam {
     public static void m_y$set(MemorySegment seg, long index, float x) {
         NewtonBoxParam.m_y$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_z$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_z"));
+    static final VarHandle m_z$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_z"));
     public static VarHandle m_z$VH() {
         return NewtonBoxParam.m_z$VH;
     }
@@ -67,12 +67,12 @@ public class NewtonBoxParam {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

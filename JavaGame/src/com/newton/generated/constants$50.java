@@ -6,70 +6,64 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$50 {
 
-    static final FunctionDescriptor NewtonCreateHeightFieldCollision$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_INT,
-        C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT,
-        C_INT
+    static final FunctionDescriptor NewtonCreateHeightFieldCollision$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonCreateHeightFieldCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateHeightFieldCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;IIIILjdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;FFFI)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateHeightFieldCollision",
         constants$50.NewtonCreateHeightFieldCollision$FUNC, false
     );
     static final FunctionDescriptor NewtonHeightFieldSetUserRayCastCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonHeightFieldSetUserRayCastCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonHeightFieldSetUserRayCastCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonHeightFieldSetUserRayCastCallback",
         constants$50.NewtonHeightFieldSetUserRayCastCallback$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateTreeCollision$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonCreateTreeCollision$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonCreateTreeCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateTreeCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateTreeCollision",
         constants$50.NewtonCreateTreeCollision$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateTreeCollisionFromMesh$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonCreateTreeCollisionFromMesh$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonCreateTreeCollisionFromMesh$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateTreeCollisionFromMesh",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateTreeCollisionFromMesh",
         constants$50.NewtonCreateTreeCollisionFromMesh$FUNC, false
     );
     static final FunctionDescriptor NewtonTreeCollisionSetUserRayCastCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonTreeCollisionSetUserRayCastCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonTreeCollisionSetUserRayCastCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonTreeCollisionSetUserRayCastCallback",
         constants$50.NewtonTreeCollisionSetUserRayCastCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonTreeCollisionBeginBuild$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonTreeCollisionBeginBuild$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonTreeCollisionBeginBuild",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonTreeCollisionBeginBuild",
         constants$50.NewtonTreeCollisionBeginBuild$FUNC, false
     );
 }

@@ -6,15 +6,15 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonUserMeshCollisionRayHitDesc {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        MemoryLayout.sequenceLayout(4, C_FLOAT).withName("m_p0"),
-        MemoryLayout.sequenceLayout(4, C_FLOAT).withName("m_p1"),
-        MemoryLayout.sequenceLayout(4, C_FLOAT).withName("m_normalOut"),
-        C_LONG_LONG.withName("m_userIdOut"),
-        C_POINTER.withName("m_userData")
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        MemoryLayout.sequenceLayout(4, Constants$root.C_FLOAT$LAYOUT).withName("m_p0"),
+        MemoryLayout.sequenceLayout(4, Constants$root.C_FLOAT$LAYOUT).withName("m_p1"),
+        MemoryLayout.sequenceLayout(4, Constants$root.C_FLOAT$LAYOUT).withName("m_normalOut"),
+        Constants$root.C_LONG_LONG$LAYOUT.withName("m_userIdOut"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_userData")
     ).withName("NewtonUserMeshCollisionRayHitDesc");
     public static MemoryLayout $LAYOUT() {
         return NewtonUserMeshCollisionRayHitDesc.$struct$LAYOUT;
@@ -28,7 +28,7 @@ public class NewtonUserMeshCollisionRayHitDesc {
     public static MemorySegment m_normalOut$slice(MemorySegment seg) {
         return seg.asSlice(32, 16);
     }
-    static final VarHandle m_userIdOut$VH = $struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_userIdOut"));
+    static final VarHandle m_userIdOut$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_userIdOut"));
     public static VarHandle m_userIdOut$VH() {
         return NewtonUserMeshCollisionRayHitDesc.m_userIdOut$VH;
     }
@@ -44,7 +44,7 @@ public class NewtonUserMeshCollisionRayHitDesc {
     public static void m_userIdOut$set(MemorySegment seg, long index, long x) {
         NewtonUserMeshCollisionRayHitDesc.m_userIdOut$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_userData$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_userData")));
+    static final VarHandle m_userData$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_userData"));
     public static VarHandle m_userData$VH() {
         return NewtonUserMeshCollisionRayHitDesc.m_userData$VH;
     }
@@ -62,12 +62,12 @@ public class NewtonUserMeshCollisionRayHitDesc {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

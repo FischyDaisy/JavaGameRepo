@@ -6,66 +6,60 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$85 {
 
-    static final FunctionDescriptor NewtonUserJointGetRowAcceleration$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonUserJointGetRowAcceleration$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonUserJointGetRowAcceleration$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUserJointGetRowAcceleration",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonUserJointGetRowAcceleration",
         constants$85.NewtonUserJointGetRowAcceleration$FUNC, false
     );
     static final FunctionDescriptor NewtonUserJointGetRowJacobian$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonUserJointGetRowJacobian$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUserJointGetRowJacobian",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonUserJointGetRowJacobian",
         constants$85.NewtonUserJointGetRowJacobian$FUNC, false
     );
     static final FunctionDescriptor NewtonUserJointSetRowAcceleration$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonUserJointSetRowAcceleration$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUserJointSetRowAcceleration",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonUserJointSetRowAcceleration",
         constants$85.NewtonUserJointSetRowAcceleration$FUNC, false
     );
     static final FunctionDescriptor NewtonUserJointSetRowMassDependentSpringDamperAcceleration$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonUserJointSetRowMassDependentSpringDamperAcceleration$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUserJointSetRowMassDependentSpringDamperAcceleration",
-        "(Ljdk/incubator/foreign/MemoryAddress;FF)V",
+        "NewtonUserJointSetRowMassDependentSpringDamperAcceleration",
         constants$85.NewtonUserJointSetRowMassDependentSpringDamperAcceleration$FUNC, false
     );
     static final FunctionDescriptor NewtonUserJointSetRowMassIndependentSpringDamperAcceleration$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonUserJointSetRowMassIndependentSpringDamperAcceleration$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUserJointSetRowMassIndependentSpringDamperAcceleration",
-        "(Ljdk/incubator/foreign/MemoryAddress;FFF)V",
+        "NewtonUserJointSetRowMassIndependentSpringDamperAcceleration",
         constants$85.NewtonUserJointSetRowMassIndependentSpringDamperAcceleration$FUNC, false
     );
     static final FunctionDescriptor NewtonUserJointSetRowStiffness$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonUserJointSetRowStiffness$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUserJointSetRowStiffness",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonUserJointSetRowStiffness",
         constants$85.NewtonUserJointSetRowStiffness$FUNC, false
     );
 }

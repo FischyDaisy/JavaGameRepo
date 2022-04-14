@@ -6,59 +6,53 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$47 {
 
-    static final FunctionDescriptor NewtonFracturedCompoundMeshPartGetIndexCount$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonFracturedCompoundMeshPartGetIndexCount$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonFracturedCompoundMeshPartGetIndexCount$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonFracturedCompoundMeshPartGetIndexCount",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonFracturedCompoundMeshPartGetIndexCount",
         constants$47.NewtonFracturedCompoundMeshPartGetIndexCount$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateSceneCollision$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonCreateSceneCollision$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonCreateSceneCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateSceneCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateSceneCollision",
         constants$47.NewtonCreateSceneCollision$FUNC, false
     );
     static final FunctionDescriptor NewtonSceneCollisionBeginAddRemove$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSceneCollisionBeginAddRemove$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSceneCollisionBeginAddRemove",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonSceneCollisionBeginAddRemove",
         constants$47.NewtonSceneCollisionBeginAddRemove$FUNC, false
     );
-    static final FunctionDescriptor NewtonSceneCollisionAddSubCollision$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonSceneCollisionAddSubCollision$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSceneCollisionAddSubCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSceneCollisionAddSubCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonSceneCollisionAddSubCollision",
         constants$47.NewtonSceneCollisionAddSubCollision$FUNC, false
     );
     static final FunctionDescriptor NewtonSceneCollisionRemoveSubCollision$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSceneCollisionRemoveSubCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSceneCollisionRemoveSubCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonSceneCollisionRemoveSubCollision",
         constants$47.NewtonSceneCollisionRemoveSubCollision$FUNC, false
     );
     static final FunctionDescriptor NewtonSceneCollisionRemoveSubCollisionByIndex$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonSceneCollisionRemoveSubCollisionByIndex$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSceneCollisionRemoveSubCollisionByIndex",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonSceneCollisionRemoveSubCollisionByIndex",
         constants$47.NewtonSceneCollisionRemoveSubCollisionByIndex$FUNC, false
     );
 }

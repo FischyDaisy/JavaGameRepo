@@ -6,64 +6,58 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$28 {
 
-    static final FunctionDescriptor NewtonWorldGetUserData$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonWorldGetUserData$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldGetUserData$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldGetUserData",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonWorldGetUserData",
         constants$28.NewtonWorldGetUserData$FUNC, false
     );
-    static final FunctionDescriptor NewtonWorldAddListener$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonWorldAddListener$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldAddListener$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldAddListener",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonWorldAddListener",
         constants$28.NewtonWorldAddListener$FUNC, false
     );
-    static final FunctionDescriptor NewtonWorldGetListener$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonWorldGetListener$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldGetListener$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldGetListener",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonWorldGetListener",
         constants$28.NewtonWorldGetListener$FUNC, false
     );
     static final FunctionDescriptor NewtonWorldListenerSetDebugCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldListenerSetDebugCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldListenerSetDebugCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonWorldListenerSetDebugCallback",
         constants$28.NewtonWorldListenerSetDebugCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonWorldListenerSetPostStepCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldListenerSetPostStepCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldListenerSetPostStepCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonWorldListenerSetPostStepCallback",
         constants$28.NewtonWorldListenerSetPostStepCallback$FUNC, false
     );
     static final FunctionDescriptor NewtonWorldListenerSetPreUpdateCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldListenerSetPreUpdateCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldListenerSetPreUpdateCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonWorldListenerSetPreUpdateCallback",
         constants$28.NewtonWorldListenerSetPreUpdateCallback$FUNC, false
     );
 }

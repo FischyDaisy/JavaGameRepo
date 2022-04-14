@@ -6,15 +6,15 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonWorldConvexCastReturnInfo {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        MemoryLayout.sequenceLayout(4, C_FLOAT).withName("m_point"),
-        MemoryLayout.sequenceLayout(4, C_FLOAT).withName("m_normal"),
-        C_LONG_LONG.withName("m_contactID"),
-        C_POINTER.withName("m_hitBody"),
-        C_FLOAT.withName("m_penetration"),
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        MemoryLayout.sequenceLayout(4, Constants$root.C_FLOAT$LAYOUT).withName("m_point"),
+        MemoryLayout.sequenceLayout(4, Constants$root.C_FLOAT$LAYOUT).withName("m_normal"),
+        Constants$root.C_LONG_LONG$LAYOUT.withName("m_contactID"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_hitBody"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_penetration"),
         MemoryLayout.paddingLayout(32)
     ).withName("NewtonWorldConvexCastReturnInfo");
     public static MemoryLayout $LAYOUT() {
@@ -26,7 +26,7 @@ public class NewtonWorldConvexCastReturnInfo {
     public static MemorySegment m_normal$slice(MemorySegment seg) {
         return seg.asSlice(16, 16);
     }
-    static final VarHandle m_contactID$VH = $struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_contactID"));
+    static final VarHandle m_contactID$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_contactID"));
     public static VarHandle m_contactID$VH() {
         return NewtonWorldConvexCastReturnInfo.m_contactID$VH;
     }
@@ -42,7 +42,7 @@ public class NewtonWorldConvexCastReturnInfo {
     public static void m_contactID$set(MemorySegment seg, long index, long x) {
         NewtonWorldConvexCastReturnInfo.m_contactID$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_hitBody$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_hitBody")));
+    static final VarHandle m_hitBody$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_hitBody"));
     public static VarHandle m_hitBody$VH() {
         return NewtonWorldConvexCastReturnInfo.m_hitBody$VH;
     }
@@ -58,7 +58,7 @@ public class NewtonWorldConvexCastReturnInfo {
     public static void m_hitBody$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonWorldConvexCastReturnInfo.m_hitBody$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_penetration$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_penetration"));
+    static final VarHandle m_penetration$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_penetration"));
     public static VarHandle m_penetration$VH() {
         return NewtonWorldConvexCastReturnInfo.m_penetration$VH;
     }
@@ -76,12 +76,12 @@ public class NewtonWorldConvexCastReturnInfo {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

@@ -6,66 +6,60 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$77 {
 
     static final FunctionDescriptor NewtonBallGetJointAngle$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBallGetJointAngle$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBallGetJointAngle",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBallGetJointAngle",
         constants$77.NewtonBallGetJointAngle$FUNC, false
     );
     static final FunctionDescriptor NewtonBallGetJointOmega$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBallGetJointOmega$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBallGetJointOmega",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBallGetJointOmega",
         constants$77.NewtonBallGetJointOmega$FUNC, false
     );
     static final FunctionDescriptor NewtonBallGetJointForce$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBallGetJointForce$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBallGetJointForce",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBallGetJointForce",
         constants$77.NewtonBallGetJointForce$FUNC, false
     );
     static final FunctionDescriptor NewtonBallSetConeLimits$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonBallSetConeLimits$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBallSetConeLimits",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;FF)V",
+        "NewtonBallSetConeLimits",
         constants$77.NewtonBallSetConeLimits$FUNC, false
     );
-    static final FunctionDescriptor NewtonConstraintCreateHinge$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonConstraintCreateHinge$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonConstraintCreateHinge$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonConstraintCreateHinge",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonConstraintCreateHinge",
         constants$77.NewtonConstraintCreateHinge$FUNC, false
     );
     static final FunctionDescriptor NewtonHingeSetUserCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonHingeSetUserCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonHingeSetUserCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonHingeSetUserCallback",
         constants$77.NewtonHingeSetUserCallback$FUNC, false
     );
 }

@@ -6,64 +6,58 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$37 {
 
     static final FunctionDescriptor NewtonMaterialSetAsSoftContact$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetAsSoftContact$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetAsSoftContact",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonMaterialSetAsSoftContact",
         constants$37.NewtonMaterialSetAsSoftContact$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetContactSoftness$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactSoftness$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactSoftness",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonMaterialSetContactSoftness",
         constants$37.NewtonMaterialSetContactSoftness$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetContactThickness$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactThickness$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactThickness",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonMaterialSetContactThickness",
         constants$37.NewtonMaterialSetContactThickness$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetContactElasticity$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactElasticity$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactElasticity",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonMaterialSetContactElasticity",
         constants$37.NewtonMaterialSetContactElasticity$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetContactFrictionState$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactFrictionState$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactFrictionState",
-        "(Ljdk/incubator/foreign/MemoryAddress;II)V",
+        "NewtonMaterialSetContactFrictionState",
         constants$37.NewtonMaterialSetContactFrictionState$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetContactFrictionCoef$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactFrictionCoef$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactFrictionCoef",
-        "(Ljdk/incubator/foreign/MemoryAddress;FFI)V",
+        "NewtonMaterialSetContactFrictionCoef",
         constants$37.NewtonMaterialSetContactFrictionCoef$FUNC, false
     );
 }

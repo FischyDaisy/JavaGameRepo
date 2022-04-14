@@ -6,25 +6,25 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonHeightFieldCollisionParam {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        C_INT.withName("m_width"),
-        C_INT.withName("m_height"),
-        C_INT.withName("m_gridsDiagonals"),
-        C_INT.withName("m_elevationDataType"),
-        C_FLOAT.withName("m_verticalScale"),
-        C_FLOAT.withName("m_horizonalScale_x"),
-        C_FLOAT.withName("m_horizonalScale_z"),
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        Constants$root.C_LONG$LAYOUT.withName("m_width"),
+        Constants$root.C_LONG$LAYOUT.withName("m_height"),
+        Constants$root.C_LONG$LAYOUT.withName("m_gridsDiagonals"),
+        Constants$root.C_LONG$LAYOUT.withName("m_elevationDataType"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_verticalScale"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_horizonalScale_x"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_horizonalScale_z"),
         MemoryLayout.paddingLayout(32),
-        C_POINTER.withName("m_vertialElevation"),
-        C_POINTER.withName("m_atributes")
+        Constants$root.C_POINTER$LAYOUT.withName("m_vertialElevation"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_atributes")
     ).withName("NewtonHeightFieldCollisionParam");
     public static MemoryLayout $LAYOUT() {
         return NewtonHeightFieldCollisionParam.$struct$LAYOUT;
     }
-    static final VarHandle m_width$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_width"));
+    static final VarHandle m_width$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_width"));
     public static VarHandle m_width$VH() {
         return NewtonHeightFieldCollisionParam.m_width$VH;
     }
@@ -40,7 +40,7 @@ public class NewtonHeightFieldCollisionParam {
     public static void m_width$set(MemorySegment seg, long index, int x) {
         NewtonHeightFieldCollisionParam.m_width$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_height$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_height"));
+    static final VarHandle m_height$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_height"));
     public static VarHandle m_height$VH() {
         return NewtonHeightFieldCollisionParam.m_height$VH;
     }
@@ -56,7 +56,7 @@ public class NewtonHeightFieldCollisionParam {
     public static void m_height$set(MemorySegment seg, long index, int x) {
         NewtonHeightFieldCollisionParam.m_height$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_gridsDiagonals$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_gridsDiagonals"));
+    static final VarHandle m_gridsDiagonals$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_gridsDiagonals"));
     public static VarHandle m_gridsDiagonals$VH() {
         return NewtonHeightFieldCollisionParam.m_gridsDiagonals$VH;
     }
@@ -72,7 +72,7 @@ public class NewtonHeightFieldCollisionParam {
     public static void m_gridsDiagonals$set(MemorySegment seg, long index, int x) {
         NewtonHeightFieldCollisionParam.m_gridsDiagonals$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_elevationDataType$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_elevationDataType"));
+    static final VarHandle m_elevationDataType$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_elevationDataType"));
     public static VarHandle m_elevationDataType$VH() {
         return NewtonHeightFieldCollisionParam.m_elevationDataType$VH;
     }
@@ -88,7 +88,7 @@ public class NewtonHeightFieldCollisionParam {
     public static void m_elevationDataType$set(MemorySegment seg, long index, int x) {
         NewtonHeightFieldCollisionParam.m_elevationDataType$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_verticalScale$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_verticalScale"));
+    static final VarHandle m_verticalScale$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_verticalScale"));
     public static VarHandle m_verticalScale$VH() {
         return NewtonHeightFieldCollisionParam.m_verticalScale$VH;
     }
@@ -104,7 +104,7 @@ public class NewtonHeightFieldCollisionParam {
     public static void m_verticalScale$set(MemorySegment seg, long index, float x) {
         NewtonHeightFieldCollisionParam.m_verticalScale$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_horizonalScale_x$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_horizonalScale_x"));
+    static final VarHandle m_horizonalScale_x$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_horizonalScale_x"));
     public static VarHandle m_horizonalScale_x$VH() {
         return NewtonHeightFieldCollisionParam.m_horizonalScale_x$VH;
     }
@@ -120,7 +120,7 @@ public class NewtonHeightFieldCollisionParam {
     public static void m_horizonalScale_x$set(MemorySegment seg, long index, float x) {
         NewtonHeightFieldCollisionParam.m_horizonalScale_x$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_horizonalScale_z$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_horizonalScale_z"));
+    static final VarHandle m_horizonalScale_z$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_horizonalScale_z"));
     public static VarHandle m_horizonalScale_z$VH() {
         return NewtonHeightFieldCollisionParam.m_horizonalScale_z$VH;
     }
@@ -136,7 +136,7 @@ public class NewtonHeightFieldCollisionParam {
     public static void m_horizonalScale_z$set(MemorySegment seg, long index, float x) {
         NewtonHeightFieldCollisionParam.m_horizonalScale_z$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_vertialElevation$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_vertialElevation")));
+    static final VarHandle m_vertialElevation$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_vertialElevation"));
     public static VarHandle m_vertialElevation$VH() {
         return NewtonHeightFieldCollisionParam.m_vertialElevation$VH;
     }
@@ -152,7 +152,7 @@ public class NewtonHeightFieldCollisionParam {
     public static void m_vertialElevation$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonHeightFieldCollisionParam.m_vertialElevation$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_atributes$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_atributes")));
+    static final VarHandle m_atributes$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_atributes"));
     public static VarHandle m_atributes$VH() {
         return NewtonHeightFieldCollisionParam.m_atributes$VH;
     }
@@ -170,12 +170,12 @@ public class NewtonHeightFieldCollisionParam {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

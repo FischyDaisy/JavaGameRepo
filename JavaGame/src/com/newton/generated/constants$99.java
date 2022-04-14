@@ -6,59 +6,53 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$99 {
 
-    static final FunctionDescriptor NewtonMeshCreateNextLayer$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshCreateNextLayer$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshCreateNextLayer$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshCreateNextLayer",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMeshCreateNextLayer",
         constants$99.NewtonMeshCreateNextLayer$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshGetTotalFaceCount$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshGetTotalFaceCount$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetTotalFaceCount$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetTotalFaceCount",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshGetTotalFaceCount",
         constants$99.NewtonMeshGetTotalFaceCount$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshGetTotalIndexCount$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshGetTotalIndexCount$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetTotalIndexCount$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetTotalIndexCount",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshGetTotalIndexCount",
         constants$99.NewtonMeshGetTotalIndexCount$FUNC, false
     );
     static final FunctionDescriptor NewtonMeshGetFaces$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetFaces$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetFaces",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMeshGetFaces",
         constants$99.NewtonMeshGetFaces$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshGetVertexCount$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshGetVertexCount$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetVertexCount$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetVertexCount",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshGetVertexCount",
         constants$99.NewtonMeshGetVertexCount$FUNC, false
     );
-    static final FunctionDescriptor NewtonMeshGetVertexStrideInByte$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMeshGetVertexStrideInByte$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMeshGetVertexStrideInByte$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMeshGetVertexStrideInByte",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMeshGetVertexStrideInByte",
         constants$99.NewtonMeshGetVertexStrideInByte$FUNC, false
     );
 }

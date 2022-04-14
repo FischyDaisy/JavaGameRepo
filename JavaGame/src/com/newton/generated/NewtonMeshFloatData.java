@@ -6,19 +6,19 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonMeshFloatData {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        C_POINTER.withName("m_data"),
-        C_POINTER.withName("m_indexList"),
-        C_INT.withName("m_strideInBytes"),
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        Constants$root.C_POINTER$LAYOUT.withName("m_data"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_indexList"),
+        Constants$root.C_LONG$LAYOUT.withName("m_strideInBytes"),
         MemoryLayout.paddingLayout(32)
     ).withName("NewtonMeshFloatData");
     public static MemoryLayout $LAYOUT() {
         return NewtonMeshFloatData.$struct$LAYOUT;
     }
-    static final VarHandle m_data$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_data")));
+    static final VarHandle m_data$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_data"));
     public static VarHandle m_data$VH() {
         return NewtonMeshFloatData.m_data$VH;
     }
@@ -34,7 +34,7 @@ public class NewtonMeshFloatData {
     public static void m_data$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonMeshFloatData.m_data$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_indexList$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_indexList")));
+    static final VarHandle m_indexList$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_indexList"));
     public static VarHandle m_indexList$VH() {
         return NewtonMeshFloatData.m_indexList$VH;
     }
@@ -50,7 +50,7 @@ public class NewtonMeshFloatData {
     public static void m_indexList$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonMeshFloatData.m_indexList$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_strideInBytes$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_strideInBytes"));
+    static final VarHandle m_strideInBytes$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_strideInBytes"));
     public static VarHandle m_strideInBytes$VH() {
         return NewtonMeshFloatData.m_strideInBytes$VH;
     }
@@ -68,12 +68,12 @@ public class NewtonMeshFloatData {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

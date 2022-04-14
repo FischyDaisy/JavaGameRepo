@@ -560,7 +560,6 @@ public class NuklearRenderActivity {
                                 pipeline.getVkPipelineLayout(), 0, nullDescriptorSets, null);
             			break;
             	}
-            	//textureDescriptorSets[idx].update(device, cmd.texture().ptr(), textureSampler, 0);
             	int offsetX = (int) Math.max(cmd.clip_rect().x(), 0);
             	int offsetY = (int) Math.max(cmd.clip_rect().y(), 1);
             	rect.offset(it -> it.x(offsetX).y(offsetY));

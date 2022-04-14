@@ -6,66 +6,60 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$60 {
 
     static final FunctionDescriptor NewtonBodyAddTorque$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodyAddTorque$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodyAddTorque",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodyAddTorque",
         constants$60.NewtonBodyAddTorque$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetCentreOfMass$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodySetCentreOfMass$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetCentreOfMass",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodySetCentreOfMass",
         constants$60.NewtonBodySetCentreOfMass$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetMassMatrix$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonBodySetMassMatrix$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetMassMatrix",
-        "(Ljdk/incubator/foreign/MemoryAddress;FFFF)V",
+        "NewtonBodySetMassMatrix",
         constants$60.NewtonBodySetMassMatrix$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetFullMassMatrix$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodySetFullMassMatrix$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetFullMassMatrix",
-        "(Ljdk/incubator/foreign/MemoryAddress;FLjdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodySetFullMassMatrix",
         constants$60.NewtonBodySetFullMassMatrix$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetMassProperties$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodySetMassProperties$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetMassProperties",
-        "(Ljdk/incubator/foreign/MemoryAddress;FLjdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodySetMassProperties",
         constants$60.NewtonBodySetMassProperties$FUNC, false
     );
     static final FunctionDescriptor NewtonBodySetMatrix$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBodySetMatrix$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBodySetMatrix",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBodySetMatrix",
         constants$60.NewtonBodySetMatrix$FUNC, false
     );
 }

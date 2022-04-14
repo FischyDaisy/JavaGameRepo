@@ -6,55 +6,55 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonMeshVertexFormat {
-
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        C_INT.withName("m_faceCount"),
+	
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        Constants$root.C_LONG$LAYOUT.withName("m_faceCount"),
         MemoryLayout.paddingLayout(32),
-        C_POINTER.withName("m_faceIndexCount"),
-        C_POINTER.withName("m_faceMaterial"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_faceIndexCount"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_faceMaterial"),
         MemoryLayout.structLayout(
-            C_POINTER.withName("m_data"),
-            C_POINTER.withName("m_indexList"),
-            C_INT.withName("m_strideInBytes"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_data"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_indexList"),
+            Constants$root.C_LONG$LAYOUT.withName("m_strideInBytes"),
             MemoryLayout.paddingLayout(32)
         ).withName("m_vertex"),
         MemoryLayout.structLayout(
-            C_POINTER.withName("m_data"),
-            C_POINTER.withName("m_indexList"),
-            C_INT.withName("m_strideInBytes"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_data"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_indexList"),
+            Constants$root.C_LONG$LAYOUT.withName("m_strideInBytes"),
             MemoryLayout.paddingLayout(32)
         ).withName("m_normal"),
         MemoryLayout.structLayout(
-            C_POINTER.withName("m_data"),
-            C_POINTER.withName("m_indexList"),
-            C_INT.withName("m_strideInBytes"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_data"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_indexList"),
+            Constants$root.C_LONG$LAYOUT.withName("m_strideInBytes"),
             MemoryLayout.paddingLayout(32)
         ).withName("m_binormal"),
         MemoryLayout.structLayout(
-            C_POINTER.withName("m_data"),
-            C_POINTER.withName("m_indexList"),
-            C_INT.withName("m_strideInBytes"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_data"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_indexList"),
+            Constants$root.C_LONG$LAYOUT.withName("m_strideInBytes"),
             MemoryLayout.paddingLayout(32)
         ).withName("m_uv0"),
         MemoryLayout.structLayout(
-            C_POINTER.withName("m_data"),
-            C_POINTER.withName("m_indexList"),
-            C_INT.withName("m_strideInBytes"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_data"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_indexList"),
+            Constants$root.C_LONG$LAYOUT.withName("m_strideInBytes"),
             MemoryLayout.paddingLayout(32)
         ).withName("m_uv1"),
         MemoryLayout.structLayout(
-            C_POINTER.withName("m_data"),
-            C_POINTER.withName("m_indexList"),
-            C_INT.withName("m_strideInBytes"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_data"),
+            Constants$root.C_POINTER$LAYOUT.withName("m_indexList"),
+            Constants$root.C_LONG$LAYOUT.withName("m_strideInBytes"),
             MemoryLayout.paddingLayout(32)
         ).withName("m_vertexColor")
     ).withName("NewtonMeshVertexFormat");
     public static MemoryLayout $LAYOUT() {
         return NewtonMeshVertexFormat.$struct$LAYOUT;
     }
-    static final VarHandle m_faceCount$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_faceCount"));
+    static final VarHandle m_faceCount$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_faceCount"));
     public static VarHandle m_faceCount$VH() {
         return NewtonMeshVertexFormat.m_faceCount$VH;
     }
@@ -70,7 +70,7 @@ public class NewtonMeshVertexFormat {
     public static void m_faceCount$set(MemorySegment seg, long index, int x) {
         NewtonMeshVertexFormat.m_faceCount$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_faceIndexCount$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_faceIndexCount")));
+    static final VarHandle m_faceIndexCount$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_faceIndexCount"));
     public static VarHandle m_faceIndexCount$VH() {
         return NewtonMeshVertexFormat.m_faceIndexCount$VH;
     }
@@ -86,7 +86,7 @@ public class NewtonMeshVertexFormat {
     public static void m_faceIndexCount$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonMeshVertexFormat.m_faceIndexCount$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_faceMaterial$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_faceMaterial")));
+    static final VarHandle m_faceMaterial$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_faceMaterial"));
     public static VarHandle m_faceMaterial$VH() {
         return NewtonMeshVertexFormat.m_faceMaterial$VH;
     }
@@ -122,12 +122,12 @@ public class NewtonMeshVertexFormat {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

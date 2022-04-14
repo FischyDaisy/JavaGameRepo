@@ -6,18 +6,18 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonCapsuleParam {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        C_FLOAT.withName("m_radio0"),
-        C_FLOAT.withName("m_radio1"),
-        C_FLOAT.withName("m_height")
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        Constants$root.C_FLOAT$LAYOUT.withName("m_radio0"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_radio1"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_height")
     ).withName("NewtonCapsuleParam");
     public static MemoryLayout $LAYOUT() {
         return NewtonCapsuleParam.$struct$LAYOUT;
     }
-    static final VarHandle m_radio0$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_radio0"));
+    static final VarHandle m_radio0$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_radio0"));
     public static VarHandle m_radio0$VH() {
         return NewtonCapsuleParam.m_radio0$VH;
     }
@@ -33,7 +33,7 @@ public class NewtonCapsuleParam {
     public static void m_radio0$set(MemorySegment seg, long index, float x) {
         NewtonCapsuleParam.m_radio0$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_radio1$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_radio1"));
+    static final VarHandle m_radio1$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_radio1"));
     public static VarHandle m_radio1$VH() {
         return NewtonCapsuleParam.m_radio1$VH;
     }
@@ -49,7 +49,7 @@ public class NewtonCapsuleParam {
     public static void m_radio1$set(MemorySegment seg, long index, float x) {
         NewtonCapsuleParam.m_radio1$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_height$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_height"));
+    static final VarHandle m_height$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_height"));
     public static VarHandle m_height$VH() {
         return NewtonCapsuleParam.m_height$VH;
     }
@@ -67,12 +67,12 @@ public class NewtonCapsuleParam {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

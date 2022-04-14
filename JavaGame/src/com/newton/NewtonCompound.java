@@ -11,6 +11,6 @@ public class NewtonCompound extends NewtonCollision {
 	}
 	
 	public static NewtonCollision createCompoundCollision(NewtonWorld world, int shapeID) {
-		return new NewtonCompound(Newton_h.NewtonCreateCompoundCollision(world, shapeID));
+		return new NewtonCompound(Newton_h.NewtonCreateCompoundCollision(world.address, shapeID));
 	}
 }

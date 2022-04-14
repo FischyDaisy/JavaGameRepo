@@ -6,60 +6,54 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$48 {
 
     static final FunctionDescriptor NewtonSceneCollisionSetSubCollisionMatrix$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSceneCollisionSetSubCollisionMatrix$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSceneCollisionSetSubCollisionMatrix",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonSceneCollisionSetSubCollisionMatrix",
         constants$48.NewtonSceneCollisionSetSubCollisionMatrix$FUNC, false
     );
     static final FunctionDescriptor NewtonSceneCollisionEndAddRemove$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSceneCollisionEndAddRemove$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSceneCollisionEndAddRemove",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonSceneCollisionEndAddRemove",
         constants$48.NewtonSceneCollisionEndAddRemove$FUNC, false
     );
-    static final FunctionDescriptor NewtonSceneCollisionGetFirstNode$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonSceneCollisionGetFirstNode$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSceneCollisionGetFirstNode$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSceneCollisionGetFirstNode",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonSceneCollisionGetFirstNode",
         constants$48.NewtonSceneCollisionGetFirstNode$FUNC, false
     );
-    static final FunctionDescriptor NewtonSceneCollisionGetNextNode$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonSceneCollisionGetNextNode$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSceneCollisionGetNextNode$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSceneCollisionGetNextNode",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonSceneCollisionGetNextNode",
         constants$48.NewtonSceneCollisionGetNextNode$FUNC, false
     );
-    static final FunctionDescriptor NewtonSceneCollisionGetNodeByIndex$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonSceneCollisionGetNodeByIndex$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonSceneCollisionGetNodeByIndex$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSceneCollisionGetNodeByIndex",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonSceneCollisionGetNodeByIndex",
         constants$48.NewtonSceneCollisionGetNodeByIndex$FUNC, false
     );
-    static final FunctionDescriptor NewtonSceneCollisionGetNodeIndex$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonSceneCollisionGetNodeIndex$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSceneCollisionGetNodeIndex$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSceneCollisionGetNodeIndex",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonSceneCollisionGetNodeIndex",
         constants$48.NewtonSceneCollisionGetNodeIndex$FUNC, false
     );
 }

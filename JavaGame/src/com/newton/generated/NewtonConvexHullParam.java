@@ -6,20 +6,20 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonConvexHullParam {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        C_INT.withName("m_vertexCount"),
-        C_INT.withName("m_vertexStrideInBytes"),
-        C_INT.withName("m_faceCount"),
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        Constants$root.C_LONG$LAYOUT.withName("m_vertexCount"),
+        Constants$root.C_LONG$LAYOUT.withName("m_vertexStrideInBytes"),
+        Constants$root.C_LONG$LAYOUT.withName("m_faceCount"),
         MemoryLayout.paddingLayout(32),
-        C_POINTER.withName("m_vertex")
+        Constants$root.C_POINTER$LAYOUT.withName("m_vertex")
     ).withName("NewtonConvexHullParam");
     public static MemoryLayout $LAYOUT() {
         return NewtonConvexHullParam.$struct$LAYOUT;
     }
-    static final VarHandle m_vertexCount$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_vertexCount"));
+    static final VarHandle m_vertexCount$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_vertexCount"));
     public static VarHandle m_vertexCount$VH() {
         return NewtonConvexHullParam.m_vertexCount$VH;
     }
@@ -35,7 +35,7 @@ public class NewtonConvexHullParam {
     public static void m_vertexCount$set(MemorySegment seg, long index, int x) {
         NewtonConvexHullParam.m_vertexCount$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_vertexStrideInBytes$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_vertexStrideInBytes"));
+    static final VarHandle m_vertexStrideInBytes$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_vertexStrideInBytes"));
     public static VarHandle m_vertexStrideInBytes$VH() {
         return NewtonConvexHullParam.m_vertexStrideInBytes$VH;
     }
@@ -51,7 +51,7 @@ public class NewtonConvexHullParam {
     public static void m_vertexStrideInBytes$set(MemorySegment seg, long index, int x) {
         NewtonConvexHullParam.m_vertexStrideInBytes$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_faceCount$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_faceCount"));
+    static final VarHandle m_faceCount$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_faceCount"));
     public static VarHandle m_faceCount$VH() {
         return NewtonConvexHullParam.m_faceCount$VH;
     }
@@ -67,7 +67,7 @@ public class NewtonConvexHullParam {
     public static void m_faceCount$set(MemorySegment seg, long index, int x) {
         NewtonConvexHullParam.m_faceCount$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_vertex$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_vertex")));
+    static final VarHandle m_vertex$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_vertex"));
     public static VarHandle m_vertex$VH() {
         return NewtonConvexHullParam.m_vertex$VH;
     }
@@ -85,12 +85,12 @@ public class NewtonConvexHullParam {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

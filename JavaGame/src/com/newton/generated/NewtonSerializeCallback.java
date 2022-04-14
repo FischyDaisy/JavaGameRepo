@@ -6,20 +6,18 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public interface NewtonSerializeCallback {
 
     void apply(jdk.incubator.foreign.MemoryAddress x0, jdk.incubator.foreign.MemoryAddress x1, int x2);
-    static MemoryAddress allocate(NewtonSerializeCallback fi) {
-        return RuntimeHelper.upcallStub(NewtonSerializeCallback.class, fi, constants$3.NewtonSerializeCallback$FUNC, "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)V");
-    }
-    static MemoryAddress allocate(NewtonSerializeCallback fi, ResourceScope scope) {
+    static NativeSymbol allocate(NewtonSerializeCallback fi, ResourceScope scope) {
         return RuntimeHelper.upcallStub(NewtonSerializeCallback.class, fi, constants$3.NewtonSerializeCallback$FUNC, "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)V", scope);
     }
-    static NewtonSerializeCallback ofAddress(MemoryAddress addr) {
-        return (jdk.incubator.foreign.MemoryAddress x0, jdk.incubator.foreign.MemoryAddress x1, int x2) -> {
+    static NewtonSerializeCallback ofAddress(MemoryAddress addr, ResourceScope scope) {
+        NativeSymbol symbol = NativeSymbol.ofAddress("NewtonSerializeCallback::" + Long.toHexString(addr.toRawLongValue()), addr, scope);
+return (jdk.incubator.foreign.MemoryAddress x0, jdk.incubator.foreign.MemoryAddress x1, int x2) -> {
             try {
-                constants$3.NewtonSerializeCallback$MH.invokeExact((Addressable)addr, x0, x1, x2);
+                constants$3.NewtonSerializeCallback$MH.invokeExact(symbol, (jdk.incubator.foreign.Addressable)x0, (jdk.incubator.foreign.Addressable)x1, x2);
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }

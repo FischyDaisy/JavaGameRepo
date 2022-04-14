@@ -6,20 +6,18 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public interface NewtonGetTimeInMicrosencondsCallback {
 
     long apply();
-    static MemoryAddress allocate(NewtonGetTimeInMicrosencondsCallback fi) {
-        return RuntimeHelper.upcallStub(NewtonGetTimeInMicrosencondsCallback.class, fi, constants$3.NewtonGetTimeInMicrosencondsCallback$FUNC, "()J");
-    }
-    static MemoryAddress allocate(NewtonGetTimeInMicrosencondsCallback fi, ResourceScope scope) {
+    static NativeSymbol allocate(NewtonGetTimeInMicrosencondsCallback fi, ResourceScope scope) {
         return RuntimeHelper.upcallStub(NewtonGetTimeInMicrosencondsCallback.class, fi, constants$3.NewtonGetTimeInMicrosencondsCallback$FUNC, "()J", scope);
     }
-    static NewtonGetTimeInMicrosencondsCallback ofAddress(MemoryAddress addr) {
-        return () -> {
+    static NewtonGetTimeInMicrosencondsCallback ofAddress(MemoryAddress addr, ResourceScope scope) {
+        NativeSymbol symbol = NativeSymbol.ofAddress("NewtonGetTimeInMicrosencondsCallback::" + Long.toHexString(addr.toRawLongValue()), addr, scope);
+return () -> {
             try {
-                return (long)constants$3.NewtonGetTimeInMicrosencondsCallback$MH.invokeExact((Addressable)addr);
+                return (long)constants$3.NewtonGetTimeInMicrosencondsCallback$MH.invokeExact(symbol);
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }

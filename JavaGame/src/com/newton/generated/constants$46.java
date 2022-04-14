@@ -6,60 +6,54 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$46 {
 
-    static final FunctionDescriptor NewtonFracturedCompoundCollisionGetVertexNormals$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonFracturedCompoundCollisionGetVertexNormals$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonFracturedCompoundCollisionGetVertexNormals$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonFracturedCompoundCollisionGetVertexNormals",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonFracturedCompoundCollisionGetVertexNormals",
         constants$46.NewtonFracturedCompoundCollisionGetVertexNormals$FUNC, false
     );
-    static final FunctionDescriptor NewtonFracturedCompoundCollisionGetVertexUVs$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonFracturedCompoundCollisionGetVertexUVs$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonFracturedCompoundCollisionGetVertexUVs$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonFracturedCompoundCollisionGetVertexUVs",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonFracturedCompoundCollisionGetVertexUVs",
         constants$46.NewtonFracturedCompoundCollisionGetVertexUVs$FUNC, false
     );
-    static final FunctionDescriptor NewtonFracturedCompoundMeshPartGetIndexStream$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonFracturedCompoundMeshPartGetIndexStream$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonFracturedCompoundMeshPartGetIndexStream$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonFracturedCompoundMeshPartGetIndexStream",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonFracturedCompoundMeshPartGetIndexStream",
         constants$46.NewtonFracturedCompoundMeshPartGetIndexStream$FUNC, false
     );
-    static final FunctionDescriptor NewtonFracturedCompoundMeshPartGetFirstSegment$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonFracturedCompoundMeshPartGetFirstSegment$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonFracturedCompoundMeshPartGetFirstSegment$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonFracturedCompoundMeshPartGetFirstSegment",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonFracturedCompoundMeshPartGetFirstSegment",
         constants$46.NewtonFracturedCompoundMeshPartGetFirstSegment$FUNC, false
     );
-    static final FunctionDescriptor NewtonFracturedCompoundMeshPartGetNextSegment$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonFracturedCompoundMeshPartGetNextSegment$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonFracturedCompoundMeshPartGetNextSegment$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonFracturedCompoundMeshPartGetNextSegment",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonFracturedCompoundMeshPartGetNextSegment",
         constants$46.NewtonFracturedCompoundMeshPartGetNextSegment$FUNC, false
     );
-    static final FunctionDescriptor NewtonFracturedCompoundMeshPartGetMaterial$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonFracturedCompoundMeshPartGetMaterial$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonFracturedCompoundMeshPartGetMaterial$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonFracturedCompoundMeshPartGetMaterial",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonFracturedCompoundMeshPartGetMaterial",
         constants$46.NewtonFracturedCompoundMeshPartGetMaterial$FUNC, false
     );
 }

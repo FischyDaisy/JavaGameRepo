@@ -6,58 +6,52 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$22 {
 
     static final FunctionDescriptor NewtonSetContactMergeTolerance$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonSetContactMergeTolerance$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSetContactMergeTolerance",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonSetContactMergeTolerance",
         constants$22.NewtonSetContactMergeTolerance$FUNC, false
     );
     static final FunctionDescriptor NewtonInvalidateCache$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonInvalidateCache$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonInvalidateCache",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonInvalidateCache",
         constants$22.NewtonInvalidateCache$FUNC, false
     );
     static final FunctionDescriptor NewtonSetSolverIterations$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonSetSolverIterations$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSetSolverIterations",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonSetSolverIterations",
         constants$22.NewtonSetSolverIterations$FUNC, false
     );
-    static final FunctionDescriptor NewtonGetSolverIterations$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonGetSolverIterations$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetSolverIterations$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetSolverIterations",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonGetSolverIterations",
         constants$22.NewtonGetSolverIterations$FUNC, false
     );
     static final FunctionDescriptor NewtonSetParallelSolverOnLargeIsland$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonSetParallelSolverOnLargeIsland$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSetParallelSolverOnLargeIsland",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonSetParallelSolverOnLargeIsland",
         constants$22.NewtonSetParallelSolverOnLargeIsland$FUNC, false
     );
-    static final FunctionDescriptor NewtonGetParallelSolverOnLargeIsland$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonGetParallelSolverOnLargeIsland$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetParallelSolverOnLargeIsland$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetParallelSolverOnLargeIsland",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonGetParallelSolverOnLargeIsland",
         constants$22.NewtonGetParallelSolverOnLargeIsland$FUNC, false
     );
 }

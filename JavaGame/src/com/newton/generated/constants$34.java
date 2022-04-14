@@ -6,64 +6,58 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$34 {
 
     static final FunctionDescriptor NewtonMaterialSetDefaultFriction$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_FLOAT,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetDefaultFriction$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetDefaultFriction",
-        "(Ljdk/incubator/foreign/MemoryAddress;IIFF)V",
+        "NewtonMaterialSetDefaultFriction",
         constants$34.NewtonMaterialSetDefaultFriction$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialJointResetIntraJointCollision$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMaterialJointResetIntraJointCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialJointResetIntraJointCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;II)V",
+        "NewtonMaterialJointResetIntraJointCollision",
         constants$34.NewtonMaterialJointResetIntraJointCollision$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialJointResetSelftJointCollision$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMaterialJointResetSelftJointCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialJointResetSelftJointCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;II)V",
+        "NewtonMaterialJointResetSelftJointCollision",
         constants$34.NewtonMaterialJointResetSelftJointCollision$FUNC, false
     );
-    static final FunctionDescriptor NewtonWorldGetFirstMaterial$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonWorldGetFirstMaterial$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldGetFirstMaterial$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldGetFirstMaterial",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonWorldGetFirstMaterial",
         constants$34.NewtonWorldGetFirstMaterial$FUNC, false
     );
-    static final FunctionDescriptor NewtonWorldGetNextMaterial$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonWorldGetNextMaterial$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldGetNextMaterial$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldGetNextMaterial",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonWorldGetNextMaterial",
         constants$34.NewtonWorldGetNextMaterial$FUNC, false
     );
-    static final FunctionDescriptor NewtonWorldGetFirstBody$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonWorldGetFirstBody$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldGetFirstBody$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldGetFirstBody",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonWorldGetFirstBody",
         constants$34.NewtonWorldGetFirstBody$FUNC, false
     );
 }

@@ -6,67 +6,61 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$75 {
 
-    static final FunctionDescriptor NewtonJointGetStiffness$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonJointGetStiffness$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonJointGetStiffness$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonJointGetStiffness",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonJointGetStiffness",
         constants$75.NewtonJointGetStiffness$FUNC, false
     );
     static final FunctionDescriptor NewtonJointSetStiffness$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonJointSetStiffness$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonJointSetStiffness",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonJointSetStiffness",
         constants$75.NewtonJointSetStiffness$FUNC, false
     );
     static final FunctionDescriptor NewtonDestroyJoint$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonDestroyJoint$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonDestroyJoint",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonDestroyJoint",
         constants$75.NewtonDestroyJoint$FUNC, false
     );
     static final FunctionDescriptor NewtonJointSetDestructor$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonJointSetDestructor$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonJointSetDestructor",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonJointSetDestructor",
         constants$75.NewtonJointSetDestructor$FUNC, false
     );
-    static final FunctionDescriptor NewtonJointIsActive$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonJointIsActive$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonJointIsActive$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonJointIsActive",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonJointIsActive",
         constants$75.NewtonJointIsActive$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateMassSpringDamperSystem$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_INT,
-        C_POINTER,
-        C_INT,
-        C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_INT,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateMassSpringDamperSystem$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateMassSpringDamperSystem$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateMassSpringDamperSystem",
-        "(Ljdk/incubator/foreign/MemoryAddress;ILjdk/incubator/foreign/MemoryAddress;IILjdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;ILjdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateMassSpringDamperSystem",
         constants$75.NewtonCreateMassSpringDamperSystem$FUNC, false
     );
 }

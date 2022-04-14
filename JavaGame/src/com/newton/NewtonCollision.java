@@ -4,7 +4,7 @@ import com.newton.generated.Newton_h;
 
 import jdk.incubator.foreign.*;
 
-public abstract class NewtonCollision implements Addressable {
+public abstract class NewtonCollision {
 	
 	protected final MemoryAddress address;
 	protected ResourceScope scope;
@@ -15,12 +15,7 @@ public abstract class NewtonCollision implements Addressable {
 	}
 	
 	public void destroy() {
-		Newton_h.NewtonDestroyCollision(this);
+		Newton_h.NewtonDestroyCollision(address);
 		scope.close();
-	}
-	
-	@Override
-	public MemoryAddress address() {
-		return address;
 	}
 }

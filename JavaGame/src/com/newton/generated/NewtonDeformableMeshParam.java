@@ -6,21 +6,21 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonDeformableMeshParam {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        C_INT.withName("m_vertexCount"),
-        C_INT.withName("m_triangleCount"),
-        C_INT.withName("m_vrtexStrideInBytes"),
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        Constants$root.C_LONG$LAYOUT.withName("m_vertexCount"),
+        Constants$root.C_LONG$LAYOUT.withName("m_triangleCount"),
+        Constants$root.C_LONG$LAYOUT.withName("m_vrtexStrideInBytes"),
         MemoryLayout.paddingLayout(32),
-        C_POINTER.withName("m_indexList"),
-        C_POINTER.withName("m_vertexList")
+        Constants$root.C_POINTER$LAYOUT.withName("m_indexList"),
+        Constants$root.C_POINTER$LAYOUT.withName("m_vertexList")
     ).withName("NewtonDeformableMeshParam");
     public static MemoryLayout $LAYOUT() {
         return NewtonDeformableMeshParam.$struct$LAYOUT;
     }
-    static final VarHandle m_vertexCount$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_vertexCount"));
+    static final VarHandle m_vertexCount$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_vertexCount"));
     public static VarHandle m_vertexCount$VH() {
         return NewtonDeformableMeshParam.m_vertexCount$VH;
     }
@@ -36,7 +36,7 @@ public class NewtonDeformableMeshParam {
     public static void m_vertexCount$set(MemorySegment seg, long index, int x) {
         NewtonDeformableMeshParam.m_vertexCount$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_triangleCount$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_triangleCount"));
+    static final VarHandle m_triangleCount$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_triangleCount"));
     public static VarHandle m_triangleCount$VH() {
         return NewtonDeformableMeshParam.m_triangleCount$VH;
     }
@@ -52,7 +52,7 @@ public class NewtonDeformableMeshParam {
     public static void m_triangleCount$set(MemorySegment seg, long index, int x) {
         NewtonDeformableMeshParam.m_triangleCount$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_vrtexStrideInBytes$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_vrtexStrideInBytes"));
+    static final VarHandle m_vrtexStrideInBytes$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_vrtexStrideInBytes"));
     public static VarHandle m_vrtexStrideInBytes$VH() {
         return NewtonDeformableMeshParam.m_vrtexStrideInBytes$VH;
     }
@@ -68,7 +68,7 @@ public class NewtonDeformableMeshParam {
     public static void m_vrtexStrideInBytes$set(MemorySegment seg, long index, int x) {
         NewtonDeformableMeshParam.m_vrtexStrideInBytes$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_indexList$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_indexList")));
+    static final VarHandle m_indexList$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_indexList"));
     public static VarHandle m_indexList$VH() {
         return NewtonDeformableMeshParam.m_indexList$VH;
     }
@@ -84,7 +84,7 @@ public class NewtonDeformableMeshParam {
     public static void m_indexList$set(MemorySegment seg, long index, MemoryAddress x) {
         NewtonDeformableMeshParam.m_indexList$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_vertexList$VH = MemoryHandles.asAddressVarHandle($struct$LAYOUT.varHandle(long.class, MemoryLayout.PathElement.groupElement("m_vertexList")));
+    static final VarHandle m_vertexList$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_vertexList"));
     public static VarHandle m_vertexList$VH() {
         return NewtonDeformableMeshParam.m_vertexList$VH;
     }
@@ -102,12 +102,12 @@ public class NewtonDeformableMeshParam {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

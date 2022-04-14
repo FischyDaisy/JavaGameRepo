@@ -6,63 +6,57 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$38 {
 
     static final FunctionDescriptor NewtonMaterialSetContactNormalAcceleration$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactNormalAcceleration$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactNormalAcceleration",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonMaterialSetContactNormalAcceleration",
         constants$38.NewtonMaterialSetContactNormalAcceleration$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetContactNormalDirection$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactNormalDirection$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactNormalDirection",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMaterialSetContactNormalDirection",
         constants$38.NewtonMaterialSetContactNormalDirection$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetContactPosition$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactPosition$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactPosition",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMaterialSetContactPosition",
         constants$38.NewtonMaterialSetContactPosition$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetContactTangentFriction$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactTangentFriction$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactTangentFriction",
-        "(Ljdk/incubator/foreign/MemoryAddress;FI)V",
+        "NewtonMaterialSetContactTangentFriction",
         constants$38.NewtonMaterialSetContactTangentFriction$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialSetContactTangentAcceleration$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonMaterialSetContactTangentAcceleration$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialSetContactTangentAcceleration",
-        "(Ljdk/incubator/foreign/MemoryAddress;FI)V",
+        "NewtonMaterialSetContactTangentAcceleration",
         constants$38.NewtonMaterialSetContactTangentAcceleration$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialContactRotateTangentDirections$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialContactRotateTangentDirections$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialContactRotateTangentDirections",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMaterialContactRotateTangentDirections",
         constants$38.NewtonMaterialContactRotateTangentDirections$FUNC, false
     );
 }

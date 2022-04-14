@@ -11,6 +11,6 @@ public class NewtonNull extends NewtonCollision {
 	}
 	
 	public static NewtonCollision createNullCollision(NewtonWorld world) {
-		return new NewtonNull(Newton_h.NewtonCreateNull(world));
+		return new NewtonNull(Newton_h.NewtonCreateNull(world.address));
 	}
 }

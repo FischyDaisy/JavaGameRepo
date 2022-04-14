@@ -6,20 +6,18 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public interface NewtonCollisionCopyConstructionCallback {
 
     void apply(jdk.incubator.foreign.MemoryAddress x0, jdk.incubator.foreign.MemoryAddress x1, jdk.incubator.foreign.MemoryAddress x2);
-    static MemoryAddress allocate(NewtonCollisionCopyConstructionCallback fi) {
-        return RuntimeHelper.upcallStub(NewtonCollisionCopyConstructionCallback.class, fi, constants$9.NewtonCollisionCopyConstructionCallback$FUNC, "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V");
-    }
-    static MemoryAddress allocate(NewtonCollisionCopyConstructionCallback fi, ResourceScope scope) {
+    static NativeSymbol allocate(NewtonCollisionCopyConstructionCallback fi, ResourceScope scope) {
         return RuntimeHelper.upcallStub(NewtonCollisionCopyConstructionCallback.class, fi, constants$9.NewtonCollisionCopyConstructionCallback$FUNC, "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V", scope);
     }
-    static NewtonCollisionCopyConstructionCallback ofAddress(MemoryAddress addr) {
-        return (jdk.incubator.foreign.MemoryAddress x0, jdk.incubator.foreign.MemoryAddress x1, jdk.incubator.foreign.MemoryAddress x2) -> {
+    static NewtonCollisionCopyConstructionCallback ofAddress(MemoryAddress addr, ResourceScope scope) {
+        NativeSymbol symbol = NativeSymbol.ofAddress("NewtonCollisionCopyConstructionCallback::" + Long.toHexString(addr.toRawLongValue()), addr, scope);
+return (jdk.incubator.foreign.MemoryAddress x0, jdk.incubator.foreign.MemoryAddress x1, jdk.incubator.foreign.MemoryAddress x2) -> {
             try {
-                constants$9.NewtonCollisionCopyConstructionCallback$MH.invokeExact((Addressable)addr, x0, x1, x2);
+                constants$9.NewtonCollisionCopyConstructionCallback$MH.invokeExact(symbol, (jdk.incubator.foreign.Addressable)x0, (jdk.incubator.foreign.Addressable)x1, (jdk.incubator.foreign.Addressable)x2);
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }

@@ -6,58 +6,52 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$23 {
 
-    static final FunctionDescriptor NewtonGetBroadphaseAlgorithm$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonGetBroadphaseAlgorithm$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetBroadphaseAlgorithm$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetBroadphaseAlgorithm",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonGetBroadphaseAlgorithm",
         constants$23.NewtonGetBroadphaseAlgorithm$FUNC, false
     );
     static final FunctionDescriptor NewtonSelectBroadphaseAlgorithm$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonSelectBroadphaseAlgorithm$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSelectBroadphaseAlgorithm",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonSelectBroadphaseAlgorithm",
         constants$23.NewtonSelectBroadphaseAlgorithm$FUNC, false
     );
     static final FunctionDescriptor NewtonResetBroadphase$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonResetBroadphase$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonResetBroadphase",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonResetBroadphase",
         constants$23.NewtonResetBroadphase$FUNC, false
     );
     static final FunctionDescriptor NewtonUpdate$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonUpdate$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUpdate",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonUpdate",
         constants$23.NewtonUpdate$FUNC, false
     );
     static final FunctionDescriptor NewtonUpdateAsync$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_FLOAT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonUpdateAsync$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonUpdateAsync",
-        "(Ljdk/incubator/foreign/MemoryAddress;F)V",
+        "NewtonUpdateAsync",
         constants$23.NewtonUpdateAsync$FUNC, false
     );
     static final FunctionDescriptor NewtonWaitForUpdateToFinish$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWaitForUpdateToFinish$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWaitForUpdateToFinish",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonWaitForUpdateToFinish",
         constants$23.NewtonWaitForUpdateToFinish$FUNC, false
     );
 }

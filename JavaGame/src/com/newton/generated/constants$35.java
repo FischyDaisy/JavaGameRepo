@@ -6,59 +6,53 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$35 {
 
-    static final FunctionDescriptor NewtonWorldGetNextBody$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonWorldGetNextBody$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldGetNextBody$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldGetNextBody",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonWorldGetNextBody",
         constants$35.NewtonWorldGetNextBody$FUNC, false
     );
-    static final FunctionDescriptor NewtonMaterialGetMaterialPairUserData$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMaterialGetMaterialPairUserData$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialGetMaterialPairUserData$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialGetMaterialPairUserData",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMaterialGetMaterialPairUserData",
         constants$35.NewtonMaterialGetMaterialPairUserData$FUNC, false
     );
-    static final FunctionDescriptor NewtonMaterialGetContactFaceAttribute$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMaterialGetContactFaceAttribute$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialGetContactFaceAttribute$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialGetContactFaceAttribute",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonMaterialGetContactFaceAttribute",
         constants$35.NewtonMaterialGetContactFaceAttribute$FUNC, false
     );
-    static final FunctionDescriptor NewtonMaterialGetBodyCollidingShape$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonMaterialGetBodyCollidingShape$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialGetBodyCollidingShape$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialGetBodyCollidingShape",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonMaterialGetBodyCollidingShape",
         constants$35.NewtonMaterialGetBodyCollidingShape$FUNC, false
     );
-    static final FunctionDescriptor NewtonMaterialGetContactNormalSpeed$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonMaterialGetContactNormalSpeed$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialGetContactNormalSpeed$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialGetContactNormalSpeed",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonMaterialGetContactNormalSpeed",
         constants$35.NewtonMaterialGetContactNormalSpeed$FUNC, false
     );
     static final FunctionDescriptor NewtonMaterialGetContactForce$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonMaterialGetContactForce$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonMaterialGetContactForce",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonMaterialGetContactForce",
         constants$35.NewtonMaterialGetContactForce$FUNC, false
     );
 }

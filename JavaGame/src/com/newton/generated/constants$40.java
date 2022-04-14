@@ -6,78 +6,72 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$40 {
 
-    static final FunctionDescriptor NewtonCreateCapsule$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT,
-        C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateCapsule$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateCapsule$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateCapsule",
-        "(Ljdk/incubator/foreign/MemoryAddress;FFFILjdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateCapsule",
         constants$40.NewtonCreateCapsule$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateCylinder$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_FLOAT,
-        C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateCylinder$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateCylinder$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateCylinder",
-        "(Ljdk/incubator/foreign/MemoryAddress;FFFILjdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateCylinder",
         constants$40.NewtonCreateCylinder$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateChamferCylinder$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_FLOAT,
-        C_FLOAT,
-        C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateChamferCylinder$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateChamferCylinder$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateChamferCylinder",
-        "(Ljdk/incubator/foreign/MemoryAddress;FFILjdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateChamferCylinder",
         constants$40.NewtonCreateChamferCylinder$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateConvexHull$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_INT,
-        C_POINTER,
-        C_INT,
-        C_FLOAT,
-        C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCreateConvexHull$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCreateConvexHull$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateConvexHull",
-        "(Ljdk/incubator/foreign/MemoryAddress;ILjdk/incubator/foreign/MemoryAddress;IFILjdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateConvexHull",
         constants$40.NewtonCreateConvexHull$FUNC, false
     );
-    static final FunctionDescriptor NewtonCreateConvexHullFromMesh$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_FLOAT,
-        C_INT
+    static final FunctionDescriptor NewtonCreateConvexHullFromMesh$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonCreateConvexHullFromMesh$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateConvexHullFromMesh",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;FI)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateConvexHullFromMesh",
         constants$40.NewtonCreateConvexHullFromMesh$FUNC, false
     );
-    static final FunctionDescriptor NewtonCollisionGetMode$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonCollisionGetMode$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCollisionGetMode$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCollisionGetMode",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonCollisionGetMode",
         constants$40.NewtonCollisionGetMode$FUNC, false
     );
 }

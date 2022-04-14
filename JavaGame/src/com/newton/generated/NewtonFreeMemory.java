@@ -5,22 +5,19 @@ package com.newton.generated;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
-
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public interface NewtonFreeMemory {
 
     void apply(jdk.incubator.foreign.MemoryAddress x0, int x1);
-    static MemoryAddress allocate(NewtonFreeMemory fi) {
-        return RuntimeHelper.upcallStub(NewtonFreeMemory.class, fi, constants$0.NewtonFreeMemory$FUNC, "(Ljdk/incubator/foreign/MemoryAddress;I)V");
-    }
-    static MemoryAddress allocate(NewtonFreeMemory fi, ResourceScope scope) {
+    static NativeSymbol allocate(NewtonFreeMemory fi, ResourceScope scope) {
         return RuntimeHelper.upcallStub(NewtonFreeMemory.class, fi, constants$0.NewtonFreeMemory$FUNC, "(Ljdk/incubator/foreign/MemoryAddress;I)V", scope);
     }
-    static NewtonFreeMemory ofAddress(MemoryAddress addr) {
-        return (jdk.incubator.foreign.MemoryAddress x0, int x1) -> {
+    static NewtonFreeMemory ofAddress(MemoryAddress addr, ResourceScope scope) {
+        NativeSymbol symbol = NativeSymbol.ofAddress("NewtonFreeMemory::" + Long.toHexString(addr.toRawLongValue()), addr, scope);
+return (jdk.incubator.foreign.MemoryAddress x0, int x1) -> {
             try {
-                constants$0.NewtonFreeMemory$MH.invokeExact((Addressable)addr, x0, x1);
+                constants$0.NewtonFreeMemory$MH.invokeExact(symbol, (jdk.incubator.foreign.Addressable)x0, x1);
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }

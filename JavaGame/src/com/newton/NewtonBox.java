@@ -14,7 +14,7 @@ public class NewtonBox extends NewtonCollision {
 	}
 	
 	public static NewtonCollision create(NewtonWorld world, float dx, float dy, float dz, int shapeID, Addressable offsetMatrix) {
-		return new NewtonBox(Newton_h.NewtonCreateBox(world, dx, dy, dz, shapeID, offsetMatrix));
+		return new NewtonBox(Newton_h.NewtonCreateBox(world.address, dx, dy, dz, shapeID, offsetMatrix));
 	}
 	
 	public static NewtonCollision create(NewtonWorld world, float dx, float dy, float dz, int shapeID, Matrix4f offsetMatrix) {

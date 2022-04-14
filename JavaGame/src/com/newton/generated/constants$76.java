@@ -6,61 +6,55 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$76 {
 
-    static final FunctionDescriptor NewtonCreateDeformableSolid$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonCreateDeformableSolid$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonCreateDeformableSolid$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCreateDeformableSolid",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonCreateDeformableSolid",
         constants$76.NewtonCreateDeformableSolid$FUNC, false
     );
-    static final FunctionDescriptor NewtonDeformableMeshGetParticleCount$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonDeformableMeshGetParticleCount$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonDeformableMeshGetParticleCount$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonDeformableMeshGetParticleCount",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonDeformableMeshGetParticleCount",
         constants$76.NewtonDeformableMeshGetParticleCount$FUNC, false
     );
-    static final FunctionDescriptor NewtonDeformableMeshGetParticleStrideInBytes$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonDeformableMeshGetParticleStrideInBytes$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonDeformableMeshGetParticleStrideInBytes$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonDeformableMeshGetParticleStrideInBytes",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonDeformableMeshGetParticleStrideInBytes",
         constants$76.NewtonDeformableMeshGetParticleStrideInBytes$FUNC, false
     );
-    static final FunctionDescriptor NewtonDeformableMeshGetParticleArray$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonDeformableMeshGetParticleArray$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonDeformableMeshGetParticleArray$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonDeformableMeshGetParticleArray",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonDeformableMeshGetParticleArray",
         constants$76.NewtonDeformableMeshGetParticleArray$FUNC, false
     );
-    static final FunctionDescriptor NewtonConstraintCreateBall$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonConstraintCreateBall$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonConstraintCreateBall$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonConstraintCreateBall",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonConstraintCreateBall",
         constants$76.NewtonConstraintCreateBall$FUNC, false
     );
     static final FunctionDescriptor NewtonBallSetUserCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonBallSetUserCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonBallSetUserCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonBallSetUserCallback",
         constants$76.NewtonBallSetUserCallback$FUNC, false
     );
 }

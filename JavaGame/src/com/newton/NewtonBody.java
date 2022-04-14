@@ -7,7 +7,7 @@ import com.newton.generated.Newton_h;
 
 import jdk.incubator.foreign.*;
 
-public abstract class NewtonBody implements Addressable{
+public abstract class NewtonBody {
 	
 	protected final MemoryAddress address;
 	protected ResourceScope scope;
@@ -22,7 +22,7 @@ public abstract class NewtonBody implements Addressable{
 	}
 	
 	public static int getType(NewtonBody body) {
-		return Newton_h.NewtonBodyGetType(body);
+		return Newton_h.NewtonBodyGetType(body.address);
 	}
 	
 	public int getCollidable() {
@@ -30,7 +30,7 @@ public abstract class NewtonBody implements Addressable{
 	}
 	
 	public static int getCollidable(NewtonBody body) {
-		return Newton_h.NewtonBodyGetCollidable(body);
+		return Newton_h.NewtonBodyGetCollidable(body.address);
 	}
 	
 	public void setCollidable(int collidableState) {
@@ -38,7 +38,7 @@ public abstract class NewtonBody implements Addressable{
 	}
 	
 	public static void setCollidable(NewtonBody body, int collidableState) {
-		Newton_h.NewtonBodySetCollidable(body, collidableState);
+		Newton_h.NewtonBodySetCollidable(body.address, collidableState);
 	}
 	
 	public void addForce(float[] force) {
@@ -54,11 +54,11 @@ public abstract class NewtonBody implements Addressable{
 	}
 	
 	public NewtonApplyForceAndTorque getForceAndTorqueCallback() {
-		return getForceAndTorqueCallback(this);
+		return getForceAndTorqueCallback(this, scope);
 	}
 	
-	public static NewtonApplyForceAndTorque getForceAndTorqueCallback(NewtonBody body) {
-		return NewtonApplyForceAndTorque.ofAddress(Newton_h.NewtonBodyGetForceAndTorqueCallback(body));
+	public static NewtonApplyForceAndTorque getForceAndTorqueCallback(NewtonBody body, ResourceScope scope) {
+		return NewtonApplyForceAndTorque.ofAddress(Newton_h.NewtonBodyGetForceAndTorqueCallback(body.address), scope);
 	}
 	
 	public void setForceAndTorqueCallback(NewtonApplyForceAndTorque callback) {
@@ -66,7 +66,7 @@ public abstract class NewtonBody implements Addressable{
 	}
 	
 	public static void setForceAndTorqueCallback(NewtonBody body, NewtonApplyForceAndTorque callback, ResourceScope scope) {
-		Newton_h.NewtonBodySetForceAndTorqueCallback(body, NewtonApplyForceAndTorque.allocate(callback, scope));
+		Newton_h.NewtonBodySetForceAndTorqueCallback(body.address, NewtonApplyForceAndTorque.allocate(callback, scope));
 	}
 	
 	public NewtonWorld getNewtonWorld() {
@@ -74,7 +74,7 @@ public abstract class NewtonBody implements Addressable{
 	}
 	
 	public static NewtonWorld getNewtonWorld(NewtonBody body) {
-		return NewtonWorld.wrap(Newton_h.NewtonBodyGetWorld(body));
+		return NewtonWorld.wrap(Newton_h.NewtonBodyGetWorld(body.address));
 	}
 	
 	public static float[] getMass(NewtonBody body, ResourceScope scope) {
@@ -83,7 +83,7 @@ public abstract class NewtonBody implements Addressable{
 		MemorySegment Iyy = Newton.createFloatSegment(scope);
 		MemorySegment Izz = Newton.createFloatSegment(scope);
 		
-		Newton_h.NewtonBodyGetMass(body, mass, Ixx, Iyy, Izz);
+		Newton_h.NewtonBodyGetMass(body.address, mass, Ixx, Iyy, Izz);
 		return mass.toFloatArray();
 	}
 	
@@ -95,7 +95,7 @@ public abstract class NewtonBody implements Addressable{
 	}
 	
 	public void destroy() {
-		Newton_h.NewtonDestroyBody(this);
+		Newton_h.NewtonDestroyBody(address);
 		if (scope.isAlive()) {
 			scope.close();
 		}
@@ -114,10 +114,5 @@ public abstract class NewtonBody implements Addressable{
 			default:
 				throw new RuntimeException("Cannot wrap MemoryAddress");
 		}	
-	}
-	
-	@Override
-	public MemoryAddress address() {
-		return address;
 	}
 }

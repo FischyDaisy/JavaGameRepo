@@ -6,63 +6,57 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$79 {
 
-    static final FunctionDescriptor NewtonSliderGetJointPosit$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonSliderGetJointPosit$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSliderGetJointPosit$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSliderGetJointPosit",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonSliderGetJointPosit",
         constants$79.NewtonSliderGetJointPosit$FUNC, false
     );
-    static final FunctionDescriptor NewtonSliderGetJointVeloc$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonSliderGetJointVeloc$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSliderGetJointVeloc$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSliderGetJointVeloc",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonSliderGetJointVeloc",
         constants$79.NewtonSliderGetJointVeloc$FUNC, false
     );
     static final FunctionDescriptor NewtonSliderGetJointForce$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSliderGetJointForce$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSliderGetJointForce",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonSliderGetJointForce",
         constants$79.NewtonSliderGetJointForce$FUNC, false
     );
-    static final FunctionDescriptor NewtonSliderCalculateStopAccel$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER,
-        C_POINTER,
-        C_FLOAT
+    static final FunctionDescriptor NewtonSliderCalculateStopAccel$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_FLOAT$LAYOUT
     );
     static final MethodHandle NewtonSliderCalculateStopAccel$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSliderCalculateStopAccel",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;F)F",
+        "NewtonSliderCalculateStopAccel",
         constants$79.NewtonSliderCalculateStopAccel$FUNC, false
     );
-    static final FunctionDescriptor NewtonConstraintCreateCorkscrew$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonConstraintCreateCorkscrew$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonConstraintCreateCorkscrew$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonConstraintCreateCorkscrew",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonConstraintCreateCorkscrew",
         constants$79.NewtonConstraintCreateCorkscrew$FUNC, false
     );
     static final FunctionDescriptor NewtonCorkscrewSetUserCallback$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonCorkscrewSetUserCallback$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonCorkscrewSetUserCallback",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonCorkscrewSetUserCallback",
         constants$79.NewtonCorkscrewSetUserCallback$FUNC, false
     );
 }

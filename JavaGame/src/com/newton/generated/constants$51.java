@@ -6,75 +6,69 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$51 {
 
     static final FunctionDescriptor NewtonTreeCollisionAddFace$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT,
-        C_POINTER,
-        C_INT,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonTreeCollisionAddFace$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonTreeCollisionAddFace",
-        "(Ljdk/incubator/foreign/MemoryAddress;ILjdk/incubator/foreign/MemoryAddress;II)V",
+        "NewtonTreeCollisionAddFace",
         constants$51.NewtonTreeCollisionAddFace$FUNC, false
     );
     static final FunctionDescriptor NewtonTreeCollisionEndBuild$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonTreeCollisionEndBuild$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonTreeCollisionEndBuild",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)V",
+        "NewtonTreeCollisionEndBuild",
         constants$51.NewtonTreeCollisionEndBuild$FUNC, false
     );
-    static final FunctionDescriptor NewtonTreeCollisionGetFaceAttribute$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonTreeCollisionGetFaceAttribute$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonTreeCollisionGetFaceAttribute$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonTreeCollisionGetFaceAttribute",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;I)I",
+        "NewtonTreeCollisionGetFaceAttribute",
         constants$51.NewtonTreeCollisionGetFaceAttribute$FUNC, false
     );
     static final FunctionDescriptor NewtonTreeCollisionSetFaceAttribute$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_INT,
-        C_INT
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonTreeCollisionSetFaceAttribute$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonTreeCollisionSetFaceAttribute",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;II)V",
+        "NewtonTreeCollisionSetFaceAttribute",
         constants$51.NewtonTreeCollisionSetFaceAttribute$FUNC, false
     );
     static final FunctionDescriptor NewtonTreeCollisionForEachFace$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonTreeCollisionForEachFace$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonTreeCollisionForEachFace",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonTreeCollisionForEachFace",
         constants$51.NewtonTreeCollisionForEachFace$FUNC, false
     );
-    static final FunctionDescriptor NewtonTreeCollisionGetVertexListTriangleListInAABB$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonTreeCollisionGetVertexListTriangleListInAABB$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonTreeCollisionGetVertexListTriangleListInAABB$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonTreeCollisionGetVertexListTriangleListInAABB",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;ILjdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonTreeCollisionGetVertexListTriangleListInAABB",
         constants$51.NewtonTreeCollisionGetVertexListTriangleListInAABB$FUNC, false
     );
 }

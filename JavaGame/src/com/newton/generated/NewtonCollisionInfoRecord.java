@@ -6,91 +6,91 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonCollisionInfoRecord {
-
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        MemoryLayout.sequenceLayout(4, MemoryLayout.sequenceLayout(4, C_FLOAT)).withName("m_offsetMatrix"),
+	
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        MemoryLayout.sequenceLayout(4, MemoryLayout.sequenceLayout(4, Constants$root.C_FLOAT$LAYOUT)).withName("m_offsetMatrix"),
         MemoryLayout.structLayout(
-            C_LONG_LONG.withName("m_userId"),
+            Constants$root.C_LONG_LONG$LAYOUT.withName("m_userId"),
             MemoryLayout.unionLayout(
-                C_POINTER.withName("m_ptr"),
-                C_LONG_LONG.withName("m_int"),
-                C_FLOAT.withName("m_float")
+                Constants$root.C_POINTER$LAYOUT.withName("m_ptr"),
+                Constants$root.C_LONG_LONG$LAYOUT.withName("m_int"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_float")
             ).withName("m_userData"),
             MemoryLayout.sequenceLayout(6, MemoryLayout.unionLayout(
-                C_POINTER.withName("m_ptr"),
-                C_LONG_LONG.withName("m_int"),
-                C_FLOAT.withName("m_float")
+                Constants$root.C_POINTER$LAYOUT.withName("m_ptr"),
+                Constants$root.C_LONG_LONG$LAYOUT.withName("m_int"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_float")
             )).withName("m_userParam")
         ).withName("m_collisionMaterial"),
-        C_INT.withName("m_collisionType"),
+        Constants$root.C_LONG$LAYOUT.withName("m_collisionType"),
         MemoryLayout.paddingLayout(32),
         MemoryLayout.unionLayout(
             MemoryLayout.structLayout(
-                C_FLOAT.withName("m_x"),
-                C_FLOAT.withName("m_y"),
-                C_FLOAT.withName("m_z")
+                Constants$root.C_FLOAT$LAYOUT.withName("m_x"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_y"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_z")
             ).withName("m_box"),
             MemoryLayout.structLayout(
-                C_FLOAT.withName("m_radio"),
-                C_FLOAT.withName("m_height")
+                Constants$root.C_FLOAT$LAYOUT.withName("m_radio"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_height")
             ).withName("m_cone"),
             MemoryLayout.structLayout(
-                C_FLOAT.withName("m_radio")
+                Constants$root.C_FLOAT$LAYOUT.withName("m_radio")
             ).withName("m_sphere"),
             MemoryLayout.structLayout(
-                C_FLOAT.withName("m_radio0"),
-                C_FLOAT.withName("m_radio1"),
-                C_FLOAT.withName("m_height")
+                Constants$root.C_FLOAT$LAYOUT.withName("m_radio0"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_radio1"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_height")
             ).withName("m_capsule"),
             MemoryLayout.structLayout(
-                C_FLOAT.withName("m_radio0"),
-                C_FLOAT.withName("m_radio1"),
-                C_FLOAT.withName("m_height")
+                Constants$root.C_FLOAT$LAYOUT.withName("m_radio0"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_radio1"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_height")
             ).withName("m_cylinder"),
             MemoryLayout.structLayout(
-                C_FLOAT.withName("m_radio"),
-                C_FLOAT.withName("m_height")
+                Constants$root.C_FLOAT$LAYOUT.withName("m_radio"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_height")
             ).withName("m_chamferCylinder"),
             MemoryLayout.structLayout(
-                C_INT.withName("m_vertexCount"),
-                C_INT.withName("m_vertexStrideInBytes"),
-                C_INT.withName("m_faceCount"),
+                Constants$root.C_LONG$LAYOUT.withName("m_vertexCount"),
+                Constants$root.C_LONG$LAYOUT.withName("m_vertexStrideInBytes"),
+                Constants$root.C_LONG$LAYOUT.withName("m_faceCount"),
                 MemoryLayout.paddingLayout(32),
-                C_POINTER.withName("m_vertex")
+                Constants$root.C_POINTER$LAYOUT.withName("m_vertex")
             ).withName("m_convexHull"),
             MemoryLayout.structLayout(
-                C_INT.withName("m_vertexCount"),
-                C_INT.withName("m_triangleCount"),
-                C_INT.withName("m_vrtexStrideInBytes"),
+                Constants$root.C_LONG$LAYOUT.withName("m_vertexCount"),
+                Constants$root.C_LONG$LAYOUT.withName("m_triangleCount"),
+                Constants$root.C_LONG$LAYOUT.withName("m_vrtexStrideInBytes"),
                 MemoryLayout.paddingLayout(32),
-                C_POINTER.withName("m_indexList"),
-                C_POINTER.withName("m_vertexList")
+                Constants$root.C_POINTER$LAYOUT.withName("m_indexList"),
+                Constants$root.C_POINTER$LAYOUT.withName("m_vertexList")
             ).withName("m_deformableMesh"),
             MemoryLayout.structLayout(
-                C_INT.withName("m_chidrenCount")
+                Constants$root.C_LONG$LAYOUT.withName("m_chidrenCount")
             ).withName("m_compoundCollision"),
             MemoryLayout.structLayout(
-                C_INT.withName("m_vertexCount"),
-                C_INT.withName("m_indexCount")
+                Constants$root.C_LONG$LAYOUT.withName("m_vertexCount"),
+                Constants$root.C_LONG$LAYOUT.withName("m_indexCount")
             ).withName("m_collisionTree"),
             MemoryLayout.structLayout(
-                C_INT.withName("m_width"),
-                C_INT.withName("m_height"),
-                C_INT.withName("m_gridsDiagonals"),
-                C_INT.withName("m_elevationDataType"),
-                C_FLOAT.withName("m_verticalScale"),
-                C_FLOAT.withName("m_horizonalScale_x"),
-                C_FLOAT.withName("m_horizonalScale_z"),
+                Constants$root.C_LONG$LAYOUT.withName("m_width"),
+                Constants$root.C_LONG$LAYOUT.withName("m_height"),
+                Constants$root.C_LONG$LAYOUT.withName("m_gridsDiagonals"),
+                Constants$root.C_LONG$LAYOUT.withName("m_elevationDataType"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_verticalScale"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_horizonalScale_x"),
+                Constants$root.C_FLOAT$LAYOUT.withName("m_horizonalScale_z"),
                 MemoryLayout.paddingLayout(32),
-                C_POINTER.withName("m_vertialElevation"),
-                C_POINTER.withName("m_atributes")
+                Constants$root.C_POINTER$LAYOUT.withName("m_vertialElevation"),
+                Constants$root.C_POINTER$LAYOUT.withName("m_atributes")
             ).withName("m_heightField"),
             MemoryLayout.structLayout(
-                C_INT.withName("m_childrenProxyCount")
+                Constants$root.C_LONG$LAYOUT.withName("m_childrenProxyCount")
             ).withName("m_sceneCollision"),
-            MemoryLayout.sequenceLayout(64, C_FLOAT).withName("m_paramArray")
+            MemoryLayout.sequenceLayout(64, Constants$root.C_FLOAT$LAYOUT).withName("m_paramArray")
         ).withName("$anon$0")
     ).withName("NewtonCollisionInfoRecord");
     public static MemoryLayout $LAYOUT() {
@@ -102,7 +102,7 @@ public class NewtonCollisionInfoRecord {
     public static MemorySegment m_collisionMaterial$slice(MemorySegment seg) {
         return seg.asSlice(64, 64);
     }
-    static final VarHandle m_collisionType$VH = $struct$LAYOUT.varHandle(int.class, MemoryLayout.PathElement.groupElement("m_collisionType"));
+    static final VarHandle m_collisionType$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_collisionType"));
     public static VarHandle m_collisionType$VH() {
         return NewtonCollisionInfoRecord.m_collisionType$VH;
     }
@@ -159,12 +159,12 @@ public class NewtonCollisionInfoRecord {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }

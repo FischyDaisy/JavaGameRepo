@@ -6,57 +6,51 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$72 {
 
-    static final FunctionDescriptor NewtonContactJointGetNextContact$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonContactJointGetNextContact$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonContactJointGetNextContact$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonContactJointGetNextContact",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonContactJointGetNextContact",
         constants$72.NewtonContactJointGetNextContact$FUNC, false
     );
-    static final FunctionDescriptor NewtonContactJointGetContactCount$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER
+    static final FunctionDescriptor NewtonContactJointGetContactCount$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonContactJointGetContactCount$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonContactJointGetContactCount",
-        "(Ljdk/incubator/foreign/MemoryAddress;)I",
+        "NewtonContactJointGetContactCount",
         constants$72.NewtonContactJointGetContactCount$FUNC, false
     );
     static final FunctionDescriptor NewtonContactJointRemoveContact$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonContactJointRemoveContact$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonContactJointRemoveContact",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonContactJointRemoveContact",
         constants$72.NewtonContactJointRemoveContact$FUNC, false
     );
-    static final FunctionDescriptor NewtonContactJointGetClosestDistance$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonContactJointGetClosestDistance$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonContactJointGetClosestDistance$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonContactJointGetClosestDistance",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonContactJointGetClosestDistance",
         constants$72.NewtonContactJointGetClosestDistance$FUNC, false
     );
     static final FunctionDescriptor NewtonContactJointResetSelftJointCollision$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonContactJointResetSelftJointCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonContactJointResetSelftJointCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonContactJointResetSelftJointCollision",
         constants$72.NewtonContactJointResetSelftJointCollision$FUNC, false
     );
     static final FunctionDescriptor NewtonContactJointResetIntraJointCollision$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonContactJointResetIntraJointCollision$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonContactJointResetIntraJointCollision",
-        "(Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonContactJointResetIntraJointCollision",
         constants$72.NewtonContactJointResetIntraJointCollision$FUNC, false
     );
 }

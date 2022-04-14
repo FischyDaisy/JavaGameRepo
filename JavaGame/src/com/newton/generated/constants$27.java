@@ -6,62 +6,56 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$27 {
 
-    static final FunctionDescriptor NewtonAtomicSwap$FUNC = FunctionDescriptor.of(C_INT,
-        C_POINTER,
-        C_INT
+    static final FunctionDescriptor NewtonAtomicSwap$FUNC = FunctionDescriptor.of(Constants$root.C_LONG$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_LONG$LAYOUT
     );
     static final MethodHandle NewtonAtomicSwap$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonAtomicSwap",
-        "(Ljdk/incubator/foreign/MemoryAddress;I)I",
+        "NewtonAtomicSwap",
         constants$27.NewtonAtomicSwap$FUNC, false
     );
     static final FunctionDescriptor NewtonYield$FUNC = FunctionDescriptor.ofVoid();
     static final MethodHandle NewtonYield$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonYield",
-        "([Ljava/lang/Object;)V",
+        "NewtonYield",
         constants$27.NewtonYield$FUNC, true
     );
     static final FunctionDescriptor NewtonSetIslandUpdateEvent$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSetIslandUpdateEvent$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSetIslandUpdateEvent",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonSetIslandUpdateEvent",
         constants$27.NewtonSetIslandUpdateEvent$FUNC, false
     );
     static final FunctionDescriptor NewtonWorldForEachJointDo$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldForEachJointDo$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldForEachJointDo",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonWorldForEachJointDo",
         constants$27.NewtonWorldForEachJointDo$FUNC, false
     );
     static final FunctionDescriptor NewtonWorldForEachBodyInAABBDo$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldForEachBodyInAABBDo$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldForEachBodyInAABBDo",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonWorldForEachBodyInAABBDo",
         constants$27.NewtonWorldForEachBodyInAABBDo$FUNC, false
     );
     static final FunctionDescriptor NewtonWorldSetUserData$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonWorldSetUserData$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonWorldSetUserData",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonWorldSetUserData",
         constants$27.NewtonWorldSetUserData$FUNC, false
     );
 }

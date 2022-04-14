@@ -6,58 +6,52 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 class constants$21 {
 
-    static final FunctionDescriptor NewtonGetFirstPlugin$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonGetFirstPlugin$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetFirstPlugin$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetFirstPlugin",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonGetFirstPlugin",
         constants$21.NewtonGetFirstPlugin$FUNC, false
     );
-    static final FunctionDescriptor NewtonGetPreferedPlugin$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonGetPreferedPlugin$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetPreferedPlugin$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetPreferedPlugin",
-        "(Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonGetPreferedPlugin",
         constants$21.NewtonGetPreferedPlugin$FUNC, false
     );
-    static final FunctionDescriptor NewtonGetNextPlugin$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonGetNextPlugin$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetNextPlugin$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetNextPlugin",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonGetNextPlugin",
         constants$21.NewtonGetNextPlugin$FUNC, false
     );
-    static final FunctionDescriptor NewtonGetPluginString$FUNC = FunctionDescriptor.of(C_POINTER,
-        C_POINTER,
-        C_POINTER
+    static final FunctionDescriptor NewtonGetPluginString$FUNC = FunctionDescriptor.of(Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetPluginString$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetPluginString",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)Ljdk/incubator/foreign/MemoryAddress;",
+        "NewtonGetPluginString",
         constants$21.NewtonGetPluginString$FUNC, false
     );
     static final FunctionDescriptor NewtonSelectPlugin$FUNC = FunctionDescriptor.ofVoid(
-        C_POINTER,
-        C_POINTER
+        Constants$root.C_POINTER$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonSelectPlugin$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonSelectPlugin",
-        "(Ljdk/incubator/foreign/MemoryAddress;Ljdk/incubator/foreign/MemoryAddress;)V",
+        "NewtonSelectPlugin",
         constants$21.NewtonSelectPlugin$FUNC, false
     );
-    static final FunctionDescriptor NewtonGetContactMergeTolerance$FUNC = FunctionDescriptor.of(C_FLOAT,
-        C_POINTER
+    static final FunctionDescriptor NewtonGetContactMergeTolerance$FUNC = FunctionDescriptor.of(Constants$root.C_FLOAT$LAYOUT,
+        Constants$root.C_POINTER$LAYOUT
     );
     static final MethodHandle NewtonGetContactMergeTolerance$MH = RuntimeHelper.downcallHandle(
-        Newton_h.LIBRARIES, "NewtonGetContactMergeTolerance",
-        "(Ljdk/incubator/foreign/MemoryAddress;)F",
+        "NewtonGetContactMergeTolerance",
         constants$21.NewtonGetContactMergeTolerance$FUNC, false
     );
 }

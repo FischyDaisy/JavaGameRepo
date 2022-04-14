@@ -6,19 +6,19 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.ByteOrder;
 import jdk.incubator.foreign.*;
-import static jdk.incubator.foreign.CLinker.*;
+import static jdk.incubator.foreign.ValueLayout.*;
 public class NewtonHingeSliderUpdateDesc {
 
-    static final MemoryLayout $struct$LAYOUT = MemoryLayout.structLayout(
-        C_FLOAT.withName("m_accel"),
-        C_FLOAT.withName("m_minFriction"),
-        C_FLOAT.withName("m_maxFriction"),
-        C_FLOAT.withName("m_timestep")
+    static final  GroupLayout $struct$LAYOUT = MemoryLayout.structLayout(
+        Constants$root.C_FLOAT$LAYOUT.withName("m_accel"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_minFriction"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_maxFriction"),
+        Constants$root.C_FLOAT$LAYOUT.withName("m_timestep")
     ).withName("NewtonHingeSliderUpdateDesc");
     public static MemoryLayout $LAYOUT() {
         return NewtonHingeSliderUpdateDesc.$struct$LAYOUT;
     }
-    static final VarHandle m_accel$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_accel"));
+    static final VarHandle m_accel$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_accel"));
     public static VarHandle m_accel$VH() {
         return NewtonHingeSliderUpdateDesc.m_accel$VH;
     }
@@ -34,7 +34,7 @@ public class NewtonHingeSliderUpdateDesc {
     public static void m_accel$set(MemorySegment seg, long index, float x) {
         NewtonHingeSliderUpdateDesc.m_accel$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_minFriction$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_minFriction"));
+    static final VarHandle m_minFriction$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_minFriction"));
     public static VarHandle m_minFriction$VH() {
         return NewtonHingeSliderUpdateDesc.m_minFriction$VH;
     }
@@ -50,7 +50,7 @@ public class NewtonHingeSliderUpdateDesc {
     public static void m_minFriction$set(MemorySegment seg, long index, float x) {
         NewtonHingeSliderUpdateDesc.m_minFriction$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_maxFriction$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_maxFriction"));
+    static final VarHandle m_maxFriction$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_maxFriction"));
     public static VarHandle m_maxFriction$VH() {
         return NewtonHingeSliderUpdateDesc.m_maxFriction$VH;
     }
@@ -66,7 +66,7 @@ public class NewtonHingeSliderUpdateDesc {
     public static void m_maxFriction$set(MemorySegment seg, long index, float x) {
         NewtonHingeSliderUpdateDesc.m_maxFriction$VH.set(seg.asSlice(index*sizeof()), x);
     }
-    static final VarHandle m_timestep$VH = $struct$LAYOUT.varHandle(float.class, MemoryLayout.PathElement.groupElement("m_timestep"));
+    static final VarHandle m_timestep$VH = $struct$LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("m_timestep"));
     public static VarHandle m_timestep$VH() {
         return NewtonHingeSliderUpdateDesc.m_timestep$VH;
     }
@@ -84,12 +84,12 @@ public class NewtonHingeSliderUpdateDesc {
     }
     public static long sizeof() { return $LAYOUT().byteSize(); }
     public static MemorySegment allocate(SegmentAllocator allocator) { return allocator.allocate($LAYOUT()); }
-    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.ofScope(scope)); }
     public static MemorySegment allocateArray(int len, SegmentAllocator allocator) {
         return allocator.allocate(MemoryLayout.sequenceLayout(len, $LAYOUT()));
     }
+    public static MemorySegment allocate(ResourceScope scope) { return allocate(SegmentAllocator.nativeAllocator(scope)); }
     public static MemorySegment allocateArray(int len, ResourceScope scope) {
-        return allocateArray(len, SegmentAllocator.ofScope(scope));
+        return allocateArray(len, SegmentAllocator.nativeAllocator(scope));
     }
     public static MemorySegment ofAddress(MemoryAddress addr, ResourceScope scope) { return RuntimeHelper.asArray(addr, $LAYOUT(), 1, scope); }
 }
