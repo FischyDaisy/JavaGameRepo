@@ -7,10 +7,18 @@ import jdk.incubator.foreign.*;
 public class NewtonTreeCollision extends NewtonCollision {
 	
 	private NewtonTreeCollision(MemoryAddress address) {
-		super(address);
+		super(address, ResourceScope.newConfinedScope());
 	}
 	
-	public static NewtonCollision createTreeCollision(NewtonWorld world, int shapeID) {
+	private NewtonTreeCollision(MemoryAddress address, ResourceScope scope) {
+		super(address, scope);
+	}
+	
+	public static NewtonCollision create(NewtonWorld world, int shapeID) {
 		return new NewtonTreeCollision(Newton_h.NewtonCreateTreeCollision(world.address, shapeID));
+	}
+	
+	public static NewtonCollision create(NewtonWorld world, int shapeID, ResourceScope scope) {
+		return new NewtonTreeCollision(Newton_h.NewtonCreateTreeCollision(world.address, shapeID), scope);
 	}
 }

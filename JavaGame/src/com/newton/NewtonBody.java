@@ -10,11 +10,11 @@ import jdk.incubator.foreign.*;
 public abstract class NewtonBody {
 	
 	protected final MemoryAddress address;
-	protected ResourceScope scope;
+	protected final ResourceScope scope;
 	
-	protected NewtonBody(MemoryAddress address) {
+	protected NewtonBody(MemoryAddress address, ResourceScope scope) {
 		this.address = address;
-		scope = ResourceScope.newConfinedScope();
+		this.scope = scope;
 	}
 	
 	public int getType() {
@@ -78,20 +78,19 @@ public abstract class NewtonBody {
 	}
 	
 	public static float[] getMass(NewtonBody body, ResourceScope scope) {
-		MemorySegment mass = Newton.createFloatSegment(scope);
-		MemorySegment Ixx = Newton.createFloatSegment(scope);
-		MemorySegment Iyy = Newton.createFloatSegment(scope);
-		MemorySegment Izz = Newton.createFloatSegment(scope);
+		//MemorySegment mass = Newton.createFloatSegment(scope);
+		//MemorySegment Ixx = Newton.createFloatSegment(scope);
+		//MemorySegment Iyy = Newton.createFloatSegment(scope);
+		//MemorySegment Izz = Newton.createFloatSegment(scope);
 		
-		Newton_h.NewtonBodyGetMass(body.address, mass, Ixx, Iyy, Izz);
-		return mass.toFloatArray();
+		//Newton_h.NewtonBodyGetMass(body.address, mass, Ixx, Iyy, Izz);
+		return new float[] {0f};
 	}
 	
 	public void cleanup() {
 		if (scope.isAlive()) {
 			scope.close();
 		}
-		scope = ResourceScope.newConfinedScope();
 	}
 	
 	public void destroy() {

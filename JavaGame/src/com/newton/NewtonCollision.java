@@ -7,15 +7,17 @@ import jdk.incubator.foreign.*;
 public abstract class NewtonCollision {
 	
 	protected final MemoryAddress address;
-	protected ResourceScope scope;
+	protected final ResourceScope scope;
 	
-	protected NewtonCollision(MemoryAddress address) {
+	protected NewtonCollision(MemoryAddress address, ResourceScope scope) {
 		this.address = address;
-		scope = ResourceScope.newConfinedScope();
+		this.scope = scope;
 	}
 	
 	public void destroy() {
 		Newton_h.NewtonDestroyCollision(address);
-		scope.close();
+		if (scope.isAlive()) {
+			scope.close();
+		}
 	}
 }

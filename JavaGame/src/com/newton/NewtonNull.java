@@ -7,10 +7,18 @@ import jdk.incubator.foreign.*;
 public class NewtonNull extends NewtonCollision {
 	
 	private NewtonNull(MemoryAddress address) {
-		super(address);
+		super(address, ResourceScope.newConfinedScope());
 	}
 	
-	public static NewtonCollision createNullCollision(NewtonWorld world) {
+	private NewtonNull(MemoryAddress address, ResourceScope scope) {
+		super(address, scope);
+	}
+	
+	public static NewtonCollision create(NewtonWorld world) {
 		return new NewtonNull(Newton_h.NewtonCreateNull(world.address));
+	}
+	
+	public static NewtonCollision create(NewtonWorld world, ResourceScope scope) {
+		return new NewtonNull(Newton_h.NewtonCreateNull(world.address), scope);
 	}
 }
