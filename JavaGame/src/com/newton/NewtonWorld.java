@@ -51,7 +51,6 @@ public class NewtonWorld {
 		return MemorySegment.ofAddress(Newton_h.NewtonAlloc((int) layout.byteSize()), layout.byteSize(), scope);
 	}
 	
-	
 	public static void newtonFree(Addressable ptr) {
 		Newton_h.NewtonFree(ptr);
 	}
@@ -102,6 +101,49 @@ public class NewtonWorld {
 		Newton_h.NewtonUnloadPlugins(address);
 	}
 	
+	public String currentPlugin() {
+		MemoryAddress pluginStrAddress = Newton_h.NewtonCurrentPlugin(address);
+		return pluginStrAddress.getUtf8String(0);
+	}
+	
+	public String firstPlugin() {
+		MemoryAddress pluginStrAddress = Newton_h.NewtonGetFirstPlugin(address);
+		return pluginStrAddress.getUtf8String(0);
+	}
+	
+	public String preferedPlugin() {
+		MemoryAddress pluginStrAddress = Newton_h.NewtonGetPreferedPlugin(address);
+		return pluginStrAddress.getUtf8String(0);
+	}
+	
+	public float getContactMergeTolerance() {
+		return Newton_h.NewtonGetContactMergeTolerance(address);
+	}
+	
+	public void setContactMergeTolerance(float tolerance) {
+		Newton_h.NewtonSetContactMergeTolerance(address, tolerance);
+	}
+	
+	public void invalidateCache() {
+		Newton_h.NewtonInvalidateCache(address);
+	}
+	
+	public void setSolverIterations(int model) {
+		Newton_h.NewtonSetSolverIterations(address, model);
+	}
+	
+	public int getSolverIterations() {
+		return Newton_h.NewtonGetSolverIterations(address);
+	}
+	
+	public void setParallelSolverOnLargeIsland(int mode) {
+		Newton_h.NewtonSetParallelSolverOnLargeIsland(address, mode);
+	}
+	
+	public int getParallelSolverOnLargeIsland() {
+		return Newton_h.NewtonGetParallelSolverOnLargeIsland(address);
+	}
+	
 	public void update(float timestep) {
 		Newton_h.NewtonUpdate(address, timestep);
 	}
@@ -109,11 +151,6 @@ public class NewtonWorld {
 	public void destroyAllBodies() {
 		Newton_h.NewtonDestroyAllBodies(address);
 	}
-	
-	public void setSolverIterations(int i) {
-		Newton_h.NewtonSetSolverIterations(address, i);
-	}
-	
 	/**
 	 * This method wraps a memory address into a NewtonWorld object.
 	 * This method is only meant to be used internally. Improper use of this method could
