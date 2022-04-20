@@ -9,11 +9,11 @@ import main.engine.graphics.GraphConstants;
 
 public class NewtonBox extends NewtonCollision {
 	
-	private NewtonBox(MemoryAddress address) {
+	protected NewtonBox(MemoryAddress address) {
 		super(address, ResourceScope.newConfinedScope());
 	}
 	
-	private NewtonBox(MemoryAddress address, ResourceScope scope) {
+	protected NewtonBox(MemoryAddress address, ResourceScope scope) {
 		super(address, scope);
 	}
 	

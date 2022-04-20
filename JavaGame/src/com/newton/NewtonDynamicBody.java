@@ -9,11 +9,11 @@ import jdk.incubator.foreign.*;
 
 public class NewtonDynamicBody extends NewtonBody {
 	
-	private NewtonDynamicBody(MemoryAddress address) {
+	protected NewtonDynamicBody(MemoryAddress address) {
 		super(address, ResourceScope.newConfinedScope());
 	}
 	
-	private NewtonDynamicBody(MemoryAddress address, ResourceScope scope) {
+	protected NewtonDynamicBody(MemoryAddress address, ResourceScope scope) {
 		super(address, scope);
 	}
 	

@@ -9,11 +9,11 @@ import jdk.incubator.foreign.*;
 
 public class NewtonKinematicBody extends NewtonBody {
 	
-	private NewtonKinematicBody(MemoryAddress address) {
+	protected NewtonKinematicBody(MemoryAddress address) {
 		super(address, ResourceScope.newConfinedScope());
 	}
 	
-	private NewtonKinematicBody(MemoryAddress address, ResourceScope scope) {
+	protected NewtonKinematicBody(MemoryAddress address, ResourceScope scope) {
 		super(address, scope);
 	}
 	

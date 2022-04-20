@@ -144,8 +144,129 @@ public class NewtonWorld {
 		return Newton_h.NewtonGetParallelSolverOnLargeIsland(address);
 	}
 	
+	public int getBroadphaseAlgorithm() {
+		return Newton_h.NewtonGetBroadphaseAlgorithm(address);
+	}
+	
+	public void selectBroadphaseAlgorithm(int algorithmType) {
+		Newton_h.NewtonSelectBroadphaseAlgorithm(address, algorithmType);
+	}
+	
+	public void resetBroadphase() {
+		Newton_h.NewtonResetBroadphase(address);
+	}
+	
 	public void update(float timestep) {
 		Newton_h.NewtonUpdate(address, timestep);
+	}
+	
+	public void updateAsync(float timestep) {
+		Newton_h.NewtonUpdateAsync(address, timestep);
+	}
+	
+	public void waitForUpdateToFinish() {
+		Newton_h.NewtonWaitForUpdateToFinish(address);
+	}
+	
+	public int getNumberOfSubsteps() {
+		return Newton_h.NewtonGetNumberOfSubsteps(address);
+	}
+	
+	public void setNumberOfSubsteps(int substeps) {
+		Newton_h.NewtonSetNumberOfSubsteps(address, substeps);
+	}
+	
+	public float getLastUpdateTime() {
+		return Newton_h.NewtonGetLastUpdateTime(address);
+	}
+	
+	public void serializeToFile(String filename, NewtonOnBodySerializationCallback bodyCallback, Addressable bodyUserData) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment filePath = allocator.allocateUtf8String(filename);
+		NativeSymbol callbackFunc = NewtonOnBodySerializationCallback.allocate(bodyCallback, scope);
+		Newton_h.NewtonSerializeToFile(address, filePath, callbackFunc, bodyUserData);
+	}
+	
+	public void serializeToFile(String filename, NewtonOnBodySerializationCallback bodyCallback, Addressable bodyUserData,
+			ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment filePath = allocator.allocateUtf8String(filename);
+		NativeSymbol callbackFunc = NewtonOnBodySerializationCallback.allocate(bodyCallback, scope);
+		Newton_h.NewtonSerializeToFile(address, filePath, callbackFunc, bodyUserData);
+	}
+	
+	public void deserializeFromFile(String filename, NewtonOnBodyDeserializationCallback bodyCallback, Addressable bodyUserData) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment filePath = allocator.allocateUtf8String(filename);
+		NativeSymbol callbackFunc = NewtonOnBodyDeserializationCallback.allocate(bodyCallback, scope);
+		Newton_h.NewtonDeserializeFromFile(address, filePath, callbackFunc, bodyUserData);
+	}
+	
+	public void deserializeFromFile(String filename, NewtonOnBodyDeserializationCallback bodyCallback, Addressable bodyUserData,
+			ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment filePath = allocator.allocateUtf8String(filename);
+		NativeSymbol callbackFunc = NewtonOnBodyDeserializationCallback.allocate(bodyCallback, scope);
+		Newton_h.NewtonDeserializeFromFile(address, filePath, callbackFunc, bodyUserData);
+	}
+	
+	public void serializeScene(NewtonOnBodySerializationCallback bodyCallback, Addressable bodyUserData, NewtonSerializeCallback serializeCallback, Addressable serializeHandle) {
+		NativeSymbol bodyFunc = NewtonOnBodySerializationCallback.allocate(bodyCallback, scope);
+		NativeSymbol serializeFunc = NewtonSerializeCallback.allocate(serializeCallback, scope);
+		Newton_h.NewtonSerializeScene(address, bodyFunc, bodyUserData, serializeFunc, serializeHandle);
+	}
+	
+	public void serializeScene(NewtonOnBodySerializationCallback bodyCallback, Addressable bodyUserData, NewtonSerializeCallback serializeCallback, Addressable serializeHandle,
+			ResourceScope scope) {
+		NativeSymbol bodyFunc = NewtonOnBodySerializationCallback.allocate(bodyCallback, scope);
+		NativeSymbol serializeFunc = NewtonSerializeCallback.allocate(serializeCallback, scope);
+		Newton_h.NewtonSerializeScene(address, bodyFunc, bodyUserData, serializeFunc, serializeHandle);
+	}
+	
+	public void deserializeScene(NewtonOnBodyDeserializationCallback bodyCallback, Addressable bodyUserData, NewtonDeserializeCallback serializeCallback, Addressable serializeHandle) {
+		NativeSymbol bodyFunc = NewtonOnBodyDeserializationCallback.allocate(bodyCallback, scope);
+		NativeSymbol deserializeFunc = NewtonDeserializeCallback.allocate(serializeCallback, scope);
+		Newton_h.NewtonDeserializeScene(address, bodyFunc, bodyUserData, deserializeFunc, serializeHandle);
+	}
+	
+	public void deserializeScene(NewtonOnBodyDeserializationCallback bodyCallback, Addressable bodyUserData, NewtonDeserializeCallback serializeCallback, Addressable serializeHandle,
+			ResourceScope scope) {
+		NativeSymbol bodyFunc = NewtonOnBodyDeserializationCallback.allocate(bodyCallback, scope);
+		NativeSymbol deserializeFunc = NewtonDeserializeCallback.allocate(serializeCallback, scope);
+		Newton_h.NewtonDeserializeScene(address, bodyFunc, bodyUserData, deserializeFunc, serializeHandle);
+	}
+	
+	public NewtonBody findSerializedBody(int bodySerializedID) {
+		MemoryAddress body = Newton_h.NewtonFindSerializedBody(address, bodySerializedID);
+		int bodyType = Newton_h.NewtonBodyGetType(body);
+		switch (bodyType) {
+			case 0:
+				return new NewtonDynamicBody(body, scope);
+			case 1:
+				return new NewtonKinematicBody(body, scope);
+			default:
+				throw new RuntimeException("Error finding serialized body");
+		}
+	}
+	
+	public void lockCriticalSection(int threadIndex) {
+		Newton_h.NewtonWorldCriticalSectionLock(address, threadIndex);
+	}
+	
+	public void unlockCriticalSection() {
+		Newton_h.NewtonWorldCriticalSectionUnlock(address);
+	}
+	
+	public void setThreadCount(int threads) {
+		Newton_h.NewtonSetThreadsCount(address, threads);
+	}
+	
+	public int getThreadCount() {
+		return Newton_h.NewtonGetThreadsCount(address);
+	}
+	
+	public int getMaxThreadCount() {
+		return Newton_h.NewtonGetMaxThreadsCount(address);
 	}
 	
 	public void destroyAllBodies() {
