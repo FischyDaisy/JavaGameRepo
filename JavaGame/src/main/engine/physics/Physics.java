@@ -11,7 +11,7 @@ public class Physics {
 		@Override
 		public void apply(MemoryAddress x0, float x1, int x2) {
 			NewtonBody body = NewtonBody.wrap(x0);
-			Newton_h.NewtonBodyGetMass(body, body, body, x0, body);
+			//Newton_h.NewtonBodyGetMass(body, body, body, x0, body);
 		}
 		
 	}

@@ -1,6 +1,9 @@
 package com.newton;
 
 import jdk.incubator.foreign.*;
+
+import org.joml.Vector3f;
+
 import com.newton.generated.*;
 
 public class NewtonWorld {
@@ -249,6 +252,37 @@ public class NewtonWorld {
 		}
 	}
 	
+	public void setJointSerializationCallbacks(NewtonOnJointSerializationCallback serializeJoint, NewtonOnJointDeserializationCallback deserializeJoint) {
+		NativeSymbol serializeFunc = NewtonOnJointSerializationCallback.allocate(serializeJoint, scope);
+		NativeSymbol deserializeFunc = NewtonOnJointDeserializationCallback.allocate(deserializeJoint, scope);
+		Newton_h.NewtonSetJointSerializationCallbacks(address, serializeFunc, deserializeFunc);
+	}
+	
+	public void setJointSerializationCallbacks(NewtonOnJointSerializationCallback serializeJoint, NewtonOnJointDeserializationCallback deserializeJoint,
+			ResourceScope scope) {
+		NativeSymbol serializeFunc = NewtonOnJointSerializationCallback.allocate(serializeJoint, scope);
+		NativeSymbol deserializeFunc = NewtonOnJointDeserializationCallback.allocate(deserializeJoint, scope);
+		Newton_h.NewtonSetJointSerializationCallbacks(address, serializeFunc, deserializeFunc);
+	}
+	
+	public JointSerializationCallbacks getJointSerializationCallbacks() {
+		MemoryAddress serializePtr = MemoryAddress.NULL;
+		MemoryAddress deserializePtr = MemoryAddress.NULL;
+		Newton_h.NewtonGetJointSerializationCallbacks(address, serializePtr, deserializePtr);
+		NewtonOnJointSerializationCallback serializeCallback = NewtonOnJointSerializationCallback.ofAddress(serializePtr, scope);
+		NewtonOnJointDeserializationCallback deserializeCallback = NewtonOnJointDeserializationCallback.ofAddress(deserializePtr, scope);
+		return new JointSerializationCallbacks(serializeCallback, deserializeCallback);
+	}
+	
+	public JointSerializationCallbacks getJointSerializationCallbacks(ResourceScope scope) {
+		MemoryAddress serializePtr = MemoryAddress.NULL;
+		MemoryAddress deserializePtr = MemoryAddress.NULL;
+		Newton_h.NewtonGetJointSerializationCallbacks(address, serializePtr, deserializePtr);
+		NewtonOnJointSerializationCallback serializeCallback = NewtonOnJointSerializationCallback.ofAddress(serializePtr, scope);
+		NewtonOnJointDeserializationCallback deserializeCallback = NewtonOnJointDeserializationCallback.ofAddress(deserializePtr, scope);
+		return new JointSerializationCallbacks(serializeCallback, deserializeCallback);
+	}
+	
 	public void lockCriticalSection(int threadIndex) {
 		Newton_h.NewtonWorldCriticalSectionLock(address, threadIndex);
 	}
@@ -269,6 +303,175 @@ public class NewtonWorld {
 		return Newton_h.NewtonGetMaxThreadsCount(address);
 	}
 	
+	public void dispatchThreadJob(NewtonJobTask task, Addressable userData, String functionName) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment function_name = allocator.allocateUtf8String(functionName);
+		NativeSymbol taskFunc = NewtonJobTask.allocate(task, scope);
+		Newton_h.NewtonDispachThreadJob(address, taskFunc, userData, function_name);
+	}
+	
+	public void dispatchThreadJob(NewtonJobTask task, Addressable userData, String functionName, ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment function_name = allocator.allocateUtf8String(functionName);
+		NativeSymbol taskFunc = NewtonJobTask.allocate(task, scope);
+		Newton_h.NewtonDispachThreadJob(address, taskFunc, userData, function_name);
+	}
+	
+	public void syncThreadJobs() {
+		Newton_h.NewtonSyncThreadJobs(address);
+	}
+	
+	public void setIslandUpdateEvent(NewtonIslandUpdate islandUpdate) {
+		NativeSymbol islandUpdateFunc = NewtonIslandUpdate.allocate(islandUpdate, scope);
+		Newton_h.NewtonSetIslandUpdateEvent(address, islandUpdateFunc);
+	}
+	
+	public void setIslandUpdateEvent(NewtonIslandUpdate islandUpdate, ResourceScope scope) {
+		NativeSymbol islandUpdateFunc = NewtonIslandUpdate.allocate(islandUpdate, scope);
+		Newton_h.NewtonSetIslandUpdateEvent(address, islandUpdateFunc);
+	}
+	
+	public void forEachJoint(NewtonJointIterator callback, Addressable userData) {
+		NativeSymbol callbackFunc = NewtonJointIterator.allocate(callback, scope);
+		Newton_h.NewtonWorldForEachJointDo(address, callbackFunc, userData);
+	}
+	
+	public void forEachJoint(NewtonJointIterator callback, Addressable userData, ResourceScope scope) {
+		NativeSymbol callbackFunc = NewtonJointIterator.allocate(callback, scope);
+		Newton_h.NewtonWorldForEachJointDo(address, callbackFunc, userData);
+	}
+	
+	public void forEachBodyInAABB(float[] p0, float[] p1, NewtonBodyIterator callback, Addressable userData) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment p0Segment = allocator.allocateArray(Newton_h.C_FLOAT, p0);
+		MemorySegment p1Segment = allocator.allocateArray(Newton_h.C_FLOAT, p1);
+		NativeSymbol callbackFunc = NewtonBodyIterator.allocate(callback, scope);
+		Newton_h.NewtonWorldForEachBodyInAABBDo(address, p0Segment, p1Segment, callbackFunc, userData);
+	}
+	
+	public void forEachBodyInAABB(float[] p0, float[] p1, NewtonBodyIterator callback, Addressable userData, ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment p0Segment = allocator.allocateArray(Newton_h.C_FLOAT, p0);
+		MemorySegment p1Segment = allocator.allocateArray(Newton_h.C_FLOAT, p1);
+		NativeSymbol callbackFunc = NewtonBodyIterator.allocate(callback, scope);
+		Newton_h.NewtonWorldForEachBodyInAABBDo(address, p0Segment, p1Segment, callbackFunc, userData);
+	}
+	
+	public void forEachBodyInAABB(Vector3f p0, Vector3f p1, NewtonBodyIterator callback, Addressable userData) {
+		float[] p0Arr = new float[] {p0.x, p0.y, p0.z};
+		float[] p1Arr = new float[] {p1.x, p1.y, p1.z};
+		forEachBodyInAABB(p0Arr, p1Arr, callback, userData);
+	}
+	
+	public void forEachBodyInAABB(Vector3f p0, Vector3f p1, NewtonBodyIterator callback, Addressable userData, ResourceScope scope) {
+		float[] p0Arr = new float[] {p0.x, p0.y, p0.z};
+		float[] p1Arr = new float[] {p1.x, p1.y, p1.z};
+		forEachBodyInAABB(p0Arr, p1Arr, callback, userData, scope);
+	}
+	
+	public void setUserData(Addressable userData) {
+		Newton_h.NewtonWorldSetUserData(address, userData);
+	}
+	
+	public MemoryAddress getUserData() {
+		return Newton_h.NewtonWorldGetUserData(address);
+	}
+	
+	public MemoryAddress addListener(String nameId, Addressable listenerUserData) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment nameIdSegment = allocator.allocateUtf8String(nameId);
+		return Newton_h.NewtonWorldAddListener(address, nameIdSegment, listenerUserData);
+	}
+	
+	public MemoryAddress addListener(String nameId, Addressable listenerUserData, ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment nameIdSegment = allocator.allocateUtf8String(nameId);
+		return Newton_h.NewtonWorldAddListener(address, nameIdSegment, listenerUserData);
+	}
+	
+	public MemoryAddress getListener(String nameId) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment nameIdSegment = allocator.allocateUtf8String(nameId);
+		return Newton_h.NewtonWorldGetListener(address, nameIdSegment);
+	}
+	
+	public MemoryAddress getListener(String nameId, ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment nameIdSegment = allocator.allocateUtf8String(nameId);
+		return Newton_h.NewtonWorldGetListener(address, nameIdSegment);
+	}
+	
+	public void listenerSetDebugCallback(Addressable listener, NewtonWorldListenerDebugCallback callback) {
+		NativeSymbol callbackFunc = NewtonWorldListenerDebugCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetDebugCallback(address, listener, callbackFunc);
+	}
+	
+	public void listenerSetDebugCallback(Addressable listener, NewtonWorldListenerDebugCallback callback, ResourceScope scope) {
+		NativeSymbol callbackFunc = NewtonWorldListenerDebugCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetDebugCallback(address, listener, callbackFunc);
+	}
+	
+	public void listenerSetPostStepCallback(Addressable listener, NewtonWorldUpdateListenerCallback callback) {
+		NativeSymbol callbackFunc = NewtonWorldUpdateListenerCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetPostStepCallback(address, listener, callbackFunc);
+	}
+	
+	public void listenerSetPostStepCallback(Addressable listener, NewtonWorldUpdateListenerCallback callback, ResourceScope scope) {
+		NativeSymbol callbackFunc = NewtonWorldUpdateListenerCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetPostStepCallback(address, listener, callbackFunc);
+	}
+	
+	public void listenerSetPreUpdateCallback(Addressable listener, NewtonWorldUpdateListenerCallback callback) {
+		NativeSymbol callbackFunc = NewtonWorldUpdateListenerCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetPreUpdateCallback(address, listener, callbackFunc);
+	}
+	
+	public void listenerSetPreUpdateCallback(Addressable listener, NewtonWorldUpdateListenerCallback callback, ResourceScope scope) {
+		NativeSymbol callbackFunc = NewtonWorldUpdateListenerCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetPreUpdateCallback(address, listener, callbackFunc);
+	}
+	
+	public void listenerSetPostUpdateCallback(Addressable listener, NewtonWorldUpdateListenerCallback callback) {
+		NativeSymbol callbackFunc = NewtonWorldUpdateListenerCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetPostUpdateCallback(address, listener, callbackFunc);
+	}
+	
+	public void listenerSetPostUpdateCallback(Addressable listener, NewtonWorldUpdateListenerCallback callback, ResourceScope scope) {
+		NativeSymbol callbackFunc = NewtonWorldUpdateListenerCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetPostUpdateCallback(address, listener, callbackFunc);
+	}
+	
+	public void listenerSetDestructorCallback(Addressable listener, NewtonWorldDestroyListenerCallback callback) {
+		NativeSymbol callbackFunc = NewtonWorldDestroyListenerCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetDestructorCallback(address, listener, callbackFunc);
+	}
+	
+	public void listenerSetBodyDestroyCallback(Addressable listener, NewtonWorldListenerBodyDestroyCallback callback) {
+		NativeSymbol callbackFunc = NewtonWorldListenerBodyDestroyCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetBodyDestroyCallback(address, listener, callbackFunc);
+	}
+	
+	public void listenerSetBodyDestroyCallback(Addressable listener, NewtonWorldListenerBodyDestroyCallback callback, ResourceScope scope) {
+		NativeSymbol callbackFunc = NewtonWorldListenerBodyDestroyCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetBodyDestroyCallback(address, listener, callbackFunc);
+	}
+	
+	public void listenerDebug(Addressable context) {
+		Newton_h.NewtonWorldListenerDebug(address, context);
+	}
+	
+	public MemoryAddress getListenerUserData(Addressable listener) {
+		return Newton_h.NewtonWorldGetListenerUserData(address, listener);
+	}
+	
+	public NewtonWorldListenerBodyDestroyCallback listenerGetBodyDestroyCallback(Addressable listener) {
+		return NewtonWorldListenerBodyDestroyCallback.ofAddress(Newton_h.NewtonWorldListenerGetBodyDestroyCallback(address, listener), scope);
+	}
+	
+	public NewtonWorldListenerBodyDestroyCallback listenerGetBodyDestroyCallback(Addressable listener, ResourceScope scope) {
+		return NewtonWorldListenerBodyDestroyCallback.ofAddress(Newton_h.NewtonWorldListenerGetBodyDestroyCallback(address, listener), scope);
+	}
+	
 	public void destroyAllBodies() {
 		Newton_h.NewtonDestroyAllBodies(address);
 	}
@@ -282,4 +485,6 @@ public class NewtonWorld {
 	protected static NewtonWorld wrap(MemoryAddress address) {
 		return new NewtonWorld(address);
 	}
+	
+	public record JointSerializationCallbacks(NewtonOnJointSerializationCallback serializeCallback, NewtonOnJointDeserializationCallback deserializeCallback) {}
 }

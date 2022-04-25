@@ -20,6 +20,7 @@ import main.engine.utility.Utils;
 
 import static main.engine.utility.ResourcePaths.Shaders;
 
+/*
 public class GameHud implements IHud {
 	
 	private static final Font FONT = new Font("Arial", Font.PLAIN, 20);
@@ -121,3 +122,4 @@ public class GameHud implements IHud {
 	}
 
 }
+*/
