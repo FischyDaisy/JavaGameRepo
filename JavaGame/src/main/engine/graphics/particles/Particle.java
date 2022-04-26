@@ -2,8 +2,7 @@ package main.engine.graphics.particles;
 
 import org.joml.Vector3f;
 
-import main.engine.graphics.opengl.Mesh;
-import main.engine.graphics.opengl.GLTexture;
+import main.engine.graphics.vulkan.VKTexture;
 import main.engine.items.GameItem;
 
 public class Particle extends GameItem {
@@ -21,7 +20,7 @@ public class Particle extends GameItem {
     
     private int animFrames;
 
-    public Particle(String id, String modelId, GLTexture texture, Vector3f speed, long ttl, long updateTextureNanos) {
+    public Particle(String id, String modelId, VKTexture texture, Vector3f speed, long ttl, long updateTextureNanos) {
         super(id, modelId);
         this.speed = new Vector3f(speed);
         this.ttl = ttl;

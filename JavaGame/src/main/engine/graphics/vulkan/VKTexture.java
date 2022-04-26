@@ -20,6 +20,8 @@ public class VKTexture implements ITexture {
     private final int mipLevels;
     private final int width;
 
+    private int cols;
+    private int rows;
     private String fileName;
     private Image image;
     private ImageView imageView;
@@ -56,6 +58,16 @@ public class VKTexture implements ITexture {
     public VKTexture(Device device, ByteBuffer buf, int width, int height, int imageFormat) {
         this.width = width;
         this.height = height;
+        mipLevels = 1;
+
+        createTextureResources(device, buf, imageFormat);
+    }
+    
+    public VKTexture(Device device, ByteBuffer buf, int width, int height, int cols, int rows, int imageFormat) {
+        this.width = width;
+        this.height = height;
+        this.cols = cols;
+        this.rows = rows;
         mipLevels = 1;
 
         createTextureResources(device, buf, imageFormat);
@@ -103,6 +115,14 @@ public class VKTexture implements ITexture {
 
     public ImageView getImageView() {
         return imageView;
+    }
+    
+    public int getNumCols() {
+    	return cols;
+    }
+    
+    public int getNumRows() {
+    	return rows;
     }
     
     private double log2(int n) {

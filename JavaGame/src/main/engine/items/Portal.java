@@ -3,10 +3,8 @@ package main.engine.items;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import main.engine.graphics.Material;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.camera.Camera;
-import main.engine.graphics.opengl.Mesh;
 
 public class Portal extends GameItem {
 	
@@ -14,13 +12,8 @@ public class Portal extends GameItem {
 	
 	private Warp dest;
 	
-	public Portal(Mesh mesh) throws Exception {
+	public Portal() throws Exception {
 		//super(mesh);
-		dest = null;
-	}
-	
-	public Portal(Mesh[] meshes) throws Exception {
-		//super(meshes);
 		dest = null;
 	}
 	

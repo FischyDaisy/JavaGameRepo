@@ -1,15 +1,10 @@
 package main.engine.graphics;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.joml.primitives.AABBf;
-
-import main.engine.graphics.animation.Animation;
-import main.engine.graphics.opengl.Mesh;
 
 public class ModelData {
 	private List<AnimMeshData> animMeshDataList;

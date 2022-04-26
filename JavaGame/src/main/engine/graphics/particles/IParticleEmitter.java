@@ -3,7 +3,6 @@ package main.engine.graphics.particles;
 import java.util.List;
 
 import main.engine.graphics.ModelData;
-import main.engine.graphics.opengl.InstancedGLModel;
 import main.engine.items.GameItem;
 
 public interface IParticleEmitter {

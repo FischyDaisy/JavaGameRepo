@@ -39,7 +39,6 @@ import main.engine.graphics.camera.CameraBoxSelectionDetector;
 import main.engine.graphics.camera.MouseBoxSelectionDetector;
 import main.engine.graphics.hud.Calculator;
 import main.engine.graphics.hud.Demo;
-import main.engine.graphics.hud.GameHud;
 import main.engine.graphics.hud.MenuHud;
 import main.engine.graphics.hud.NKHudElement;
 import main.engine.graphics.lights.DirectionalLight;
@@ -87,7 +86,7 @@ public class Game implements IGameLogic {
     
     private MenuHud mHud;
     
-    private GameHud gHud;
+    //private GameHud gHud;
 
     private float lightAngle;
     
@@ -553,10 +552,11 @@ public class Game implements IGameLogic {
             lightDirection.z = zValue;
             lightDirection.normalize();
             
+            /*
             if (gHud != null) {
             	gHud.updateSize(window);
             	gHud.updateCrossHair(window);
-            }
+            }*/
             
             particleEmitter.update(Double.valueOf(interval).longValue());
             
@@ -610,9 +610,10 @@ public class Game implements IGameLogic {
         if (mHud != null) {
         	mHud.render(window);
         }
+        /*
         if (gHud != null) {
         	gHud.render(window);
-        }
+        }*/
     }
 
     @Override
@@ -628,9 +629,10 @@ public class Game implements IGameLogic {
         if ( mHud != null ) {
             mHud.cleanup();
         }
+        /*
         if ( gHud != null ) {
             gHud.cleanup();
-        }
+        }*/
     }
     
     private void updateDirectionalLight() {

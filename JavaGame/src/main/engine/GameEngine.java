@@ -1,10 +1,7 @@
 package main.engine;
 
 import main.engine.graphics.Renderer;
-import main.engine.graphics.opengl.GLRenderer;
 import main.engine.graphics.vulkan.VKRenderer;
-import main.engine.items.GameItem;
-import main.engine.utility.Timer;
 
 public class GameEngine implements Runnable {
     
@@ -43,7 +40,7 @@ public class GameEngine implements Runnable {
     	window.init(null);
         this.gameLogic = gameLogic;
         scene = new Scene();
-        this.renderer = opts.useVulkan == false ? new GLRenderer(window) : new VKRenderer(window, scene);
+        this.renderer = new VKRenderer(window, scene);
         gameLogic.init(window, scene, renderer);
         lastFps = System.nanoTime();
         fps = 0;

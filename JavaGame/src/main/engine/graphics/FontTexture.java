@@ -14,7 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 
-import main.engine.graphics.opengl.GLTexture;
+import main.engine.graphics.vulkan.Device;
+import main.engine.graphics.vulkan.VKTexture;
 
 public class FontTexture {
 
@@ -28,18 +29,18 @@ public class FontTexture {
 
     private final Map<Character, CharInfo> charMap;
 
-    private GLTexture texture;
+    private VKTexture texture;
 
     private int height;
 
     private int width;
 
-    public FontTexture(Font font, String charSetName) throws Exception {
+    public FontTexture(Device device, Font font, String charSetName, int imageFormat) throws Exception {
         this.font = font;
         this.charSetName = charSetName;
         charMap = new HashMap<>();
 
-        buildTexture();
+        buildTexture(device, imageFormat);
     }
 
     public int getWidth() {
@@ -50,7 +51,7 @@ public class FontTexture {
         return height;
     }
 
-    public GLTexture getTexture() {
+    public VKTexture getTexture() {
         return texture;
     }
 
@@ -69,7 +70,7 @@ public class FontTexture {
         return result.toString();
     }
 
-    private void buildTexture() throws Exception {
+    private void buildTexture(Device device, int imageFormat) throws Exception {
         // Get the font metrics for each character for the selected font by using image
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2D = img.createGraphics();
@@ -112,7 +113,7 @@ public class FontTexture {
             buf.put(data, 0, data.length);
             buf.flip();
         }
-        texture = new GLTexture(buf);
+        texture = new VKTexture(device, buf, width, height, imageFormat);
     }
     
     //New CharInfo that uses record

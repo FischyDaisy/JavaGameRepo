@@ -5,7 +5,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import main.engine.graphics.Transformation;
-import main.engine.graphics.opengl.Mesh;
 
 public class GameItem {
 	
