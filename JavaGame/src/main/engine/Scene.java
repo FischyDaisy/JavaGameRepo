@@ -6,25 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import main.engine.graphics.camera.Camera;
-import main.engine.graphics.opengl.InstancedMesh;
-import main.engine.graphics.opengl.Mesh;
 import main.engine.graphics.particles.IParticleEmitter;
 import main.engine.graphics.weather.Fog;
 import main.engine.items.GameItem;
-import main.engine.items.Portal;
 import main.engine.items.SkyBox;
 
 public class Scene {
-
-	private final Map<Mesh, List<GameItem>> meshMap;
 	
 	private final Map<String, List<GameItem>> modelMap;
 	
 	private final Map<String, List<GameItem>> instancedModelMap;
-	
-	private final Map<InstancedMesh, List<GameItem>> instancedMeshMap;
-	
-	private final Map<Mesh, List<GameItem>> portalMap;
 	
 	private Camera camera;
     
@@ -39,26 +30,11 @@ public class Scene {
     private IParticleEmitter[] particleEmitters;
     
     public Scene() {
-        meshMap = new HashMap<Mesh, List<GameItem>>();
         modelMap = new HashMap<String, List<GameItem>>();
         instancedModelMap = new HashMap<String, List<GameItem>>();
-        instancedMeshMap = new HashMap<InstancedMesh, List<GameItem>>();
-        portalMap = new HashMap<Mesh, List<GameItem>>();
         fog = Fog.NOFOG;
         renderShadows = true;
         sceneLight = new SceneLight();
-    }
-
-    public Map<Mesh, List<GameItem>> getGameMeshes() {
-        return meshMap;
-    }
-    
-    public Map<InstancedMesh, List<GameItem>> getGameInstancedMeshes() {
-        return instancedMeshMap;
-    }
-    
-    public Map<Mesh, List<GameItem>> getPortalMeshes() {
-        return portalMap;
     }
     
     public Map<String, List<GameItem>> getModelMap() {
@@ -74,6 +50,7 @@ public class Scene {
     }
     
     public boolean containsPortals() {
+    	/*
     	for (Map.Entry<? extends Mesh, List<GameItem>> entry : portalMap.entrySet()) {
     		List<GameItem> gameItems = entry.getValue();
     		for (GameItem item : gameItems) {
@@ -82,6 +59,7 @@ public class Scene {
     			}
     		}
     	}
+    	*/
     	return false;
     }
     
@@ -112,12 +90,6 @@ public class Scene {
     }
     
     public void cleanup() {
-    	for (Mesh mesh : meshMap.keySet()) {
-            mesh.cleanup();
-        }
-        for (Mesh mesh : instancedMeshMap.keySet()) {
-            mesh.cleanup();
-        }
         if (particleEmitters != null) {
             for (IParticleEmitter particleEmitter : particleEmitters) {
                 particleEmitter.cleanup();

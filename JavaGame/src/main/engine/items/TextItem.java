@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.engine.graphics.FontTexture;
-import main.engine.graphics.Material;
-import main.engine.graphics.opengl.Mesh;
+import main.engine.graphics.ModelData;
 import main.engine.utility.Utils;
 
 public class TextItem extends GameItem {
@@ -26,10 +25,12 @@ public class TextItem extends GameItem {
         //setMesh(buildMesh());
     }
 
-    private Mesh buildMesh() {
+    public ModelData.MeshData buildMesh() {
         List<Float> positions = new ArrayList<>();
         List<Float> textCoords = new ArrayList<>();
-        float[] normals   = new float[0];
+        float[] normals = new float[0];
+        float[] tangents = new float[0];
+        float[] biTangents = new float[0];
         List<Integer> indices   = new ArrayList<>();
         char[] characters = text.toCharArray();
         int numChars = characters.length;
@@ -82,8 +83,7 @@ public class TextItem extends GameItem {
         float[] posArr = Utils.listFloatToArray(positions);
         float[] textCoordsArr = Utils.listFloatToArray(textCoords);
         int[] indicesArr = indices.stream().mapToInt(i->i).toArray();
-        Mesh mesh = new Mesh(posArr, textCoordsArr, normals, indicesArr);
-        mesh.setMaterial(new Material(fontTexture.getTexture()));
+        ModelData.MeshData mesh = new ModelData.MeshData(posArr, normals, tangents, biTangents, textCoordsArr, indicesArr, 0, null);
         return mesh;
     }
     

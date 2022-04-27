@@ -8,11 +8,9 @@ import org.joml.Vector4f;
 import main.engine.Window;
 import main.engine.graphics.FontTexture;
 import main.engine.graphics.IHud;
-import main.engine.graphics.Material;
 import main.engine.graphics.Transformation;
 import main.engine.items.GameItem;
 import main.engine.items.TextItem;
-import main.engine.loaders.obj.OBJLoader;
 import main.engine.utility.Utils;
 
 import static main.engine.utility.ResourcePaths.Shaders;

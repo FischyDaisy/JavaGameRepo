@@ -472,6 +472,36 @@ public class NewtonWorld {
 		return NewtonWorldListenerBodyDestroyCallback.ofAddress(Newton_h.NewtonWorldListenerGetBodyDestroyCallback(address, listener), scope);
 	}
 	
+	public void setDestructorCallback(NewtonWorldDestructorCallback destructor) {
+		NativeSymbol destructorFunc = NewtonWorldDestructorCallback.allocate(destructor, scope);
+		Newton_h.NewtonWorldSetDestructorCallback(address, destructorFunc);
+	}
+	
+	public void setDestructorCallback(NewtonWorldDestructorCallback destructor, ResourceScope scope) {
+		NativeSymbol destructorFunc = NewtonWorldDestructorCallback.allocate(destructor, scope);
+		Newton_h.NewtonWorldSetDestructorCallback(address, destructorFunc);
+	}
+	
+	public NewtonWorldDestructorCallback getDestructorCallback() {
+		return NewtonWorldDestructorCallback.ofAddress(Newton_h.NewtonWorldGetDestructorCallback(address), scope);
+	}
+	
+	public NewtonWorldDestructorCallback getDestructorCallback(ResourceScope scope) {
+		return NewtonWorldDestructorCallback.ofAddress(Newton_h.NewtonWorldGetDestructorCallback(address), scope);
+	}
+	
+	public void setCollisionConstructorDestructorCallback(NewtonCollisionCopyConstructionCallback constructor, NewtonCollisionDestructorCallback destructor) {
+		NativeSymbol constructorFunc = NewtonCollisionCopyConstructionCallback.allocate(constructor, scope);
+		NativeSymbol destructorFunc = NewtonCollisionDestructorCallback.allocate(destructor, scope);
+		Newton_h.NewtonWorldSetCollisionConstructorDestructorCallback(address, constructorFunc, destructorFunc);
+	}
+	
+	public void setCollisionConstructorDestructorCallback(NewtonCollisionCopyConstructionCallback constructor, NewtonCollisionDestructorCallback destructor, ResourceScope scope) {
+		NativeSymbol constructorFunc = NewtonCollisionCopyConstructionCallback.allocate(constructor, scope);
+		NativeSymbol destructorFunc = NewtonCollisionDestructorCallback.allocate(destructor, scope);
+		Newton_h.NewtonWorldSetCollisionConstructorDestructorCallback(address, constructorFunc, destructorFunc);
+	}
+	
 	public void destroyAllBodies() {
 		Newton_h.NewtonDestroyAllBodies(address);
 	}
