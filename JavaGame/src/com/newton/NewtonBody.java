@@ -10,11 +10,9 @@ import jdk.incubator.foreign.*;
 public abstract class NewtonBody {
 	
 	protected final MemoryAddress address;
-	protected final ResourceScope scope;
 	
-	protected NewtonBody(MemoryAddress address, ResourceScope scope) {
+	protected NewtonBody(MemoryAddress address) {
 		this.address = address;
-		this.scope = scope;
 	}
 	
 	public int getType() {
@@ -41,6 +39,10 @@ public abstract class NewtonBody {
 		Newton_h.NewtonBodySetCollidable(body.address, collidableState);
 	}
 	
+	public NewtonJoint findJoint(NewtonBody otherBody) {
+		return new NewtonJoint(Newton_h.NewtonWorldFindJoint(address, otherBody.address));
+	}
+	
 	public void addForce(float[] force) {
 	}
 	
@@ -53,7 +55,7 @@ public abstract class NewtonBody {
 	public void addTorque(Vector3f torque) {
 	}
 	
-	public NewtonApplyForceAndTorque getForceAndTorqueCallback() {
+	public NewtonApplyForceAndTorque getForceAndTorqueCallback(ResourceScope scope) {
 		return getForceAndTorqueCallback(this, scope);
 	}
 	
@@ -61,7 +63,7 @@ public abstract class NewtonBody {
 		return NewtonApplyForceAndTorque.ofAddress(Newton_h.NewtonBodyGetForceAndTorqueCallback(body.address), scope);
 	}
 	
-	public void setForceAndTorqueCallback(NewtonApplyForceAndTorque callback) {
+	public void setForceAndTorqueCallback(NewtonApplyForceAndTorque callback, ResourceScope scope) {
 		setForceAndTorqueCallback(this, callback, scope);
 	}
 	
@@ -87,17 +89,8 @@ public abstract class NewtonBody {
 		return new float[] {0f};
 	}
 	
-	public void cleanup() {
-		if (scope.isAlive()) {
-			scope.close();
-		}
-	}
-	
 	public void destroy() {
 		Newton_h.NewtonDestroyBody(address);
-		if (scope.isAlive()) {
-			scope.close();
-		}
 	}
 	
 	public static NewtonBody wrap(MemoryAddress address) {

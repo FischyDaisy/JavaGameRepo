@@ -244,9 +244,9 @@ public class NewtonWorld {
 		int bodyType = Newton_h.NewtonBodyGetType(body);
 		switch (bodyType) {
 			case 0:
-				return new NewtonDynamicBody(body, scope);
+				return new NewtonDynamicBody(body);
 			case 1:
-				return new NewtonKinematicBody(body, scope);
+				return new NewtonKinematicBody(body);
 			default:
 				throw new RuntimeException("Error finding serialized body");
 		}
@@ -355,18 +355,6 @@ public class NewtonWorld {
 		MemorySegment p1Segment = allocator.allocateArray(Newton_h.C_FLOAT, p1);
 		NativeSymbol callbackFunc = NewtonBodyIterator.allocate(callback, scope);
 		Newton_h.NewtonWorldForEachBodyInAABBDo(address, p0Segment, p1Segment, callbackFunc, userData);
-	}
-	
-	public void forEachBodyInAABB(Vector3f p0, Vector3f p1, NewtonBodyIterator callback, Addressable userData) {
-		float[] p0Arr = new float[] {p0.x, p0.y, p0.z};
-		float[] p1Arr = new float[] {p1.x, p1.y, p1.z};
-		forEachBodyInAABB(p0Arr, p1Arr, callback, userData);
-	}
-	
-	public void forEachBodyInAABB(Vector3f p0, Vector3f p1, NewtonBodyIterator callback, Addressable userData, ResourceScope scope) {
-		float[] p0Arr = new float[] {p0.x, p0.y, p0.z};
-		float[] p1Arr = new float[] {p1.x, p1.y, p1.z};
-		forEachBodyInAABB(p0Arr, p1Arr, callback, userData, scope);
 	}
 	
 	public void setUserData(Addressable userData) {
@@ -500,6 +488,92 @@ public class NewtonWorld {
 		NativeSymbol constructorFunc = NewtonCollisionCopyConstructionCallback.allocate(constructor, scope);
 		NativeSymbol destructorFunc = NewtonCollisionDestructorCallback.allocate(destructor, scope);
 		Newton_h.NewtonWorldSetCollisionConstructorDestructorCallback(address, constructorFunc, destructorFunc);
+	}
+	
+	public void setCreateDestroyContactCallback(NewtonCreateContactCallback createContact, NewtonDestroyContactCallback destroyContact) {
+		NativeSymbol createFunc = NewtonCreateContactCallback.allocate(createContact, scope);
+		NativeSymbol destroyFunc = NewtonDestroyContactCallback.allocate(destroyContact, scope);
+		Newton_h.NewtonWorldSetCreateDestroyContactCallback(address, createFunc, destroyFunc);
+	}
+	
+	public void setCreateDestroyContactCallback(NewtonCreateContactCallback createContact, NewtonDestroyContactCallback destroyContact, ResourceScope scope) {
+		NativeSymbol createFunc = NewtonCreateContactCallback.allocate(createContact, scope);
+		NativeSymbol destroyFunc = NewtonDestroyContactCallback.allocate(destroyContact, scope);
+		Newton_h.NewtonWorldSetCreateDestroyContactCallback(address, createFunc, destroyFunc);
+	}
+	
+	public void rayCast(float[] p0, float[] p1, NewtonWorldRayFilterCallback filter, Addressable userData, NewtonWorldRayPrefilterCallback prefilter, int threadIndex) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment p0Segment = allocator.allocateArray(Newton_h.C_FLOAT, p0);
+		MemorySegment p1Segment = allocator.allocateArray(Newton_h.C_FLOAT, p1);
+		NativeSymbol filterFunc = NewtonWorldRayFilterCallback.allocate(filter, scope);
+		NativeSymbol preFilterFunc = NewtonWorldRayPrefilterCallback.allocate(prefilter, scope);
+		Newton_h.NewtonWorldRayCast(address, p0Segment, p1Segment, filterFunc, userData, preFilterFunc, threadIndex);
+	}
+	
+	public void rayCast(float[] p0, float[] p1, NewtonWorldRayFilterCallback filter, Addressable userData, NewtonWorldRayPrefilterCallback prefilter, int threadIndex,
+			ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment p0Segment = allocator.allocateArray(Newton_h.C_FLOAT, p0);
+		MemorySegment p1Segment = allocator.allocateArray(Newton_h.C_FLOAT, p1);
+		NativeSymbol filterFunc = NewtonWorldRayFilterCallback.allocate(filter, scope);
+		NativeSymbol preFilterFunc = NewtonWorldRayPrefilterCallback.allocate(prefilter, scope);
+		Newton_h.NewtonWorldRayCast(address, p0Segment, p1Segment, filterFunc, userData, preFilterFunc, threadIndex);
+	}
+	
+	public int convexCast(float[] matrix, float[] target, NewtonCollision shape, MemorySegment param, Addressable userData, NewtonWorldRayPrefilterCallback prefilter,
+			MemorySegment info, int maxContactsCount, int threadIndex) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment matrixSegment = allocator.allocateArray(Newton_h.C_FLOAT, matrix);
+		MemorySegment targetSegment = allocator.allocateArray(Newton_h.C_FLOAT, target);
+		NativeSymbol prefilterFunc = NewtonWorldRayPrefilterCallback.allocate(prefilter, scope);
+		return Newton_h.NewtonWorldConvexCast(address, matrixSegment, targetSegment, shape.address, param, userData, prefilterFunc, info, maxContactsCount, threadIndex);
+	}
+	
+	public int convexCast(float[] matrix, float[] target, NewtonCollision shape, MemorySegment param, Addressable userData, NewtonWorldRayPrefilterCallback prefilter,
+			MemorySegment info, int maxContactsCount, int threadIndex, ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment matrixSegment = allocator.allocateArray(Newton_h.C_FLOAT, matrix);
+		MemorySegment targetSegment = allocator.allocateArray(Newton_h.C_FLOAT, target);
+		NativeSymbol prefilterFunc = NewtonWorldRayPrefilterCallback.allocate(prefilter, scope);
+		return Newton_h.NewtonWorldConvexCast(address, matrixSegment, targetSegment, shape.address, param, userData, prefilterFunc, info, maxContactsCount, threadIndex);
+	}
+	
+	public int getBodyCount() {
+		return Newton_h.NewtonWorldGetBodyCount(address);
+	}
+	
+	public int getConstraintCount() {
+		return Newton_h.NewtonWorldGetConstraintCount(address);
+	}
+	
+	public int createMaterialGroupID() {
+		return Newton_h.NewtonMaterialCreateGroupID(address);
+	}
+	
+	public int getDefaultMaterialGroupID() {
+		return Newton_h.NewtonMaterialGetDefaultGroupID(address);
+	}
+	
+	public void destroyAllMaterialGroupIDs() {
+		Newton_h.NewtonMaterialDestroyAllGroupID(address);
+	}
+	
+	public MemoryAddress getMaterialUserData(int id0, int id1) {
+		return Newton_h.NewtonMaterialGetUserData(address, id0, id1);
+	}
+	
+	public void setMaterialSurfaceThickness(int id0, int id1, float thickness) {
+		Newton_h.NewtonMaterialSetSurfaceThickness(address, id0, id1, thickness);
+	}
+	
+	public void setMaterialCallbackUserData(int id0, int id1, Addressable userData) {
+		Newton_h.NewtonMaterialSetCallbackUserData(address, id0, id1, userData);
+	}
+	
+	public void setMaterialContactGenerationCallback(int id0, int id1, NewtonOnContactGeneration contactGeneration) {
+		NativeSymbol contactFunc = NewtonOnContactGeneration.allocate(contactGeneration, scope);
+		Newton_h.NewtonMaterialSetContactGenerationCallback(address, id0, id1, contactFunc);
 	}
 	
 	public void destroyAllBodies() {
