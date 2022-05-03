@@ -93,18 +93,12 @@ public abstract class NewtonBody {
 		Newton_h.NewtonDestroyBody(address);
 	}
 	
-	public static NewtonBody wrap(MemoryAddress address) {
-		int i = Newton_h.NewtonBodyGetType(address);
-		switch (i) {
-			case 0:
-				return NewtonDynamicBody.wrapImpl(address);
-			case 1:
-				return NewtonKinematicBody.wrapImpl(address);
-			case 2:
-				// Didn't create DynamicAsymetrixBody class yet
-				return null;
-			default:
-				throw new RuntimeException("Cannot wrap MemoryAddress");
-		}	
+	protected static NewtonBody wrap(MemoryAddress address) {
+		int bodyType = Newton_h.NewtonBodyGetType(address);
+		return switch (bodyType) {
+			case 0 -> new NewtonDynamicBody(address);
+			case 1 -> new NewtonKinematicBody(address);
+			default -> throw new RuntimeException("Error wrapping MemoryAddress");
+		};
 	}
 }

@@ -1,5 +1,12 @@
 package com.newton;
 
-public class NewtonMaterial {
+import jdk.incubator.foreign.*;
 
+public class NewtonMaterial {
+	
+	protected final MemoryAddress address;
+	
+	protected NewtonMaterial(MemoryAddress address) {
+		this.address = address;
+	}
 }

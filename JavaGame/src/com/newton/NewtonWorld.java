@@ -2,8 +2,6 @@ package com.newton;
 
 import jdk.incubator.foreign.*;
 
-import org.joml.Vector3f;
-
 import com.newton.generated.*;
 
 public class NewtonWorld {
@@ -104,19 +102,20 @@ public class NewtonWorld {
 		Newton_h.NewtonUnloadPlugins(address);
 	}
 	
-	public String currentPlugin() {
-		MemoryAddress pluginStrAddress = Newton_h.NewtonCurrentPlugin(address);
-		return pluginStrAddress.getUtf8String(0);
+	public MemoryAddress getCurrentPlugin() {
+		return Newton_h.NewtonCurrentPlugin(address);
 	}
 	
-	public String firstPlugin() {
-		MemoryAddress pluginStrAddress = Newton_h.NewtonGetFirstPlugin(address);
-		return pluginStrAddress.getUtf8String(0);
+	public MemoryAddress getFirstPlugin() {
+		return Newton_h.NewtonGetFirstPlugin(address);
 	}
 	
-	public String preferedPlugin() {
-		MemoryAddress pluginStrAddress = Newton_h.NewtonGetPreferedPlugin(address);
-		return pluginStrAddress.getUtf8String(0);
+	public MemoryAddress getNextPlugin(MemoryAddress curPlugin) {
+		return Newton_h.NewtonGetNextPlugin(address, curPlugin);
+	}
+	
+	public MemoryAddress getPreferedPlugin() {
+		return Newton_h.NewtonGetPreferedPlugin(address);
 	}
 	
 	public float getContactMergeTolerance() {
@@ -242,14 +241,11 @@ public class NewtonWorld {
 	public NewtonBody findSerializedBody(int bodySerializedID) {
 		MemoryAddress body = Newton_h.NewtonFindSerializedBody(address, bodySerializedID);
 		int bodyType = Newton_h.NewtonBodyGetType(body);
-		switch (bodyType) {
-			case 0:
-				return new NewtonDynamicBody(body);
-			case 1:
-				return new NewtonKinematicBody(body);
-			default:
-				throw new RuntimeException("Error finding serialized body");
-		}
+		return switch (bodyType) {
+			case 0 -> new NewtonDynamicBody(body);
+			case 1 -> new NewtonKinematicBody(body);
+			default -> throw new RuntimeException("Error finding serialized body");
+		};
 	}
 	
 	public void setJointSerializationCallbacks(NewtonOnJointSerializationCallback serializeJoint, NewtonOnJointDeserializationCallback deserializeJoint) {
@@ -434,6 +430,11 @@ public class NewtonWorld {
 		Newton_h.NewtonWorldListenerSetDestructorCallback(address, listener, callbackFunc);
 	}
 	
+	public void listenerSetDestructorCallback(Addressable listener, NewtonWorldDestroyListenerCallback callback, ResourceScope scope) {
+		NativeSymbol callbackFunc = NewtonWorldDestroyListenerCallback.allocate(callback, scope);
+		Newton_h.NewtonWorldListenerSetDestructorCallback(address, listener, callbackFunc);
+	}
+	
 	public void listenerSetBodyDestroyCallback(Addressable listener, NewtonWorldListenerBodyDestroyCallback callback) {
 		NativeSymbol callbackFunc = NewtonWorldListenerBodyDestroyCallback.allocate(callback, scope);
 		Newton_h.NewtonWorldListenerSetBodyDestroyCallback(address, listener, callbackFunc);
@@ -574,6 +575,75 @@ public class NewtonWorld {
 	public void setMaterialContactGenerationCallback(int id0, int id1, NewtonOnContactGeneration contactGeneration) {
 		NativeSymbol contactFunc = NewtonOnContactGeneration.allocate(contactGeneration, scope);
 		Newton_h.NewtonMaterialSetContactGenerationCallback(address, id0, id1, contactFunc);
+	}
+	
+	public void setMaterialContactGenerationCallback(int id0, int id1, NewtonOnContactGeneration contactGeneration, ResourceScope scope) {
+		NativeSymbol contactFunc = NewtonOnContactGeneration.allocate(contactGeneration, scope);
+		Newton_h.NewtonMaterialSetContactGenerationCallback(address, id0, id1, contactFunc);
+	}
+	
+	public void setMaterialCompoundCollisionCallback(int id0, int id1, NewtonOnCompoundSubCollisionAABBOverlap compoundAabbOverlap) {
+		NativeSymbol overLapFunc = NewtonOnCompoundSubCollisionAABBOverlap.allocate(compoundAabbOverlap, scope);
+		Newton_h.NewtonMaterialSetCompoundCollisionCallback(address, id0, id1, overLapFunc);
+	}
+	
+	public void setMaterialCompoundCollisionCallback(int id0, int id1, NewtonOnCompoundSubCollisionAABBOverlap compoundAabbOverlap, ResourceScope scope) {
+		NativeSymbol overLapFunc = NewtonOnCompoundSubCollisionAABBOverlap.allocate(compoundAabbOverlap, scope);
+		Newton_h.NewtonMaterialSetCompoundCollisionCallback(address, id0, id1, overLapFunc);
+	}
+	
+	public void setMaterialCollisionCallback(int id0, int id1, NewtonOnAABBOverlap aabbOverlap, NewtonContactsProcess process) {
+		NativeSymbol overlapFunc = NewtonOnAABBOverlap.allocate(aabbOverlap, scope);
+		NativeSymbol processFunc = NewtonContactsProcess.allocate(process, scope);
+		Newton_h.NewtonMaterialSetCollisionCallback(address, id0, id1, overlapFunc, processFunc);
+	}
+	
+	public void setMaterialCollisionCallback(int id0, int id1, NewtonOnAABBOverlap aabbOverlap, NewtonContactsProcess process, ResourceScope scope) {
+		NativeSymbol overlapFunc = NewtonOnAABBOverlap.allocate(aabbOverlap, scope);
+		NativeSymbol processFunc = NewtonContactsProcess.allocate(process, scope);
+		Newton_h.NewtonMaterialSetCollisionCallback(address, id0, id1, overlapFunc, processFunc);
+	}
+	
+	public void setMaterialDefaultSoftness(int id0, int id1, float softness) {
+		Newton_h.NewtonMaterialSetDefaultSoftness(address, id0, id1, softness);
+	}
+	
+	public void setMaterialDefaultElasticity(int id0, int id1, float elasticCoef) {
+		Newton_h.NewtonMaterialSetDefaultElasticity(address, id0, id1, elasticCoef);
+	}
+	
+	public void setMaterialDefaultCollidable(int id0, int id1, int state) {
+		Newton_h.NewtonMaterialSetDefaultCollidable(address, id0, id1, state);
+	}
+	
+	public void setMaterialDefaultFriction(int id0, int id1, float staticFriction, float kineticFriction) {
+		Newton_h.NewtonMaterialSetDefaultFriction(address, id0, id1, staticFriction, kineticFriction);
+	}
+	
+	public void resetMaterialJointIntraJointCollision(int id0, int id1) {
+		Newton_h.NewtonMaterialJointResetIntraJointCollision(address, id0, id1);
+	}
+	
+	public void resetMaterialJointSelftJointCollision(int id0, int id1) {
+		Newton_h.NewtonMaterialJointResetSelftJointCollision(address, id0, id1);
+	}
+	
+	public NewtonMaterial getFirstMaterial() {
+		return new NewtonMaterial(Newton_h.NewtonWorldGetFirstMaterial(address));
+	}
+	
+	public NewtonMaterial getNextMaterial(NewtonMaterial material) {
+		MemoryAddress materialPtr = Newton_h.NewtonWorldGetNextMaterial(address, material.address);
+		return materialPtr.equals(MemoryAddress.NULL) ? null : new NewtonMaterial(materialPtr);
+	}
+	
+	public NewtonBody getFirstBody() {
+		return NewtonBody.wrap(Newton_h.NewtonWorldGetFirstBody(address));
+	}
+	
+	public NewtonBody getNextBody(NewtonBody body) {
+		MemoryAddress bodyPtr = Newton_h.NewtonWorldGetNextBody(address, body.address);
+		return bodyPtr.equals(MemoryAddress.NULL) ? null : NewtonBody.wrap(bodyPtr);
 	}
 	
 	public void destroyAllBodies() {
