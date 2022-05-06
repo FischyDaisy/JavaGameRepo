@@ -6,7 +6,7 @@ import jdk.incubator.foreign.*;
 
 public class NewtonNull extends NewtonCollision {
 	
-	private NewtonNull(MemoryAddress address) {
+	protected NewtonNull(MemoryAddress address) {
 		super(address);
 	}
 	

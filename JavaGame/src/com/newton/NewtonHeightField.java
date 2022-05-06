@@ -6,7 +6,7 @@ import jdk.incubator.foreign.*;
 
 public class NewtonHeightField extends NewtonCollision {
 	
-	private NewtonHeightField(MemoryAddress address) {
+	protected NewtonHeightField(MemoryAddress address) {
 		super(address);
 	}
 	

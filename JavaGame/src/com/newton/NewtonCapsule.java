@@ -8,7 +8,7 @@ import jdk.incubator.foreign.*;
 
 public class NewtonCapsule extends NewtonCollision {
 	
-	private NewtonCapsule(MemoryAddress address) {
+	protected NewtonCapsule(MemoryAddress address) {
 		super(address);
 	}
 	public static NewtonCollision create(NewtonWorld world, float radius0,  float radius1,  float height,  int shapeID,  Addressable offsetMatrix) {

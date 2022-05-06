@@ -9,7 +9,7 @@ import jdk.incubator.foreign.*;
 
 public class NewtonConvexHull extends NewtonCollision {
 	
-	private NewtonConvexHull(MemoryAddress address) {
+	protected NewtonConvexHull(MemoryAddress address) {
 		super(address);
 	}
 	

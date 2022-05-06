@@ -9,7 +9,7 @@ import jdk.incubator.foreign.*;
 
 public class NewtonCone extends NewtonCollision {
 	
-	private NewtonCone(MemoryAddress address) {
+	protected NewtonCone(MemoryAddress address) {
 		super(address);
 	}
 	
