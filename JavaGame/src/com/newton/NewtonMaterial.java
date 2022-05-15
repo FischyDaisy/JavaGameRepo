@@ -33,10 +33,7 @@ public class NewtonMaterial {
 		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
 		MemorySegment forceSegment = allocator.allocateArray(Newton_h.C_FLOAT, new float[] {0f, 0f, 0f});
 		Newton_h.NewtonMaterialGetContactForce(address, body.address, forceSegment);
-		float[] tempArr = forceSegment.toArray(Newton_h.C_FLOAT);
-		force[0] = tempArr[0];
-		force[1] = tempArr[1];
-		force[2] = tempArr[2];
+		MemorySegment.copy(forceSegment, Newton_h.C_FLOAT, 0, force, 0, 3);
 	}
 	
 	public void getContactPositionAndNormal(NewtonBody body, float[] position, float[] normal, ResourceScope scope) {
@@ -44,14 +41,8 @@ public class NewtonMaterial {
 		MemorySegment positionSegment = allocator.allocateArray(Newton_h.C_FLOAT, new float[] {0f, 0f, 0f});
 		MemorySegment normalSegment = allocator.allocateArray(Newton_h.C_FLOAT, new float[] {0f, 0f, 0f});
 		Newton_h.NewtonMaterialGetContactPositionAndNormal(address, body.address, positionSegment, normalSegment);
-		float[] tempArr = positionSegment.toArray(Newton_h.C_FLOAT);
-		position[0] = tempArr[0];
-		position[1] = tempArr[1];
-		position[2] = tempArr[2];
-		tempArr = normalSegment.toArray(Newton_h.C_FLOAT);
-		normal[0] = tempArr[0];
-		normal[1] = tempArr[1];
-		normal[2] = tempArr[2];
+		MemorySegment.copy(positionSegment, Newton_h.C_FLOAT, 0, position, 0, 3);
+		MemorySegment.copy(normalSegment, Newton_h.C_FLOAT, 0, normal, 0, 3);
 	}
 	
 	public void getContactTangentDirections(NewtonBody body, float[] dir0, float[] dir1, ResourceScope scope) {
@@ -59,14 +50,8 @@ public class NewtonMaterial {
 		MemorySegment dir0Segment = allocator.allocateArray(Newton_h.C_FLOAT, new float[] {0f, 0f, 0f});
 		MemorySegment dir1Segment = allocator.allocateArray(Newton_h.C_FLOAT, new float[] {0f, 0f, 0f});
 		Newton_h.NewtonMaterialGetContactTangentDirections(address, body.address, dir0Segment, dir1Segment);
-		float[] tempArr = dir0Segment.toArray(Newton_h.C_FLOAT);
-		dir0[0] = tempArr[0];
-		dir0[1] = tempArr[1];
-		dir0[2] = tempArr[2];
-		tempArr = dir1Segment.toArray(Newton_h.C_FLOAT);
-		dir1[0] = tempArr[0];
-		dir1[1] = tempArr[1];
-		dir1[2] = tempArr[2];
+		MemorySegment.copy(dir0Segment, Newton_h.C_FLOAT, 0, dir0, 0, 3);
+		MemorySegment.copy(dir1Segment, Newton_h.C_FLOAT, 0, dir1, 0, 3);
 	}
 	
 	public float getContactTangentSpeed(int index) {

@@ -25,4 +25,8 @@ public class NewtonConvexHull extends NewtonCollision {
 		MemorySegment matrix = allocator.allocateArray(Newton_h.C_FLOAT, matArr);
 		return create(world, count, vertCloud, strideInBytes, tolerance, shapeID, matrix);
 	}
+	
+	public int getFaceIndices(int face, int[] faceIndices) {
+		return 0;
+	}
 }

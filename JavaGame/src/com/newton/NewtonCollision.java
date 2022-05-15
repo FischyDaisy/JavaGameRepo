@@ -12,6 +12,27 @@ public abstract class NewtonCollision {
 		this.address = address;
 	}
 	
+	public int getMode() {
+		return Newton_h.NewtonCollisionGetMode(address);
+	}
+	
+	public void setMode(int mode) {
+		Newton_h.NewtonCollisionSetMode(address, mode);
+	}
+	
+	public float calculateVolume() {
+		return Newton_h.NewtonConvexCollisionCalculateVolume(address);
+	}
+	
+	public void calculateInertiaMatrix(float[] inertia, float[] origin, ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment inertiaSegment = allocator.allocateArray(Newton_h.C_FLOAT, new float[] {0f, 0f, 0f});
+		MemorySegment originSegment = allocator.allocateArray(Newton_h.C_FLOAT, new float[] {0f, 0f, 0f});
+		Newton_h.NewtonConvexCollisionCalculateInertialMatrix(address, inertiaSegment, originSegment);
+		MemorySegment.copy(inertiaSegment, Newton_h.C_FLOAT, 0, inertia, 0, 3);
+		MemorySegment.copy(originSegment, Newton_h.C_FLOAT, 0, origin, 0, 3);
+	}
+	
 	public void destroy() {
 		Newton_h.NewtonDestroyCollision(address);
 	}
