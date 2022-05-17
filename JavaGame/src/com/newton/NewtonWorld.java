@@ -646,6 +646,26 @@ public class NewtonWorld {
 		return bodyPtr.equals(MemoryAddress.NULL) ? null : NewtonBody.wrap(bodyPtr);
 	}
 	
+	public NewtonCollision createCollisionFromSerialization(NewtonDeserializeCallback deserializeFunction, Addressable serializeHandle) {
+		NativeSymbol deserializeFunc = NewtonDeserializeCallback.allocate(deserializeFunction, scope);
+		return NewtonCollision.wrap(Newton_h.NewtonCreateCollisionFromSerialization(address, deserializeFunc, serializeHandle));
+	}
+	
+	public NewtonCollision createCollisionFromSerialization(NewtonDeserializeCallback deserializeFunction, Addressable serializeHandle, ResourceScope scope) {
+		NativeSymbol deserializeFunc = NewtonDeserializeCallback.allocate(deserializeFunction, scope);
+		return NewtonCollision.wrap(Newton_h.NewtonCreateCollisionFromSerialization(address, deserializeFunc, serializeHandle));
+	}
+	
+	public void serializeCollision(NewtonCollision collision, NewtonSerializeCallback serializeFunction, Addressable serializeHandle) {
+		NativeSymbol serializeFunc = NewtonSerializeCallback.allocate(serializeFunction, scope);
+		Newton_h.NewtonCollisionSerialize(address, collision.address, serializeFunc, serializeHandle);
+	}
+	
+	public void serializeCollision(NewtonCollision collision, NewtonSerializeCallback serializeFunction, Addressable serializeHandle, ResourceScope scope) {
+		NativeSymbol serializeFunc = NewtonSerializeCallback.allocate(serializeFunction, scope);
+		Newton_h.NewtonCollisionSerialize(address, collision.address, serializeFunc, serializeHandle);
+	}
+	
 	public void destroyAllBodies() {
 		Newton_h.NewtonDestroyAllBodies(address);
 	}
