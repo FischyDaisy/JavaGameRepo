@@ -38,7 +38,7 @@ final class RuntimeHelper {
             (size, align) -> MemorySegment.allocateNative(size, align, ResourceScope.newImplicitScope());
 
     static {
-        System.loadLibrary("newton");
+        System.loadLibrary("com/newtondll/newton");
         SymbolLookup loaderLookup = SymbolLookup.loaderLookup();
         SYMBOL_LOOKUP = name -> loaderLookup.lookup(name).or(() -> LINKER.lookup(name));
     }

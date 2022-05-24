@@ -33,6 +33,67 @@ public abstract class NewtonCollision {
 		MemorySegment.copy(originSegment, Newton_h.C_FLOAT, 0, origin, 0, 3);
 	}
 	
+	public int getType() {
+		return Newton_h.NewtonCollisionGetType(address);
+	}
+	
+	public boolean isConvex() {
+		return Newton_h.NewtonCollisionIsConvexShape(address) == 1 ? true : false;
+	}
+	
+	public boolean isStatic() {
+		return Newton_h.NewtonCollisionIsStaticShape(address) == 1 ? true : false;
+	}
+	
+	public void setUserData(Addressable data) {
+		Newton_h.NewtonCollisionSetUserData(address, data);
+	}
+	
+	public MemoryAddress getUserData() {
+		return Newton_h.NewtonCollisionGetUserData(address);
+	}
+	
+	public void setUserID(long id) {
+		Newton_h.NewtonCollisionSetUserID(address, id);
+	}
+	
+	public long getUserID() {
+		return Newton_h.NewtonCollisionGetUserID(address);
+	}
+	
+	public MemoryAddress getSubCollisionHandle() {
+		return Newton_h.NewtonCollisionGetSubCollisionHandle(address);
+	}
+	
+	public NewtonCollision getParentInstance() {
+		MemoryAddress ptr = Newton_h.NewtonCollisionGetParentInstance(address);
+		return ptr.equals(MemoryAddress.NULL) ? null : NewtonCollision.wrap(ptr);
+	}
+	
+	public void setMatrix(float[] matrix, ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment matrixSegment = allocator.allocateArray(Newton_h.C_FLOAT, matrix);
+		Newton_h.NewtonCollisionSetMatrix(address, matrixSegment);
+	}
+	
+	public void setMatrix(float[] matrix, SegmentAllocator allocator) {
+		MemorySegment matrixSegment = allocator.allocateArray(Newton_h.C_FLOAT, matrix);
+		Newton_h.NewtonCollisionSetMatrix(address, matrixSegment);
+	}
+	
+	public float[] getMatrix(ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment matrixSegment = allocator.allocateArray(Newton_h.C_FLOAT, new float[16]);
+		Newton_h.NewtonCollisionGetMatrix(address, matrixSegment);
+		return matrixSegment.toArray(Newton_h.C_FLOAT);
+	}
+	
+	public float[] getMatrix(SegmentAllocator allocator) {
+		MemorySegment matrixSegment = allocator.allocateArray(Newton_h.C_FLOAT, new float[16]);
+		Newton_h.NewtonCollisionGetMatrix(address, matrixSegment);
+		return matrixSegment.toArray(Newton_h.C_FLOAT);
+	}
+	
 	public void destroy() {
 		Newton_h.NewtonDestroyCollision(address);
 	}
