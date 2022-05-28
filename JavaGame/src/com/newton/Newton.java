@@ -15,5 +15,7 @@ public class Newton {
 	
 	private Newton() {}
 	
-	
+	public static void loadNewton(String filepath) {
+		
+	}
 }

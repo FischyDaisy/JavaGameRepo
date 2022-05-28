@@ -1,6 +1,5 @@
 package com.newton;
 
-import org.joml.Vector3f;
 
 import com.newton.generated.NewtonApplyForceAndTorque;
 import com.newton.generated.Newton_h;
@@ -15,78 +14,113 @@ public abstract class NewtonBody {
 		this.address = address;
 	}
 	
-	public int getType() {
-		return getType(this);
+	public int getSimulationState() {
+		return Newton_h.NewtonBodyGetSimulationState(address);
 	}
 	
-	public static int getType(NewtonBody body) {
-		return Newton_h.NewtonBodyGetType(body.address);
+	public void setSimulationState(int state) {
+		Newton_h.NewtonBodySetSimulationState(address, state);
+	}
+	
+	public int getType() {
+		return Newton_h.NewtonBodyGetType(address);
 	}
 	
 	public int getCollidable() {
-		return getCollidable(this);
-	}
-	
-	public static int getCollidable(NewtonBody body) {
-		return Newton_h.NewtonBodyGetCollidable(body.address);
+		return Newton_h.NewtonBodyGetCollidable(address);
 	}
 	
 	public void setCollidable(int collidableState) {
-		setCollidable(this, collidableState);
+		Newton_h.NewtonBodySetCollidable(address, collidableState);
 	}
 	
-	public static void setCollidable(NewtonBody body, int collidableState) {
-		Newton_h.NewtonBodySetCollidable(body.address, collidableState);
+	public void addForce(float[] force, SegmentAllocator allocator) {
+		MemorySegment forceSeg = allocator.allocateArray(Newton_h.C_FLOAT, force);
+		Newton_h.NewtonBodyAddForce(address, forceSeg);
 	}
 	
-	public NewtonJoint findJoint(NewtonBody otherBody) {
-		return new NewtonJoint(Newton_h.NewtonWorldFindJoint(address, otherBody.address));
+	public void addTorque(float[] torque, SegmentAllocator allocator) {
+		MemorySegment torqueSeg = allocator.allocateArray(Newton_h.C_FLOAT, torque);
+		Newton_h.NewtonBodyAddTorque(address, torqueSeg);
 	}
 	
-	public void addForce(float[] force) {
+	public void setCenterOfMass(float[] center, SegmentAllocator allocator) {
+		MemorySegment centerSeg = allocator.allocateArray(Newton_h.C_FLOAT, center);
+		Newton_h.NewtonBodySetCentreOfMass(address, centerSeg);
 	}
 	
-	public void addForce(Vector3f force) {
+	public void setMassMatrix(float mass, float Ixx, float Iyy, float Izz) {
+		Newton_h.NewtonBodySetMassMatrix(address, mass, Ixx, Iyy, Izz);
 	}
 	
-	public void addTorque(float[] torque) {
+	public void setFullMassMatrix(float mass, float[] inertiaMatrix, SegmentAllocator allocator) {
+		MemorySegment matrix = allocator.allocateArray(Newton_h.C_FLOAT, inertiaMatrix);
+		Newton_h.NewtonBodySetFullMassMatrix(address, mass, matrix);
 	}
 	
-	public void addTorque(Vector3f torque) {
+	public void setMassProperties(float mass, NewtonCollision collision) {
+		Newton_h.NewtonBodySetMassProperties(address, mass, collision.address);
 	}
 	
-	public NewtonApplyForceAndTorque getForceAndTorqueCallback(ResourceScope scope) {
-		return getForceAndTorqueCallback(this, scope);
+	public void setMatrix(float[] matrix, SegmentAllocator allocator) {
+		MemorySegment matrixSeg = allocator.allocateArray(Newton_h.C_FLOAT, matrix);
+		Newton_h.NewtonBodySetMatrix(address, matrixSeg);
 	}
 	
-	public static NewtonApplyForceAndTorque getForceAndTorqueCallback(NewtonBody body, ResourceScope scope) {
-		return NewtonApplyForceAndTorque.ofAddress(Newton_h.NewtonBodyGetForceAndTorqueCallback(body.address), scope);
+	public void setMatrixNoSleep(float[] matrix, SegmentAllocator allocator) {
+		MemorySegment matrixSeg = allocator.allocateArray(Newton_h.C_FLOAT, matrix);
+		Newton_h.NewtonBodySetMatrixNoSleep(address, matrixSeg);
 	}
 	
-	public void setForceAndTorqueCallback(NewtonApplyForceAndTorque callback, ResourceScope scope) {
-		setForceAndTorqueCallback(this, callback, scope);
+	public void setMatrixRecursive(float[] matrix, SegmentAllocator allocator) {
+		MemorySegment matrixSeg = allocator.allocateArray(Newton_h.C_FLOAT, matrix);
+		Newton_h.NewtonBodySetMatrixRecursive(address, matrixSeg);
 	}
 	
-	public static void setForceAndTorqueCallback(NewtonBody body, NewtonApplyForceAndTorque callback, ResourceScope scope) {
-		Newton_h.NewtonBodySetForceAndTorqueCallback(body.address, NewtonApplyForceAndTorque.allocate(callback, scope));
+	public void setMaterialGroupdID(int id) {
+		Newton_h.NewtonBodySetMaterialGroupID(address, id);
 	}
 	
-	public NewtonWorld getNewtonWorld() {
-		return getNewtonWorld(this);
+	public void setContinuousCollisionMode(int state) {
+		Newton_h.NewtonBodySetContinuousCollisionMode(address, state);
 	}
 	
-	public static NewtonWorld getNewtonWorld(NewtonBody body) {
-		return NewtonWorld.wrap(Newton_h.NewtonBodyGetWorld(body.address));
+	public void setJointRecursiveCollision(int state) {
+		Newton_h.NewtonBodySetJointRecursiveCollision(address, state);
 	}
 	
-	public static float[] getMass(NewtonBody body, ResourceScope scope) {
-		//MemorySegment mass = Newton.createFloatSegment(scope);
-		//MemorySegment Ixx = Newton.createFloatSegment(scope);
-		//MemorySegment Iyy = Newton.createFloatSegment(scope);
-		//MemorySegment Izz = Newton.createFloatSegment(scope);
-		
-		//Newton_h.NewtonBodyGetMass(body.address, mass, Ixx, Iyy, Izz);
-		return new float[] {0f};
+	public void setOmega(float[] omega, SegmentAllocator allocator) {
+		MemorySegment omegaSeg = allocator.allocateArray(Newton_h.C_FLOAT, omega);
+		Newton_h.NewtonBodySetOmega(address, omegaSeg);
+	}
+	
+	public void setOmegaNoSleep(float[] omega, SegmentAllocator allocator) {
+		MemorySegment omegaSeg = allocator.allocateArray(Newton_h.C_FLOAT, omega);
+		Newton_h.NewtonBodySetOmegaNoSleep(address, omegaSeg);
+	}
+	
+	public void setVelocity(float[] velocity, SegmentAllocator allocator) {
+		MemorySegment velSeg = allocator.allocateArray(Newton_h.C_FLOAT, velocity);
+		Newton_h.NewtonBodySetVelocity(address, velSeg);
+	}
+	
+	public void setVelocityNoSleep(float[] velocity, SegmentAllocator allocator) {
+		MemorySegment velSeg = allocator.allocateArray(Newton_h.C_FLOAT, velocity);
+		Newton_h.NewtonBodySetVelocityNoSleep(address, velSeg);
+	}
+	
+	public void setForce(float[] force, SegmentAllocator allocator) {
+		MemorySegment forceSeg = allocator.allocateArray(Newton_h.C_FLOAT, force);
+		Newton_h.NewtonBodySetForce(address, forceSeg);
+	}
+	
+	public void setTorque(float[] torque, SegmentAllocator allocator) {
+		MemorySegment torqueSeg = allocator.allocateArray(Newton_h.C_FLOAT, torque);
+		Newton_h.NewtonBodySetTorque(address, torqueSeg);
+	}
+	
+	public void setLinearDamping(float linearDamp) {
+		Newton_h.NewtonBodySetLinearDamping(address, linearDamp);
 	}
 	
 	public void destroy() {
@@ -98,6 +132,7 @@ public abstract class NewtonBody {
 		return switch (bodyType) {
 			case 0 -> new NewtonDynamicBody(address);
 			case 1 -> new NewtonKinematicBody(address);
+			case 2 -> new NewtonAsymetricDynamicBody(address);
 			default -> throw new RuntimeException("Error wrapping MemoryAddress");
 		};
 	}

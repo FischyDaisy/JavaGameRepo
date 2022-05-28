@@ -94,8 +94,39 @@ public abstract class NewtonCollision {
 		return matrixSegment.toArray(Newton_h.C_FLOAT);
 	}
 	
+	public void setScale(float x, float y, float z) {
+		Newton_h.NewtonCollisionSetScale(address, x, y, z);
+	}
+	
+	public float[] getScale(ResourceScope scope) {
+		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+		MemorySegment xyzSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		Newton_h.NewtonCollisionGetScale(address, 
+				xyzSeg.asSlice(0L, Newton_h.C_FLOAT.byteSize()), 
+				xyzSeg.asSlice(4L, Newton_h.C_FLOAT.byteSize()), 
+				xyzSeg.asSlice(8L, Newton_h.C_FLOAT.byteSize()));
+		return xyzSeg.toArray(Newton_h.C_FLOAT);
+	}
+	
+	public float[] getScale(SegmentAllocator allocator) {
+		MemorySegment xyzSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		Newton_h.NewtonCollisionGetScale(address, 
+				xyzSeg.asSlice(0L, Newton_h.C_FLOAT.byteSize()), 
+				xyzSeg.asSlice(4L, Newton_h.C_FLOAT.byteSize()), 
+				xyzSeg.asSlice(8L, Newton_h.C_FLOAT.byteSize()));
+		return xyzSeg.toArray(Newton_h.C_FLOAT);
+	}
+	
 	public void destroy() {
 		Newton_h.NewtonDestroyCollision(address);
+	}
+	
+	public float getSkinThickness() {
+		return Newton_h.NewtonCollisionGetSkinThickness(address);
+	}
+	
+	public void setSkinThickness(float thickness) {
+		Newton_h.NewtonCollisionSetSkinThickness(address, thickness);
 	}
 	
 	protected static NewtonCollision wrap(MemoryAddress address) {

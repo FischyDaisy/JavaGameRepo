@@ -26,21 +26,21 @@ import java.util.stream.Stream;
 import static jdk.incubator.foreign.CLinker.*;
 import static jdk.incubator.foreign.ValueLayout.*;
 
-final class RuntimeHelper {
+public final class RuntimeHelper {
 
     private RuntimeHelper() {}
     private final static CLinker LINKER = CLinker.systemCLinker();
     private final static ClassLoader LOADER = RuntimeHelper.class.getClassLoader();
     private final static MethodHandles.Lookup MH_LOOKUP = MethodHandles.lookup();
-    private final static SymbolLookup SYMBOL_LOOKUP;
+    private static SymbolLookup SYMBOL_LOOKUP;
 
     final static SegmentAllocator CONSTANT_ALLOCATOR =
             (size, align) -> MemorySegment.allocateNative(size, align, ResourceScope.newImplicitScope());
 
     static {
-        System.loadLibrary("com/newtondll/newton");
-        SymbolLookup loaderLookup = SymbolLookup.loaderLookup();
-        SYMBOL_LOOKUP = name -> loaderLookup.lookup(name).or(() -> LINKER.lookup(name));
+        //System.load("C:\\Users\\Christopher\\Documents\\Workspace\\JavaGame\\resources\\newtondll\\newton.dll");
+        //SymbolLookup loaderLookup = SymbolLookup.loaderLookup();
+        //SYMBOL_LOOKUP = name -> loaderLookup.lookup(name).or(() -> LINKER.lookup(name));
     }
 
     static <T> T requireNonNull(T obj, String symbolName) {
@@ -52,6 +52,12 @@ final class RuntimeHelper {
 
     private final static SegmentAllocator THROWING_ALLOCATOR = (x, y) -> { throw new AssertionError("should not reach here"); };
 
+    public static final void loadLibraryAbsolute(String filepath) {
+    	System.load(filepath);
+        SymbolLookup loaderLookup = SymbolLookup.loaderLookup();
+        SYMBOL_LOOKUP = name -> loaderLookup.lookup(name).or(() -> LINKER.lookup(name));
+    }
+    
     static final MemorySegment lookupGlobalVariable(String name, MemoryLayout layout) {
         return SYMBOL_LOOKUP.lookup(name).map(symbol -> MemorySegment.ofAddress(symbol.address(), layout.byteSize(), ResourceScope.newSharedScope())).orElse(null);
     }
