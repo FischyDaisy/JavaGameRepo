@@ -10,11 +10,11 @@ public class NewtonCompoundCollision extends NewtonCollision {
 		super(address);
 	}
 	
-	public static NewtonCollision create(NewtonWorld world, int shapeID) {
+	public static NewtonCompoundCollision create(NewtonWorld world, int shapeID) {
 		return new NewtonCompoundCollision(Newton_h.NewtonCreateCompoundCollision(world.address, shapeID));
 	}
 	
-	public static NewtonCollision create(NewtonWorld world, NewtonMesh mesh, float hullTolerance, int shapeID, int subShapeID) {
+	public static NewtonCompoundCollision create(NewtonWorld world, NewtonMesh mesh, float hullTolerance, int shapeID, int subShapeID) {
 		return new NewtonCompoundCollision(Newton_h.NewtonCreateCompoundCollisionFromMesh(world.address, mesh.address, hullTolerance, shapeID, subShapeID));
 	}
 	

@@ -10,11 +10,11 @@ public class NewtonTreeCollision extends NewtonCollision {
 		super(address);
 	}
 	
-	public static NewtonCollision create(NewtonWorld world, int shapeID) {
+	public static NewtonTreeCollision create(NewtonWorld world, int shapeID) {
 		return new NewtonTreeCollision(Newton_h.NewtonCreateTreeCollision(world.address, shapeID));
 	}
 	
-	public static NewtonCollision createFromMesh(NewtonWorld world, NewtonMesh mesh, int shapeID) {
+	public static NewtonTreeCollision createFromMesh(NewtonWorld world, NewtonMesh mesh, int shapeID) {
 		return new NewtonTreeCollision(Newton_h.NewtonCreateTreeCollisionFromMesh(world.address, mesh.address, shapeID));
 	}
 	

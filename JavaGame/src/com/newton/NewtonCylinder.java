@@ -13,11 +13,11 @@ public class NewtonCylinder extends NewtonCollision {
 		super(address);
 	}
 	
-	public static NewtonCollision create(NewtonWorld world, float radio0,  float radio1,  float height,  int shapeID,  Addressable offsetMatrix) {
+	public static NewtonCylinder create(NewtonWorld world, float radio0,  float radio1,  float height,  int shapeID,  Addressable offsetMatrix) {
 		return new NewtonCylinder(Newton_h.NewtonCreateCylinder(world.address, radio0, radio1, height, shapeID, offsetMatrix));
 	}
 	
-	public static NewtonCollision create(NewtonWorld world, float radio0,  float radio1,  float height,  int shapeID,  Matrix4f offsetMatrix, ResourceScope scope) {
+	public static NewtonCylinder create(NewtonWorld world, float radio0,  float radio1,  float height,  int shapeID,  Matrix4f offsetMatrix, ResourceScope scope) {
 		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
 		float[] matArr = new float[16];
 		offsetMatrix.get(matArr);

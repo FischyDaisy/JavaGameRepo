@@ -13,11 +13,11 @@ public class NewtonCone extends NewtonCollision {
 		super(address);
 	}
 	
-	public static NewtonCollision create(NewtonWorld world, float radius,  float height,  int shapeID,  Addressable offsetMatrix) {
+	public static NewtonCone create(NewtonWorld world, float radius,  float height,  int shapeID,  Addressable offsetMatrix) {
 		return new NewtonCone(Newton_h.NewtonCreateCone(world.address, radius, height, shapeID, offsetMatrix));
 	}
 	
-	public static NewtonCollision create(NewtonWorld world, float radius,  float height,  int shapeID,  Matrix4f offsetMatrix, ResourceScope scope) {
+	public static NewtonCone create(NewtonWorld world, float radius,  float height,  int shapeID,  Matrix4f offsetMatrix, ResourceScope scope) {
 		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
 		float[] matArr = new float[16];
 		offsetMatrix.get(matArr);

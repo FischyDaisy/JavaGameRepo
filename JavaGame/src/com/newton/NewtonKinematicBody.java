@@ -13,11 +13,11 @@ public class NewtonKinematicBody extends NewtonBody {
 		super(address);
 	}
 	
-	public static NewtonBody create(NewtonWorld world, NewtonCollision collision, Addressable matrix) {
+	public static NewtonKinematicBody create(NewtonWorld world, NewtonCollision collision, Addressable matrix) {
 		return new NewtonKinematicBody(Newton_h.NewtonCreateKinematicBody(world.address, collision.address, matrix));
 	}
 	
-	public static NewtonBody create(NewtonWorld world, NewtonCollision collision, Matrix4f matrix, ResourceScope scope) {
+	public static NewtonKinematicBody create(NewtonWorld world, NewtonCollision collision, Matrix4f matrix, ResourceScope scope) {
 		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
 		float[] matArr = new float[16];
 		matrix.get(matArr);

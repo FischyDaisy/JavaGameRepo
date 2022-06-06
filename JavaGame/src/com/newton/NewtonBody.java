@@ -342,6 +342,12 @@ public abstract class NewtonBody {
 		return Newton_h.NewtonBodyGetLinearDamping(address);
 	}
 	
+	public float[] getAngularDamping(SegmentAllocator allocator) {
+		MemorySegment vecSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		Newton_h.NewtonBodyGetAngularDamping(address, vecSeg);
+		return vecSeg.toArray(Newton_h.C_FLOAT);
+	}
+	
 	public void destroy() {
 		Newton_h.NewtonDestroyBody(address);
 	}

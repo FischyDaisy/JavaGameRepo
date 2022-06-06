@@ -10,7 +10,7 @@ public class NewtonNull extends NewtonCollision {
 		super(address);
 	}
 	
-	public static NewtonCollision create(NewtonWorld world) {
+	public static NewtonNull create(NewtonWorld world) {
 		return new NewtonNull(Newton_h.NewtonCreateNull(world.address));
 	}
 }

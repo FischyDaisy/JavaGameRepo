@@ -10,7 +10,7 @@ public class NewtonSphere extends NewtonCollision {
 		super(address);
 	}
 	
-	public static NewtonCollision create(NewtonWorld world, float radius, int shapeID, Addressable offsetMatrix) {
+	public static NewtonSphere create(NewtonWorld world, float radius, int shapeID, Addressable offsetMatrix) {
 		return new NewtonSphere(Newton_h.NewtonCreateSphere(world.address, radius, shapeID, offsetMatrix));
 	}
 }

@@ -13,11 +13,11 @@ public class NewtonConvexHull extends NewtonCollision {
 		super(address);
 	}
 	
-	public static NewtonCollision create(NewtonWorld world, int count,  Addressable vertexCloud,  int strideInBytes,  float tolerance,  int shapeID,  Addressable offsetMatrix) {
+	public static NewtonConvexHull create(NewtonWorld world, int count,  Addressable vertexCloud,  int strideInBytes,  float tolerance,  int shapeID,  Addressable offsetMatrix) {
 		return new NewtonConvexHull(Newton_h.NewtonCreateConvexHull(world.address, count, vertexCloud, strideInBytes, tolerance, shapeID, offsetMatrix));
 	}
 	
-	public static NewtonCollision create(NewtonWorld world, int count,  float[] vertexCloud,  int strideInBytes,  float tolerance,  int shapeID,  Matrix4f offsetMatrix, ResourceScope scope) {
+	public static NewtonConvexHull create(NewtonWorld world, int count,  float[] vertexCloud,  int strideInBytes,  float tolerance,  int shapeID,  Matrix4f offsetMatrix, ResourceScope scope) {
 		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
 		MemorySegment vertCloud = allocator.allocateArray(Newton_h.C_FLOAT, vertexCloud);
 		float[] matArr = new float[16];
