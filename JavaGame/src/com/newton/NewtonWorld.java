@@ -4,58 +4,118 @@ import jdk.incubator.foreign.*;
 
 import com.newton.generated.*;
 
+/**
+ * 
+ * @author Christopher
+ *
+ */
 public class NewtonWorld {
 	
 	protected final MemoryAddress address;
 	protected final ResourceScope scope;
 	
+	/**
+	 * Internal NewtonWorld Constructor
+	 * @param address - address of the NewtonWorld object
+	 */
 	private NewtonWorld(MemoryAddress address) {
 		this.address = address;
 		this.scope = ResourceScope.newConfinedScope();
 	}
 	
+	/**
+	 * Creates a NewtonWorld instance
+	 * @return NewtonWorld
+	 */
 	public static NewtonWorld create() {
 		return new NewtonWorld(Newton_h.NewtonCreate(new Object[] {}));
 	}
 	
+	/**
+	 * Gets the version of Newton
+	 * @return Newton API Version
+	 */
 	public static int getWorldVersion() {
 		return Newton_h.NewtonWorldGetVersion(new Object[] {});
 	}
 	
+	/**
+	 * Gets the size of floats in Newton library
+	 * @return size of floats in bytes
+	 */
 	public static int getFloatSizes() {
 		return Newton_h.NewtonWorldFloatSize(new Object[] {});
 	}
 	
+	/**
+	 * Gets the amount of memory used by Newton
+	 * @return amount of memory used in bytes
+	 */
 	public static int getMemoryUsed() {
 		return Newton_h.NewtonGetMemoryUsed(new Object[] {});
 	}
 	
+	/**
+	 * Set the memory system for Newton library
+	 * @param alloc - allocation function
+	 * @param free - deallocation function
+	 * @param scope - ResourceScope for allocating upcall stubs
+	 */
 	public static void setMemorySystem(NewtonAllocMemory alloc, NewtonFreeMemory free, ResourceScope scope) {
 		NativeSymbol allocFunc = NewtonAllocMemory.allocate(alloc, scope);
 		NativeSymbol freeFunc = NewtonFreeMemory.allocate(free, scope);
 		Newton_h.NewtonSetMemorySystem(allocFunc, freeFunc);
 	}
 	
+	/**
+	 * Allocates memory with Newton allocator
+	 * @param sizeInBytes - size in bytes of memory to be allocated
+	 * @return MemoryAddress to the allocated memory
+	 */
 	public static MemoryAddress newtonAlloc(int sizeInBytes) {
 		return Newton_h.NewtonAlloc(sizeInBytes);
 	}
 	
+	/**
+	 * Allocates memory with Newton allocator
+	 * @param sizeInBytes - size in bytes of memory to be allocated
+	 * @param scope - ResourceScope for the returned MemorySegment
+	 * @return MemorySegment representing the allocated memory
+	 */
 	public static MemorySegment newtonAlloc(int sizeInBytes, ResourceScope scope) {
 		return MemorySegment.ofAddress(Newton_h.NewtonAlloc(sizeInBytes), sizeInBytes, scope);
 	}
 	
+	/**
+	 * Allocates memory with Newton allocator and given MemoryLayout
+	 * @param layout - MemoryLayout to be allocated
+	 * @return MemoryAddress to the allocated memory
+	 */
 	public static MemoryAddress newtonAlloc(MemoryLayout layout) {
 		return Newton_h.NewtonAlloc((int) layout.byteSize());
 	}
 	
+	/**
+	 * Allocates memory with Newton allocator and given MemoryLayout
+	 * @param layout - MemoryLayout to be allocated
+	 * @param scope - ResourceScope for the returned MemorySegment
+	 * @return MemorySegment representing the allocated memory
+	 */
 	public static MemorySegment newtonAlloc(MemoryLayout layout, ResourceScope scope) {
 		return MemorySegment.ofAddress(Newton_h.NewtonAlloc((int) layout.byteSize()), layout.byteSize(), scope);
 	}
 	
+	/**
+	 * Frees memory allocated by Newton
+	 * @param ptr - pointer to the memory create by Newton
+	 */
 	public static void newtonFree(Addressable ptr) {
 		Newton_h.NewtonFree(ptr);
 	}
 	
+	/**
+	 * Destroys the current Newton object.
+	 */
 	public void destroy() {
 		Newton_h.NewtonDestroy(address);
 		if (scope.isAlive()) {

@@ -13,16 +13,17 @@ public class NewtonDynamicBody extends NewtonBody {
 		super(address);
 	}
 	
-	public static NewtonDynamicBody create(NewtonWorld world, NewtonCollision collision, Addressable matrix) {
-		return new NewtonDynamicBody(Newton_h.NewtonCreateDynamicBody(world.address, collision.address, matrix));
-	}
-	
-	public static NewtonDynamicBody create(NewtonWorld world, NewtonCollision collision, Matrix4f matrix, ResourceScope scope) {
-		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
-		float[] matArr = new float[16];
-		matrix.get(matArr);
-		MemorySegment matrixSegment = allocator.allocateArray(Newton_h.C_FLOAT, matArr);
-		return create(world, collision, matrixSegment);
+	/**
+	 * 
+	 * @param world
+	 * @param collision
+	 * @param matrix
+	 * @param allocator
+	 * @return
+	 */
+	public static NewtonDynamicBody create(NewtonWorld world, NewtonCollision collision, float[] matrix, SegmentAllocator allocator) {
+		MemorySegment matrixSegment = allocator.allocateArray(Newton_h.C_FLOAT, matrix);
+		return new NewtonDynamicBody(Newton_h.NewtonCreateDynamicBody(world.address, collision.address, matrixSegment));
 	}
 	
 	protected static NewtonBody wrapImpl(MemoryAddress address) {

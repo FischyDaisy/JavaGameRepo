@@ -10,8 +10,7 @@ public class NewtonAsymetricDynamicBody extends NewtonBody {
 		super(address);
 	}
 	
-	public static NewtonAsymetricDynamicBody create(NewtonWorld world, NewtonCollision collision, float[] matrix, ResourceScope scope) {
-		SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
+	public static NewtonAsymetricDynamicBody create(NewtonWorld world, NewtonCollision collision, float[] matrix, SegmentAllocator allocator) {
 		MemorySegment matrixSeg = allocator.allocateArray(Newton_h.C_FLOAT, matrix);
 		return new NewtonAsymetricDynamicBody(Newton_h.NewtonCreateAsymetricDynamicBody(world.address, collision.address, matrixSeg));
 	}
