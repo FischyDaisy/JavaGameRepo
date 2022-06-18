@@ -24,6 +24,9 @@ public class NewtonConvexHull extends NewtonCollision {
 	 */
 	public static NewtonConvexHull create(NewtonWorld world, int count,  float[] vertexCloud,  int strideInBytes,  float tolerance,  int shapeID,  float[] offsetMatrix, SegmentAllocator allocator) {
 		MemorySegment vertCloud = allocator.allocateArray(Newton_h.C_FLOAT, vertexCloud);
+		if (offsetMatrix == null) {
+			return new NewtonConvexHull(Newton_h.NewtonCreateConvexHull(world.address, count, vertCloud, strideInBytes, tolerance, shapeID, MemoryAddress.NULL));
+		}
 		MemorySegment matrix = allocator.allocateArray(Newton_h.C_FLOAT, offsetMatrix);
 		return new NewtonConvexHull(Newton_h.NewtonCreateConvexHull(world.address, count, vertCloud, strideInBytes, tolerance, shapeID, matrix));
 	}

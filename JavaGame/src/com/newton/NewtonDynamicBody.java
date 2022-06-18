@@ -1,8 +1,5 @@
 package com.newton;
 
-import org.joml.Matrix4f;
-
-import com.newton.generated.Constants$root;
 import com.newton.generated.Newton_h;
 
 import jdk.incubator.foreign.*;
@@ -24,9 +21,5 @@ public class NewtonDynamicBody extends NewtonBody {
 	public static NewtonDynamicBody create(NewtonWorld world, NewtonCollision collision, float[] matrix, SegmentAllocator allocator) {
 		MemorySegment matrixSegment = allocator.allocateArray(Newton_h.C_FLOAT, matrix);
 		return new NewtonDynamicBody(Newton_h.NewtonCreateDynamicBody(world.address, collision.address, matrixSegment));
-	}
-	
-	protected static NewtonBody wrapImpl(MemoryAddress address) {
-		return new NewtonDynamicBody(address);
 	}
 }

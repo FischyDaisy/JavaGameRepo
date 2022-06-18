@@ -26,6 +26,9 @@ public class NewtonBox extends NewtonCollision {
 	 * @return
 	 */
 	public static NewtonBox create(NewtonWorld world, float dx, float dy, float dz, int shapeID, float[] offsetMatrix, SegmentAllocator allocator) {
+		if (offsetMatrix == null) {
+			return new NewtonBox(Newton_h.NewtonCreateBox(world.address, dx, dy, dz, shapeID, MemoryAddress.NULL));
+		}
 		MemorySegment matrix = allocator.allocateArray(Newton_h.C_FLOAT, offsetMatrix);
 		return new NewtonBox(Newton_h.NewtonCreateBox(world.address, dx, dy, dz, shapeID, matrix));
 	}

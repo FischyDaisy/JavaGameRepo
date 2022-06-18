@@ -1,6 +1,5 @@
 package com.newton;
 
-import com.newton.NewtonCompoundCollision.Node;
 import com.newton.generated.Newton_h;
 
 import jdk.incubator.foreign.*;
@@ -11,6 +10,12 @@ public class NewtonSceneCollision extends NewtonCollision {
 		super(address);
 	}
 	
+	/**
+	 * 
+	 * @param world
+	 * @param shapeID
+	 * @return
+	 */
 	public static NewtonSceneCollision create(NewtonWorld world, int shapeID) {
 		return new NewtonSceneCollision(Newton_h.NewtonCreateSceneCollision(world.address, shapeID));
 	}

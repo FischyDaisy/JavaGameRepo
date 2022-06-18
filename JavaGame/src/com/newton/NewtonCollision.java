@@ -129,7 +129,7 @@ public abstract class NewtonCollision {
 		Newton_h.NewtonCollisionSetSkinThickness(address, thickness);
 	}
 	
-	protected static NewtonCollision wrap(MemoryAddress address) {
+	public static NewtonCollision wrap(MemoryAddress address) {
 		int collisionType = Newton_h.NewtonCollisionGetType(address);
 		return switch (collisionType) {
 			case 0 -> new NewtonSphere(address);

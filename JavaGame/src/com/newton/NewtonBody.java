@@ -234,7 +234,7 @@ public abstract class NewtonBody {
 	}
 	
 	public float[] getPosition(SegmentAllocator allocator) {
-		MemorySegment posSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		MemorySegment posSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC3F);
 		Newton_h.NewtonBodyGetPosition(address, posSeg);
 		return posSeg.toArray(Newton_h.C_FLOAT);
 	}
@@ -246,13 +246,13 @@ public abstract class NewtonBody {
 	}
 	
 	public float[] getRotation(SegmentAllocator allocator) {
-		MemorySegment rotSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[4]);
+		MemorySegment rotSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC4F);
 		Newton_h.NewtonBodyGetRotation(address, rotSeg);
 		return rotSeg.toArray(Newton_h.C_FLOAT);
 	}
 	
 	public float[] getMass(SegmentAllocator allocator) {
-		MemorySegment massSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[4]);
+		MemorySegment massSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC4F);
 		Newton_h.NewtonBodyGetMass(address, 
 				massSeg.asSlice(0L, Newton_h.C_FLOAT.byteSize()), 
 				massSeg.asSlice(4L, Newton_h.C_FLOAT.byteSize()), 
@@ -262,7 +262,7 @@ public abstract class NewtonBody {
 	}
 	
 	public float[] getInverseMass(SegmentAllocator allocator) {
-		MemorySegment massSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[4]);
+		MemorySegment massSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC4F);
 		Newton_h.NewtonBodyGetInvMass(address, 
 				massSeg.asSlice(0L, Newton_h.C_FLOAT.byteSize()), 
 				massSeg.asSlice(4L, Newton_h.C_FLOAT.byteSize()), 
@@ -272,62 +272,62 @@ public abstract class NewtonBody {
 	}
 	
 	public float[] getInertiaMatrix(SegmentAllocator allocator) {
-		MemorySegment matrixSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[16]);
+		MemorySegment matrixSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.MAT4F);
 		Newton_h.NewtonBodyGetInertiaMatrix(address, matrixSeg);
 		return matrixSeg.toArray(Newton_h.C_FLOAT);
 	}
 	
 	public float[] getInverseInertiaMatrix(SegmentAllocator allocator) {
-		MemorySegment matrixSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[16]);
+		MemorySegment matrixSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.MAT4F);
 		Newton_h.NewtonBodyGetInvInertiaMatrix(address, matrixSeg);
 		return matrixSeg.toArray(Newton_h.C_FLOAT);
 	}
 	
 	public float[] getOmega(SegmentAllocator allocator) {
-		MemorySegment omegaSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		MemorySegment omegaSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC3F);
 		Newton_h.NewtonBodyGetOmega(address, omegaSeg);
 		return omegaSeg.toArray(Newton_h.C_FLOAT);
 	}
 	
 	public float[] getVelocity(SegmentAllocator allocator) {
-		MemorySegment velSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		MemorySegment velSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC3F);
 		Newton_h.NewtonBodyGetVelocity(address, velSeg);
 		return velSeg.toArray(Newton_h.C_FLOAT);
 	}
 	
 	public float[] getAlpha(SegmentAllocator allocator) {
-		MemorySegment alphaSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		MemorySegment alphaSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC3F);
 		Newton_h.NewtonBodyGetAlpha(address, alphaSeg);
 		return alphaSeg.toArray(Newton_h.C_FLOAT);
 	}
 	
 	public float[] getAcceleration(SegmentAllocator allocator) {
-		MemorySegment accSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		MemorySegment accSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC3F);
 		Newton_h.NewtonBodyGetAcceleration(address, accSeg);
 		return accSeg.toArray(Newton_h.C_FLOAT);
 	}
 	
 	public float[] getForce(SegmentAllocator allocator) {
-		MemorySegment forceSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		MemorySegment forceSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC3F);
 		Newton_h.NewtonBodyGetForce(address, forceSeg);
 		return forceSeg.toArray(Newton_h.C_FLOAT);
 	}
 	
 	public float[] getTorque(SegmentAllocator allocator) {
-		MemorySegment torqueSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		MemorySegment torqueSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC3F);
 		Newton_h.NewtonBodyGetTorque(address, torqueSeg);
 		return torqueSeg.toArray(Newton_h.C_FLOAT);
 	}
 	
 	public float[] getCenterOfMass(SegmentAllocator allocator) {
-		MemorySegment comSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		MemorySegment comSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC3F);
 		Newton_h.NewtonBodyGetCentreOfMass(address, comSeg);
 		return comSeg.toArray(Newton_h.C_FLOAT);
 	}
 	
 	public float[] getPointVelocity(float[] point, SegmentAllocator allocator) {
 		MemorySegment pointSeg = allocator.allocateArray(Newton_h.C_FLOAT, point);
-		MemorySegment velSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		MemorySegment velSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC3F);
 		Newton_h.NewtonBodyGetPointVelocity(address, pointSeg, velSeg);
 		return velSeg.toArray(Newton_h.C_FLOAT);
 	}
@@ -343,7 +343,7 @@ public abstract class NewtonBody {
 	}
 	
 	public float[] getAngularDamping(SegmentAllocator allocator) {
-		MemorySegment vecSeg = allocator.allocateArray(Newton_h.C_FLOAT, new float[3]);
+		MemorySegment vecSeg = allocator.allocateArray(Newton_h.C_FLOAT, Newton.VEC3F);
 		Newton_h.NewtonBodyGetAngularDamping(address, vecSeg);
 		return vecSeg.toArray(Newton_h.C_FLOAT);
 	}
@@ -352,7 +352,7 @@ public abstract class NewtonBody {
 		Newton_h.NewtonDestroyBody(address);
 	}
 	
-	protected static NewtonBody wrap(MemoryAddress address) {
+	public static NewtonBody wrap(MemoryAddress address) {
 		int bodyType = Newton_h.NewtonBodyGetType(address);
 		return switch (bodyType) {
 			case 0 -> new NewtonDynamicBody(address);
