@@ -13,14 +13,26 @@ public abstract class NewtonBody {
 		this.address = address;
 	}
 	
+	/**
+	 * Gets the simulation state of the body
+	 * @return 0 if body is disabled or 1 if body is active
+	 */
 	public int getSimulationState() {
 		return Newton_h.NewtonBodyGetSimulationState(address);
 	}
 	
+	/**
+	 * Sets the simulation state of the body
+	 * @param state - 0 to disable body | 1 to activate body
+	 */
 	public void setSimulationState(int state) {
 		Newton_h.NewtonBodySetSimulationState(address, state);
 	}
 	
+	/**
+	 * Gets the type of {@code this} body
+	 * @return 0 for dynamic body, 1 for kinematic body, 2 for
+	 */
 	public int getType() {
 		return Newton_h.NewtonBodyGetType(address);
 	}
