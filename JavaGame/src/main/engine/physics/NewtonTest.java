@@ -1,6 +1,6 @@
 package main.engine.physics;
 
-import com.newton.*;
+import crab.newton.*;
 import jdk.incubator.foreign.*;
 
 public class NewtonTest {

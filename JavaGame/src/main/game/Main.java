@@ -4,14 +4,13 @@ import java.util.Arrays;
 
 import org.joml.Matrix4f;
 
-import com.newton.*;
-import com.newton.generated.*;
+import crab.newton.*;
 import jdk.incubator.foreign.*;
 
 public class Main {
  
     public static void main(String[] args) {
-    	RuntimeHelper.loadLibraryAbsolute("C:\\Users\\Christopher\\Documents\\Workspace\\JavaGame\\resources\\newtondll\\newton.dll");
+    	Newton.loadNewtonAbsolute("C:\\Users\\Christopher\\Documents\\Workspace\\JavaGame\\resources\\newtondll\\newton.dll");
     	
         System.out.println("NewtonWorld Version: " + NewtonWorld.getWorldVersion());
         
@@ -32,23 +31,19 @@ public class Main {
         	NewtonBody dBody = NewtonDynamicBody.create(world, boxCollision, matArr, allocator);
         	dBody.setMassMatrix(10f, 0f, 0f, 0f);
         	
-        	System.out.println("Position: " + Arrays.toString(dBody.getPosition(allocator)));
+        	System.out.println("Position: " + Arrays.toString(dBody.getPosition()));
         	
         	dBody.setForceAndTorqueCallback((bodyPtr, timestep, threadIndex) -> {
-        		try (ResourceScope ftScope = ResourceScope.newConfinedScope()) {
-        			SegmentAllocator ftAlloc = SegmentAllocator.nativeAllocator(ftScope);
-        			
-        			NewtonBody body = NewtonBody.wrap(bodyPtr);
-            		float[] mass = body.getMass(ftAlloc);
-            		System.out.println("Mass: " + Arrays.toString(mass));
-            		float[] newMass = new float[] {0f, mass[0] * -9.8f, 0f};
-            		body.setForce(newMass, ftAlloc);
-        		}
+        		NewtonBody body = NewtonBody.wrap(bodyPtr);
+        		float[] mass = body.getMass();
+        		System.out.println("Mass: " + Arrays.toString(mass));
+        		float[] newMass = new float[] {0f, mass[0] * -9.8f, 0f};
+        		body.setForce(newMass);
         	}, scope);
         	
         	world.update(10f);
         	
-        	System.out.println("Position: " + Arrays.toString(dBody.getPosition(allocator)));
+        	System.out.println("Position: " + Arrays.toString(dBody.getPosition()));
         }
     }
 }

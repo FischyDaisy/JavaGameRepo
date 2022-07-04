@@ -58,8 +58,7 @@ import main.engine.sound.SoundSource;
 import main.engine.utility.AxisRotation;
 import main.engine.utility.ResourcePaths;
 
-import com.newton.*;
-import com.newton.generated.Newton_h;
+import crab.newton.*;
 
 import jdk.incubator.foreign.*;
 
