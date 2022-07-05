@@ -44,6 +44,16 @@ public class Main {
         	world.update(10f);
         	
         	System.out.println("Position: " + Arrays.toString(dBody.getPosition()));
+        	
+        	NewtonMesh mesh = NewtonMesh.createFromCollision(boxCollision);
+        	
+        	int vertexCount = mesh.getPointCount();
+        	
+        	System.out.println("Box Vertex Count: " + vertexCount);
+        	
+        	float[] vertexData = mesh.getVertexChannel(vertexCount);
+        	
+        	System.out.println("Box Vertex List: " + Arrays.toString(vertexData));
         }
     }
 }
