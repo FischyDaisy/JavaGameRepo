@@ -52,8 +52,20 @@ public class Main {
         	System.out.println("Box Vertex Count: " + vertexCount);
         	
         	float[] vertexData = mesh.getVertexChannel(vertexCount);
-        	
         	System.out.println("Box Vertex List: " + Arrays.toString(vertexData));
+        	float[] normalData, biNormalData, uvData;
+        	if (mesh.hasNormalChannel()) {
+        		normalData = mesh.getNormalChannel(vertexCount);
+        		System.out.println("Box Normal List: " + Arrays.toString(normalData));
+        	}
+        	if (mesh.hasBiNormalChannel()) {
+        		biNormalData = mesh.getBiNormalChannel(vertexCount);
+        		System.out.println("Box BiNormal List: " + Arrays.toString(biNormalData));
+        	}
+        	if (mesh.hasUV0Channel()) {
+        		uvData = mesh.getUV0Channel(vertexCount);
+        		System.out.println("Box UV List: " + Arrays.toString(uvData));
+        	}
         }
     }
 }

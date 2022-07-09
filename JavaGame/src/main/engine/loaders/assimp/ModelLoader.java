@@ -319,7 +319,7 @@ public class ModelLoader {
             }
             
             AIString aiNormalMapPath = AIString.calloc(stack);
-            Assimp.aiGetMaterialTexture(aiMaterial, aiTextureType_NORMALS, 0, aiNormalMapPath, (IntBuffer) null,
+            aiGetMaterialTexture(aiMaterial, aiTextureType_NORMALS, 0, aiNormalMapPath, (IntBuffer) null,
                     null, null, null, null, null);
             String normalMapPath = aiNormalMapPath.dataString();
             if (normalMapPath != null && normalMapPath.length() > 0) {
@@ -327,7 +327,7 @@ public class ModelLoader {
             }
             
             AIString aiMetallicRoughnessPath = AIString.calloc(stack);
-            Assimp.aiGetMaterialTexture(aiMaterial, AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLICROUGHNESS_TEXTURE, 0, aiMetallicRoughnessPath, (IntBuffer) null,
+            aiGetMaterialTexture(aiMaterial, AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLICROUGHNESS_TEXTURE, 0, aiMetallicRoughnessPath, (IntBuffer) null,
                     null, null, null, null, null);
             String metallicRoughnessPath = aiMetallicRoughnessPath.dataString();
             if (metallicRoughnessPath != null && metallicRoughnessPath.length() > 0) {
