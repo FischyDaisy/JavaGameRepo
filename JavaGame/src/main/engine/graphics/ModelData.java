@@ -89,5 +89,5 @@ public class ModelData {
         }
     }
 
-    public record MeshData(float[] positions, float[] normals, float[] tangents, float[] biTangents, float[] textCoords, int[] indices, int materialIdx, AABBf boundingBox) {}
+    public record MeshData(float[] positions, float[] normals, float[] tangents, float[] biTangents, float[] textCoords, int[] indices, int materialIdx) {}
 }

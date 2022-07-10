@@ -358,7 +358,6 @@ public class ModelLoader {
         List<Float> biTangents = processBitangents(aiMesh, normals);
         List<Float> textCoords = processTextCoords(aiMesh);
         List<Integer> indices = processIndices(aiMesh);
-        AABBf aabb = processAABB(aiMesh);
 
         // Texture coordinates may not have been populated. We need at least the empty slots
         if (textCoords.isEmpty()) {
@@ -370,7 +369,7 @@ public class ModelLoader {
 
         int materialIdx = aiMesh.mMaterialIndex();
         return new ModelData.MeshData(Utils.listFloatToArray(vertices), Utils.listFloatToArray(normals), Utils.listFloatToArray(tangents),
-                Utils.listFloatToArray(biTangents), Utils.listFloatToArray(textCoords), Utils.listIntToArray(indices), materialIdx, aabb);
+                Utils.listFloatToArray(biTangents), Utils.listFloatToArray(textCoords), Utils.listIntToArray(indices), materialIdx);
     }
     
     private static List<Float> processTangents(AIMesh aiMesh, List<Float> normals) {
@@ -424,16 +423,6 @@ public class ModelLoader {
     		normals.add(aiNormal.z());
     	}
     	return normals;
-    }
-    
-    private static final AABBf processAABB(AIMesh aiMesh) {
-    	AIAABB aiAABB = aiMesh.mAABB();
-    	AIVector3D min = aiAABB.mMin();
-    	AIVector3D max = aiAABB.mMax();
-    	AABBf aabb = new AABBf(min.x(), min.y(), min.z(),
-    			max.x(), max.y(), max.z());
-    	return aabb;
-    	
     }
     
     private static Matrix4f toMatrix(AIMatrix4x4 aiMatrix4x4) {

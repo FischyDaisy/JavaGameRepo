@@ -49,7 +49,11 @@ public class Main {
         	
         	int vertexCount = mesh.getPointCount();
         	
+        	int[] indices = mesh.getIndexToVertexMap(vertexCount);
+        	
         	System.out.println("Box Vertex Count: " + vertexCount);
+        	
+        	System.out.println("Box Indices: " + Arrays.toString(indices));
         	
         	float[] vertexData = mesh.getVertexChannel(vertexCount);
         	System.out.println("Box Vertex List: " + Arrays.toString(vertexData));

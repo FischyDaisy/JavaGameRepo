@@ -83,7 +83,7 @@ public class TextItem extends GameItem {
         float[] posArr = Utils.listFloatToArray(positions);
         float[] textCoordsArr = Utils.listFloatToArray(textCoords);
         int[] indicesArr = indices.stream().mapToInt(i->i).toArray();
-        ModelData.MeshData mesh = new ModelData.MeshData(posArr, normals, tangents, biTangents, textCoordsArr, indicesArr, 0, null);
+        ModelData.MeshData mesh = new ModelData.MeshData(posArr, normals, tangents, biTangents, textCoordsArr, indicesArr, 0);
         return mesh;
     }
     
