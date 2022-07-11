@@ -6,8 +6,8 @@ import java.util.List;
 import org.joml.Vector3f;
 
 import crab.newton.NewtonMesh;
+import jdk.incubator.foreign.MemoryAddress;
 import main.engine.graphics.ModelData;
-import main.engine.graphics.ModelData.Material;
 
 public final class PhysUtils {
 	
@@ -27,8 +27,15 @@ public final class PhysUtils {
 			float[] uvData = mesh.getUV0Channel(vertexCount);
 			float[] tangentData = new float[vertexCount * 3];
 			float[] biTangentData = new float[vertexCount * 3];
-			calcTangent(vertexData, normalData, uvData, tangentData, biTangentData, vertexCount);
 			int[] indicesData = mesh.getIndexToVertexMap(vertexCount);
+			calcTangent(vertexData, normalData, uvData, tangentData, biTangentData, indicesData, vertexCount);
+			
+			MemoryAddress geometryHandle = mesh.beginHandle();
+			for (int handle = mesh.firstMaterial(geometryHandle); handle != -1; handle = mesh.nextMaterial(geometryHandle, handle)) {
+				int materialIdx = mesh.materialGetMaterial(geometryHandle, handle);
+				int indexCount = mesh.materialGetIndexCount(geometryHandle, handle);
+			}
+			
 			ModelData.MeshData meshData = new ModelData.MeshData(vertexData, normalData, tangentData, biTangentData, 
 					uvData, indicesData, 0);
 			ModelData.Material material = new ModelData.Material(texturePath);
@@ -41,11 +48,11 @@ public final class PhysUtils {
 		return null;
 	}
 	
-	private static void calcTangent(float[] vertex, float[] normal, float[] textCoords, float[] tangents, float[] biTangents, int vertexCount) {
+	private static void calcTangent(float[] vertex, float[] normals, float[] textCoords, float[] tangents, float[] biTangents, int[] indices, int indexCount) {
 		Vector3f tangent = new Vector3f(), biTangent = new Vector3f(), localTan = new Vector3f(), localBiTan = new Vector3f();
 		
-		for (int i = 0; i < vertexCount; i++) {
-			int p0 = i * 3, p1 = (i * 3) + 3, p2 = (i * 3) + 6;
+		for (int idx = 0; idx < indexCount; idx += 3) {
+			int p0 = (idx * 3) + 0, p1 = (idx * 3) + 3, p2 = (idx * 3) + 6;
 			float vx, vy, vz, wx, wy, wz;
 			vx = vertex[p1] - vertex[p0];
 			vy = vertex[p1 + 1] - vertex[p0 + 1];

@@ -70,6 +70,16 @@ public class Main {
         		uvData = mesh.getUV0Channel(vertexCount);
         		System.out.println("Box UV List: " + Arrays.toString(uvData));
         	}
+        	
+        	MemoryAddress geometryHandle = mesh.beginHandle();
+			for (int handle = mesh.firstMaterial(geometryHandle); handle != -1; handle = mesh.nextMaterial(geometryHandle, handle)) {
+				int materialIdx = mesh.materialGetMaterial(geometryHandle, handle);
+				int indexCount = mesh.materialGetIndexCount(geometryHandle, handle);
+				
+				int[] mIndices = mesh.materialGetIndexStream(geometryHandle, handle, indexCount);
+				
+				System.out.println("Material Indices: " + Arrays.toString(mIndices));
+			}
         }
     }
 }
