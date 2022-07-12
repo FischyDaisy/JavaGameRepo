@@ -1,11 +1,15 @@
 package main.game;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.joml.Matrix4f;
 
 import crab.newton.*;
 import jdk.incubator.foreign.*;
+import main.engine.graphics.ModelData;
+import main.engine.physics.PhysUtils;
 
 public class Main {
  
@@ -66,6 +70,7 @@ public class Main {
         		biNormalData = mesh.getBiNormalChannel(vertexCount);
         		System.out.println("Box BiNormal List: " + Arrays.toString(biNormalData));
         	}
+        	mesh.applyBoxMapping(0, 0, 2, matArr);
         	if (mesh.hasUV0Channel()) {
         		uvData = mesh.getUV0Channel(vertexCount);
         		System.out.println("Box UV List: " + Arrays.toString(uvData));
@@ -73,12 +78,22 @@ public class Main {
         	
         	MemoryAddress geometryHandle = mesh.beginHandle();
 			for (int handle = mesh.firstMaterial(geometryHandle); handle != -1; handle = mesh.nextMaterial(geometryHandle, handle)) {
-				int materialIdx = mesh.materialGetMaterial(geometryHandle, handle);
 				int indexCount = mesh.materialGetIndexCount(geometryHandle, handle);
 				
 				int[] mIndices = mesh.materialGetIndexStream(geometryHandle, handle, indexCount);
 				
 				System.out.println("Material Indices: " + Arrays.toString(mIndices));
+			}
+			
+			List<ModelData.Material> materialList = new ArrayList<ModelData.Material>();
+			materialList.add(new ModelData.Material());
+			
+			ModelData newtonModel = PhysUtils.convertToModelData(mesh, "", materialList);
+			List<ModelData.MeshData> meshes = newtonModel.getMeshDataList();
+			
+			for (ModelData.MeshData m : meshes) {
+				//System.out.println("Model Vertex: " + Arrays.toString(m.positions()));
+				System.out.println("Model Indices: " + Arrays.toString(m.indices()));
 			}
         }
     }
