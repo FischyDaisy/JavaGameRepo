@@ -98,10 +98,43 @@ public final class PhysUtils {
 					biTangentY = (- wy * sx + vy * tx) * dirCorrection;
 					biTangentZ = (- wz * sx + vz * tx) * dirCorrection;
 					
+					Vector3f localTan = new Vector3f(), localBitan = new Vector3f(), 
+							tangent = new Vector3f(tangentX, tangentY, tangentZ), biTangent = new Vector3f(biTangentX, biTangentY, biTangentZ), 
+							normal = new Vector3f();
 					for (int b = 0; b < 3; b++) {
 						int p = newIndices[i + b];
+						normal.x = mNormal[p];
+						normal.y = mNormal[p + 1];
+						normal.z = mNormal[p + 2];
 						
-						float localTanX, localTanY, localTanZ, localBitanX, localBitanY, localBitanZ;
+						tangent.sub(normal.mul(tangent.mul(normal, localTan), localTan), localTan);
+						biTangent.sub(normal.mul(biTangent.mul(normal, localBitan), localBitan), localBitan)
+						.sub(localTan.mul(biTangent.mul(localTan, localBitan), localBitan));
+						localTan.normalize();
+						localBitan.normalize();
+						
+						boolean invalid_tangent = !localTan.isFinite();
+						boolean invalid_bitangent = !localBitan.isFinite();
+						if (invalid_tangent != invalid_bitangent) {
+							if (invalid_tangent) {
+								localTan.x = Float.intBitsToFloat(Float.floatToIntBits(normal.x) ^ Float.floatToIntBits(localBitan.x));
+								localTan.y = Float.intBitsToFloat(Float.floatToIntBits(normal.y) ^ Float.floatToIntBits(localBitan.y));
+								localTan.z = Float.intBitsToFloat(Float.floatToIntBits(normal.z) ^ Float.floatToIntBits(localBitan.z));
+								localTan.normalize();
+							} else {
+								localBitan.x = Float.intBitsToFloat(Float.floatToIntBits(normal.x) ^ Float.floatToIntBits(localTan.x));
+								localBitan.y = Float.intBitsToFloat(Float.floatToIntBits(normal.y) ^ Float.floatToIntBits(localTan.y));
+								localBitan.z = Float.intBitsToFloat(Float.floatToIntBits(normal.z) ^ Float.floatToIntBits(localTan.z));
+								localTan.normalize();
+							}
+						}
+						
+						mTangent[p] = localTan.x;
+						mTangent[p + 1] = localTan.y;
+						mTangent[p + 2] = localTan.z;
+						mBitTangent[p] = localBitan.x;
+						mBitTangent[p + 1] = localBitan.y;
+						mBitTangent[p + 2] = localBitan.z;
 					}
 				}
 				

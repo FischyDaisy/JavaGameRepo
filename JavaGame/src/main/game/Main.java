@@ -93,7 +93,7 @@ public class Main {
 			
 			for (ModelData.MeshData m : meshes) {
 				//System.out.println("Model Vertex: " + Arrays.toString(m.positions()));
-				System.out.println("Model Indices: " + Arrays.toString(m.indices()));
+				System.out.println("Model Tangents: " + Arrays.toString(m.tangents()));
 			}
         }
     }

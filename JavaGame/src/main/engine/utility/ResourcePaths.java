@@ -87,5 +87,6 @@ public class ResourcePaths {
 	public static final class Textures {
 		public static final String TEXTURE_DIR = "resources|textures".replace('|', File.separatorChar);
 		public static final String DEFAULT_TEXTURE = TEXTURE_DIR + "|default.png".replace('|', File.separatorChar);
+		public static final String THIS_PIC_GOES_HARD = TEXTURE_DIR + "|this_pic_goes_hard.png".replace('|', File.separatorChar);
 	}
 }

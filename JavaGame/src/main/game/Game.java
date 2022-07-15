@@ -51,6 +51,7 @@ import main.engine.items.Portal;
 import main.engine.items.SkyBox;
 import main.engine.loaders.assimp.ModelLoader;
 import main.engine.physics.NewtonLoader;
+import main.engine.physics.PhysUtils;
 import main.engine.sound.SoundBuffer;
 import main.engine.sound.SoundListener;
 import main.engine.sound.SoundManager;
@@ -100,9 +101,9 @@ public class Game implements IGameLogic {
     
     private GameItem[] gameItems;
     
-    private GameItem bob;
+    private GameItem bob, monster, newtonCube;
     
-    private GameItem monster;
+    private NewtonBody cubeBody;
     
     private int maxFrames = 0;
     
@@ -113,6 +114,10 @@ public class Game implements IGameLogic {
     private Vector3f rotatingAngle = new Vector3f(1, 1, 1);
     
     private VKRenderer vkRenderer;
+    
+    private ResourceScope gameScope;
+    
+    private NewtonWorld world;
     
     public Game() {
         camera = new Camera();
@@ -143,6 +148,10 @@ public class Game implements IGameLogic {
         soundMgr.init();
         
         leftButtonPressed = false;
+        
+        gameScope = ResourceScope.newConfinedScope();
+        Newton.loadNewtonAbsolute("C:\\Users\\Christopher\\Documents\\Workspace\\JavaGame\\resources\\newtondll\\newton.dll");
+        world = NewtonWorld.create();
         
         this.scene = scene;
         
@@ -183,6 +192,39 @@ public class Game implements IGameLogic {
         monster.buildModelMatrix();
         monster.setGameItemAnimation(new GameItem.GameItemAnimation(false, 0, 0));
         scene.addGameItem(monster);
+        
+        String newtonModelId = "newton-cube";
+        newtonCube = new GameItem("Cubby", newtonModelId);
+        newtonCube.setPosition(-2.5f, 2.5f, 0f);
+        newtonCube.buildModelMatrix();
+        ModelData.Material newtonMaterial = new ModelData.Material(ResourcePaths.Textures.THIS_PIC_GOES_HARD);
+        SegmentAllocator allocator = SegmentAllocator.nativeAllocator(gameScope);
+        NewtonCollision boxCollision = NewtonBox.create(world, 1f, 1f, 1f, 0, null, allocator);
+        NewtonMesh mesh = NewtonMesh.createFromCollision(boxCollision);
+        Matrix4f cubeMatrix = new Matrix4f();//newtonCube.buildModelMatrix();
+    	float[] matArr = new float[16];
+    	cubeMatrix.transpose();
+    	cubeMatrix.get(matArr);
+    	cubeBody = NewtonDynamicBody.create(world, boxCollision, matArr, allocator);
+    	cubeBody.setMassMatrix(10f, 0f, 0f, 0f);
+    	cubeBody.setForceAndTorqueCallback((bodyPtr, timestep, threadIndex) -> {
+    		NewtonBody body = NewtonBody.wrap(bodyPtr);
+    		float[] mass = body.getMass();
+    		float[] newMass = new float[] {0f, mass[0] * -9.8f, 0f};
+    		body.setForce(newMass);
+    	}, gameScope);
+    	Matrix4f matrix = new Matrix4f();
+    	matrix.identity();
+    	matrix.transpose();
+    	matrix.get(matArr);
+        mesh.applyBoxMapping(0, 0, 0, matArr);
+        List<ModelData.Material> newtonMaterials = new ArrayList<ModelData.Material>();
+        newtonMaterials.add(newtonMaterial);
+        ModelData newtonCubeData = PhysUtils.convertToModelData(mesh, newtonModelId, newtonMaterials);
+        modelDataList.add(newtonCubeData);
+        scene.addGameItem(newtonCube);
+        boxCollision.destroy();
+        mesh.destroy();
 
         vkRenderer.loadModels(modelDataList);
         vkRenderer.loadAnimation(bob);
@@ -302,6 +344,9 @@ public class Game implements IGameLogic {
 
     @Override
     public void update(double interval, Window window) {
+    	world.update((float) interval);
+    	float[] position = cubeBody.getPosition();
+    	newtonCube.setPosition(position[0], position[1], position[2]);
     	MouseInput mouseInput = window.getMouseInput();
     	// Update camera based on mouse            
         if (mouseInput.isRightButtonPressed()) {
@@ -348,6 +393,12 @@ public class Game implements IGameLogic {
         if ( gHud != null ) {
             gHud.cleanup();
         }*/
+        if (gameScope.isAlive()) {
+        	gameScope.close();
+        }
+        if (world != null) {
+        	world.destroy();
+        }
     }
     
     private void updateDirectionalLight() {
