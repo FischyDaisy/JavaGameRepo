@@ -501,7 +501,7 @@ public class NuklearRenderActivity {
 		win.clearCodepointList();
 	}
 	
-	public void recordCommandBuffer(Scene scene, CommandBuffer commandBuffer) {
+	public void recordCommandBuffer(CommandBuffer commandBuffer) {
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			int idx = swapChain.getCurrentFrame();
 			

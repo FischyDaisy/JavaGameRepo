@@ -61,31 +61,31 @@ public class ModelData {
         public static final Vector4f DEFAULT_COLOR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         public Material() {
-            this(null, null, null, DEFAULT_COLOR, 0.0f, 0.0f, 1, 1);
+            this("", "", "", DEFAULT_COLOR, 0.0f, 0.0f, 1, 1);
         }
         
         public Material(String filePath) {
-        	this(filePath, null, null, DEFAULT_COLOR, 0.0f, 0.0f, 1, 1);
+        	this(filePath, "", "", DEFAULT_COLOR, 0.0f, 0.0f, 1, 1);
         }
         
         public Material(String filePath, int cols, int rows) {
-        	this(filePath, null, null, DEFAULT_COLOR, 0.0f, 0.0f, cols, rows);
+        	this(filePath, "", "", DEFAULT_COLOR, 0.0f, 0.0f, cols, rows);
         }
         
         public Material(String filePath, float roughnessFactor, float metllicaFactor) {
-        	this(filePath, null, null, DEFAULT_COLOR, roughnessFactor, metllicaFactor, 1, 1);
+        	this(filePath, "", "", DEFAULT_COLOR, roughnessFactor, metllicaFactor, 1, 1);
         }
         
         public Material(Vector4f color) {
-        	this(null, null, null, color, 0.0f, 0.0f, 1, 1);
+        	this("", "", "", color, 0.0f, 0.0f, 1, 1);
         }
         
         public Material(Vector4f color, int cols, int rows) {
-        	this(null, null, null, color, 0.0f, 0.0f, cols, rows);
+        	this("", "", "", color, 0.0f, 0.0f, cols, rows);
         }
         
         public Material(Vector4f color, float roughnessFactor, float metallicaFactor) {
-        	this(null, null, null, color, roughnessFactor, metallicaFactor, 1, 1);
+        	this("", "", "", color, roughnessFactor, metallicaFactor, 1, 1);
         }
     }
 

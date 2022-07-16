@@ -21,13 +21,7 @@ public class VKTextureCache extends Cache<VKTexture> {
 
 	@Override
 	public VKTexture get(String key) {
-		String path = key;
-        if (key == null || key.trim().isEmpty()) {
-            EngineProperties engProperties = EngineProperties.getInstance();
-            path = ResourcePaths.Textures.DEFAULT_TEXTURE;
-            //return null;
-        }
-        return cacheMap.get(path);
+        return cacheMap.get(key);
 	}
 	
 	public VKTexture get(Device device, String key, int format) {

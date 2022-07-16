@@ -30,8 +30,8 @@ import main.engine.SceneLight;
 import main.engine.Window;
 import main.engine.graphics.IHud;
 import main.engine.graphics.ModelData;
-import main.engine.graphics.Renderer;
 import main.engine.graphics.Transformation;
+import main.engine.graphics.ModelData.Material;
 import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.camera.Camera;
 import main.engine.graphics.camera.CameraBoxSelectionDetector;
@@ -97,17 +97,15 @@ public class Game implements IGameLogic {
 
     private boolean sceneChanged;
     
+    private boolean updatePhysics;
+    
     private enum Sounds { FIRE };
     
     private GameItem[] gameItems;
     
-    private GameItem bob, monster, newtonCube;
+    private GameItem bob, monster, newtonCube, skybox;
     
     private NewtonBody cubeBody;
-    
-    private int maxFrames = 0;
-    
-    private int monsterMax;
     
     private AnimGameItem momster;
     
@@ -119,6 +117,8 @@ public class Game implements IGameLogic {
     
     private NewtonWorld world;
     
+    private LevelLoader.Levels curLevel;
+    
     public Game() {
         camera = new Camera();
         soundMgr = new SoundManager();
@@ -126,6 +126,7 @@ public class Game implements IGameLogic {
         angleInc = 0;
         lightAngle = 45;
         firstTime = true;
+        curLevel = LevelLoader.Levels.NEWTONPLAYGROUND;
     }
     
     public static void main(String[] args) {
@@ -144,7 +145,7 @@ public class Game implements IGameLogic {
     }
     
     @Override
-    public void init(Window window, Scene scene, Renderer renderer) throws Exception {
+    public void init(Window window, Scene scene, VKRenderer renderer) throws Exception {
         soundMgr.init();
         
         leftButtonPressed = false;
@@ -155,80 +156,18 @@ public class Game implements IGameLogic {
         
         this.scene = scene;
         
-        vkRenderer = (VKRenderer) renderer;
-    	List<ModelData> modelDataList = new ArrayList<>();
-
-    	String sponzaModelId = "sponza-model";
-        ModelData sponzaModelData = ModelLoader.loadModel(sponzaModelId, ResourcePaths.Models.SPONZA_GLTF,
-                ResourcePaths.Models.SPONZA_DIR, false);
-        modelDataList.add(sponzaModelData);
-        GameItem sponza = new GameItem("SponzaObject", sponzaModelId);
-        scene.addGameItem(sponza);
+        vkRenderer = renderer;
+    	
+        LevelLoader.loadLevel(curLevel, scene, vkRenderer, world, gameScope);
         
-        String bobModelId = "bob-model";
-        ModelData bobModelData = ModelLoader.loadModel(bobModelId, ResourcePaths.Models.BOBLAMP_MD5MESH,
-        		ResourcePaths.Models.BOBLAMP_DIR, true);
-        maxFrames = bobModelData.getAnimationsList().get(0).frames().size();
-        modelDataList.add(bobModelData);
-        bob = new GameItem("BobObject", bobModelId);
-        bob.setScale(0.04f);
-        AxisRotation rot = AxisRotation.UP;
-        rot.setRotation((float) Math.toRadians(-90.0f));
-        bob.setRotation(rot.getQuatRotation());
-        bob.buildModelMatrix();
-        bob.setGameItemAnimation(new GameItem.GameItemAnimation(false, 0, 0));
-        scene.addGameItem(bob);
+        newtonCube = scene.getGameItemsByModelId("newton-cube").get(0);
+        cubeBody = newtonCube.getBody();
         
-        String monsterModelId = "monster-model";
-        ModelData monsterModelData = ModelLoader.loadModel(monsterModelId, ResourcePaths.Models.MONSTER_MD5MESH, 
-        		ResourcePaths.Models.MONSTER_DIR, true);
-        monsterMax = monsterModelData.getAnimationsList().get(0).frames().size();
-        modelDataList.add(monsterModelData);
-        monster = new GameItem("MonsterObject", monsterModelId);
-        monster.setScale(0.02f);
-        //rot.setRotation((float) Math.toRadians(-90.0f));
-        //monster.setRotation(rot.getQuatRotation());
-        monster.setPosition(-5f, 0f, 0f);
-        monster.buildModelMatrix();
-        monster.setGameItemAnimation(new GameItem.GameItemAnimation(false, 0, 0));
-        scene.addGameItem(monster);
-        
-        String newtonModelId = "newton-cube";
-        newtonCube = new GameItem("Cubby", newtonModelId);
-        newtonCube.setPosition(-2.5f, 2.5f, 0f);
-        newtonCube.buildModelMatrix();
-        ModelData.Material newtonMaterial = new ModelData.Material(ResourcePaths.Textures.THIS_PIC_GOES_HARD);
-        SegmentAllocator allocator = SegmentAllocator.nativeAllocator(gameScope);
-        NewtonCollision boxCollision = NewtonBox.create(world, 1f, 1f, 1f, 0, null, allocator);
-        NewtonMesh mesh = NewtonMesh.createFromCollision(boxCollision);
-        Matrix4f cubeMatrix = new Matrix4f();//newtonCube.buildModelMatrix();
-    	float[] matArr = new float[16];
-    	cubeMatrix.transpose();
-    	cubeMatrix.get(matArr);
-    	cubeBody = NewtonDynamicBody.create(world, boxCollision, matArr, allocator);
-    	cubeBody.setMassMatrix(10f, 0f, 0f, 0f);
-    	cubeBody.setForceAndTorqueCallback((bodyPtr, timestep, threadIndex) -> {
-    		NewtonBody body = NewtonBody.wrap(bodyPtr);
-    		float[] mass = body.getMass();
-    		float[] newMass = new float[] {0f, mass[0] * -9.8f, 0f};
-    		body.setForce(newMass);
-    	}, gameScope);
-    	Matrix4f matrix = new Matrix4f();
-    	matrix.identity();
-    	matrix.transpose();
-    	matrix.get(matArr);
-        mesh.applyBoxMapping(0, 0, 0, matArr);
-        List<ModelData.Material> newtonMaterials = new ArrayList<ModelData.Material>();
-        newtonMaterials.add(newtonMaterial);
-        ModelData newtonCubeData = PhysUtils.convertToModelData(mesh, newtonModelId, newtonMaterials);
-        modelDataList.add(newtonCubeData);
-        scene.addGameItem(newtonCube);
-        boxCollision.destroy();
-        mesh.destroy();
-
-        vkRenderer.loadModels(modelDataList);
-        vkRenderer.loadAnimation(bob);
-        vkRenderer.loadAnimation(monster);
+        String skyboxId = "skyboxModel";
+        ModelData skyboxModel = ModelLoader.loadModel(skyboxId, ResourcePaths.Models.SKYBOX_OBJ, 
+        		ResourcePaths.Textures.TEXTURE_DIR, false);
+        skyboxModel.getMaterialList().set(0, new ModelData.Material(ResourcePaths.Textures.SKYBOX_TEXTURE));
+        skybox = new SkyBox(skyboxModel, scene, vkRenderer);
         
         camera.setPosition(-6.0f, 2.0f, 0.0f);
         camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
@@ -321,6 +260,10 @@ public class Game implements IGameLogic {
             monster.getGameItemAnimation().setStarted(!monster.getGameItemAnimation().isStarted());
         }
         
+        if (window.isKeyPressed(GLFW_KEY_F)) {
+        	updatePhysics = !updatePhysics;
+        }
+        
         lightAngle += angleInc;
         if (lightAngle < 0) {
             lightAngle = 0;
@@ -328,25 +271,28 @@ public class Game implements IGameLogic {
             lightAngle = 180;
         }
         updateDirectionalLight();
-        
+        /*
         GameItem.GameItemAnimation itemAnimation = bob.getGameItemAnimation();
         if (itemAnimation.isStarted()) {
-            int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, maxFrames);
+            int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, itemAnimation.maxFrames);
             itemAnimation.setCurrentFrame(currentFrame);
         }
         
         itemAnimation = monster.getGameItemAnimation();
         if (itemAnimation.isStarted()) {
-            int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, monsterMax);
+            int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, itemAnimation.maxFrames);
             itemAnimation.setCurrentFrame(currentFrame);
-        }
+        }*/
     }
 
     @Override
     public void update(double interval, Window window) {
-    	world.update((float) interval);
-    	float[] position = cubeBody.getPosition();
-    	newtonCube.setPosition(position[0], position[1], position[2]);
+    	if (updatePhysics) {
+    		world.update((float) interval);
+        	float[] position = cubeBody.getPosition();
+        	newtonCube.setPosition(position[0], position[1], position[2]);
+        	newtonCube.buildModelMatrix();
+    	}
     	MouseInput mouseInput = window.getMouseInput();
     	// Update camera based on mouse            
         if (mouseInput.isRightButtonPressed()) {
@@ -401,6 +347,10 @@ public class Game implements IGameLogic {
         }
     }
     
+    public void setLevel(LevelLoader.Levels level) {
+    	curLevel = level;
+    }
+    
     private void updateDirectionalLight() {
         float zValue = (float) Math.cos(Math.toRadians(lightAngle));
         float yValue = (float) Math.sin(Math.toRadians(lightAngle));
@@ -410,13 +360,5 @@ public class Game implements IGameLogic {
         lightDirection.z = zValue;
         lightDirection.normalize();
         lightDirection.w = 0.0f;
-    }
-    
-    public static String arrToString(float[] arr) {
-    	String result = "";
-    	for (int i = 0; i < arr.length; i++) {
-    		result = result + ":" + arr[i] + ":";
-    	}
-    	return result;
     }
 }

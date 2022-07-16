@@ -1,6 +1,5 @@
 package main.engine;
 
-import main.engine.graphics.Renderer;
 import main.engine.graphics.vulkan.VKRenderer;
 
 public class GameEngine implements Runnable {
@@ -15,7 +14,7 @@ public class GameEngine implements Runnable {
 
     private final IGameLogic gameLogic;
     
-    private final Renderer renderer;
+    private final VKRenderer renderer;
     
     private double lastFps;
     

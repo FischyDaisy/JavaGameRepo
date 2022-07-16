@@ -1,10 +1,10 @@
 package main.engine;
 
-import main.engine.graphics.Renderer;
+import main.engine.graphics.vulkan.VKRenderer;
 
 public interface IGameLogic {
 	
-	void init(Window window, Scene scene, Renderer renderer) throws Exception;
+	void init(Window window, Scene scene, VKRenderer renderer) throws Exception;
     
     void input(Window window, Scene scene, long diffTimeMillis);
 

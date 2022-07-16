@@ -4,11 +4,14 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import crab.newton.NewtonBody;
 import main.engine.graphics.Transformation;
 
 public class GameItem {
 	
 	private GameItemAnimation gameItemAnimation;
+	
+	private NewtonBody body;
 	
 	private String id;
 	
@@ -36,6 +39,7 @@ public class GameItem {
         textPos = 0;
         insideFrustum = true;
         disableFrustumCulling = false;
+        body = null;
     }
     
     public GameItem(String id, String modelId) {
@@ -50,6 +54,14 @@ public class GameItem {
 
     public void setGameItemAnimation(GameItemAnimation entityAnimation) {
         this.gameItemAnimation = entityAnimation;
+    }
+    
+    public NewtonBody getBody() {
+    	return body;
+    }
+    
+    public void setBody(NewtonBody body) {
+    	this.body = body;
     }
 
     public boolean hasAnimation() {
@@ -180,11 +192,14 @@ public class GameItem {
         private int animationIdx;
         private int currentFrame;
         private boolean started;
+        
+        public final int maxFrames;
 
-        public GameItemAnimation(boolean started, int animationIdx, int currentFrame) {
+        public GameItemAnimation(boolean started, int animationIdx, int currentFrame, int maxFrames) {
             this.started = started;
             this.animationIdx = animationIdx;
             this.currentFrame = currentFrame;
+            this.maxFrames = maxFrames;
         }
 
         public int getAnimationIdx() {

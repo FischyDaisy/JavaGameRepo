@@ -10,7 +10,6 @@ import main.engine.Scene;
 import main.engine.Window;
 import main.engine.graphics.IHud;
 import main.engine.graphics.ModelData;
-import main.engine.graphics.Renderer;
 import main.engine.graphics.camera.Camera;
 import main.engine.graphics.hud.Calculator;
 import main.engine.graphics.hud.Demo;
@@ -22,7 +21,7 @@ import main.engine.graphics.vulkan.nuklear.NuklearRenderActivity;
 import main.engine.graphics.vulkan.shadows.ShadowRenderActivity;
 import main.engine.items.GameItem;
 
-public class VKRenderer implements Renderer {
+public class VKRenderer {
 	
 	private static final EngineProperties engProps = EngineProperties.getInstance();
 	
@@ -89,7 +88,7 @@ public class VKRenderer implements Renderer {
         geometryRenderActivity.submit(graphQueue);
         commandBuffer = lightingRenderActivity.beginRecording(shadowRenderActivity.getShadowCascades());
         lightingRenderActivity.recordCommandBuffer(commandBuffer);
-        nuklearRenderActivity.recordCommandBuffer(scene, commandBuffer);
+        nuklearRenderActivity.recordCommandBuffer(commandBuffer);
         lightingRenderActivity.endRecording(commandBuffer);
         lightingRenderActivity.submit(graphQueue);
 
@@ -123,6 +122,9 @@ public class VKRenderer implements Renderer {
 	}
 	
 	public void loadSkyBox(ModelData skybox) throws Exception {
+		vulkanModels.addAll(VulkanModel.transformModels(List.of(skybox), textureCache, commandPool, graphQueue));
+		geometryRenderActivity.registerModels(vulkanModels);
+        animationComputeActivity.registerModels(vulkanModels);
 	}
 	
 	public void loadParticles(List<ModelData> modelDataList, int maxParticles) throws Exception {

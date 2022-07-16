@@ -89,6 +89,14 @@ public class Scene {
         return instancedModelMap.get(modelId);
     }
     
+    public void clearGameItemsByModelId(String modelId) {
+    	modelMap.get(modelId).clear();
+    }
+    
+    public void clearInstancedGameItemsByModelId(String modelId) {
+    	instancedModelMap.get(modelId).clear();
+    }
+    
     public void cleanup() {
         if (particleEmitters != null) {
             for (IParticleEmitter particleEmitter : particleEmitters) {
