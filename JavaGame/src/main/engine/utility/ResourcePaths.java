@@ -75,6 +75,10 @@ public class ResourcePaths {
 			public static final String SHADOW_GEOMETRY_SPV = SHADOW_GEOMETRY_GLSL + ".spv";
 			public static final String SHADOW_VERTEX_GLSL = "resources|shaders|vulkan|shadow_vertex.glsl".replace('|', File.separatorChar);
 			public static final String SHADOW_VERTEX_SPV = SHADOW_VERTEX_GLSL + ".spv";
+			public static final String SKYBOX_FRAGMENT_GLSL = "resources|shaders|vulkan|skybox_fragment.glsl".replace('|', File.separatorChar);
+			public static final String SKYBOX_FRAGMENT_SPV = SKYBOX_FRAGMENT_GLSL + ".spv";
+			public static final String SKYBOX_VERTEX_GLSL = "resources|shaders|vulkan|skybox_vertex.glsl".replace('|', File.separatorChar);
+			public static final String SKYBOX_VERTEX_SPV = SKYBOX_VERTEX_GLSL + ".spv";
 		}
 	}
 	

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Matrix4f;
+import org.tinylog.Logger;
 
 import jdk.incubator.foreign.*;
 import crab.newton.NewtonBody;
@@ -55,7 +56,7 @@ public class LevelLoader {
     	cubeBody.setForceAndTorqueCallback((bodyPtr, timestep, threadIndex) -> {
     		NewtonBody body = NewtonBody.wrap(bodyPtr);
     		float[] mass = body.getMass();
-    		float[] newMass = new float[] {0f, mass[0] * -9.8f, 0f};
+    		float[] newMass = new float[] {0f, mass[0] * -1.0f, 0f};
     		body.setForce(newMass);
     	}, scope);
     	newtonCube.setBody(cubeBody);

@@ -8,7 +8,7 @@ public class GameEngine implements Runnable {
     
     private Scene scene;
     
-    private static final EngineProperties engineProperties = EngineProperties.getInstance();
+    private static final EngineProperties engineProperties = EngineProperties.INSTANCE;
 
     private final Window window;
 
@@ -61,9 +61,9 @@ public class GameEngine implements Runnable {
             deltaU += (currentTime - initialTime) / timeU;
             initialTime = currentTime;
 
-            gameLogic.input(window, scene, currentTime - updateTime);
             if (deltaU >= 1) {
-                gameLogic.update(timeU, window);
+            	long diffTimeNanos = currentTime - updateTime;
+                gameLogic.inputAndUpdate(window, scene, diffTimeNanos);
                 updateTime = currentTime;
                 deltaU--;
             }
@@ -74,7 +74,7 @@ public class GameEngine implements Runnable {
                 fps = 0;
             }
             fps++;
-            gameLogic.render(window, scene);
+            renderer.render(window, scene);
             if (!engineProperties.useVulkan()) {
             	window.swapBuffers();
             }
@@ -102,15 +102,6 @@ public class GameEngine implements Runnable {
             	System.out.println("Failed to sync");
             }
         }
-    }
-
-    protected void update(float interval) {
-    	gameLogic.update(interval, window);
-    }
-
-    protected void render() {
-        gameLogic.render(window, scene);
-        window.update();
     }
     
     public void start() {

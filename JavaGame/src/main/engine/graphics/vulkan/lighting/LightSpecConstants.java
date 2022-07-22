@@ -15,7 +15,7 @@ public class LightSpecConstants {
     private final VkSpecializationInfo specInfo;
 
     public LightSpecConstants() {
-    	EngineProperties engineProperties = EngineProperties.getInstance();
+    	EngineProperties engineProperties = EngineProperties.INSTANCE;
         data = MemoryUtil.memAlloc(GraphConstants.INT_SIZE_BYTES * 4 + GraphConstants.FLOAT_SIZE_BYTES);
         data.putInt(GraphConstants.MAX_LIGHTS);
         data.putInt(GraphConstants.SHADOW_MAP_CASCADE_COUNT);

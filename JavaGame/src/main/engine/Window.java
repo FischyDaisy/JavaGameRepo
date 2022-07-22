@@ -64,7 +64,7 @@ public class Window {
     
     private final Map<Integer, Integer> keyMap;
     
-    private final EngineProperties props = EngineProperties.getInstance();
+    private final EngineProperties props = EngineProperties.INSTANCE;
 
     private int width;
 

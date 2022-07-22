@@ -155,7 +155,7 @@ public class LightingRenderActivity {
     }
 
     private void createShaders() {
-        EngineProperties engineProperties = EngineProperties.getInstance();
+        EngineProperties engineProperties = EngineProperties.INSTANCE;
         if (engineProperties.isShaderRecompilation()) {
             ShaderCompiler.compileShaderIfChanged(Shaders.Vulkan.LIGHTING_VERTEX_GLSL, Shaderc.shaderc_glsl_vertex_shader);
             ShaderCompiler.compileShaderIfChanged(Shaders.Vulkan.LIGHTING_FRAGMENT_GLSL, Shaderc.shaderc_glsl_fragment_shader);

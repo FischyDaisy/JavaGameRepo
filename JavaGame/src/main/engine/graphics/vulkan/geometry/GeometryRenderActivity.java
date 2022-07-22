@@ -116,7 +116,7 @@ public class GeometryRenderActivity {
     }
 
     private void createDescriptorPool() {
-        EngineProperties engineProps = EngineProperties.getInstance();
+        EngineProperties engineProps = EngineProperties.INSTANCE;
         List<DescriptorPool.DescriptorTypeCount> descriptorTypeCounts = new ArrayList<>();
         descriptorTypeCounts.add(new DescriptorPool.DescriptorTypeCount(swapChain.getNumImages() + 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER));
         descriptorTypeCounts.add(new DescriptorPool.DescriptorTypeCount(engineProps.getMaxMaterials() * 3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER));
@@ -137,7 +137,7 @@ public class GeometryRenderActivity {
                 materialDescriptorSetLayout
         };
 
-        EngineProperties engineProps = EngineProperties.getInstance();
+        EngineProperties engineProps = EngineProperties.INSTANCE;
         descriptorSetMap = new HashMap<>();
         textureSampler = new TextureSampler(device, 1);
         projMatrixUniform = new VulkanBuffer(device, GraphConstants.MAT4X4_SIZE_BYTES, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
@@ -168,7 +168,7 @@ public class GeometryRenderActivity {
     }
 
     private void createShaders() {
-        EngineProperties engineProperties = EngineProperties.getInstance();
+        EngineProperties engineProperties = EngineProperties.INSTANCE;
         if (engineProperties.isShaderRecompilation()) {
             ShaderCompiler.compileShaderIfChanged(Shaders.Vulkan.GEOMETRY_VERTEX_GLSL, Shaderc.shaderc_glsl_vertex_shader);
             ShaderCompiler.compileShaderIfChanged(Shaders.Vulkan.GEOMETRY_FRAGMENT_GLSL, Shaderc.shaderc_glsl_fragment_shader);
@@ -183,9 +183,21 @@ public class GeometryRenderActivity {
     public void endRecording(CommandBuffer commandBuffer) {
         commandBuffer.endRecording();
     }
+    
+    public void endRenderPass(CommandBuffer commandBuffer) {
+    	vkCmdEndRenderPass(commandBuffer.getVkCommandBuffer());
+    }
 
     public List<Attachment> getAttachments() {
         return geometryFrameBuffer.geometryAttachments().getAttachments();
+    }
+    
+    public int getMaterialSize() {
+    	return materialSize;
+    }
+    
+    public GeometryFrameBuffer getFrameBuffer() {
+    	return geometryFrameBuffer;
     }
 
     public void recordCommandBuffer(CommandBuffer commandBuffer, List<VulkanModel> vulkanModelList,
@@ -250,7 +262,7 @@ public class GeometryRenderActivity {
 
             recordGameItems(stack, cmdHandle, descriptorSets, vulkanModelList, gameItemAnimationsBuffers);
 
-            vkCmdEndRenderPass(cmdHandle);
+            //vkCmdEndRenderPass(cmdHandle);
         }
     }
 

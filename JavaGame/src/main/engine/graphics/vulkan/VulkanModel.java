@@ -177,6 +177,96 @@ public class VulkanModel implements IModel{
                 hasNormalMapTexture, metalRoughTexture, hasMetalRoughTexture, material.metallicFactor(),
                 material.roughnessFactor(), new ArrayList<VulkanMesh>());
     }
+    
+    public static VulkanModel transformModel(ModelData modelData, VKTextureCache textureCache, 
+    		CommandPool commandPool, Queue queue) {
+    	Device device = commandPool.getDevice();
+        CommandBuffer cmd = new CommandBuffer(commandPool, true, true);
+        List<VulkanBuffer> stagingBufferList = new ArrayList<>();
+        List<VKTexture> textureList = new ArrayList<>();
+        
+        cmd.beginRecording();
+        
+        VulkanModel vulkanModel = new VulkanModel(modelData.getModelId());
+
+        // Create textures defined for the materials
+        VulkanMaterial defaultVulkanMaterial = null;
+        for (ModelData.Material material : modelData.getMaterialList()) {
+            VulkanMaterial vulkanMaterial = transformMaterial(material, device, textureCache, cmd, textureList);
+            vulkanModel.vulkanMaterialList.add(vulkanMaterial);
+        }
+        
+        List<ModelData.Animation> animationsList = modelData.getAnimationsList();
+        boolean hasAnimation = animationsList != null && !animationsList.isEmpty();
+        if (hasAnimation) {
+            vulkanModel.animationList = new ArrayList<>();
+            for (ModelData.Animation animation : animationsList) {
+                List<VulkanBuffer> vulkanFrameBufferList = new ArrayList<>();
+                VulkanAnimation vulkanAnimation = new VulkanAnimation(animation.name(), vulkanFrameBufferList);
+                vulkanModel.animationList.add(vulkanAnimation);
+                List<ModelData.AnimatedFrame> frameList = animation.frames();
+                for (ModelData.AnimatedFrame frame : frameList) {
+                    TransferBuffers jointMatricesBuffers = createJointMatricesBuffers(device, frame);
+                    stagingBufferList.add(jointMatricesBuffers.srcBuffer());
+                    recordTransferCommand(cmd, jointMatricesBuffers);
+                    vulkanFrameBufferList.add(jointMatricesBuffers.dstBuffer);
+                }
+            }
+        }
+
+        // Transform meshes loading their data into GPU buffers
+        int meshCount = 0;
+        for (ModelData.MeshData meshData : modelData.getMeshDataList()) {
+            TransferBuffers verticesBuffers = createVerticesBuffers(device, meshData);
+            TransferBuffers indicesBuffers = createIndicesBuffers(device, meshData);
+            stagingBufferList.add(verticesBuffers.srcBuffer());
+            stagingBufferList.add(indicesBuffers.srcBuffer());
+            recordTransferCommand(cmd, verticesBuffers);
+            recordTransferCommand(cmd, indicesBuffers);
+            
+            TransferBuffers weightsBuffers = null;
+            List<ModelData.AnimMeshData> animMeshDataList = modelData.getAnimMeshDataList();
+            if (animMeshDataList != null && !animMeshDataList.isEmpty()) {
+                weightsBuffers = createWeightsBuffers(device, animMeshDataList.get(meshCount));
+                stagingBufferList.add(weightsBuffers.srcBuffer());
+                recordTransferCommand(cmd, weightsBuffers);
+            }
+
+            VulkanModel.VulkanMesh vulkanMesh = new VulkanModel.VulkanMesh(verticesBuffers.dstBuffer(),
+                    indicesBuffers.dstBuffer(), meshData.indices().length,
+                    weightsBuffers != null ? weightsBuffers.dstBuffer() : null);
+
+            VulkanMaterial vulkanMaterial;
+            int materialIdx = meshData.materialIdx();
+            if (materialIdx >= 0 && materialIdx < vulkanModel.vulkanMaterialList.size()) {
+                vulkanMaterial = vulkanModel.vulkanMaterialList.get(materialIdx);
+            } else {
+                if (defaultVulkanMaterial == null) {
+                    defaultVulkanMaterial = transformMaterial(new ModelData.Material(), device, textureCache, cmd, textureList);
+                }
+                vulkanMaterial = defaultVulkanMaterial;
+            }
+            vulkanMaterial.vulkanMeshList.add(vulkanMesh);
+            meshCount++;
+        }
+        
+        List<VulkanMaterial> temp = new ArrayList<VulkanMaterial>(vulkanModel.vulkanMaterialList);
+        
+        for (VulkanMaterial material : temp) {
+        	if (material.vulkanMeshList.isEmpty()) {
+        		vulkanModel.vulkanMaterialList.remove(material);
+        	}
+        }
+        
+        cmd.endRecording();
+        cmd.submitAndWait(device, queue);
+        cmd.cleanup();
+
+        stagingBufferList.forEach(VulkanBuffer::cleanup);
+        textureList.forEach(VKTexture::cleanupStgBuffer);
+        
+        return vulkanModel;
+    }
 
     public static List<VulkanModel> transformModels(List<ModelData> modelDataList, VKTextureCache textureCache,
                                                     CommandPool commandPool, Queue queue) {

@@ -21,7 +21,7 @@ public class ShadowsFrameBuffer {
     	Logger.debug("Creating ShadowsFrameBuffer");
         try (MemoryStack stack = MemoryStack.stackPush()) {
             int usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-            EngineProperties engineProperties = EngineProperties.getInstance();
+            EngineProperties engineProperties = EngineProperties.INSTANCE;
             int shadowMapSize = engineProperties.getShadowMapSize();
             Image.ImageData imageData = new Image.ImageData().width(shadowMapSize).height(shadowMapSize).
                     usage(usage | VK_IMAGE_USAGE_SAMPLED_BIT).

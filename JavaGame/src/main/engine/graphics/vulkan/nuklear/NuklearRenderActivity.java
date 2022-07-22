@@ -201,7 +201,7 @@ public class NuklearRenderActivity {
     }
 
     private void createShaders() {
-        EngineProperties engineProperties = EngineProperties.getInstance();
+        EngineProperties engineProperties = EngineProperties.INSTANCE;
         if (engineProperties.isShaderRecompilation()) {
             ShaderCompiler.compileShaderIfChanged(Shaders.Vulkan.NUKLEAR_VERTEX_GLSL, Shaderc.shaderc_glsl_vertex_shader);
             ShaderCompiler.compileShaderIfChanged(Shaders.Vulkan.NUKLEAR_FRAGMENT_GLSL, Shaderc.shaderc_glsl_fragment_shader);
@@ -577,7 +577,6 @@ public class NuklearRenderActivity {
 	
 	public void resize(SwapChain swapChain) {
         this.swapChain = swapChain;
-        VkExtent2D swapChainExtent = swapChain.getSwapChainExtent();
     }
 	
 	private void updateBuffers(int idx) {

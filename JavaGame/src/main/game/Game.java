@@ -65,7 +65,7 @@ import jdk.incubator.foreign.*;
 
 public class Game implements IGameLogic {
 	
-	private static final EngineProperties engineProperties = EngineProperties.getInstance();
+	private static final EngineProperties engineProperties = EngineProperties.INSTANCE;
 	
 	private static final float MOUSE_SENSITIVITY = 0.2f;
 
@@ -103,7 +103,9 @@ public class Game implements IGameLogic {
     
     private GameItem[] gameItems;
     
-    private GameItem bob, monster, newtonCube, skybox;
+    private GameItem bob, monster, newtonCube;
+    
+    private SkyBox skybox;
     
     private NewtonBody cubeBody;
     
@@ -167,7 +169,9 @@ public class Game implements IGameLogic {
         ModelData skyboxModel = ModelLoader.loadModel(skyboxId, ResourcePaths.Models.SKYBOX_OBJ, 
         		ResourcePaths.Textures.TEXTURE_DIR, false);
         skyboxModel.getMaterialList().set(0, new ModelData.Material(ResourcePaths.Textures.SKYBOX_TEXTURE));
-        skybox = new SkyBox(skyboxModel, scene, vkRenderer);
+        skybox = new SkyBox(skyboxModel, window, scene, vkRenderer);
+        skybox.setScale(50f);
+        scene.setSkyBox(skybox);
         
         camera.setPosition(-6.0f, 2.0f, 0.0f);
         camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
@@ -187,7 +191,6 @@ public class Game implements IGameLogic {
     }
     
     private void setupSounds() throws Exception {
-        
         SoundBuffer buffFire = new SoundBuffer(ResourcePaths.Sounds.FIRE_OGG);
         soundMgr.addSoundBuffer(buffFire);
         SoundSource sourceFire = new SoundSource(true, false);
@@ -218,7 +221,7 @@ public class Game implements IGameLogic {
     }
 
     @Override
-    public void input(Window window, Scene scene, long diffTimeMillis) {
+    public void inputAndUpdate(Window window, Scene scene, long diffTimeNanos) {
     	sceneChanged = false;
     	vkRenderer.inputNuklear(window);
     	cameraInc.set(0, 0, 0);
@@ -283,12 +286,10 @@ public class Game implements IGameLogic {
             int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, itemAnimation.maxFrames);
             itemAnimation.setCurrentFrame(currentFrame);
         }*/
-    }
-
-    @Override
-    public void update(double interval, Window window) {
-    	if (updatePhysics) {
-    		world.update((float) interval);
+        
+        if (updatePhysics) {
+        	float diffTimeSeconds = (float) (diffTimeNanos / 1000000000f);
+    		world.update(diffTimeSeconds);
         	float[] position = cubeBody.getPosition();
         	newtonCube.setPosition(position[0], position[1], position[2]);
         	newtonCube.buildModelMatrix();
@@ -312,20 +313,6 @@ public class Game implements IGameLogic {
         }
         
         camera.updateViewMatrixQuat();
-    }
-
-    @Override
-    public void render(Window window, Scene scene) {
-    	if (firstTime) {
-            sceneChanged = true;
-            firstTime = false;
-        }
-    	this.scene = scene;
-    	vkRenderer.render(window, scene);
-        /*
-        if (gHud != null) {
-        	gHud.render(window);
-        }*/
     }
 
     @Override

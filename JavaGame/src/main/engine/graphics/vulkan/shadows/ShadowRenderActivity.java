@@ -93,7 +93,7 @@ public class ShadowRenderActivity {
     }
 
     private void createShaders() {
-        EngineProperties engineProperties = EngineProperties.getInstance();
+        EngineProperties engineProperties = EngineProperties.INSTANCE;
         if (engineProperties.isShaderRecompilation()) {
             ShaderCompiler.compileShaderIfChanged(Shaders.Vulkan.SHADOW_VERTEX_GLSL, Shaderc.shaderc_glsl_vertex_shader);
             ShaderCompiler.compileShaderIfChanged(Shaders.Vulkan.SHADOW_GEOMETRY_GLSL, Shaderc.shaderc_glsl_geometry_shader);
@@ -135,7 +135,7 @@ public class ShadowRenderActivity {
             VkClearValue.Buffer clearValues = VkClearValue.calloc(1, stack);
             clearValues.apply(0, v -> v.depthStencil().depth(1.0f));
 
-            EngineProperties engineProperties = EngineProperties.getInstance();
+            EngineProperties engineProperties = EngineProperties.INSTANCE;
             int shadowMapSize = engineProperties.getShadowMapSize();
             int width = shadowMapSize;
             int height = shadowMapSize;

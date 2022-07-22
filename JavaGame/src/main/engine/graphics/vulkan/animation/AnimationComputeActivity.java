@@ -73,7 +73,7 @@ public class AnimationComputeActivity {
     }
 
     private void createDescriptorPool() {
-        EngineProperties engineProperties = EngineProperties.getInstance();
+        EngineProperties engineProperties = EngineProperties.INSTANCE;
         int maxStorageBuffers = engineProperties.getMaxStorageBuffers();
         int maxJointsMatricesLists = engineProperties.getMaxJointsMatricesLists();
         List<DescriptorPool.DescriptorTypeCount> descriptorTypeCounts = new ArrayList<>();
@@ -100,7 +100,7 @@ public class AnimationComputeActivity {
     }
 
     private void createShaders() {
-        EngineProperties engineProperties = EngineProperties.getInstance();
+        EngineProperties engineProperties = EngineProperties.INSTANCE;
         if (engineProperties.isShaderRecompilation()) {
             ShaderCompiler.compileShaderIfChanged(Shaders.Vulkan.ANIMATION_COMPUTE_GLSL, Shaderc.shaderc_compute_shader);
         }

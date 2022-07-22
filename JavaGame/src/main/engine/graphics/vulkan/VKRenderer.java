@@ -19,11 +19,12 @@ import main.engine.graphics.vulkan.geometry.GeometryRenderActivity;
 import main.engine.graphics.vulkan.lighting.LightingRenderActivity;
 import main.engine.graphics.vulkan.nuklear.NuklearRenderActivity;
 import main.engine.graphics.vulkan.shadows.ShadowRenderActivity;
+import main.engine.graphics.vulkan.skybox.SkyboxRenderActivity;
 import main.engine.items.GameItem;
 
 public class VKRenderer {
 	
-	private static final EngineProperties engProps = EngineProperties.getInstance();
+	private static final EngineProperties engProps = EngineProperties.INSTANCE;
 	
 	private final AnimationComputeActivity animationComputeActivity;
 	private final CommandPool commandPool;
@@ -31,6 +32,7 @@ public class VKRenderer {
     private final GeometryRenderActivity geometryRenderActivity;
     private final LightingRenderActivity lightingRenderActivity;
     private final ShadowRenderActivity shadowRenderActivity;
+    private final SkyboxRenderActivity skyboxRenderActivity;
     private final NuklearRenderActivity nuklearRenderActivity;
     private final Queue.GraphicsQueue graphQueue;
     private final Instance instance;
@@ -42,6 +44,7 @@ public class VKRenderer {
     private final List<VulkanModel> vulkanModels;
     
     private SwapChain swapChain;
+    private VulkanModel skybox;
 	
 	public VKRenderer(Window window, Scene scene) throws Exception {
 		instance = new Instance(engProps.isValidate());
@@ -56,6 +59,8 @@ public class VKRenderer {
         pipelineCache = new PipelineCache(device);
         geometryRenderActivity = new GeometryRenderActivity(swapChain, commandPool, pipelineCache, scene, window);
         shadowRenderActivity = new ShadowRenderActivity(swapChain, pipelineCache, scene, window);
+        skyboxRenderActivity = new SkyboxRenderActivity(swapChain, pipelineCache, scene, window, 
+				geometryRenderActivity.getFrameBuffer().getRenderPass().getVkRenderPass(), geometryRenderActivity.getMaterialSize());
         List<Attachment> attachments = new ArrayList<>(geometryRenderActivity.getAttachments());
         attachments.add(shadowRenderActivity.getDepthAttachment());
         lightingRenderActivity = new LightingRenderActivity(swapChain, commandPool, pipelineCache, attachments, scene, window);
@@ -83,6 +88,8 @@ public class VKRenderer {
 
         CommandBuffer commandBuffer = geometryRenderActivity.beginRecording();
         geometryRenderActivity.recordCommandBuffer(commandBuffer, vulkanModels, animationComputeActivity.getGameItemAnimationsBuffers());
+        skyboxRenderActivity.recordCommandBuffer(commandBuffer, skybox);
+        geometryRenderActivity.endRenderPass(commandBuffer);
         shadowRenderActivity.recordCommandBuffer(commandBuffer, vulkanModels, animationComputeActivity.getGameItemAnimationsBuffers());
         geometryRenderActivity.endRecording(commandBuffer);
         geometryRenderActivity.submit(graphQueue);
@@ -108,6 +115,7 @@ public class VKRenderer {
         lightingRenderActivity.cleanup();
         animationComputeActivity.cleanup();
         shadowRenderActivity.cleanup();
+        skyboxRenderActivity.cleanup();
         geometryRenderActivity.cleanup();
         commandPool.cleanup();
         swapChain.cleanup();
@@ -121,10 +129,12 @@ public class VKRenderer {
 		nuklearRenderActivity.input(window);
 	}
 	
-	public void loadSkyBox(ModelData skybox) throws Exception {
-		vulkanModels.addAll(VulkanModel.transformModels(List.of(skybox), textureCache, commandPool, graphQueue));
-		geometryRenderActivity.registerModels(vulkanModels);
-        animationComputeActivity.registerModels(vulkanModels);
+	public void loadSkyBox(ModelData skyboxModelData, Window window, Scene scene) throws Exception {
+		if (skybox != null) {
+			skybox.cleanup();
+		}
+		skybox = VulkanModel.transformModel(skyboxModelData, textureCache, commandPool, graphQueue);
+		skyboxRenderActivity.registerModel(skybox);
 	}
 	
 	public void loadParticles(List<ModelData> modelDataList, int maxParticles) throws Exception {
@@ -179,9 +189,11 @@ public class VKRenderer {
         swapChain = new SwapChain(device, surface, window, engProps.getRequestedImages(),
                 engProps.isvSync());
         geometryRenderActivity.resize(swapChain);
+        skyboxRenderActivity.resize(swapChain);
         shadowRenderActivity.resize(swapChain);
         List<Attachment> attachments = new ArrayList<>(geometryRenderActivity.getAttachments());
         attachments.add(shadowRenderActivity.getDepthAttachment());
         lightingRenderActivity.resize(swapChain, attachments);
+        nuklearRenderActivity.resize(swapChain);
     }
 }

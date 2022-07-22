@@ -12,6 +12,7 @@ public class EngineProperties {
 	private static final int DEFAULT_MAX_JOINTS_MATRICES_LISTS = 100;
     private static final int DEFAULT_STORAGES_BUFFERS = 100;
 	private static final int DEFAULT_MAX_MATERIALS = 500;
+	private static final int DEFAULT_MAX_SKYBOX_MATERIALS = 10;
 	private static final int DEFAULT_REQUESTED_IMAGES = 3;
 	private static final float DEFAULT_SHADOW_BIAS = 0.00005f;
     private static final int DEFAULT_SHADOW_MAP_SIZE = 2048;
@@ -21,12 +22,12 @@ public class EngineProperties {
     private static final float DEFAULT_Z_NEAR = 0.01f;
     private static final String FILENAME = "eng.properties";
     private static final File PROP_FILE = new File(ResourcePaths.Engine.PROPERTIES);
-    private static EngineProperties instance;
     private String defaultTexturePath;
     private float fov;
     private int maxJointsMatricesLists;
     private int maxStorageBuffers;
     private int maxMaterials;
+    private int maxSkyboxMaterials;
     private String physDeviceName;
     private int requestedImages;
     private boolean shaderRecompilation;
@@ -42,6 +43,8 @@ public class EngineProperties {
     private float zFar;
     private float zNear;
     private boolean useDeferred;
+    
+    public static final EngineProperties INSTANCE = new EngineProperties();
 
     private EngineProperties() {
         // Singleton
@@ -65,6 +68,7 @@ public class EngineProperties {
             defaultTexturePath = props.getProperty("defaultTexturePath");
             useDeferred = Boolean.parseBoolean(props.getOrDefault("useDeferred", false).toString());
             maxMaterials = Integer.parseInt(props.getOrDefault("maxMaterials", DEFAULT_MAX_MATERIALS).toString());
+            maxSkyboxMaterials = Integer.parseInt(props.getOrDefault("maxSkyboxMaterials", DEFAULT_MAX_SKYBOX_MATERIALS).toString());
             shadowPcf = Boolean.parseBoolean(props.getOrDefault("shadowPcf", false).toString());
             shadowBias = Float.parseFloat(props.getOrDefault("shadowBias", DEFAULT_SHADOW_BIAS).toString());
             shadowMapSize = Integer.parseInt(props.getOrDefault("shadowMapSize", DEFAULT_SHADOW_MAP_SIZE).toString());
@@ -75,13 +79,6 @@ public class EngineProperties {
         	System.out.println("Could not read [" + FILENAME + "] properties file");
             //System.out.println(excp);
         }
-    }
-
-    public static synchronized EngineProperties getInstance() {
-        if (instance == null) {
-            instance = new EngineProperties();
-        }
-        return instance;
     }
     
     public String getDefaultTexturePath() {
@@ -134,6 +131,10 @@ public class EngineProperties {
     
     public int getMaxMaterials() {
         return maxMaterials;
+    }
+    
+    public int getMaxSkyboxMaterials() {
+    	return maxSkyboxMaterials;
     }
     
     public boolean isShaderRecompilation() {
