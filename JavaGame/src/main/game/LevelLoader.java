@@ -1,6 +1,7 @@
 package main.game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.joml.Matrix4f;
@@ -42,17 +43,23 @@ public class LevelLoader {
 		String newtonModelId = "newton-cube";
         GameItem newtonCube = new GameItem("Cubby", newtonModelId);
         newtonCube.setPosition(-2.5f, 2.5f, 0f);
-        newtonCube.buildModelMatrix();
+        //newtonCube.buildModelMatrix();
         ModelData.Material newtonMaterial = new ModelData.Material(ResourcePaths.Textures.THIS_PIC_GOES_HARD);
         SegmentAllocator allocator = SegmentAllocator.nativeAllocator(scope);
         NewtonCollision boxCollision = NewtonBox.create(world, 1f, 1f, 1f, 0, null, allocator);
         NewtonMesh mesh = NewtonMesh.createFromCollision(boxCollision);
-        Matrix4f cubeMatrix = new Matrix4f();//newtonCube.buildModelMatrix();
+        Matrix4f cubeMatrix = newtonCube.buildModelMatrix();
     	float[] matArr = new float[16];
-    	cubeMatrix.transpose();
+    	//cubeMatrix.transpose();
     	cubeMatrix.get(matArr);
+    	//cubeMatrix.transpose();
     	NewtonBody cubeBody = NewtonDynamicBody.create(world, boxCollision, matArr, allocator);
-    	cubeBody.setMassMatrix(0.25f, 0f, 0f, 0f);
+    	Logger.debug("GameItem Matrix Array: {}", Arrays.toString(matArr));
+    	Logger.debug("Newton Body Initial Position: {}", Arrays.toString(cubeBody.getPosition()));
+    	float[] inertiaOrigin = boxCollision.calculateInertiaMatrix();
+    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
+    	cubeBody.setMassMatrix(0.25f, 0.25f * inertiaOrigin[0], 0.25f * inertiaOrigin[1], 0.25f * inertiaOrigin[2]);
+    	cubeBody.setCenterOfMass(origin);
     	cubeBody.setForceAndTorqueCallback((bodyPtr, timestep, threadIndex) -> {
     		NewtonBody body = NewtonBody.wrap(bodyPtr);
     		float[] mass = body.getMass();
