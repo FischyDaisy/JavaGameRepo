@@ -1,6 +1,7 @@
 package main.engine;
 
 import main.engine.graphics.vulkan.VKRenderer;
+import main.engine.scene.Scene;
 
 public class GameEngine implements Runnable {
     

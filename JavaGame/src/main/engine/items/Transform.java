@@ -133,9 +133,8 @@ public class Transform {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof Transform)) return false;
-		Transform tr = (Transform)obj;
-		return rotation.equals(tr.rotation) && position.equals(tr.position);
+		return obj instanceof Transform tr &&
+				rotation.equals(tr.rotation) && position.equals(tr.position);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package main.engine;
+package main.engine.scene;
 
 import java.util.Arrays;
 import java.util.Optional;

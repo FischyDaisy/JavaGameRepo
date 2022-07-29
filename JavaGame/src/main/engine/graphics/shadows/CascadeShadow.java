@@ -2,9 +2,9 @@ package main.engine.graphics.shadows;
 
 import org.joml.*;
 
-import main.engine.Scene;
 import main.engine.Window;
 import main.engine.graphics.GraphConstants;
+import main.engine.scene.Scene;
 
 import java.util.List;
 

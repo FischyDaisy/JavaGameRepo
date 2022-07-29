@@ -6,7 +6,6 @@ import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.*;
 
 import main.engine.EngineProperties;
-import main.engine.Scene;
 import main.engine.Window;
 import main.engine.graphics.GraphConstants;
 import main.engine.graphics.shadows.CascadeShadow;
@@ -14,6 +13,7 @@ import main.engine.graphics.vulkan.*;
 import main.engine.graphics.vulkan.animation.AnimationComputeActivity;
 import main.engine.graphics.vulkan.geometry.GeometryAttachments;
 import main.engine.items.GameItem;
+import main.engine.scene.Scene;
 import main.engine.utility.ResourcePaths.Shaders;
 
 import java.nio.*;

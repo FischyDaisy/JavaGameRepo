@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import main.engine.EngineProperties;
-import main.engine.Scene;
 import main.engine.Window;
 import main.engine.graphics.IHud;
 import main.engine.graphics.ModelData;
@@ -21,6 +20,7 @@ import main.engine.graphics.vulkan.nuklear.NuklearRenderActivity;
 import main.engine.graphics.vulkan.shadows.ShadowRenderActivity;
 import main.engine.graphics.vulkan.skybox.SkyboxRenderActivity;
 import main.engine.items.GameItem;
+import main.engine.scene.Scene;
 
 public class VKRenderer {
 	
@@ -69,7 +69,7 @@ public class VKRenderer {
                 lightingRenderActivity.getLightingFrameBuffer().getLightingRenderPass().getVkRenderPass(), window);
         nuklearRenderActivity.setElements(new NKHudElement[] {new Demo(), new Calculator()});
         vulkanModels = new ArrayList<>();
-        textureCache = VKTextureCache.getInstance();
+        textureCache = VKTextureCache.INSTANCE;
 	}
 
 	public void render(Window window, Scene scene) {

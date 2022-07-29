@@ -35,12 +35,12 @@ import org.lwjgl.vulkan.*;
 
 import main.engine.EngineProperties;
 import main.engine.MouseInput;
-import main.engine.Scene;
 import main.engine.Window;
 import main.engine.graphics.GraphConstants;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.hud.NKHudElement;
 import main.engine.graphics.vulkan.*;
+import main.engine.scene.Scene;
 import main.engine.utility.ResourcePaths;
 import main.engine.utility.Utils;
 

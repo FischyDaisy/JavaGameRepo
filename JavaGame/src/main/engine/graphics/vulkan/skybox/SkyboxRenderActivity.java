@@ -42,6 +42,7 @@ import main.engine.graphics.vulkan.animation.AnimationComputeActivity;
 import main.engine.graphics.vulkan.geometry.*;
 import main.engine.items.GameItem;
 import main.engine.items.SkyBox;
+import main.engine.scene.Scene;
 import main.engine.utility.ResourcePaths.Shaders;
 
 public class SkyboxRenderActivity {

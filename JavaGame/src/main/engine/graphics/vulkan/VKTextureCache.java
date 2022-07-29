@@ -6,17 +6,10 @@ import main.engine.utility.ResourcePaths;
 
 public class VKTextureCache extends Cache<VKTexture> {
 	
-	private static VKTextureCache instance;
+	public static final VKTextureCache INSTANCE = new VKTextureCache();
 	
 	private VKTextureCache() {
 		super();
-	}
-	
-	public static synchronized VKTextureCache getInstance() {
-		if (instance == null) {
-    		instance = new VKTextureCache();
-    	}
-    	return instance;
 	}
 
 	@Override

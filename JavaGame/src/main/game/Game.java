@@ -25,8 +25,6 @@ import main.engine.EngineProperties;
 import main.engine.GameEngine;
 import main.engine.IGameLogic;
 import main.engine.MouseInput;
-import main.engine.Scene;
-import main.engine.SceneLight;
 import main.engine.Window;
 import main.engine.graphics.IHud;
 import main.engine.graphics.ModelData;
@@ -52,6 +50,9 @@ import main.engine.items.SkyBox;
 import main.engine.loaders.assimp.ModelLoader;
 import main.engine.physics.NewtonLoader;
 import main.engine.physics.PhysUtils;
+import main.engine.scene.Level;
+import main.engine.scene.Scene;
+import main.engine.scene.SceneLight;
 import main.engine.sound.SoundBuffer;
 import main.engine.sound.SoundListener;
 import main.engine.sound.SoundManager;
@@ -119,7 +120,7 @@ public class Game implements IGameLogic {
     
     private NewtonWorld world;
     
-    private LevelLoader.Levels curLevel;
+    private final Level[] levels;
     
     public Game() {
         camera = new Camera();
@@ -128,7 +129,7 @@ public class Game implements IGameLogic {
         angleInc = 0;
         lightAngle = 45;
         firstTime = true;
-        curLevel = LevelLoader.Levels.NEWTONPLAYGROUND;
+        levels = new Level[] {new NewtonDemo(), new Sponza()};
     }
     
     public static void main(String[] args) {
@@ -160,7 +161,7 @@ public class Game implements IGameLogic {
         
         vkRenderer = renderer;
     	
-        LevelLoader.loadLevel(curLevel, scene, vkRenderer, world, gameScope);
+        levels[0].load(scene, renderer, world, gameScope);;
         
         newtonCube = scene.getGameItemsByModelId("newton-cube").get(0);
         cubeBody = newtonCube.getBody();
@@ -170,7 +171,7 @@ public class Game implements IGameLogic {
         		ResourcePaths.Textures.TEXTURE_DIR, false);
         skyboxModel.getMaterialList().set(0, new ModelData.Material(ResourcePaths.Textures.SKYBOX_TEXTURE));
         skybox = new SkyBox(skyboxModel, window, scene, vkRenderer);
-        skybox.setScale(50f);
+        skybox.setScale(200f);
         scene.setSkyBox(skybox);
         
         camera.setPosition(-6.0f, 2.0f, 0.0f);
@@ -290,9 +291,10 @@ public class Game implements IGameLogic {
         if (updatePhysics) {
         	float diffTimeSeconds = (float) (diffTimeNanos / 1000000000f);
     		world.update(diffTimeSeconds);
-        	float[] position = cubeBody.getPosition();
-        	newtonCube.setPosition(position[0], position[1], position[2]);
-        	newtonCube.buildModelMatrix();
+        	float[] matArr = cubeBody.getMatrix();
+        	Matrix4f matrix = new Matrix4f();
+        	matrix.set(matArr);
+        	newtonCube.setMatrix(matrix);
     	}
     	MouseInput mouseInput = window.getMouseInput();
     	// Update camera based on mouse            
@@ -332,10 +334,6 @@ public class Game implements IGameLogic {
         if (world != null) {
         	world.destroy();
         }
-    }
-    
-    public void setLevel(LevelLoader.Levels level) {
-    	curLevel = level;
     }
     
     private void updateDirectionalLight() {

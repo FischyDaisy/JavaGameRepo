@@ -5,12 +5,12 @@ import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.VkCommandBuffer;
 
 import main.engine.EngineProperties;
-import main.engine.Scene;
 import main.engine.utility.ResourcePaths.Shaders;
 import main.engine.graphics.GraphConstants;
 import main.engine.graphics.vulkan.*;
 import main.engine.graphics.vulkan.Queue;
 import main.engine.items.GameItem;
+import main.engine.scene.Scene;
 
 import java.nio.LongBuffer;
 import java.util.*;
