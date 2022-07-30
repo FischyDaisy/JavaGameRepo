@@ -9,6 +9,7 @@ import main.engine.graphics.ModelData;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.items.GameItem;
 import main.engine.loaders.assimp.ModelLoader;
+import main.engine.physics.Physics;
 import main.engine.scene.Level;
 import main.engine.scene.Scene;
 import main.engine.utility.AxisRotation;
@@ -17,7 +18,7 @@ import main.engine.utility.ResourcePaths;
 public class Sponza implements Level {
 
 	@Override
-	public void load(Scene scene, VKRenderer renderer, NewtonWorld world, ResourceScope scope) throws Exception {
+	public void load(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, ResourceScope scope) throws Exception {
 		List<ModelData> modelDataList = new ArrayList<>();
 
     	String sponzaModelId = "sponza-model";

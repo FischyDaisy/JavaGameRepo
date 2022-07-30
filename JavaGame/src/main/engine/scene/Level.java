@@ -2,6 +2,7 @@ package main.engine.scene;
 
 import crab.newton.NewtonWorld;
 import main.engine.graphics.vulkan.VKRenderer;
+import main.engine.physics.Physics;
 import jdk.incubator.foreign.*;
 
 /**
@@ -22,5 +23,5 @@ public interface Level {
 	 * @param world
 	 * @param scope
 	 */
-	public void load(final Scene scene, final VKRenderer renderer, final NewtonWorld world, final ResourceScope scope) throws Exception;
+	public void load(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, ResourceScope scope) throws Exception;
 }

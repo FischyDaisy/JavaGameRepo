@@ -120,6 +120,10 @@ public class Window {
             }
 
             glfwSetFramebufferSizeCallback(windowHandle, (window, width, height) -> resize(width, height));
+            
+            glfwSetCharCallback(windowHandle, (window, codepoint) -> {
+        		codePointList.add(codepoint);
+        	});
 
             glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
                 if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
@@ -128,6 +132,7 @@ public class Window {
                 if (keyCallback != null) {
                     keyCallback.invoke(window, key, scancode, action, mods);
                 }
+                keyMap.put(key, action);
             });
         } else { // Use OpenGL
         	// Setup an error callback. The default implementation
@@ -314,10 +319,6 @@ public class Window {
         glfwPollEvents();
         mouseInput.input();
     }
-    
-    public void swapBuffers() {
-    	glfwSwapBuffers(windowHandle);
-    }
 
     public boolean isResized() {
         return resized;
@@ -339,11 +340,6 @@ public class Window {
 
     public void setvSync(boolean vSync) {
         this.vSync = vSync;
-    }
-
-    public void update() {
-        glfwSwapBuffers(windowHandle);
-        glfwPollEvents();
     }
     
     public void cleanup() {

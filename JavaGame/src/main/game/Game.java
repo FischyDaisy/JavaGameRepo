@@ -48,8 +48,8 @@ import main.engine.items.GameItem.GameItemAnimation;
 import main.engine.items.Portal;
 import main.engine.items.SkyBox;
 import main.engine.loaders.assimp.ModelLoader;
-import main.engine.physics.NewtonLoader;
 import main.engine.physics.PhysUtils;
+import main.engine.physics.Physics;
 import main.engine.scene.Level;
 import main.engine.scene.Scene;
 import main.engine.scene.SceneLight;
@@ -122,6 +122,8 @@ public class Game implements IGameLogic {
     
     private final Level[] levels;
     
+    private Physics gamePhysics;
+    
     public Game() {
         camera = new Camera();
         soundMgr = new SoundManager();
@@ -160,11 +162,10 @@ public class Game implements IGameLogic {
         this.scene = scene;
         
         vkRenderer = renderer;
-    	
-        levels[0].load(scene, renderer, world, gameScope);;
         
-        newtonCube = scene.getGameItemsByModelId("newton-cube").get(0);
-        cubeBody = newtonCube.getBody();
+        gamePhysics = new Physics();
+    	
+        levels[0].load(scene, renderer, world, gamePhysics, gameScope);
         
         String skyboxId = "skyboxModel";
         ModelData skyboxModel = ModelLoader.loadModel(skyboxId, ResourcePaths.Models.SKYBOX_OBJ, 
@@ -224,7 +225,6 @@ public class Game implements IGameLogic {
     @Override
     public void inputAndUpdate(Window window, Scene scene, long diffTimeNanos) {
     	sceneChanged = false;
-    	vkRenderer.inputNuklear(window);
     	cameraInc.set(0, 0, 0);
         if (window.isKeyPressed(GLFW_KEY_W)) {
             cameraInc.z = -1;
@@ -265,7 +265,9 @@ public class Game implements IGameLogic {
         }
         
         if (window.isKeyPressed(GLFW_KEY_F)) {
-        	updatePhysics = !updatePhysics;
+        	updatePhysics = true;
+        } else {
+        	updatePhysics = false;
         }
         
         lightAngle += angleInc;
@@ -291,10 +293,7 @@ public class Game implements IGameLogic {
         if (updatePhysics) {
         	float diffTimeSeconds = (float) (diffTimeNanos / 1000000000f);
     		world.update(diffTimeSeconds);
-        	float[] matArr = cubeBody.getMatrix();
-        	Matrix4f matrix = new Matrix4f();
-        	matrix.set(matArr);
-        	newtonCube.setMatrix(matrix);
+        	gamePhysics.update(diffTimeSeconds);
     	}
     	MouseInput mouseInput = window.getMouseInput();
     	// Update camera based on mouse            

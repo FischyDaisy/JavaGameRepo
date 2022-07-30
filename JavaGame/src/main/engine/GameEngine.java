@@ -57,6 +57,7 @@ public class GameEngine implements Runnable {
 
         	scene.getCamera().setHasMoved(false);
             window.pollEvents();
+            renderer.inputNuklear(window);
 
             long currentTime = System.nanoTime();
             deltaU += (currentTime - initialTime) / timeU;
@@ -76,9 +77,6 @@ public class GameEngine implements Runnable {
             }
             fps++;
             renderer.render(window, scene);
-            if (!engineProperties.useVulkan()) {
-            	window.swapBuffers();
-            }
             
             if ( !window.isvSync() ) {
                 sync();
