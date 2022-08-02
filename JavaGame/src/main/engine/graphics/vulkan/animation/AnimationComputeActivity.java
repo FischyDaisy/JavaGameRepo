@@ -3,6 +3,7 @@ package main.engine.graphics.vulkan.animation;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.VkCommandBuffer;
+import org.tinylog.Logger;
 
 import main.engine.EngineProperties;
 import main.engine.utility.ResourcePaths.Shaders;
@@ -55,6 +56,7 @@ public class AnimationComputeActivity {
     }
 
     public void cleanup() {
+    	Logger.trace("Cleaning up AnimationComputeActivity");
         computePipeline.cleanup();
         shaderProgram.cleanup();
         commandBuffer.cleanup();
@@ -62,6 +64,7 @@ public class AnimationComputeActivity {
         storageDescriptorSetLayout.cleanup();
         uniformDescriptorSetLayout.cleanup();
         fence.cleanup();
+        memoryBarrier.cleanup();
         for (Map.Entry<String, List<GameItemAnimationBuffer>> entry : gameItemAnimationsBuffers.entrySet()) {
             entry.getValue().forEach(GameItemAnimationBuffer::cleanup);
         }

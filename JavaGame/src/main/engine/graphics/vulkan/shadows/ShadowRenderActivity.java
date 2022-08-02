@@ -4,6 +4,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import main.engine.EngineProperties;
 import main.engine.Window;
@@ -53,6 +54,7 @@ public class ShadowRenderActivity {
     }
 
     public void cleanup() {
+    	Logger.trace("Cleaning up ShadowRenderActivity");
         pipeLine.cleanup();
         Arrays.stream(shadowsUniforms).forEach(VulkanBuffer::cleanup);
         uniformDescriptorSetLayout.cleanup();

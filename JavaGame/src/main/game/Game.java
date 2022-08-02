@@ -36,6 +36,7 @@ import main.engine.graphics.camera.CameraBoxSelectionDetector;
 import main.engine.graphics.camera.MouseBoxSelectionDetector;
 import main.engine.graphics.hud.Calculator;
 import main.engine.graphics.hud.Demo;
+import main.engine.graphics.hud.GameMenu;
 import main.engine.graphics.hud.NKHudElement;
 import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.lights.Light;
@@ -124,6 +125,10 @@ public class Game implements IGameLogic {
     
     private Physics gamePhysics;
     
+    private GameMenu menu;
+    
+    private boolean shouldShow;
+    
     public Game() {
         camera = new Camera();
         soundMgr = new SoundManager();
@@ -174,6 +179,10 @@ public class Game implements IGameLogic {
         skybox = new SkyBox(skyboxModel, window, scene, vkRenderer);
         skybox.setScale(200f);
         scene.setSkyBox(skybox);
+        
+        menu = new GameMenu(window);
+        vkRenderer.setNulkearElements(new NKHudElement[] {menu});
+        shouldShow = true;
         
         camera.setPosition(-6.0f, 2.0f, 0.0f);
         camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
@@ -226,6 +235,10 @@ public class Game implements IGameLogic {
     public void inputAndUpdate(Window window, Scene scene, long diffTimeNanos) {
     	sceneChanged = false;
     	cameraInc.set(0, 0, 0);
+    	if (window.isKeyPressed(GLFW_KEY_ESCAPE)) {
+    		menu.showWindow(vkRenderer.getNuklearContext(), shouldShow);
+    		shouldShow = !shouldShow;
+    	}
         if (window.isKeyPressed(GLFW_KEY_W)) {
             cameraInc.z = -1;
             sceneChanged = true;

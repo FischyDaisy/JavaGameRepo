@@ -40,6 +40,7 @@ public class NewtonDemo implements Level {
 		float[] params = new float[] {1f, 1f, 1f, 1f};
         GameItem primitiveItem;
         float z = 0f;
+        /*
         for (Physics.CollisionPrimitive primitive : Physics.CollisionPrimitive.values()) {
         	String newtonModelId = "newton-" + primitive.getName();
     		String gameItemId = primitive.getName() + "-item";
@@ -64,7 +65,7 @@ public class NewtonDemo implements Level {
         modelDataList.add(heightFieldModel);
         scene.addGameItem(heightField);
         heightMapData.collision().destroy();
-
+*/
         renderer.loadModels(modelDataList);
 	}
 }

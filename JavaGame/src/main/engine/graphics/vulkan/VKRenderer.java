@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.lwjgl.nuklear.NkContext;
+
 import main.engine.EngineProperties;
 import main.engine.Window;
 import main.engine.graphics.IHud;
@@ -67,7 +69,6 @@ public class VKRenderer {
         animationComputeActivity = new AnimationComputeActivity(commandPool, pipelineCache, scene);
         nuklearRenderActivity = new NuklearRenderActivity(swapChain, commandPool, graphQueue, pipelineCache,
                 lightingRenderActivity.getLightingFrameBuffer().getLightingRenderPass().getVkRenderPass(), window);
-        nuklearRenderActivity.setElements(new NKHudElement[] {new Demo(), new Calculator()});
         vulkanModels = new ArrayList<>();
         textureCache = VKTextureCache.INSTANCE;
 	}
@@ -178,6 +179,18 @@ public class VKRenderer {
 	public void clearAndLoadModels(List<ModelData> modelDataList) throws Exception {
 		vulkanModels.clear();
 		loadModels(modelDataList);
+	}
+	
+	public NKHudElement[] getNuklearElements() {
+		return nuklearRenderActivity.getElements();
+	}
+	
+	public void setNulkearElements(NKHudElement[] elements) {
+		nuklearRenderActivity.setElements(elements);
+	}
+	
+	public NkContext getNuklearContext() {
+		return nuklearRenderActivity.getContext();
 	}
 	
 	private void resize(Window window) {

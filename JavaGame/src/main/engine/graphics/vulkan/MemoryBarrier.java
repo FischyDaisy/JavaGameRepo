@@ -18,4 +18,8 @@ public class MemoryBarrier {
     public VkMemoryBarrier.Buffer getVkMemoryBarrier() {
         return vkMemoryBarrier;
     }
+    
+    public void cleanup() {
+    	vkMemoryBarrier.free();
+    }
 }

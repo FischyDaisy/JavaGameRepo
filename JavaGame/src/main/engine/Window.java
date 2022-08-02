@@ -127,7 +127,7 @@ public class Window {
 
             glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
                 if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-                    glfwSetWindowShouldClose(window, true);
+                    //glfwSetWindowShouldClose(window, true);
                 }
                 if (keyCallback != null) {
                     keyCallback.invoke(window, key, scancode, action, mods);

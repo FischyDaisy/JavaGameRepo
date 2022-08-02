@@ -34,6 +34,7 @@ import org.lwjgl.vulkan.VkCommandBuffer;
 import org.lwjgl.vulkan.VkExtent2D;
 import org.lwjgl.vulkan.VkRect2D;
 import org.lwjgl.vulkan.VkViewport;
+import org.tinylog.Logger;
 
 import main.engine.*;
 import main.engine.graphics.GraphConstants;
@@ -86,6 +87,7 @@ public class SkyboxRenderActivity {
 	}
 	
 	public void cleanup() {
+		Logger.trace("Cleaning up SkyboxRenderActivity");
 		pipeline.cleanup();
         materialsBuffer.cleanup();
         Arrays.stream(viewMatricesBuffer).forEach(VulkanBuffer::cleanup);

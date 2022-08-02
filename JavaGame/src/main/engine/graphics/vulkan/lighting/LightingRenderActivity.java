@@ -6,6 +6,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import main.engine.EngineProperties;
 import main.engine.Window;
@@ -88,6 +89,7 @@ public class LightingRenderActivity {
     }
 
     public void cleanup() {
+    	Logger.trace("Cleaning up LightingRenderActivity");
     	uniformDescriptorSetLayout.cleanup();
         attachmentsDescriptorSet.cleanup();
         attachmentsLayout.cleanup();

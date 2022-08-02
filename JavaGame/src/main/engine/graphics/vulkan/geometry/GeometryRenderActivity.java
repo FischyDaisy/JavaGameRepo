@@ -3,6 +3,7 @@ package main.engine.graphics.vulkan.geometry;
 import org.lwjgl.system.*;
 import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import main.engine.EngineProperties;
 import main.engine.Window;
@@ -90,6 +91,7 @@ public class GeometryRenderActivity {
     }
 
     public void cleanup() {
+    	Logger.trace("Cleaning up GeometryRenderActivity");
         pipeLine.cleanup();
         materialsBuffer.cleanup();
         Arrays.stream(viewMatricesBuffer).forEach(VulkanBuffer::cleanup);

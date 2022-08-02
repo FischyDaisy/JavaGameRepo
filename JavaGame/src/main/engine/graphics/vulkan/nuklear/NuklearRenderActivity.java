@@ -32,6 +32,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.*;
+import org.tinylog.Logger;
 
 import main.engine.EngineProperties;
 import main.engine.MouseInput;
@@ -128,11 +129,17 @@ public class NuklearRenderActivity {
     	this.AA = AA;
     }
     
+    public NkContext getContext() {
+    	return ctx;
+    }
+    
     public void cleanup() {
+    	Logger.trace("Cleaning up NuklearRenderActivity");
         textureDescriptorSetLayout.cleanup();
         textureSampler.cleanup();
         descriptorPool.cleanup();
         fontsTexture.cleanup();
+        nullTexture.cleanup();
         Arrays.stream(vertexBuffers).filter(Objects::nonNull).forEach(VulkanBuffer::cleanup);
         Arrays.stream(indicesBuffers).filter(Objects::nonNull).forEach(VulkanBuffer::cleanup);
         pipeline.cleanup();
