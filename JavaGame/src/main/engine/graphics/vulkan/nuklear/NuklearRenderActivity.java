@@ -188,7 +188,7 @@ public class NuklearRenderActivity {
     }
 
     private void createDescriptorSets(SwapChain swapChain) {
-        textureDescriptorSetLayout = new DescriptorSetLayout.SamplerDescriptorSetLayout(device, 0, VK_SHADER_STAGE_FRAGMENT_BIT, 0);
+        textureDescriptorSetLayout = new DescriptorSetLayout.SamplerDescriptorSetLayout(device, 1, 0, VK_SHADER_STAGE_FRAGMENT_BIT, 0);
         descriptorSetLayouts = new DescriptorSetLayout[]{
                 textureDescriptorSetLayout,
         };

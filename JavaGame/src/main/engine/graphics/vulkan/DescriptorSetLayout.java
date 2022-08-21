@@ -29,26 +29,26 @@ public abstract class DescriptorSetLayout {
 
     public static class DynUniformDescriptorSetLayout extends SimpleDescriptorSetLayout {
         public DynUniformDescriptorSetLayout(Device device, int binding, int stage, int flags) {
-            super(device, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, binding, stage, flags);
+            super(device, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1, binding, stage, flags);
         }
     }
 
     public static class SamplerDescriptorSetLayout extends SimpleDescriptorSetLayout {
-        public SamplerDescriptorSetLayout(Device device, int binding, int stage, int flags) {
-            super(device, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, binding, stage, flags);
+        public SamplerDescriptorSetLayout(Device device, int descriptorCount, int binding, int stage, int flags) {
+            super(device, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, descriptorCount, binding, stage, flags);
         }
     }
 
     public static class SimpleDescriptorSetLayout extends DescriptorSetLayout {
 
-        public SimpleDescriptorSetLayout(Device device, int descriptorType, int binding, int stage, int flags) {
+        public SimpleDescriptorSetLayout(Device device, int descriptorType, int descriptorCount, int binding, int stage, int flags) {
             super(device);
             try (MemoryStack stack = MemoryStack.stackPush()) {
                 VkDescriptorSetLayoutBinding.Buffer layoutBindings = VkDescriptorSetLayoutBinding.calloc(1, stack);
                 layoutBindings.get(0)
                         .binding(binding)
                         .descriptorType(descriptorType)
-                        .descriptorCount(1)
+                        .descriptorCount(descriptorCount)
                         .stageFlags(stage);
 
                 VkDescriptorSetLayoutCreateInfo layoutInfo = VkDescriptorSetLayoutCreateInfo.calloc(stack)
@@ -66,13 +66,13 @@ public abstract class DescriptorSetLayout {
     
     public static class StorageDescriptorSetLayout extends SimpleDescriptorSetLayout {
         public StorageDescriptorSetLayout(Device device, int binding, int stage, int flags) {
-            super(device, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, binding, stage, flags);
+            super(device, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, binding, stage, flags);
         }
     }
 
     public static class UniformDescriptorSetLayout extends SimpleDescriptorSetLayout {
         public UniformDescriptorSetLayout(Device device, int binding, int stage, int flags) {
-            super(device, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, binding, stage, flags);
+            super(device, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, binding, stage, flags);
         }
     }
 }

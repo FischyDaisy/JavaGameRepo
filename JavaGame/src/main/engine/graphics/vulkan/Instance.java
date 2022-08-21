@@ -39,7 +39,7 @@ public class Instance {
     	Logger.debug("Creating Vulkan instance");
         try (MemoryStack stack = MemoryStack.stackPush()) {
             // Create application information
-            ByteBuffer appShortName = stack.UTF8("Game");
+            ByteBuffer appShortName = stack.UTF8("Crustacean");
             VkApplicationInfo appInfo = VkApplicationInfo.calloc(stack)
                     .sType(VK_STRUCTURE_TYPE_APPLICATION_INFO)
                     .pApplicationName(appShortName)

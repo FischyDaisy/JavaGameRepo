@@ -56,8 +56,6 @@ public class Sponza implements Level {
         monster.setGameItemAnimation(new GameItem.GameItemAnimation(false, 0, 0, monsterMax));
         scene.addGameItem(monster);
         
-        renderer.loadModels(modelDataList);
-        renderer.loadAnimation(bob);
-        renderer.loadAnimation(monster);
+        renderer.loadModels(modelDataList, scene);
 	}
 }

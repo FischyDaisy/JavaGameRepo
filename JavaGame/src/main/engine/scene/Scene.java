@@ -15,9 +15,9 @@ public class Scene {
 	
 	private final Map<String, List<GameItem>> modelMap;
 	
-	private final Map<String, List<GameItem>> instancedModelMap;
-	
 	private Camera camera;
+	
+	private long gameItemsLoadedTimeStamp;
     
     private SkyBox skyBox;
     
@@ -31,7 +31,6 @@ public class Scene {
     
     public Scene() {
         modelMap = new HashMap<String, List<GameItem>>();
-        instancedModelMap = new HashMap<String, List<GameItem>>();
         fog = Fog.NOFOG;
         renderShadows = true;
         sceneLight = new SceneLight();
@@ -39,10 +38,6 @@ public class Scene {
     
     public Map<String, List<GameItem>> getModelMap() {
     	return modelMap;
-    }
-    
-    public Map<String, List<GameItem>> getInstancedModelMap() {
-    	return instancedModelMap;
     }
     
     public boolean isRenderShadows() {
@@ -70,31 +65,28 @@ public class Scene {
             modelMap.put(gameItem.getModelId(), gameItems);
         }
         gameItems.add(gameItem);
-    }
-    
-    public void addInstancedGameItem(GameItem gameItem) {
-    	List<GameItem> gameItems = instancedModelMap.get(gameItem.getModelId());
-        if (gameItems == null) {
-            gameItems = new ArrayList<GameItem>();
-            instancedModelMap.put(gameItem.getModelId(), gameItems);
-        }
-        gameItems.add(gameItem);
+        gameItemsLoadedTimeStamp = System.currentTimeMillis();
     }
     
     public List<GameItem> getGameItemsByModelId(String modelId) {
         return modelMap.get(modelId);
     }
     
-    public List<GameItem> getInstancedGameItemsByModelId(String modelId) {
-        return instancedModelMap.get(modelId);
+    public long getGameItemsLoadedTimeStamp() {
+    	return gameItemsLoadedTimeStamp;
     }
     
-    public void clearGameItemsByModelId(String modelId) {
-    	modelMap.get(modelId).clear();
+    public void removeAllGameItems() {
+    	modelMap.clear();
+    	gameItemsLoadedTimeStamp = System.currentTimeMillis();
     }
     
-    public void clearInstancedGameItemsByModelId(String modelId) {
-    	instancedModelMap.get(modelId).clear();
+    public void removeGameItem(GameItem gameItem) {
+    	List<GameItem> items = modelMap.get(gameItem.getModelId());
+    	if (items != null) {
+    		items.removeIf(g -> g.getId().equals(gameItem.getId()));
+    	}
+    	gameItemsLoadedTimeStamp = System.currentTimeMillis();
     }
     
     public void cleanup() {

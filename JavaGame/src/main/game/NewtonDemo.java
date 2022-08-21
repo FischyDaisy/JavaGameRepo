@@ -66,6 +66,6 @@ public class NewtonDemo implements Level {
         scene.addGameItem(heightField);
         heightMapData.collision().destroy();
 */
-        renderer.loadModels(modelDataList);
+        renderer.loadModels(modelDataList, scene);
 	}
 }

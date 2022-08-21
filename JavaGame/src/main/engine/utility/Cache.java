@@ -2,6 +2,7 @@ package main.engine.utility;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import main.engine.graphics.IndexedLinkedHashMap;
 
@@ -17,6 +18,17 @@ public abstract class Cache<T> {
 	public List<T> getAsList() {
 		List<T> list = new ArrayList<T>();
 		for (T t : cacheMap.values()) {
+			list.add(t);
+		}
+		return list;
+	}
+	
+	public List<T> getAsList(Predicate<T> test) {
+		List<T> list = new ArrayList<T>();
+		for (T t : cacheMap.values()) {
+			if (test.test(t)) {
+				continue;
+			}
 			list.add(t);
 		}
 		return list;

@@ -42,6 +42,10 @@ public class FontTexture {
 
         buildTexture(device, imageFormat);
     }
+    
+    public void cleanup() {
+    	texture.cleanup();
+    }
 
     public int getWidth() {
         return width;

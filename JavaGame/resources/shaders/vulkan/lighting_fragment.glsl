@@ -44,13 +44,11 @@ layout(set = 3, binding = 0) uniform ShadowsUniforms {
     CascadeShadow cascadeshadows[SHADOW_MAP_CASCADE_COUNT];
 } shadowsUniforms;
 
-vec3 fresnelSchlick(float cosTheta, vec3 F0)
-{
+vec3 fresnelSchlick(float cosTheta, vec3 F0) {
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
-float DistributionGGX(vec3 N, vec3 H, float roughness)
-{
+float DistributionGGX(vec3 N, vec3 H, float roughness) {
     float a      = roughness*roughness;
     float a2     = a*a;
     float NdotH  = max(dot(N, H), 0.0);
@@ -63,8 +61,7 @@ float DistributionGGX(vec3 N, vec3 H, float roughness)
     return num / denom;
 }
 
-float GeometrySchlickGGX(float NdotV, float roughness)
-{
+float GeometrySchlickGGX(float NdotV, float roughness) {
     float r = (roughness + 1.0);
     float k = (r*r) / 8.0;
 
@@ -73,8 +70,8 @@ float GeometrySchlickGGX(float NdotV, float roughness)
 
     return num / denom;
 }
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
-{
+
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
     float NdotV = max(dot(N, V), 0.0);
     float NdotL = max(dot(N, L), 0.0);
     float ggx2  = GeometrySchlickGGX(NdotV, roughness);
@@ -134,8 +131,7 @@ float metallic, float roughness) {
     attenuation);
 }
 
-float textureProj(vec4 shadowCoord, vec2 offset, uint cascadeIndex)
-{
+float textureProj(vec4 shadowCoord, vec2 offset, uint cascadeIndex) {
     float shadow = 1.0;
 
     if (shadowCoord.z > -1.0 && shadowCoord.z < 1.0) {
@@ -147,8 +143,7 @@ float textureProj(vec4 shadowCoord, vec2 offset, uint cascadeIndex)
     return shadow;
 }
 
-float filterPCF(vec4 sc, uint cascadeIndex)
-{
+float filterPCF(vec4 sc, uint cascadeIndex) {
     ivec2 texDim = textureSize(shadowSampler, 0).xy;
     float scale = 0.75;
     float dx = scale * 1.0 / float(texDim.x);
@@ -167,8 +162,7 @@ float filterPCF(vec4 sc, uint cascadeIndex)
     return shadowFactor / count;
 }
 
-float calcShadow(vec4 worldPosition, uint cascadeIndex)
-{
+float calcShadow(vec4 worldPosition, uint cascadeIndex) {
     vec4 shadowMapPosition = shadowsUniforms.cascadeshadows[cascadeIndex].projViewMatrix * worldPosition;
 
     float shadow = 1.0;

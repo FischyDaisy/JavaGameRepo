@@ -1,8 +1,6 @@
 package main.engine.graphics.vulkan;
 
-import main.engine.EngineProperties;
 import main.engine.utility.Cache;
-import main.engine.utility.ResourcePaths;
 
 public class VKTextureCache extends Cache<VKTexture> {
 	
@@ -18,14 +16,13 @@ public class VKTextureCache extends Cache<VKTexture> {
 	}
 	
 	public VKTexture get(Device device, String key, int format) {
+		if (key == null || key.trim().isEmpty()) {
+            return null;
+        }
 		VKTexture texture = get(key);
-		if (texture == null && key.length() > 0) {
+		if (texture == null) {
 			texture = new VKTexture(device, key, format);
 			cacheMap.put(key, texture);
-		} else if (texture == null && key.length() == 0) {
-			String path = ResourcePaths.Textures.DEFAULT_TEXTURE;
-			texture = new VKTexture(device, path, format);
-			cacheMap.put(path, texture);
 		}
 		return texture;
 	}

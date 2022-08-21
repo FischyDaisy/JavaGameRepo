@@ -32,6 +32,14 @@ public class ComputePipeline {
                     .stage(shaderModule.shaderStage())
                     .module(shaderModule.handle())
                     .pName(main);
+            
+            VkPushConstantRange.Buffer vpcr = null;
+            if (pipeLineCreationInfo.pushConstantsSize() > 0) {
+                vpcr = VkPushConstantRange.calloc(1, stack)
+                        .stageFlags(VK_SHADER_STAGE_COMPUTE_BIT)
+                        .offset(0)
+                        .size(pipeLineCreationInfo.pushConstantsSize());
+            }
 
             DescriptorSetLayout[] descriptorSetLayouts = pipeLineCreationInfo.descriptorSetLayouts();
             int numLayouts = descriptorSetLayouts != null ? descriptorSetLayouts.length : 0;
@@ -41,7 +49,8 @@ public class ComputePipeline {
             }
             VkPipelineLayoutCreateInfo pPipelineLayoutCreateInfo = VkPipelineLayoutCreateInfo.calloc(stack)
                     .sType(VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO)
-                    .pSetLayouts(ppLayout);
+                    .pSetLayouts(ppLayout)
+                    .pPushConstantRanges(vpcr);
             VulkanUtils.vkCheck(vkCreatePipelineLayout(device.getVkDevice(), pPipelineLayoutCreateInfo, null, lp),
                     "Failed to create pipeline layout");
             vkPipelineLayout = lp.get(0);
@@ -70,5 +79,6 @@ public class ComputePipeline {
         return vkPipelineLayout;
     }
 
-    public record PipeLineCreationInfo(ShaderProgram shaderProgram, DescriptorSetLayout[] descriptorSetLayouts) {}
+    public record PipeLineCreationInfo(ShaderProgram shaderProgram, DescriptorSetLayout[] descriptorSetLayouts,
+    		int pushConstantsSize) {}
 }

@@ -4,14 +4,13 @@ import main.engine.items.GameItem;
 import java.util.Map;
 import java.util.Optional;
 
-public class AnimGameItem extends GameItem {
+public class AnimGameItem {
 
 	private Map<String, Animation> animations;
 
     private Animation currentAnimation;
     
     public AnimGameItem(String id, String modelId, Map<String, Animation> animations) {
-    	super(id, modelId);
     	this.animations = animations;
         Optional<Map.Entry<String, Animation>> entry = animations.entrySet().stream().findFirst();
         currentAnimation = entry.isPresent() ? entry.get().getValue() : null;

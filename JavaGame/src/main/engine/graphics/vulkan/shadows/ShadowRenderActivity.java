@@ -89,8 +89,8 @@ public class ShadowRenderActivity {
     private void createPipeline(PipelineCache pipelineCache) {
         Pipeline.PipeLineCreationInfo pipeLineCreationInfo = new Pipeline.PipeLineCreationInfo(
                 shadowsFrameBuffer.getRenderPass().getVkRenderPass(), shaderProgram,
-                GeometryAttachments.NUMBER_COLOR_ATTACHMENTS, true, true, GraphConstants.MAT4X4_SIZE_BYTES,
-                new VertexBufferStructure(), descriptorSetLayouts);
+                GeometryAttachments.NUMBER_COLOR_ATTACHMENTS, true, true, 0,
+                new InstancedVertexBufferStructure(), descriptorSetLayouts);
         pipeLine = new Pipeline(pipelineCache, pipeLineCreationInfo);
     }
 
@@ -123,27 +123,18 @@ public class ShadowRenderActivity {
         return cascadeShadows;
     }
 
-    public void recordCommandBuffer(CommandBuffer commandBuffer, List<VulkanModel> vulkanModelList,
-    		Map<String, List<AnimationComputeActivity.GameItemAnimationBuffer>> gameItemAnimationsBuffers) {
+    public void recordCommandBuffer(CommandBuffer commandBuffer, GlobalBuffers globalBuffers, int idx) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            if (scene.getSceneLight().isLightChanged() || scene.getCamera().hasMoved()) {
-                CascadeShadow.updateCascadeShadows(cascadeShadows, scene, window);
-            }
-
-            int idx = swapChain.getCurrentFrame();
-
-            updateProjViewBuffers(idx);
-
-            VkClearValue.Buffer clearValues = VkClearValue.calloc(1, stack);
+        	VkClearValue.Buffer clearValues = VkClearValue.calloc(1, stack);
             clearValues.apply(0, v -> v.depthStencil().depth(1.0f));
 
             EngineProperties engineProperties = EngineProperties.INSTANCE;
             int shadowMapSize = engineProperties.getShadowMapSize();
             int width = shadowMapSize;
             int height = shadowMapSize;
-
+            
             VkCommandBuffer cmdHandle = commandBuffer.getVkCommandBuffer();
-
+            
             VkViewport.Buffer viewport = VkViewport.calloc(1, stack)
                     .x(0)
                     .y(height)
@@ -152,7 +143,7 @@ public class ShadowRenderActivity {
                     .minDepth(0.0f)
                     .maxDepth(1.0f);
             vkCmdSetViewport(cmdHandle, 0, viewport);
-
+            
             VkRect2D.Buffer scissor = VkRect2D.calloc(1, stack)
                     .extent(it -> it
                             .width(width)
@@ -161,7 +152,7 @@ public class ShadowRenderActivity {
                             .x(0)
                             .y(0));
             vkCmdSetScissor(cmdHandle, 0, scissor);
-
+            
             FrameBuffer frameBuffer = shadowsFrameBuffer.getFrameBuffer();
 
             VkRenderPassBeginInfo renderPassBeginInfo = VkRenderPassBeginInfo.calloc(stack)
@@ -170,78 +161,67 @@ public class ShadowRenderActivity {
                     .pClearValues(clearValues)
                     .renderArea(a -> a.extent().set(width, height))
                     .framebuffer(frameBuffer.getVkFrameBuffer());
-
+            
             vkCmdBeginRenderPass(cmdHandle, renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
             vkCmdBindPipeline(cmdHandle, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeLine.getVkPipeline());
 
             LongBuffer descriptorSets = stack.mallocLong(1)
                     .put(0, projMatrixDescriptorSet[idx].getVkDescriptorSet());
-
+            
             vkCmdBindDescriptorSets(cmdHandle, VK_PIPELINE_BIND_POINT_GRAPHICS,
                     pipeLine.getVkPipelineLayout(), 0, descriptorSets, null);
+            
+            LongBuffer vertexBuffer = stack.mallocLong(1);
+            LongBuffer instanceBuffer = stack.mallocLong(1);
+            LongBuffer offsets = stack.mallocLong(1).put(0, 0L);
+            
+            // Draw commands for non animated models
+            if (globalBuffers.getNumIndirectCommands() > 0) {
+                vertexBuffer.put(0, globalBuffers.getVerticesBuffer().getBuffer());
+                instanceBuffer.put(0, globalBuffers.getInstanceDataBuffers()[idx].getBuffer());
 
-            recordGameItems(stack, cmdHandle, vulkanModelList, gameItemAnimationsBuffers);
+                vkCmdBindVertexBuffers(cmdHandle, 0, vertexBuffer, offsets);
+                vkCmdBindVertexBuffers(cmdHandle, 1, instanceBuffer, offsets);
+                vkCmdBindIndexBuffer(cmdHandle, globalBuffers.getIndicesBuffer().getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+                VulkanBuffer indirectBuffer = globalBuffers.getIndirectBuffer();
+                vkCmdDrawIndexedIndirect(cmdHandle, indirectBuffer.getBuffer(), 0, globalBuffers.getNumIndirectCommands(),
+                        GlobalBuffers.IND_COMMAND_STRIDE);
+            }
+            
+            if (globalBuffers.getNumAnimIndirectCommands() > 0) {
+                // Draw commands for  animated models
+                vertexBuffer.put(0, globalBuffers.getAnimVerticesBuffer().getBuffer());
+                instanceBuffer.put(0, globalBuffers.getAnimInstanceDataBuffers()[idx].getBuffer());
+
+                vkCmdBindVertexBuffers(cmdHandle, 0, vertexBuffer, offsets);
+                vkCmdBindVertexBuffers(cmdHandle, 1, instanceBuffer, offsets);
+                vkCmdBindIndexBuffer(cmdHandle, globalBuffers.getIndicesBuffer().getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+                VulkanBuffer animIndirectBuffer = globalBuffers.getAnimIndirectBuffer();
+                vkCmdDrawIndexedIndirect(cmdHandle, animIndirectBuffer.getBuffer(), 0, globalBuffers.getNumAnimIndirectCommands(),
+                        GlobalBuffers.IND_COMMAND_STRIDE);
+            }
 
             vkCmdEndRenderPass(cmdHandle);
         }
     }
+    
+    public void render() {
+        if (scene.getSceneLight().isLightChanged() || scene.getCamera().hasMoved()) {
+            CascadeShadow.updateCascadeShadows(cascadeShadows, scene, window);
+        }
 
-    private void recordGameItems(MemoryStack stack, VkCommandBuffer cmdHandle, List<VulkanModel> vulkanModelList,
-    		Map<String, List<AnimationComputeActivity.GameItemAnimationBuffer>> gameItemAnimationsBuffers) {
-        LongBuffer offsets = stack.mallocLong(1);
-        offsets.put(0, 0L);
-        LongBuffer vertexBuffer = stack.mallocLong(1);
-        for (VulkanModel vulkanModel : vulkanModelList) {
-            String modelId = vulkanModel.getModelId();
-            List<GameItem> items = scene.getGameItemsByModelId(modelId);
-            if (items.isEmpty()) {
-                continue;
-            }
-            int meshCount = 0;
-            for (VulkanModel.VulkanMaterial material : vulkanModel.getVulkanMaterialList()) {
-                for (VulkanModel.VulkanMesh mesh : material.vulkanMeshList()) {
-                	if (!vulkanModel.hasAnimations()) {
-                        vertexBuffer.put(0, mesh.verticesBuffer().getBuffer());
-                        vkCmdBindVertexBuffers(cmdHandle, 0, vertexBuffer, offsets);
-                    }
-                    vkCmdBindIndexBuffer(cmdHandle, mesh.indicesBuffer().getBuffer(), 0, VK_INDEX_TYPE_UINT32);
-
-                    for (GameItem item : items) {
-                        setPushConstant(pipeLine, cmdHandle, item.getModelMatrix());
-                        if (vulkanModel.hasAnimations()) {
-                            List<AnimationComputeActivity.GameItemAnimationBuffer> animationsBuffer = gameItemAnimationsBuffers.get(item.getId());
-                            AnimationComputeActivity.GameItemAnimationBuffer entityAnimationBuffer = animationsBuffer.get(meshCount);
-                            vertexBuffer.put(0, entityAnimationBuffer.verticesBuffer().getBuffer());
-                            vkCmdBindVertexBuffers(cmdHandle, 0, vertexBuffer, offsets);
-                        }
-                        vkCmdDrawIndexed(cmdHandle, mesh.numIndices(), 1, 0, 0, 0);
-                    }
-                    meshCount++;
-                }
-            }
+        int idx = swapChain.getCurrentFrame();
+        int offset = 0;
+        for (CascadeShadow cascadeShadow : cascadeShadows) {
+            VulkanUtils.copyMatrixToBuffer(shadowsUniforms[idx], cascadeShadow.getProjViewMatrix(), offset);
+            offset += GraphConstants.MAT4X4_SIZE_BYTES;
         }
     }
 
     public void resize(SwapChain swapChain) {
         this.swapChain = swapChain;
         CascadeShadow.updateCascadeShadows(cascadeShadows, scene, window);
-    }
-
-    private void setPushConstant(Pipeline pipeLine, VkCommandBuffer cmdHandle, Matrix4f matrix) {
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            ByteBuffer pushConstantBuffer = stack.malloc(GraphConstants.MAT4X4_SIZE_BYTES);
-            matrix.get(0, pushConstantBuffer);
-            vkCmdPushConstants(cmdHandle, pipeLine.getVkPipelineLayout(),
-                    VK_SHADER_STAGE_VERTEX_BIT, 0, pushConstantBuffer);
-        }
-    }
-
-    private void updateProjViewBuffers(int idx) {
-        int offset = 0;
-        for (CascadeShadow cascadeShadow : cascadeShadows) {
-            VulkanUtils.copyMatrixToBuffer(shadowsUniforms[idx], cascadeShadow.getProjViewMatrix(), offset);
-            offset += GraphConstants.MAT4X4_SIZE_BYTES;
-        }
     }
 }

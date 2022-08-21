@@ -105,7 +105,7 @@ public class Game implements IGameLogic {
     
     private GameItem[] gameItems;
     
-    private GameItem bob, monster, newtonCube;
+    private GameItem bob, monster;
     
     private SkyBox skybox;
     
@@ -170,7 +170,10 @@ public class Game implements IGameLogic {
         
         gamePhysics = new Physics();
     	
-        levels[0].load(scene, renderer, world, gamePhysics, gameScope);
+        levels[1].load(scene, renderer, world, gamePhysics, gameScope);
+        
+        bob = scene.getGameItemsByModelId("bob-model").get(0);
+        monster = scene.getGameItemsByModelId("monster-model").get(0);
         
         String skyboxId = "skyboxModel";
         ModelData skyboxModel = ModelLoader.loadModel(skyboxId, ResourcePaths.Models.SKYBOX_OBJ, 
@@ -179,6 +182,7 @@ public class Game implements IGameLogic {
         skybox = new SkyBox(skyboxModel, window, scene, vkRenderer);
         skybox.setScale(200f);
         scene.setSkyBox(skybox);
+        renderer.loadSkyBox(skyboxModel, scene);
         
         menu = new GameMenu(window);
         vkRenderer.setNulkearElements(new NKHudElement[] {menu});
@@ -290,7 +294,7 @@ public class Game implements IGameLogic {
             lightAngle = 180;
         }
         updateDirectionalLight();
-        /*
+        /**/
         GameItem.GameItemAnimation itemAnimation = bob.getGameItemAnimation();
         if (itemAnimation.isStarted()) {
             int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, itemAnimation.maxFrames);
@@ -301,7 +305,7 @@ public class Game implements IGameLogic {
         if (itemAnimation.isStarted()) {
             int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, itemAnimation.maxFrames);
             itemAnimation.setCurrentFrame(currentFrame);
-        }*/
+        }
         
         if (updatePhysics) {
         	float diffTimeSeconds = (float) (diffTimeNanos / 1000000000f);

@@ -1,11 +1,14 @@
 package main.engine.graphics.vulkan;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.lwjgl.nuklear.NkContext;
+import org.lwjgl.system.MemoryStack;
+import org.tinylog.Logger;
 
 import main.engine.EngineProperties;
 import main.engine.Window;
@@ -22,7 +25,10 @@ import main.engine.graphics.vulkan.nuklear.NuklearRenderActivity;
 import main.engine.graphics.vulkan.shadows.ShadowRenderActivity;
 import main.engine.graphics.vulkan.skybox.SkyboxRenderActivity;
 import main.engine.items.GameItem;
+import main.engine.items.SkyBox;
 import main.engine.scene.Scene;
+
+import static org.lwjgl.vulkan.VK11.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 
 public class VKRenderer {
 	
@@ -31,6 +37,7 @@ public class VKRenderer {
 	private final AnimationComputeActivity animationComputeActivity;
 	private final CommandPool commandPool;
     private final Device device;
+    private final GlobalBuffers globalBuffers;
     private final GeometryRenderActivity geometryRenderActivity;
     private final LightingRenderActivity lightingRenderActivity;
     private final ShadowRenderActivity shadowRenderActivity;
@@ -45,6 +52,9 @@ public class VKRenderer {
     private final VKTextureCache textureCache;
     private final List<VulkanModel> vulkanModels;
     
+    private CommandBuffer[] commandBuffers;
+    private long gameItemsLoadedTimeStamp;
+    private Fence[] fences;
     private SwapChain swapChain;
     private VulkanModel skybox;
 	
@@ -59,10 +69,11 @@ public class VKRenderer {
                 engProps.isvSync());
         commandPool = new CommandPool(device, graphQueue.getQueueFamilyIndex());
         pipelineCache = new PipelineCache(device);
-        geometryRenderActivity = new GeometryRenderActivity(swapChain, commandPool, pipelineCache, scene, window);
+        globalBuffers = new GlobalBuffers(device);
+        geometryRenderActivity = new GeometryRenderActivity(swapChain, pipelineCache, scene, window, globalBuffers);
         shadowRenderActivity = new ShadowRenderActivity(swapChain, pipelineCache, scene, window);
         skyboxRenderActivity = new SkyboxRenderActivity(swapChain, pipelineCache, scene, window, 
-				geometryRenderActivity.getFrameBuffer().getRenderPass().getVkRenderPass(), geometryRenderActivity.getMaterialSize());
+				geometryRenderActivity.getFrameBuffer().getRenderPass().getVkRenderPass(), globalBuffers);
         List<Attachment> attachments = new ArrayList<>(geometryRenderActivity.getAttachments());
         attachments.add(shadowRenderActivity.getDepthAttachment());
         lightingRenderActivity = new LightingRenderActivity(swapChain, commandPool, pipelineCache, attachments, scene, window);
@@ -71,46 +82,27 @@ public class VKRenderer {
                 lightingRenderActivity.getLightingFrameBuffer().getLightingRenderPass().getVkRenderPass(), window);
         vulkanModels = new ArrayList<>();
         textureCache = VKTextureCache.INSTANCE;
+        gameItemsLoadedTimeStamp = 0;
+        createCommandBuffers();
 	}
+	
+	private CommandBuffer acquireCurrentCommandBuffer() {
+        int idx = swapChain.getCurrentFrame();
 
-	public void render(Window window, Scene scene) {
-		if (window.getWidth() <= 0 && window.getHeight() <= 0) {
-            return;
-        }
-        if (window.isResized() || swapChain.acquireNextImage()) {
-            window.setResized(false);
-            resize(window);
-            window.updateProjectionMatrix();
-            swapChain.acquireNextImage();
-        }
-        
-        animationComputeActivity.recordCommandBuffer(vulkanModels);
-        animationComputeActivity.submit();
+        Fence fence = fences[idx];
+        CommandBuffer commandBuffer = commandBuffers[idx];
 
-        CommandBuffer commandBuffer = geometryRenderActivity.beginRecording();
-        geometryRenderActivity.recordCommandBuffer(commandBuffer, vulkanModels, animationComputeActivity.getGameItemAnimationsBuffers());
-        skyboxRenderActivity.recordCommandBuffer(commandBuffer, skybox);
-        geometryRenderActivity.endRenderPass(commandBuffer);
-        shadowRenderActivity.recordCommandBuffer(commandBuffer, vulkanModels, animationComputeActivity.getGameItemAnimationsBuffers());
-        geometryRenderActivity.endRecording(commandBuffer);
-        geometryRenderActivity.submit(graphQueue);
-        commandBuffer = lightingRenderActivity.beginRecording(shadowRenderActivity.getShadowCascades());
-        lightingRenderActivity.recordCommandBuffer(commandBuffer);
-        nuklearRenderActivity.recordCommandBuffer(commandBuffer);
-        lightingRenderActivity.endRecording(commandBuffer);
-        lightingRenderActivity.submit(graphQueue);
+        fence.fenceWait();
+        fence.reset();
 
-        if (swapChain.presentImage(graphQueue)) {
-            window.setResized(true);
-        }
-	}
+        return commandBuffer;
+    }
 
 	public void cleanup() {
 		presentQueue.waitIdle();
         graphQueue.waitIdle();
         device.waitIdle();
         textureCache.cleanup();
-        vulkanModels.forEach(VulkanModel::cleanup);
         pipelineCache.cleanup();
         nuklearRenderActivity.cleanup();
         lightingRenderActivity.cleanup();
@@ -118,6 +110,9 @@ public class VKRenderer {
         shadowRenderActivity.cleanup();
         skyboxRenderActivity.cleanup();
         geometryRenderActivity.cleanup();
+        Arrays.stream(commandBuffers).forEach(CommandBuffer::cleanup);
+        Arrays.stream(fences).forEach(Fence::cleanup);
+        globalBuffers.cleanup();
         commandPool.cleanup();
         swapChain.cleanup();
         surface.cleanup();
@@ -126,60 +121,50 @@ public class VKRenderer {
         instance.cleanup();
 	}
 	
+	private void createCommandBuffers() {
+        int numImages = swapChain.getNumImages();
+        commandBuffers = new CommandBuffer[numImages];
+        fences = new Fence[numImages];
+
+        for (int i = 0; i < numImages; i++) {
+            commandBuffers[i] = new CommandBuffer(commandPool, true, false);
+            fences[i] = new Fence(device, true);
+        }
+    }
+	
 	public void inputNuklear(Window window) {
 		nuklearRenderActivity.input(window);
 	}
 	
-	public void loadSkyBox(ModelData skyboxModelData, Window window, Scene scene) throws Exception {
-		if (skybox != null) {
-			skybox.cleanup();
-		}
-		skybox = VulkanModel.transformModel(skyboxModelData, textureCache, commandPool, graphQueue);
-		skyboxRenderActivity.registerModel(skybox);
+	public void loadSkyBox(ModelData skyboxModelData, Scene scene) throws Exception {
+		Logger.debug("Loading Skybox model");
+		skybox = globalBuffers.loadSkyboxModel(skyboxModelData, textureCache, commandPool, graphQueue);
+		Logger.debug("Loaded Skybox model");
+		
+		List<VKTexture> textureCacheList = textureCache.getAsList();
+		SkyBox skybox = scene.getSkyBox();
+		textureCacheList.removeIf(t -> !skybox.isSkyboxTexture(t));
+		skyboxRenderActivity.loadModel(textureCacheList);
 	}
 	
 	public void loadParticles(List<ModelData> modelDataList, int maxParticles) throws Exception {
 	}
 	
-	public void loadAnimation(GameItem item) {
-        String modelId = item.getModelId();
-        Optional<VulkanModel> optModel = vulkanModels.stream().filter(m -> m.getModelId().equals(modelId)).findFirst();
-        if (optModel.isEmpty()) {
-            throw new RuntimeException("Could not find model [" + modelId + "]");
-        }
-        VulkanModel vulkanModel = optModel.get();
-        if (!vulkanModel.hasAnimations()) {
-            throw new RuntimeException("Model [" + modelId + "] does not define animations");
-        }
-
-        animationComputeActivity.registerGameItem(vulkanModel, item);
-    }
-	
-	public void loadModels(List<ModelData> modelDataList) throws Exception {
-		vulkanModels.addAll(VulkanModel.transformModels(modelDataList, textureCache, commandPool, graphQueue));
+	public void loadModels(List<ModelData> modelDataList, Scene scene) throws Exception {
+		Logger.debug("Loading {} model(s)", modelDataList.size());
+		vulkanModels.addAll(globalBuffers.loadModels(modelDataList, textureCache, commandPool, graphQueue));
+		Logger.debug("Loaded {} model(s)", modelDataList.size());
 		
-		// Reorder materials inside models
-		/*
-        vulkanModels.forEach(m -> {
-            Collections.sort(m.getVulkanMaterialList(), (a, b) -> Boolean.compare(a.isTransparent(), b.isTransparent()));
-        });
-
-        // Reorder models
-        Collections.sort(vulkanModels, (a, b) -> {
-            boolean aHasTransparentMt = a.getVulkanMaterialList().stream().filter(m -> m.isTransparent()).findAny().isPresent();
-            boolean bHasTransparentMt = b.getVulkanMaterialList().stream().filter(m -> m.isTransparent()).findAny().isPresent();
-
-            return Boolean.compare(aHasTransparentMt, bHasTransparentMt);
-        });*/
-		
-        geometryRenderActivity.registerModels(vulkanModels);
-        animationComputeActivity.registerModels(vulkanModels);
+		if (skybox == null) {
+			List<VKTexture> textureCacheList = textureCache.getAsList();
+			geometryRenderActivity.loadModels(textureCacheList);
+		} else {
+			List<VKTexture> textureCacheList = textureCache.getAsList();
+			SkyBox skybox = scene.getSkyBox();
+			textureCacheList.removeIf(t -> skybox.isSkyboxTexture(t));
+			geometryRenderActivity.loadModels(textureCacheList);
+		}
     }
-	
-	public void clearAndLoadModels(List<ModelData> modelDataList) throws Exception {
-		vulkanModels.clear();
-		loadModels(modelDataList);
-	}
 	
 	public NKHudElement[] getNuklearElements() {
 		return nuklearRenderActivity.getElements();
@@ -193,6 +178,70 @@ public class VKRenderer {
 		return nuklearRenderActivity.getContext();
 	}
 	
+	private void recordCommands() { //this causes errors
+        int idx = 0;
+        for (CommandBuffer commandBuffer : commandBuffers) {
+            commandBuffer.reset();
+            commandBuffer.beginRecording();
+            geometryRenderActivity.recordCommandBuffer(commandBuffer, globalBuffers, idx);
+            skyboxRenderActivity.recordCommandBuffer(commandBuffer, globalBuffers, idx);
+            geometryRenderActivity.endRenderPass(commandBuffer);
+            shadowRenderActivity.recordCommandBuffer(commandBuffer, globalBuffers, idx);
+            commandBuffer.endRecording();
+            idx++;
+        }
+    }
+	
+	public void render(Window window, Scene scene) {
+		if (gameItemsLoadedTimeStamp < scene.getGameItemsLoadedTimeStamp()) {
+            gameItemsLoadedTimeStamp = scene.getGameItemsLoadedTimeStamp();
+            device.waitIdle();
+            globalBuffers.loadGameItems(vulkanModels, scene, commandPool, graphQueue, swapChain.getNumImages());
+            globalBuffers.loadSkybox(skybox, scene, commandPool, graphQueue, swapChain.getNumImages());
+            animationComputeActivity.onAnimatedGameItemsLoaded(globalBuffers);
+            recordCommands();
+        }
+		if (window.getWidth() <= 0 && window.getHeight() <= 0) {
+            return;
+        }
+        if (window.isResized() || swapChain.acquireNextImage()) {
+            window.setResized(false);
+            resize(window);
+            window.updateProjectionMatrix();
+            swapChain.acquireNextImage();
+        }
+        
+        globalBuffers.loadInstanceData(scene, vulkanModels, swapChain.getCurrentFrame());
+        globalBuffers.loadSkyboxInstanceData(scene, skybox, swapChain.getCurrentFrame());
+        
+        animationComputeActivity.recordCommandBuffer(globalBuffers);
+        animationComputeActivity.submit();
+
+        //CommandBuffer commandBuffer = geometryRenderActivity.beginRecording();
+        //geometryRenderActivity.recordCommandBuffer(commandBuffer, vulkanModels, animationComputeActivity.getGameItemAnimationsBuffers());
+        //skyboxRenderActivity.recordCommandBuffer(commandBuffer, skybox);
+        //geometryRenderActivity.endRenderPass(commandBuffer);
+        //shadowRenderActivity.recordCommandBuffer(commandBuffer, vulkanModels, animationComputeActivity.getGameItemAnimationsBuffers());
+        //geometryRenderActivity.endRecording(commandBuffer);
+        //geometryRenderActivity.submit(graphQueue);
+        
+        CommandBuffer commandBuffer = acquireCurrentCommandBuffer();
+        geometryRenderActivity.render();
+        skyboxRenderActivity.render();
+        shadowRenderActivity.render();
+        submitSceneCommand(graphQueue, commandBuffer);
+        
+        commandBuffer = lightingRenderActivity.beginRecording(shadowRenderActivity.getShadowCascades());
+        lightingRenderActivity.recordCommandBuffer(commandBuffer);
+        nuklearRenderActivity.recordCommandBuffer(commandBuffer);
+        lightingRenderActivity.endRecording(commandBuffer);
+        lightingRenderActivity.submit(graphQueue);
+
+        if (swapChain.presentImage(graphQueue)) {
+            window.setResized(true);
+        }
+	}
+	
 	private void resize(Window window) {
         device.waitIdle();
         graphQueue.waitIdle();
@@ -204,9 +253,22 @@ public class VKRenderer {
         geometryRenderActivity.resize(swapChain);
         skyboxRenderActivity.resize(swapChain);
         shadowRenderActivity.resize(swapChain);
+        recordCommands();
         List<Attachment> attachments = new ArrayList<>(geometryRenderActivity.getAttachments());
         attachments.add(shadowRenderActivity.getDepthAttachment());
         lightingRenderActivity.resize(swapChain, attachments);
         nuklearRenderActivity.resize(swapChain);
+    }
+	
+	public void submitSceneCommand(Queue queue, CommandBuffer commandBuffer) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            int idx = swapChain.getCurrentFrame();
+            Fence currentFence = fences[idx];
+            SwapChain.SyncSemaphores syncSemaphores = swapChain.getSyncSemaphoresList()[idx];
+            queue.submit(stack.pointers(commandBuffer.getVkCommandBuffer()),
+                    stack.longs(syncSemaphores.imgAcquisitionSemaphore().getVkSemaphore()),
+                    stack.ints(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT),
+                    stack.longs(syncSemaphores.geometryCompleteSemaphore().getVkSemaphore()), currentFence);
+        }
     }
 }

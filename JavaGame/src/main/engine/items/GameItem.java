@@ -192,11 +192,17 @@ public class GameItem {
         private int animationIdx;
         private int currentFrame;
         private boolean started;
+        private boolean loaded;
         
         public final int maxFrames;
 
         public GameItemAnimation(boolean started, int animationIdx, int currentFrame, int maxFrames) {
+            this(started, false, animationIdx, currentFrame, maxFrames);
+        }
+        
+        public GameItemAnimation(boolean started, boolean loaded, int animationIdx, int currentFrame, int maxFrames) {
             this.started = started;
+            this.loaded = loaded;
             this.animationIdx = animationIdx;
             this.currentFrame = currentFrame;
             this.maxFrames = maxFrames;
@@ -224,6 +230,14 @@ public class GameItem {
 
         public void setStarted(boolean started) {
             this.started = started;
+        }
+        
+        public boolean isLoaded() {
+        	return loaded;
+        }
+        
+        public void setLoaded(boolean loaded) {
+        	this.loaded = loaded;
         }
     }
 }

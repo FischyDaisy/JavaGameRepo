@@ -35,6 +35,10 @@ public class Device {
             }
             features.depthClamp(supportedFeatures.depthClamp());
             features.geometryShader(true);
+            if (!supportedFeatures.multiDrawIndirect()) {
+                throw new RuntimeException("Multi draw Indirect not supported");
+            }
+            features.multiDrawIndirect(true);
 
             // Enable all the queue families
             VkQueueFamilyProperties.Buffer queuePropsBuff = physicalDevice.getVkQueueFamilyProps();

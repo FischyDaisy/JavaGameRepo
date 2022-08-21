@@ -9,10 +9,14 @@ import main.engine.utility.ResourcePaths;
 
 public class EngineProperties {
 	private static final float DEFAULT_FOV = 60.0f;
-	private static final int DEFAULT_MAX_JOINTS_MATRICES_LISTS = 100;
-    private static final int DEFAULT_STORAGES_BUFFERS = 100;
-	private static final int DEFAULT_MAX_MATERIALS = 500;
+	private static final int DEFAULT_JOINT_MATRICES_BUF = 2000000;
+    private static final int DEFAULT_MAX_ANIM_WEIGHTS_BUF = 100000;
+    private static final int DEFAULT_MAX_INDICES_BUF = 5000000;
+    private static final int DEFAULT_MAX_MATERIALS = 500;
+    private static final int DEFAULT_MAX_VERTICES_BUF = 20000000;
 	private static final int DEFAULT_MAX_SKYBOX_MATERIALS = 10;
+	private static final int DEFAULT_MAX_SKYBOX_VERTICES_BUF = 2000;
+	private static final int DEFAULT_MAX_SKYBOX_INDICES_BUF = 1000;
 	private static final int DEFAULT_REQUESTED_IMAGES = 3;
 	private static final float DEFAULT_SHADOW_BIAS = 0.00005f;
     private static final int DEFAULT_SHADOW_MAP_SIZE = 2048;
@@ -24,10 +28,16 @@ public class EngineProperties {
     private static final File PROP_FILE = new File(ResourcePaths.Engine.PROPERTIES);
     private String defaultTexturePath;
     private float fov;
-    private int maxJointsMatricesLists;
-    private int maxStorageBuffers;
+    private int maxAnimWeightsBuffer;
+    private int maxIndicesBuffer;
+    private int maxJointMatricesBuffer;
     private int maxMaterials;
+    private int maxTextures;
+    private int maxVerticesBuffer;
     private int maxSkyboxMaterials;
+    private int maxSkyboxTextures;
+    private int maxSkyboxVerticesBuffer;
+    private int maxSkyboxIndicesBuffer;
     private String physDeviceName;
     private int requestedImages;
     private boolean shaderRecompilation;
@@ -42,7 +52,6 @@ public class EngineProperties {
     private boolean validate;
     private float zFar;
     private float zNear;
-    private boolean useDeferred;
     
     public static final EngineProperties INSTANCE = new EngineProperties();
 
@@ -66,15 +75,20 @@ public class EngineProperties {
             zNear = Float.parseFloat(props.getOrDefault("zNear", DEFAULT_Z_NEAR).toString());
             zFar = Float.parseFloat(props.getOrDefault("zFar", DEFAULT_Z_FAR).toString());
             defaultTexturePath = props.getProperty("defaultTexturePath");
-            useDeferred = Boolean.parseBoolean(props.getOrDefault("useDeferred", false).toString());
             maxMaterials = Integer.parseInt(props.getOrDefault("maxMaterials", DEFAULT_MAX_MATERIALS).toString());
             maxSkyboxMaterials = Integer.parseInt(props.getOrDefault("maxSkyboxMaterials", DEFAULT_MAX_SKYBOX_MATERIALS).toString());
+            maxSkyboxVerticesBuffer = Integer.parseInt(props.getOrDefault("maxSkyboxVerticesBuffer", DEFAULT_MAX_SKYBOX_VERTICES_BUF).toString());
+            maxSkyboxIndicesBuffer = Integer.parseInt(props.getOrDefault("maxSkyboxIndicesBuffer", DEFAULT_MAX_SKYBOX_INDICES_BUF).toString());
             shadowPcf = Boolean.parseBoolean(props.getOrDefault("shadowPcf", false).toString());
             shadowBias = Float.parseFloat(props.getOrDefault("shadowBias", DEFAULT_SHADOW_BIAS).toString());
             shadowMapSize = Integer.parseInt(props.getOrDefault("shadowMapSize", DEFAULT_SHADOW_MAP_SIZE).toString());
             shadowDebug = Boolean.parseBoolean(props.getOrDefault("shadowDebug", false).toString());
-            maxStorageBuffers = Integer.parseInt(props.getOrDefault("maxStorageBuffers", DEFAULT_STORAGES_BUFFERS).toString());
-            maxJointsMatricesLists = Integer.parseInt(props.getOrDefault("maxJointsMatricesLists", DEFAULT_MAX_JOINTS_MATRICES_LISTS).toString());
+            maxTextures = maxMaterials * 3;
+            maxSkyboxTextures = maxSkyboxMaterials * 3;
+            maxVerticesBuffer = Integer.parseInt(props.getOrDefault("maxVerticesBuffer", DEFAULT_MAX_VERTICES_BUF).toString());
+            maxIndicesBuffer = Integer.parseInt(props.getOrDefault("maxIndicesBuffer", DEFAULT_MAX_INDICES_BUF).toString());
+            maxAnimWeightsBuffer = Integer.parseInt(props.getOrDefault("maxAnimWeightsBuffer", DEFAULT_MAX_ANIM_WEIGHTS_BUF).toString());
+            maxJointMatricesBuffer = Integer.parseInt(props.getOrDefault("maxJointMatricesBuffer", DEFAULT_JOINT_MATRICES_BUF).toString());
         } catch (IOException excp) {
         	System.out.println("Could not read [" + FILENAME + "] properties file");
             //System.out.println(excp);
@@ -121,20 +135,44 @@ public class EngineProperties {
     	return zFar;
     }
     
-    public int getMaxJointsMatricesLists() {
-        return maxJointsMatricesLists;
+    public int getMaxAnimWeightsBuffer() {
+        return maxAnimWeightsBuffer;
     }
 
-    public int getMaxStorageBuffers() {
-        return maxStorageBuffers;
+    public int getMaxIndicesBuffer() {
+        return maxIndicesBuffer;
     }
-    
+
+    public int getMaxJointMatricesBuffer() {
+        return maxJointMatricesBuffer;
+    }
+
     public int getMaxMaterials() {
         return maxMaterials;
+    }
+
+    public int getMaxTextures() {
+        return maxTextures;
+    }
+    
+    public int getMaxVerticesBuffer() {
+        return maxVerticesBuffer;
     }
     
     public int getMaxSkyboxMaterials() {
     	return maxSkyboxMaterials;
+    }
+    
+    public int getMaxSkyboxTextures() {
+    	return maxSkyboxTextures;
+    }
+    
+    public int getMaxSkyboxVerticesBuffer() {
+    	return maxSkyboxVerticesBuffer;
+    }
+    
+    public int getMaxSkyboxIndicesBuffer() {
+    	return maxSkyboxIndicesBuffer;
     }
     
     public boolean isShaderRecompilation() {
@@ -159,9 +197,5 @@ public class EngineProperties {
     
     public boolean isvSync() {
         return vSync;
-    }
-    
-    public boolean useDeferred() {
-    	return useDeferred;
     }
 }
