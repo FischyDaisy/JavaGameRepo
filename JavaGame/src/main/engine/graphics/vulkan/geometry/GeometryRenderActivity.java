@@ -154,10 +154,11 @@ public class GeometryRenderActivity {
     	return geometryFrameBuffer;
     }
     
-    public void loadModels(List<VKTexture> textureCacheList) {
+    public void loadModels(VKTextureCache textureCache) {
         device.waitIdle();
         // Size of the descriptor is setup in the layout, we need to fill up the texture list
         // up to the number defined in the layout (reusing last texture)
+        List<VKTexture> textureCacheList = textureCache.getAsList();
         int textureCacheSize = textureCacheList.size();
         List<VKTexture> textureList = new ArrayList<>(textureCacheList);
         EngineProperties engineProperties = EngineProperties.INSTANCE;

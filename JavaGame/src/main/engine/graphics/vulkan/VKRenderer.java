@@ -49,7 +49,8 @@ public class VKRenderer {
     private final PipelineCache pipelineCache;
     private final Queue.PresentQueue presentQueue;
     private final Surface surface;
-    private final VKTextureCache textureCache;
+    private final VKTextureCache modelTextureCache;
+    private final VKTextureCache skyboxTextureCache;
     private final List<VulkanModel> vulkanModels;
     
     private CommandBuffer[] commandBuffers;
@@ -81,7 +82,8 @@ public class VKRenderer {
         nuklearRenderActivity = new NuklearRenderActivity(swapChain, commandPool, graphQueue, pipelineCache,
                 lightingRenderActivity.getLightingFrameBuffer().getLightingRenderPass().getVkRenderPass(), window);
         vulkanModels = new ArrayList<>();
-        textureCache = VKTextureCache.INSTANCE;
+        modelTextureCache = new VKTextureCache();
+        skyboxTextureCache = new VKTextureCache();
         gameItemsLoadedTimeStamp = 0;
         createCommandBuffers();
 	}
@@ -102,7 +104,8 @@ public class VKRenderer {
 		presentQueue.waitIdle();
         graphQueue.waitIdle();
         device.waitIdle();
-        textureCache.cleanup();
+        modelTextureCache.cleanup();
+        skyboxTextureCache.cleanup();
         pipelineCache.cleanup();
         nuklearRenderActivity.cleanup();
         lightingRenderActivity.cleanup();
@@ -138,13 +141,10 @@ public class VKRenderer {
 	
 	public void loadSkyBox(ModelData skyboxModelData, Scene scene) throws Exception {
 		Logger.debug("Loading Skybox model");
-		skybox = globalBuffers.loadSkyboxModel(skyboxModelData, textureCache, commandPool, graphQueue);
+		skybox = globalBuffers.loadSkyboxModel(skyboxModelData, skyboxTextureCache, commandPool, graphQueue);
 		Logger.debug("Loaded Skybox model");
 		
-		List<VKTexture> textureCacheList = textureCache.getAsList();
-		SkyBox skybox = scene.getSkyBox();
-		textureCacheList.removeIf(t -> !skybox.isSkyboxTexture(t));
-		skyboxRenderActivity.loadModel(textureCacheList);
+		skyboxRenderActivity.loadModel(skyboxTextureCache);
 	}
 	
 	public void loadParticles(List<ModelData> modelDataList, int maxParticles) throws Exception {
@@ -152,18 +152,10 @@ public class VKRenderer {
 	
 	public void loadModels(List<ModelData> modelDataList, Scene scene) throws Exception {
 		Logger.debug("Loading {} model(s)", modelDataList.size());
-		vulkanModels.addAll(globalBuffers.loadModels(modelDataList, textureCache, commandPool, graphQueue));
+		vulkanModels.addAll(globalBuffers.loadModels(modelDataList, modelTextureCache, commandPool, graphQueue));
 		Logger.debug("Loaded {} model(s)", modelDataList.size());
 		
-		if (skybox == null) {
-			List<VKTexture> textureCacheList = textureCache.getAsList();
-			geometryRenderActivity.loadModels(textureCacheList);
-		} else {
-			List<VKTexture> textureCacheList = textureCache.getAsList();
-			SkyBox skybox = scene.getSkyBox();
-			textureCacheList.removeIf(t -> skybox.isSkyboxTexture(t));
-			geometryRenderActivity.loadModels(textureCacheList);
-		}
+		geometryRenderActivity.loadModels(modelTextureCache);
     }
 	
 	public NKHudElement[] getNuklearElements() {
@@ -216,14 +208,6 @@ public class VKRenderer {
         
         animationComputeActivity.recordCommandBuffer(globalBuffers);
         animationComputeActivity.submit();
-
-        //CommandBuffer commandBuffer = geometryRenderActivity.beginRecording();
-        //geometryRenderActivity.recordCommandBuffer(commandBuffer, vulkanModels, animationComputeActivity.getGameItemAnimationsBuffers());
-        //skyboxRenderActivity.recordCommandBuffer(commandBuffer, skybox);
-        //geometryRenderActivity.endRenderPass(commandBuffer);
-        //shadowRenderActivity.recordCommandBuffer(commandBuffer, vulkanModels, animationComputeActivity.getGameItemAnimationsBuffers());
-        //geometryRenderActivity.endRecording(commandBuffer);
-        //geometryRenderActivity.submit(graphQueue);
         
         CommandBuffer commandBuffer = acquireCurrentCommandBuffer();
         geometryRenderActivity.render();
@@ -260,7 +244,7 @@ public class VKRenderer {
         nuklearRenderActivity.resize(swapChain);
     }
 	
-	public void submitSceneCommand(Queue queue, CommandBuffer commandBuffer) {
+	private void submitSceneCommand(Queue queue, CommandBuffer commandBuffer) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             int idx = swapChain.getCurrentFrame();
             Fence currentFence = fences[idx];

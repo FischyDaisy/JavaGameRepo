@@ -127,7 +127,7 @@ public class SkyboxRenderActivity {
                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0);
         projMatrixDescriptorSet = new DescriptorSet.UniformDescriptorSet(descriptorPool, uniformDescriptorSetLayout, projMatrixUniform, 0);
         materialsDescriptorSet = new DescriptorSet.StorageDescriptorSet(descriptorPool, storageDescriptorSetLayout,
-                globalBuffers.getMaterialsBuffer(), 0);
+                globalBuffers.getSkyboxMaterialsBuffer(), 0);
 
         viewMatricesDescriptorSets = new DescriptorSet.UniformDescriptorSet[numImages];
         viewMatricesBuffer = new VulkanBuffer[numImages];
@@ -162,10 +162,11 @@ public class SkyboxRenderActivity {
                 });
 	}
 	
-	public void loadModel(List<VKTexture> textureCacheList) {
+	public void loadModel(VKTextureCache textureCache) {
         device.waitIdle();
         // Size of the descriptor is setup in the layout, we need to fill up the texture list
         // up to the number defined in the layout (reusing last texture)
+        List<VKTexture> textureCacheList = textureCache.getAsList();
         int textureCacheSize = textureCacheList.size();
         List<VKTexture> textureList = new ArrayList<>(textureCacheList);
         EngineProperties engineProperties = EngineProperties.INSTANCE;

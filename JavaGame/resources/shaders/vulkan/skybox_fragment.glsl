@@ -21,7 +21,7 @@ struct Material {
     float metallicFactor;
 };
 
-layout (std430, set=2, binding=0) readonly buffer srcBuf {
+layout (std430, set = 2, binding = 0) readonly buffer srcBuf {
     Material data[];
 } materialsBuf;
 layout(set = 3, binding = 0) uniform sampler2D textSampler[MAX_TEXTURES];

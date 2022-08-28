@@ -181,6 +181,7 @@ public class Game implements IGameLogic {
         skyboxModel.getMaterialList().set(0, new ModelData.Material(ResourcePaths.Textures.SKYBOX_TEXTURE));
         skybox = new SkyBox(skyboxModel, window, scene, vkRenderer);
         skybox.setScale(200f);
+        skybox.buildModelMatrix();
         scene.setSkyBox(skybox);
         renderer.loadSkyBox(skyboxModel, scene);
         

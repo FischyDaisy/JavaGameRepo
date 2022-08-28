@@ -32,6 +32,7 @@ public class SkyBox  {
     	rotation = new Quaternionf();
     	scale = new Vector3f();
     	modelMatrix = new Matrix4f();
+    	modelId = modelData.getModelId();
     }
     
     public boolean isSkyboxTexture(VKTexture texture) {
@@ -83,6 +84,10 @@ public class SkyBox  {
     
     public void setScaleZ(float z) {
     	this.scale.z = z;
+    }
+    
+    public Matrix4f getModelMatrix() {
+    	return modelMatrix;
     }
     
     public Matrix4f buildModelMatrix() {

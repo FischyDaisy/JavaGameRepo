@@ -4,9 +4,7 @@ import main.engine.utility.Cache;
 
 public class VKTextureCache extends Cache<VKTexture> {
 	
-	public static final VKTextureCache INSTANCE = new VKTextureCache();
-	
-	private VKTextureCache() {
+	public VKTextureCache() {
 		super();
 	}
 

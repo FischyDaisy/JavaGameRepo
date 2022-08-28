@@ -18,7 +18,7 @@ public class SkyboxSpecConstants {
     public SkyboxSpecConstants() {
     	EngineProperties engineProperties = EngineProperties.INSTANCE;
         data = MemoryUtil.memAlloc(GraphConstants.INT_SIZE_BYTES);
-        data.putInt(engineProperties.getMaxTextures());
+        data.putInt(engineProperties.getMaxSkyboxTextures());
         data.flip();
 
         specEntryMap = VkSpecializationMapEntry.calloc(1);

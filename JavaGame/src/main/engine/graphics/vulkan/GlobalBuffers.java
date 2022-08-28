@@ -534,7 +534,7 @@ public class GlobalBuffers {
                             VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0);
                 }
 
-                indirectStgBuffer.recordTransferCommand(cmd, indirectBuffer);
+                indirectStgBuffer.recordTransferCommand(cmd, skyboxIndirectBuffer);
 
                 cmd.endRecording();
                 cmd.submitAndWait(device, queue);
@@ -558,7 +558,7 @@ public class GlobalBuffers {
             return;
         }
         for (VulkanModel.VulkanMesh vulkanMesh : skyboxModel.getVulkanMeshList()) {
-        	skybox.buildModelMatrix().get(pos, dataBuffer);
+        	skybox.getModelMatrix().get(pos, dataBuffer);
             pos += GraphConstants.MAT4X4_SIZE_BYTES;
             dataBuffer.putInt(pos, vulkanMesh.globalMaterialIdx());
             pos += GraphConstants.INT_SIZE_BYTES;
