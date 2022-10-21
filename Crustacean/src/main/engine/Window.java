@@ -117,22 +117,6 @@ public class Window {
 
         glfwSetFramebufferSizeCallback(windowHandle, (window, width, height) -> resize(width, height));
 
-        /*
-        glfwSetCharCallback(windowHandle, (window, codepoint) -> {
-            codePointList.add(codepoint);
-        });
-
-        glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
-            Logger.debug("Key: {}, Action: {}", key, action);
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-                //glfwSetWindowShouldClose(window, true);
-            }
-            if (keyCallback != null) {
-                keyCallback.invoke(window, key, scancode, action, mods);
-            }
-            keyMap.put(key, action);
-        });
-        */
         updateProjectionMatrix();
         mouseInput = new MouseInput(windowHandle);
         keyboardInput = new KeyboardInput(windowHandle);

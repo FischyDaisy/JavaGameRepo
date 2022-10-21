@@ -11,26 +11,26 @@ public class GameMenu implements NKHudElement {
 	
 	private final Window window;
 
-	private boolean shouldShow;
+	private boolean shouldHide;
 	
 	public GameMenu(Window window) {
 		this.window = window;
-		this.shouldShow = false;
+		this.shouldHide = true;
 	}
 
 	@Override
 	public void layout(NkContext ctx) {
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			NkRect rect = NkRect.malloc(stack);
-			if (nk_begin(ctx, "Menu", nk_rect(50, 50, window.getWidth() - 50, window.getHeight() - 50, rect), 
+			if (nk_begin(ctx, "Menu", nk_rect(50, 50, window.getWidth() - 100, window.getHeight() - 100, rect),
 					NK_WINDOW_TITLE)) { // | NK_WINDOW_HIDDEN
-				nk_window_show_if(ctx, "Menu", NK_HIDDEN, shouldShow);
+				nk_window_show_if(ctx, "Menu", NK_HIDDEN, shouldHide);
 			}
 			nk_end(ctx);
 		}
 	}
 	
 	public void showWindow(boolean show_window) {
-		this.shouldShow = show_window;
+		this.shouldHide = show_window;
 	}
 }
