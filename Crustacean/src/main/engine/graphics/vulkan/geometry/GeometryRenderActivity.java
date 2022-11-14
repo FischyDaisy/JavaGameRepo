@@ -166,8 +166,12 @@ public class GeometryRenderActivity {
         for (int i = 0; i < maxTextures - textureCacheSize; i++) {
             textureList.add(textureCacheList.get(textureCacheSize - 1));
         }
-        textureDescriptorSet = new TextureDescriptorSet(descriptorPool, textureDescriptorSetLayout, textureList,
-                textureSampler, 0);
+        if (textureDescriptorSet == null) {
+            textureDescriptorSet = new TextureDescriptorSet(descriptorPool, textureDescriptorSetLayout, textureList,
+                    textureSampler, 0);
+        } else {
+            textureDescriptorSet.update(device, textureList, textureSampler, 0);
+        }
     }
 
     public void recordCommandBuffer(CommandBuffer commandBuffer, GlobalBuffers globalBuffers, int idx) {

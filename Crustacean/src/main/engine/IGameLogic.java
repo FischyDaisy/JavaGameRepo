@@ -7,7 +7,7 @@ public interface IGameLogic {
 	
 	void init(Window window, Scene scene, VKRenderer renderer) throws Exception;
     
-    void inputAndUpdate(Window window, Scene scene, long diffTimeNanos);
+    void inputAndUpdate(Window window, Scene scene, long diffTimeNanos) throws Exception;
     
     void cleanup();
 }

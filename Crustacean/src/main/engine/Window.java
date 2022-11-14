@@ -3,59 +3,11 @@ package main.engine;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import org.lwjgl.glfw.*;
-import org.lwjgl.nuklear.NkAllocator;
-import org.lwjgl.nuklear.NkContext;
-import org.lwjgl.nuklear.NkDrawVertexLayoutElement;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
-import static org.lwjgl.system.MemoryUtil.nmemAllocChecked;
-import static org.lwjgl.system.MemoryUtil.nmemFree;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.joml.Matrix4f;
-import org.tinylog.Logger;
 
 import static org.lwjgl.glfw.GLFWVulkan.glfwVulkanSupported;
-import static org.lwjgl.nuklear.Nuklear.NK_FORMAT_COUNT;
-import static org.lwjgl.nuklear.Nuklear.NK_FORMAT_FLOAT;
-import static org.lwjgl.nuklear.Nuklear.NK_FORMAT_R8G8B8A8;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_BACKSPACE;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_COPY;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_CUT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_DEL;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_DOWN;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_ENTER;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_LEFT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_PASTE;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_RIGHT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_DOWN;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_END;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_START;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_SCROLL_UP;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_SHIFT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TAB;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_END;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_LINE_END;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_LINE_START;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_REDO;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_START;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_UNDO;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_WORD_LEFT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_TEXT_WORD_RIGHT;
-import static org.lwjgl.nuklear.Nuklear.NK_KEY_UP;
-import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_ATTRIBUTE_COUNT;
-import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_COLOR;
-import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_POSITION;
-import static org.lwjgl.nuklear.Nuklear.NK_VERTEX_TEXCOORD;
-import static org.lwjgl.nuklear.Nuklear.nk_input_key;
-import static org.lwjgl.nuklear.Nuklear.nk_input_unicode;
 
 public class Window {
 

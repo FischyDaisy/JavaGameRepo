@@ -19,4 +19,10 @@ public class IndexedLinkedHashMap<K, V> extends LinkedHashMap<K, V> {
         if (!super.containsKey(key)) indexList.add(key);
         return super.put(key, val);
     }
+
+    @Override
+    public void clear() {
+        indexList.clear();
+        super.clear();
+    }
 }

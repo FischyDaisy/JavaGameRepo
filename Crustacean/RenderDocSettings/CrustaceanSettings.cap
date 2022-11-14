@@ -2,10 +2,10 @@
     "rdocCaptureSettings": 1,
     "settings": {
         "autoStart": false,
-        "commandLine": "--enable-preview --add-modules jdk.incubator.foreign -XX:+UseZGC -Xmx2G --enable-native-access=ALL-UNNAMED  -jar JavaGame.jar",
+        "commandLine": "--enable-preview --enable-native-access=ALL-UNNAMED  -jar Crustacean.jar",
         "environment": [
         ],
-        "executable": "C:\\Program Files\\Java\\jdk-18.0.2.1\\bin\\javaw.exe",
+        "executable": "C:\\Program Files\\Java\\graalvm-ce-java19-22.3.0\\bin\\javaw.exe",
         "inject": false,
         "numQueuedFrames": 0,
         "options": {
@@ -22,6 +22,6 @@
             "verifyBufferAccess": false
         },
         "queuedFrameCap": 0,
-        "workingDir": "C:/Users/Christopher/Documents/Workspace/JavaGame"
+        "workingDir": "C:/Users/Christopher/Documents/Workspace/Crustacean"
     }
 }

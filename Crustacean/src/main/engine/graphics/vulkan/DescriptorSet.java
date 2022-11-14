@@ -20,6 +20,10 @@ public abstract class DescriptorSet {
                                        VulkanBuffer buffer, int binding, long size) {
             super(descriptorPool, descriptorSetLayout, buffer, binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, size);
         }
+
+        public void update(Device device, VulkanBuffer buffer, int binding, long size) {
+            super.update(device, buffer, binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, size);
+        }
     }
 
     public static class SimpleDescriptorSet extends DescriptorSet {
@@ -59,6 +63,27 @@ public abstract class DescriptorSet {
                 vkUpdateDescriptorSets(device.getVkDevice(), descrBuffer, null);
             }
         }
+
+        public void update(Device device, VulkanBuffer buffer, int binding, int type, long size) {
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                VkDescriptorBufferInfo.Buffer bufferInfo = VkDescriptorBufferInfo.calloc(1, stack)
+                        .buffer(buffer.getBuffer())
+                        .offset(0)
+                        .range(size);
+
+                VkWriteDescriptorSet.Buffer descrBuffer = VkWriteDescriptorSet.calloc(1, stack);
+
+                descrBuffer.get(0)
+                        .sType(VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET)
+                        .dstSet(vkDescriptorSet)
+                        .dstBinding(binding)
+                        .descriptorType(type)
+                        .descriptorCount(1)
+                        .pBufferInfo(bufferInfo);
+
+                vkUpdateDescriptorSets(device.getVkDevice(), descrBuffer, null);
+            }
+        }
     }
     
     public static class StorageDescriptorSet extends SimpleDescriptorSet {
@@ -68,6 +93,10 @@ public abstract class DescriptorSet {
             super(descriptorPool, descriptorSetLayout, buffer, binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
                     buffer.getRequestedSize());
         }
+
+        public void update(Device device, VulkanBuffer buffer, int binding) {
+            super.update(device, buffer, binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, buffer.getRequestedSize());
+        }
     }
 
     public static class UniformDescriptorSet extends SimpleDescriptorSet {
@@ -76,6 +105,10 @@ public abstract class DescriptorSet {
                                     VulkanBuffer buffer, int binding) {
             super(descriptorPool, descriptorSetLayout, buffer, binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
                     buffer.getRequestedSize());
+        }
+
+        public void update(Device device, VulkanBuffer buffer, int binding) {
+            super.update(device, buffer, binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, buffer.getRequestedSize());
         }
     }
 }

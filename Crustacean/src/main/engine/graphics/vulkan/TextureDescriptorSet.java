@@ -56,24 +56,34 @@ public class TextureDescriptorSet extends DescriptorSet {
         }
     }
     
-    public void update(Device device, VKTexture texture, TextureSampler textureSampler, int binding) {
+    public void update(Device device, List<VKTexture> textureList, TextureSampler textureSampler, int binding) {
     	try (MemoryStack stack = MemoryStack.stackPush()) {
-    		VkDescriptorImageInfo.Buffer imageInfo = VkDescriptorImageInfo.calloc(1, stack)
-                    .imageLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
-                    .imageView(texture.getImageView().getVkImageView())
-                    .sampler(textureSampler.getVkSampler());
+            int numImages = textureList.size();
+            VkDescriptorImageInfo.Buffer imageInfo = VkDescriptorImageInfo.calloc(numImages, stack);
+            for (int i = 0; i < numImages; i++) {
+                VKTexture texture = textureList.get(i);
+                imageInfo.get(i)
+                        .imageLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+                        .imageView(texture.getImageView().getVkImageView())
+                        .sampler(textureSampler.getVkSampler());
+            }
 
             VkWriteDescriptorSet.Buffer descrBuffer = VkWriteDescriptorSet.calloc(1, stack);
             descrBuffer.get(0)
                     .sType(VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET)
                     .dstSet(vkDescriptorSet)
                     .dstBinding(binding)
+                    .dstArrayElement(0)
                     .descriptorType(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-                    .descriptorCount(1)
+                    .descriptorCount(numImages)
                     .pImageInfo(imageInfo);
 
             vkUpdateDescriptorSets(device.getVkDevice(), descrBuffer, null);
     	}
+    }
+
+    public void update(Device device, VKTexture texture, TextureSampler textureSampler, int binding) {
+        update(device, Arrays.asList(texture), textureSampler, binding);
     }
     
     public void update(Device device, long vkImageView, TextureSampler textureSampler, int binding) {

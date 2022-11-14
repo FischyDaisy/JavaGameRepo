@@ -65,10 +65,10 @@ public class VulkanModel {
         }
     }
 
-    public static record VulkanAnimationFrame(int jointMatricesOffset) {}
+    public record VulkanAnimationFrame(int jointMatricesOffset) {}
 
-    public static record VulkanMaterial(int globalMaterialIdx) {}
+    public record VulkanMaterial(int globalMaterialIdx) {}
 
-    public static record VulkanMesh(int verticesSize, int numIndices, int verticesOffset, int indicesOffset,
-                                    int globalMaterialIdx, int weightsOffset) {}
+    public record VulkanMesh(int verticesSize, int numIndices, int verticesOffset, int indicesOffset,
+                             int globalMaterialIdx, int weightsOffset) {}
 }

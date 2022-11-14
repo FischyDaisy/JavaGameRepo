@@ -104,14 +104,21 @@ public class AnimationComputeActivity {
     }
     
     public void onAnimatedGameItemsLoaded(GlobalBuffers globalBuffers) {
-        srcVerticesDescriptorSet = new DescriptorSet.StorageDescriptorSet(descriptorPool,
-                storageDescriptorSetLayout, globalBuffers.getVerticesBuffer(), 0);
-        weightsDescriptorSet = new DescriptorSet.StorageDescriptorSet(descriptorPool,
-                storageDescriptorSetLayout, globalBuffers.getAnimWeightsBuffer(), 0);
-        dstVerticesDescriptorSet = new DescriptorSet.StorageDescriptorSet(descriptorPool,
-                storageDescriptorSetLayout, globalBuffers.getAnimVerticesBuffer(), 0);
-        jointMatricesDescriptorSet = new DescriptorSet.StorageDescriptorSet(descriptorPool,
-                storageDescriptorSetLayout, globalBuffers.getAnimJointMatricesBuffer(), 0);
+        if (srcVerticesDescriptorSet == null) {
+            srcVerticesDescriptorSet = new DescriptorSet.StorageDescriptorSet(descriptorPool,
+                    storageDescriptorSetLayout, globalBuffers.getVerticesBuffer(), 0);
+            weightsDescriptorSet = new DescriptorSet.StorageDescriptorSet(descriptorPool,
+                    storageDescriptorSetLayout, globalBuffers.getAnimWeightsBuffer(), 0);
+            dstVerticesDescriptorSet = new DescriptorSet.StorageDescriptorSet(descriptorPool,
+                    storageDescriptorSetLayout, globalBuffers.getAnimVerticesBuffer(), 0);
+            jointMatricesDescriptorSet = new DescriptorSet.StorageDescriptorSet(descriptorPool,
+                    storageDescriptorSetLayout, globalBuffers.getAnimJointMatricesBuffer(), 0);
+        } else {
+            srcVerticesDescriptorSet.update(device, globalBuffers.getVerticesBuffer(), 0);
+            weightsDescriptorSet.update(device, globalBuffers.getAnimWeightsBuffer(), 0);
+            dstVerticesDescriptorSet.update(device, globalBuffers.getAnimVerticesBuffer(), 0);
+            jointMatricesDescriptorSet.update(device, globalBuffers.getAnimJointMatricesBuffer(), 0);
+        }
     }
 
     public void recordCommandBuffer(GlobalBuffers globalBuffers) {

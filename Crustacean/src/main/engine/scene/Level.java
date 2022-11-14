@@ -18,10 +18,13 @@ import java.lang.foreign.*;
 public interface Level {
 	/**
 	 * Loads the level into the engine
-	 * @param scne 
-	 * @param vkRenderer
+	 * @param scene
+	 * @param renderer
 	 * @param world
-	 * @param scope
+	 * @param physics
+	 * @param session
 	 */
-	public void load(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, MemorySession session) throws Exception;
+	void load(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, MemorySession session) throws Exception;
+
+	void reset(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, MemorySession session) throws Exception;
 }

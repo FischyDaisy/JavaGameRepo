@@ -71,7 +71,7 @@ public class Physics {
 		body.setForce(newMass);
 	}
 	
-	public static GameItem createPrimitiveCollision(NewtonWorld world, Physics physics, Scene scene, List<ModelData> modelDataList, String modelId, String gameitemId, 
+	public GameItem createPrimitiveCollision(NewtonWorld world, List<ModelData> modelDataList, String modelId, String gameitemId,
 			CollisionPrimitive primitive, float[] params, float[] offsetMatrix, float mass, MemorySession session) {
 		ModelData.Material newtonMaterial = new ModelData.Material(ResourcePaths.Textures.THIS_PIC_GOES_HARD);
 		List<ModelData.Material> newtonMaterials = new ArrayList<ModelData.Material>();
@@ -94,8 +94,7 @@ public class Physics {
 		    	mesh.applyBoxMapping(0, 0, 0, matArr);
 		    	ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
 		    	modelDataList.add(model);
-		    	scene.addGameItem(item);
-		    	physics.registerGameItem(item);
+		    	registerGameItem(item);
 		    	collision.destroy();
 		    	mesh.destroy();
 				yield item;
@@ -114,8 +113,7 @@ public class Physics {
 		    	mesh.applyCylindricalMapping(0, 0, matArr);
 		    	ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
 		    	modelDataList.add(model);
-		    	scene.addGameItem(item);
-		    	physics.registerGameItem(item);
+		    	registerGameItem(item);
 		    	collision.destroy();
 		    	mesh.destroy();
 				yield item;
@@ -134,8 +132,7 @@ public class Physics {
 		    	mesh.applyCylindricalMapping(0, 0, matArr);
 		    	ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
 		    	modelDataList.add(model);
-		    	scene.addGameItem(item);
-		    	physics.registerGameItem(item);
+		    	registerGameItem(item);
 		    	collision.destroy();
 		    	mesh.destroy();
 				yield item;
@@ -154,8 +151,7 @@ public class Physics {
 		    	mesh.applyBoxMapping(0, 0, 0, matArr);
 		    	ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
 		    	modelDataList.add(model);
-		    	scene.addGameItem(item);
-		    	physics.registerGameItem(item);
+		    	registerGameItem(item);
 		    	collision.destroy();
 		    	mesh.destroy();
 				yield item;
@@ -174,8 +170,7 @@ public class Physics {
 		    	mesh.applyCylindricalMapping(0, 0, matArr);
 		    	ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
 		    	modelDataList.add(model);
-		    	scene.addGameItem(item);
-		    	physics.registerGameItem(item);
+		    	registerGameItem(item);
 		    	collision.destroy();
 		    	mesh.destroy();
 				yield item;
@@ -194,8 +189,7 @@ public class Physics {
 		    	mesh.applySphericalMapping(0, matArr);
 		    	ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
 		    	modelDataList.add(model);
-		    	scene.addGameItem(item);
-		    	physics.registerGameItem(item);
+		    	registerGameItem(item);
 		    	collision.destroy();
 		    	mesh.destroy();
 				yield item;

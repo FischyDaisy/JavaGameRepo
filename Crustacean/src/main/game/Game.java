@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.engine.*;
-import main.engine.graphics.hud.Calculator;
-import main.engine.graphics.hud.Demo;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -37,7 +35,6 @@ import main.engine.utility.ResourcePaths;
 
 import crab.newton.*;
 import org.tinylog.Logger;
-
 import java.lang.foreign.*;
 
 public class Game implements IGameLogic {
@@ -101,6 +98,7 @@ public class Game implements IGameLogic {
     private Physics gamePhysics;
     
     private GameMenu menu;
+    private GameMenu.Level currentLevel;
     
     private boolean shouldShow;
 
@@ -113,8 +111,8 @@ public class Game implements IGameLogic {
         angleInc = 0;
         lightAngle = 45;
         firstTime = true;
-        levels = new Level[] {new NewtonDemo(), new Sponza()};
-        levelSelection = 0;
+        levels = new Level[2];
+        levelSelection = 1;
     }
     
     public static void main(String[] args) {
@@ -156,6 +154,9 @@ public class Game implements IGameLogic {
         vkRenderer = renderer;
         
         gamePhysics = new Physics();
+
+        levels[0] = new NewtonDemo(world, gamePhysics, gameSession);
+        levels[1] = new Sponza();
     	
         levels[levelSelection].load(scene, renderer, world, gamePhysics, gameSession);
         
@@ -175,6 +176,7 @@ public class Game implements IGameLogic {
         renderer.loadSkyBox(skyboxModel, scene);
         
         menu = new GameMenu(window);
+        currentLevel = GameMenu.Level.SPONZA;
         vkRenderer.setNulkearElements(new NKHudElement[] {menu});
         shouldShow = true;
         
@@ -226,7 +228,26 @@ public class Game implements IGameLogic {
     }
 
     @Override
-    public void inputAndUpdate(Window window, Scene scene, long diffTimeNanos) {
+    public void inputAndUpdate(Window window, Scene scene, long diffTimeNanos) throws Exception {
+        if (!currentLevel.equals(menu.getLevel())) {
+            currentLevel = menu.getLevel();
+            switch (currentLevel) {
+                case SPONZA -> {
+                    levelSelection = 1;
+                    vkRenderer.unloadModels();
+                    scene.removeAllGameItems();
+                    levels[levelSelection].load(scene, vkRenderer, world, gamePhysics, gameSession);
+                    bob = scene.getGameItemsByModelId("bob-model").get(0);
+                    monster = scene.getGameItemsByModelId("monster-model").get(0);
+                }
+                case NEWTONDEMO -> {
+                    levelSelection = 0;
+                    scene.removeAllGameItems();
+                    vkRenderer.unloadModels();
+                    levels[levelSelection].load(scene, vkRenderer, world, gamePhysics, gameSession);
+                }
+            }
+        }
     	sceneChanged = false;
     	cameraInc.set(0, 0, 0);
         KeyboardInput keyboard = window.getKeyboardInput();

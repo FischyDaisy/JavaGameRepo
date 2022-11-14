@@ -12,8 +12,6 @@ module Crustacean {
     requires org.lwjgl.nuklear.natives;
     requires org.lwjgl.openal;
     requires org.lwjgl.openal.natives;
-    requires org.lwjgl.opengl;
-    requires org.lwjgl.opengl.natives;
     requires org.lwjgl.shaderc;
     requires org.lwjgl.shaderc.natives;
     requires org.lwjgl.stb;

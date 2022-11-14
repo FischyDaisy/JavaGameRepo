@@ -3,7 +3,7 @@ package main.engine;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.scene.Scene;
 
-public class GameEngine implements Runnable {
+public class GameEngine {
     
     private boolean running;
     
@@ -46,8 +46,8 @@ public class GameEngine implements Runnable {
         fps = 0;
     }
 
-    @Override
-    public void run() {
+
+    public void run() throws Exception {
         initialTime = System.nanoTime();
         double timeU = 1000000000d / engineProperties.getUps();
         double deltaU = 0;
@@ -103,7 +103,7 @@ public class GameEngine implements Runnable {
         }
     }
     
-    public void start() {
+    public void start() throws Exception {
         running = true;
         run();
     }

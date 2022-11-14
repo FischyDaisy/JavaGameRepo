@@ -255,4 +255,12 @@ public class VKRenderer {
                     stack.longs(syncSemaphores.geometryCompleteSemaphore().getVkSemaphore()), currentFence);
         }
     }
+
+    public void unloadModels() {
+        Logger.debug("Unloading {} Model(s)", vulkanModels.size());
+        device.waitIdle();
+        vulkanModels.clear();
+        modelTextureCache.cleanup();
+        Logger.debug("Unloaded Model(s)");
+    }
 }
