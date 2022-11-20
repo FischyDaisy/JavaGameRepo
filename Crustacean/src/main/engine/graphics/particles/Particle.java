@@ -1,11 +1,12 @@
 package main.engine.graphics.particles;
 
+import main.engine.graphics.ModelData;
 import org.joml.Vector3f;
 
 import main.engine.graphics.vulkan.VKTexture;
 import main.engine.items.GameItem;
 
-public class Particle extends GameItem {
+public final class Particle extends GameItem {
 	
 	private long updateTextureNanos;
     
@@ -81,13 +82,13 @@ public class Particle extends GameItem {
         this.currentAnimTimeNanos += elapsedTime;
         if ( this.currentAnimTimeNanos >= this.getUpdateTextureNanos() && this.animFrames > 0 ) {
             this.currentAnimTimeNanos = 0;
-            int pos = this.getTextPos();
-            pos++;
-            if ( pos < this.animFrames ) {
-                this.setTextPos(pos);
-            } else {
-                this.setTextPos(0);
-            }
+            //int pos = this.getTextPos();
+            //pos++;
+            //if ( pos < this.animFrames ) {
+            //    this.setTextPos(pos);
+            //} else {
+            //    this.setTextPos(0);
+            //}
         }
         return this.ttl;
     }

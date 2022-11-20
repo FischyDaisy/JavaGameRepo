@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.engine.*;
+import main.engine.items.GameItemAnimation;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -290,8 +291,8 @@ public class Game implements IGameLogic {
         }
         
         if (keyboard.isKeyPressed(GLFW_KEY_SPACE) && levelSelection != 0) {
-            bob.getGameItemAnimation().setStarted(!bob.getGameItemAnimation().isStarted());
-            monster.getGameItemAnimation().setStarted(!monster.getGameItemAnimation().isStarted());
+            bob.getAnimation().setStarted(!bob.getAnimation().isStarted());
+            monster.getAnimation().setStarted(!monster.getAnimation().isStarted());
         }
         
         if (keyboard.isKeyPressed(GLFW_KEY_F) && levelSelection == 0) {
@@ -309,13 +310,13 @@ public class Game implements IGameLogic {
         updateDirectionalLight();
         /**/
         if (levelSelection != 0) {
-            GameItem.GameItemAnimation itemAnimation = bob.getGameItemAnimation();
+            GameItemAnimation itemAnimation = bob.getAnimation();
             if (itemAnimation.isStarted()) {
                 int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, itemAnimation.maxFrames);
                 itemAnimation.setCurrentFrame(currentFrame);
             }
 
-            itemAnimation = monster.getGameItemAnimation();
+            itemAnimation = monster.getAnimation();
             if (itemAnimation.isStarted()) {
                 int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, itemAnimation.maxFrames);
                 itemAnimation.setCurrentFrame(currentFrame);

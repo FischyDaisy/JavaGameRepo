@@ -22,6 +22,7 @@ module Crustacean {
     requires org.tinylog.api;
     requires crab.jnewton;
     requires crab.jnewton.windows_x64;
+    requires dev.dominion.ecs.api;
 
     exports main.game;
 }

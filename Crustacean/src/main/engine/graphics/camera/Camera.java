@@ -177,7 +177,8 @@ public class Camera {
     }
     
     public Camera createPortalCam(Portal fromPortal, Portal toPortal) {
-    	Matrix4f fromPMat = fromPortal.buildModelMatrix().invert();
+    	/*
+        Matrix4f fromPMat = fromPortal.buildModelMatrix().invert();
     	Matrix4f toPMat = toPortal.buildModelMatrix();
     	
     	// Position
@@ -193,6 +194,7 @@ public class Camera {
     	relativeRot = this.getRotationQ().mul(fromPortal.getRotation().invert(), relativeRot);
     	relativeRot = relativeRot.mul(rot.getQuatRotation());
     	Quaternionf finalRot = new Quaternionf(relativeRot.mul(toPortal.getRotation()));
-    	return new Camera(finalPos, finalRot);
+    	return new Camera(finalPos, finalRot);*/
+        return  null;
     }
 }

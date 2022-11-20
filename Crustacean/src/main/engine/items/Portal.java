@@ -6,7 +6,7 @@ import org.joml.Vector3f;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.camera.Camera;
 
-public class Portal extends GameItem {
+public class Portal {
 	
 	public static final int MAX_RECURSION = 20;
 	

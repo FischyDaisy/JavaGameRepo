@@ -8,6 +8,7 @@ import java.lang.foreign.*;
 import main.engine.graphics.ModelData;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.items.GameItem;
+import main.engine.items.GameItemAnimation;
 import main.engine.loaders.assimp.ModelLoader;
 import main.engine.physics.Physics;
 import main.engine.scene.Level;
@@ -42,7 +43,7 @@ public class Sponza implements Level {
         rot.setRotation((float) Math.toRadians(-90.0f));
         bob.setRotation(rot.getQuatRotation());
         bob.buildModelMatrix();
-        bob.setGameItemAnimation(new GameItem.GameItemAnimation(false, 0, 0, maxFrames));
+        bob.setAnimation(new GameItemAnimation(false, 0, 0, maxFrames));
 
         String monsterModelId = "monster-model";
         ModelData monsterModelData = ModelLoader.loadModel(monsterModelId, ResourcePaths.Models.MONSTER_MD5MESH,
@@ -55,7 +56,7 @@ public class Sponza implements Level {
         //monster.setRotation(rot.getQuatRotation());
         monster.setPosition(-5f, 0f, 0f);
         monster.buildModelMatrix();
-        monster.setGameItemAnimation(new GameItem.GameItemAnimation(false, 0, 0, monsterMax));
+        monster.setAnimation(new GameItemAnimation(false, 0, 0, monsterMax));
     }
 	@Override
 	public void load(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, MemorySession session) throws Exception {
@@ -68,7 +69,7 @@ public class Sponza implements Level {
 
     @Override
     public void reset(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, MemorySession session) throws Exception {
-        bob.getGameItemAnimation().setCurrentFrame(0);
-        monster.getGameItemAnimation().setCurrentFrame(0);
+        bob.getAnimation().setCurrentFrame(0);
+        monster.getAnimation().setCurrentFrame(0);
     }
 }

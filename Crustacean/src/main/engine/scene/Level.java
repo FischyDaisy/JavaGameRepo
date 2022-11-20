@@ -9,8 +9,7 @@ import java.lang.foreign.*;
  * Interface for creating levels
  * 
  * A Level is a class that contains all the necessary objects to be passed to the Scene, Renderer and NewtonWorld.
- * The level can be used to create classes or can simply just be a lambda expression. In the future a way to generate
- * Levels from external files will be developed.
+ * In the future a way to generate Levels from external files will be developed.
  * 
  * @author Christopher
  *

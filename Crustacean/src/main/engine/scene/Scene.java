@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import crab.newton.NewtonBody;
+import dev.dominion.ecs.api.Dominion;
 import main.engine.graphics.camera.Camera;
 import main.engine.graphics.particles.IParticleEmitter;
 import main.engine.graphics.weather.Fog;
 import main.engine.items.GameItem;
+import main.engine.items.GameItemAnimation;
 import main.engine.items.SkyBox;
 
 public class Scene {
@@ -59,7 +62,7 @@ public class Scene {
     }
     
     public void addGameItem(GameItem gameItem) {
-    	List<GameItem> gameItems = modelMap.get(gameItem.getModelId());
+        List<GameItem> gameItems = modelMap.get(gameItem.getModelId());
         if (gameItems == null) {
             gameItems = new ArrayList<GameItem>();
             modelMap.put(gameItem.getModelId(), gameItems);

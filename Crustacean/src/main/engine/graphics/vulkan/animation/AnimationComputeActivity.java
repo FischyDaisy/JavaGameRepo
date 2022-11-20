@@ -1,5 +1,6 @@
 package main.engine.graphics.vulkan.animation;
 
+import main.engine.items.GameItemAnimation;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.VkCommandBuffer;
@@ -149,15 +150,15 @@ public class AnimationComputeActivity {
             List<VulkanAnimModel> vulkanAnimModelList = globalBuffers.getVulkanAnimModelList();
             for (VulkanAnimModel vulkanAnimModel : vulkanAnimModelList) {
                 GameItem item = vulkanAnimModel.getGameItem();
-                GameItem.GameItemAnimation gameItemAnimation = item.getGameItemAnimation();
+                GameItemAnimation gameItemAnimation = item.getAnimation();
                 if (!gameItemAnimation.isStarted() && gameItemAnimation.isLoaded()) {
                     continue;
                 }
                 gameItemAnimation.setLoaded(true);
 
                 VulkanModel vulkanModel = vulkanAnimModel.getVulkanModel();
-                int animationIdx = item.getGameItemAnimation().getAnimationIdx();
-                int currentFrame = item.getGameItemAnimation().getCurrentFrame();
+                int animationIdx = item.getAnimation().getAnimationIdx();
+                int currentFrame = item.getAnimation().getCurrentFrame();
                 int jointMatricesOffset = vulkanModel.getVulkanAnimationDataList().get(animationIdx).getVulkanAnimationFrameList().get(currentFrame).jointMatricesOffset();
 
                 for (VulkanAnimModel.VulkanAnimMesh vulkanAnimMesh : vulkanAnimModel.getVulkanAnimMeshList()) {

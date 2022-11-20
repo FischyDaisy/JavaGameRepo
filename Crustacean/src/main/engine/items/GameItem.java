@@ -1,5 +1,7 @@
 package main.engine.items;
 
+import main.engine.graphics.ModelData;
+import main.engine.graphics.particles.Particle;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -7,83 +9,48 @@ import org.joml.Vector3f;
 import crab.newton.NewtonBody;
 import main.engine.graphics.Transformation;
 
-public class GameItem {
-	
-	private GameItemAnimation gameItemAnimation;
-	
-	private NewtonBody body;
+public sealed class GameItem permits Particle {
 	
 	private String id;
 	
-	private String modelId;
+	private final String modelId;
 	
 	private boolean selected;
     
     private final Vector3f scale;
     
-    private final Transform transform;
+    private final Vector3f position;
+
+    private final Quaternionf rotation;
     
     private final Matrix4f modelMatrix;
+
+    private GameItemAnimation animation;
+
+    private NewtonBody body;
     
-    private int textPos;
-    
-    private boolean disableFrustumCulling;
-    
-    private boolean insideFrustum;
-    
-    public GameItem() {
+    public GameItem(String modelId) {
+        this.modelId = modelId;
     	selected = false;
-        transform = new Transform();
         scale = new Vector3f(1.0f, 1.0f, 1.0f);
         modelMatrix = new Matrix4f();
-        textPos = 0;
-        insideFrustum = true;
-        disableFrustumCulling = false;
-        body = null;
+        position = new Vector3f();
+        rotation = new Quaternionf();
     }
     
     public GameItem(String id, String modelId) {
-    	this();
+    	this(modelId);
     	this.id = id;
-    	this.modelId = modelId;
-    }
-    
-    public GameItemAnimation getGameItemAnimation() {
-        return gameItemAnimation;
-    }
-
-    public void setGameItemAnimation(GameItemAnimation entityAnimation) {
-        this.gameItemAnimation = entityAnimation;
-    }
-    
-    public NewtonBody getBody() {
-    	return body;
-    }
-    
-    public void setBody(NewtonBody body) {
-    	this.body = body;
-    }
-
-    public boolean hasAnimation() {
-        return gameItemAnimation != null;
     }
 
     public Vector3f getPosition() {
-        return transform.position;
-    }
-    
-    public int getTextPos() {
-        return textPos;
-    }
-    
-    public void setTextPos(int textPos) {
-        this.textPos = textPos;
+        return position;
     }
 
     public void setPosition(float x, float y, float z) {
-        this.transform.position.x = x;
-        this.transform.position.y = y;
-        this.transform.position.z = z;
+        this.position.x = x;
+        this.position.y = y;
+        this.position.z = z;
     }
     
     public String getId() {
@@ -93,13 +60,9 @@ public class GameItem {
     public void setId(String id) {
     	this.id = id;
     }
-    
+
     public String getModelId() {
-    	return modelId;
-    }
-    
-    public void setModelId(String modelId) {
-    	this.modelId = modelId;
+        return modelId;
     }
     
     public boolean isSelected() {
@@ -153,11 +116,11 @@ public class GameItem {
     }
 
     public Quaternionf getRotation() {
-        return transform.rotation;
+        return rotation;
     }
 
     public final void setRotation(Quaternionf q) {
-        this.transform.rotation.set(q);
+        this.rotation.set(q);
     }
     
     public Matrix4f getModelMatrix() {
@@ -171,73 +134,28 @@ public class GameItem {
     public Matrix4f setMatrix(Matrix4f m) {
     	return modelMatrix.set(m);
     }
-    
-    public boolean isInsideFrustum() {
-        return insideFrustum;
+
+    public GameItemAnimation getAnimation() {
+        return animation;
     }
 
-    public void setInsideFrustum(boolean insideFrustum) {
-        this.insideFrustum = insideFrustum;
-    }
-    
-    public boolean isDisableFrustumCulling() {
-        return disableFrustumCulling;
+    public void setAnimation(GameItemAnimation animation) {
+        this.animation = animation;
     }
 
-    public void setDisableFrustumCulling(boolean disableFrustumCulling) {
-        this.disableFrustumCulling = disableFrustumCulling;
+    public boolean hasAnimation() {
+        return animation != null;
     }
-    
-    public static class GameItemAnimation {
-        private int animationIdx;
-        private int currentFrame;
-        private boolean started;
-        private boolean loaded;
-        
-        public final int maxFrames;
 
-        public GameItemAnimation(boolean started, int animationIdx, int currentFrame, int maxFrames) {
-            this(started, false, animationIdx, currentFrame, maxFrames);
-        }
-        
-        public GameItemAnimation(boolean started, boolean loaded, int animationIdx, int currentFrame, int maxFrames) {
-            this.started = started;
-            this.loaded = loaded;
-            this.animationIdx = animationIdx;
-            this.currentFrame = currentFrame;
-            this.maxFrames = maxFrames;
-        }
+    public NewtonBody getBody() {
+        return body;
+    }
 
-        public int getAnimationIdx() {
-            return animationIdx;
-        }
+    public void setBody(NewtonBody body) {
+        this.body = body;
+    }
 
-        public void setAnimationIdx(int animationIdx) {
-            this.animationIdx = animationIdx;
-        }
-
-        public int getCurrentFrame() {
-            return currentFrame;
-        }
-
-        public void setCurrentFrame(int currentFrame) {
-            this.currentFrame = currentFrame;
-        }
-
-        public boolean isStarted() {
-            return started;
-        }
-
-        public void setStarted(boolean started) {
-            this.started = started;
-        }
-        
-        public boolean isLoaded() {
-        	return loaded;
-        }
-        
-        public void setLoaded(boolean loaded) {
-        	this.loaded = loaded;
-        }
+    public boolean hasPhysicsBody() {
+        return body != null;
     }
 }

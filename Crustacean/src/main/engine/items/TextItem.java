@@ -8,7 +8,7 @@ import main.engine.graphics.FontTexture;
 import main.engine.graphics.ModelData;
 import main.engine.utility.Utils;
 
-public class TextItem extends GameItem {
+public class TextItem {
 
 	private static final float ZPOS = 0.0f;
 
