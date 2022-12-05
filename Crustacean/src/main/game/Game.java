@@ -15,7 +15,7 @@ import main.engine.graphics.ModelData;
 import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.camera.Camera;
 import main.engine.graphics.camera.MouseBoxSelectionDetector;
-import main.engine.graphics.hud.GameMenu;
+import main.game.hud.GameMenu;
 import main.engine.graphics.hud.NKHudElement;
 import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.lights.Light;
@@ -45,8 +45,6 @@ public class Game implements IGameLogic {
 	private static final float MOUSE_SENSITIVITY = 0.2f;
 
     private final Vector3f cameraInc;
-    
-    private final Camera camera;
 
     private Scene scene;
     
@@ -94,30 +92,26 @@ public class Game implements IGameLogic {
     
     private NewtonWorld world;
     
-    private final Level[] levels;
-    
     private Physics gamePhysics;
     
     private GameMenu menu;
-    private GameMenu.Level currentLevel;
-    
-    private boolean shouldShow;
+    private Level currentLevel;
+
 
     private int levelSelection;
     
     public Game() {
-        camera = new Camera();
         soundMgr = new SoundManager();
         cameraInc = new Vector3f(0.0f, 0.0f, 0.0f);
         angleInc = 0;
         lightAngle = 45;
         firstTime = true;
-        levels = new Level[2];
-        levelSelection = 1;
+        updatePhysics = false;
     }
     
     public static void main(String[] args) {
         try {
+            Logger.debug("Application Directory: {}", System.getProperty("user.dir"));
             IGameLogic gameLogic = new Game();
             Window.WindowOptions opts = new Window.WindowOptions();
             opts.showFps = true;
@@ -126,7 +120,7 @@ public class Game implements IGameLogic {
             GameEngine gameEng = new GameEngine("GAME", opts, gameLogic);
             gameEng.start();
         } catch (Exception excp) {
-            excp.printStackTrace();
+            Logger.error(excp);
             System.exit(-1);
         }
     }
@@ -138,7 +132,7 @@ public class Game implements IGameLogic {
         leftButtonPressed = false;
 
         gameSession = MemorySession.openShared();
-        Newton.loadNewton("C:\\Users\\Christopher\\Documents\\Workspace\\Crustacean\\resources\\newtondll\\newton.dll", gameSession);
+        Newton.loadNewton(ResourcePaths.Newton.NEWTON_DLL, gameSession);
         /*
         try {
             Newton.loadNewton();
@@ -156,12 +150,14 @@ public class Game implements IGameLogic {
         
         gamePhysics = new Physics();
 
-        levels[0] = new NewtonDemo(world, gamePhysics, gameSession);
-        levels[1] = new Sponza();
-    	
-        levels[levelSelection].load(scene, renderer, world, gamePhysics, gameSession);
+        menu = new GameMenu(window, scene, renderer, world, gamePhysics, gameSession);
+        currentLevel = menu.getLevel();
+        levelSelection = menu.getCurrentLevel();
+        vkRenderer.setNulkearElements(new NKHudElement[] {menu});
+        menu.hideWindow(true);
+        currentLevel.load(scene, renderer, world, gamePhysics, gameSession);
         
-        if (levelSelection != 0) {
+        if (levelSelection == 0) {
             bob = scene.getGameItemsByModelId("bob-model").get(0);
             monster = scene.getGameItemsByModelId("monster-model").get(0);
         }
@@ -176,14 +172,7 @@ public class Game implements IGameLogic {
         scene.setSkyBox(skybox);
         renderer.loadSkyBox(skyboxModel, scene);
         
-        menu = new GameMenu(window);
-        currentLevel = GameMenu.Level.SPONZA;
-        vkRenderer.setNulkearElements(new NKHudElement[] {menu});
-        shouldShow = true;
-        
-        camera.setPosition(-6.0f, 2.0f, 0.0f);
-        camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
-        scene.setCamera(camera);
+
         
         scene.getSceneLight().getAmbientLight().set(0.2f, 0.2f, 0.2f, 1.0f);
         List<Light> lights = new ArrayList<>();
@@ -232,21 +221,13 @@ public class Game implements IGameLogic {
     public void inputAndUpdate(Window window, Scene scene, long diffTimeNanos) throws Exception {
         if (!currentLevel.equals(menu.getLevel())) {
             currentLevel = menu.getLevel();
-            switch (currentLevel) {
-                case SPONZA -> {
-                    levelSelection = 1;
-                    vkRenderer.unloadModels();
-                    scene.removeAllGameItems();
-                    levels[levelSelection].load(scene, vkRenderer, world, gamePhysics, gameSession);
-                    bob = scene.getGameItemsByModelId("bob-model").get(0);
-                    monster = scene.getGameItemsByModelId("monster-model").get(0);
-                }
-                case NEWTONDEMO -> {
-                    levelSelection = 0;
-                    scene.removeAllGameItems();
-                    vkRenderer.unloadModels();
-                    levels[levelSelection].load(scene, vkRenderer, world, gamePhysics, gameSession);
-                }
+            levelSelection = menu.getCurrentLevel();
+            vkRenderer.unloadModels();
+            scene.removeAllGameItems();
+            currentLevel.load(scene, vkRenderer, world, gamePhysics, gameSession);
+            if (levelSelection == 0) {
+                bob = scene.getGameItemsByModelId("bob-model").get(0);
+                monster = scene.getGameItemsByModelId("monster-model").get(0);
             }
         }
     	sceneChanged = false;
@@ -254,8 +235,8 @@ public class Game implements IGameLogic {
         KeyboardInput keyboard = window.getKeyboardInput();
     	if (keyboard.isKeyPressedOnce(GLFW_KEY_ESCAPE)) {
             Logger.debug("Escape key pressed");
-    		menu.showWindow(shouldShow);
-    		shouldShow = !shouldShow;
+            boolean shouldHide = !menu.isHidden();
+    		menu.hideWindow(shouldHide);
     	}
         if (keyboard.isKeyPressed(GLFW_KEY_W)) {
             cameraInc.z = -1;
@@ -290,15 +271,13 @@ public class Game implements IGameLogic {
             scene.getSceneLight().setLightChanged(false);
         }
         
-        if (keyboard.isKeyPressed(GLFW_KEY_SPACE) && levelSelection != 0) {
+        if (keyboard.isKeyPressedOnce(GLFW_KEY_SPACE) && levelSelection == 0) {
             bob.getAnimation().setStarted(!bob.getAnimation().isStarted());
             monster.getAnimation().setStarted(!monster.getAnimation().isStarted());
         }
         
-        if (keyboard.isKeyPressed(GLFW_KEY_F) && levelSelection == 0) {
-        	updatePhysics = true;
-        } else {
-        	updatePhysics = false;
+        if (keyboard.isKeyPressedOnce(GLFW_KEY_F) && levelSelection != 0) {
+        	updatePhysics = !updatePhysics;
         }
         
         lightAngle += angleInc;
@@ -309,7 +288,7 @@ public class Game implements IGameLogic {
         }
         updateDirectionalLight();
         /**/
-        if (levelSelection != 0) {
+        if (levelSelection == 0) {
             GameItemAnimation itemAnimation = bob.getAnimation();
             if (itemAnimation.isStarted()) {
                 int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, itemAnimation.maxFrames);
@@ -329,6 +308,7 @@ public class Game implements IGameLogic {
         	gamePhysics.update(diffTimeSeconds);
     	}
     	MouseInput mouseInput = window.getMouseInput();
+        Camera camera = scene.getCamera();
     	// Update camera based on mouse            
         if (mouseInput.isRightButtonPressed()) {
             Vector2f rotVec = mouseInput.getDisplVec();
@@ -338,7 +318,7 @@ public class Game implements IGameLogic {
         
         // Update camera position
         Vector3f prevPos = new Vector3f(camera.getPosition());
-        camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);        
+        camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
         // Check if there has been a collision. If true, set the y position to
         // the maximum height
         float height = -Float.MAX_VALUE;

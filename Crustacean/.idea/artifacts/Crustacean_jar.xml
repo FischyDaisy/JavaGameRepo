@@ -6,29 +6,6 @@
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="Crustacean" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/joml-1.10.5.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/joml-primitives-1.10.0.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-assimp.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-assimp-natives-windows.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-glfw.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-glfw-natives-windows.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-natives-windows.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-nuklear.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-nuklear-natives-windows.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-openal.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-openal-natives-windows.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-shaderc.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-shaderc-natives-windows.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-stb.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-stb-natives-windows.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-vma.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-vma-natives-windows.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl-vulkan.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/lwjgl.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/tinylog-api-2.4.1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Libs/lwjgl-release-3.3.1/tinylog-impl-2.4.1.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../JNewton/out/artifacts/JNewton_jar/JNewton.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../JNewton/out/artifacts/JNewton_Windows_x64_jar/JNewton-Windows_x64.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

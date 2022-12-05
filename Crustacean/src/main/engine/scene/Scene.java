@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import crab.newton.NewtonBody;
-import dev.dominion.ecs.api.Dominion;
+//import dev.dominion.ecs.api.Dominion;
 import main.engine.graphics.camera.Camera;
 import main.engine.graphics.particles.IParticleEmitter;
 import main.engine.graphics.weather.Fog;
@@ -37,6 +37,7 @@ public class Scene {
         fog = Fog.NOFOG;
         renderShadows = true;
         sceneLight = new SceneLight();
+        camera = new Camera();
     }
     
     public Map<String, List<GameItem>> getModelMap() {

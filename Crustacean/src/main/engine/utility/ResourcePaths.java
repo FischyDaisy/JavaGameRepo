@@ -28,33 +28,15 @@ public class ResourcePaths {
 		public static final String PLANE_OBJ = "resources|models|plane.obj".replace('|', File.separatorChar);
 		public static final String QUAD_OBJ = "resources|models|quad.obj".replace('|', File.separatorChar);
 		public static final String SKYBOX_OBJ = "resources|models|skybox.obj".replace('|', File.separatorChar);
-		public static final String BUFFER_PASS_DIR = "resources|models".replace('|', File.separatorChar);
-		public static final String BUFFER_PASS_OBJ = "resources|models|buffer_pass_mesh.obj".replace('|', File.separatorChar);
 		public static final String SPONZA_DIR = "resources|models|sponza".replace('|', File.separatorChar);
 		public static final String SPONZA_GLTF = SPONZA_DIR + "|Sponza.gltf".replace('|', File.separatorChar);
 	}
+
+	public static final class Newton {
+		public static final String NEWTON_DLL = "resources|newtondll|newton.dll".replace('|', File.separatorChar);
+	}
 	
 	public static final class Shaders {
-		public static final class OpenGL {
-			public static final String DEPTH_FRAGMENT = "resources|shaders|opengl|depth_fragment.fs".replace('|', File.separatorChar);
-			public static final String DEPTH_VERTEX = "resources|shaders|opengl|depth_vertex.vs".replace('|', File.separatorChar);
-			public static final String HUD_FRAGMENT = "resources|shaders|opengl|hud_fragment.fs".replace('|', File.separatorChar);
-			public static final String HUD_VERTEX = "resources|shaders|opengl|hud_vertex.vs".replace('|', File.separatorChar);
-			public static final String PARTICLES_FRAGMENT = "resources|shaders|opengl|particles_fragment.fs".replace('|', File.separatorChar);
-			public static final String PARTICLES_VERTEX = "resources|shaders|opengl|particles_vertex.vs".replace('|', File.separatorChar);
-			public static final String PINK_FRAGMENT = "resources|shaders|opengl|pink_fragment.fs".replace('|', File.separatorChar);
-			public static final String PINK_VERTEX = "resources|shaders|opengl|pink_vertex.vs".replace('|', File.separatorChar);
-			public static final String PORTAL_FRAGMENT = "resources|shaders|opengl|portal_fragment.fs".replace('|', File.separatorChar);
-			public static final String PORTAL_VERTEX = "resources|shaders|opengl|portal_vertex.vs".replace('|', File.separatorChar);
-			public static final String SB_FRAGMENT = "resources|shaders|opengl|sb_fragment.fs".replace('|', File.separatorChar);
-			public static final String SB_VERTEX = "resources|shaders|opengl|sb_vertex.vs".replace('|', File.separatorChar);
-			public static final String GBUFFER_FRAGMENT = "resources|shaders|opengl|gbuffer_fragment.fs".replace('|', File.separatorChar);
-			public static final String GBUFFER_VERTEX = "resources|shaders|opengl|gbuffer_vertex.vs".replace('|', File.separatorChar);
-			public static final String LIGHT_VERTEX = "resources|shaders|opengl|light_vertex.vs".replace('|', File.separatorChar);
-			public static final String DIR_LIGHT_FRAGMENT = "resources|shaders|opengl|dir_light_fragment.fs".replace('|', File.separatorChar);
-			public static final String POINT_LIGHT_FRAGMENT = "resources|shaders|opengl|point_light_fragment.fs".replace('|', File.separatorChar);
-			public static final String FOG_FRAGMENT = "resources|shaders|opengl|fog_fragment.fs".replace('|', File.separatorChar);
-		}
 		
 		public static final class Vulkan {
 			public static final String ANIMATION_COMPUTE_GLSL = "resources|shaders|vulkan|animations_comp.glsl".replace('|', File.separatorChar);

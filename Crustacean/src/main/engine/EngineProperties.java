@@ -6,6 +6,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Properties;
 
 import main.engine.utility.ResourcePaths;
+import org.tinylog.Logger;
 
 public class EngineProperties {
 	private static final float DEFAULT_FOV = 60.0f;
@@ -26,7 +27,6 @@ public class EngineProperties {
     private static final int DEFAULT_FPS = 60;
     private static final float DEFAULT_Z_FAR = 1000.f;
     private static final float DEFAULT_Z_NEAR = 0.01f;
-    private static final String FILENAME = "eng.properties";
     private static final File PROP_FILE = new File(ResourcePaths.Engine.PROPERTIES);
     private String defaultTexturePath;
     private float fov;
@@ -95,7 +95,7 @@ public class EngineProperties {
             maxAnimVerticesBuffer = Integer.parseInt(props.getOrDefault("maxAnimVerticesBuffer", DEFAULT_MAX_ANIM_VERTICES_BUF).toString());
             maxJointMatricesBuffer = Integer.parseInt(props.getOrDefault("maxJointMatricesBuffer", DEFAULT_JOINT_MATRICES_BUF).toString());
         } catch (IOException excp) {
-        	System.out.println("Could not read [" + FILENAME + "] properties file");
+            Logger.error("Could not read [{}] properties file", PROP_FILE.toPath());
             //System.out.println(excp);
         }
     }

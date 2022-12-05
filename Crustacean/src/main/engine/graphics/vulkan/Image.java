@@ -1,10 +1,13 @@
 package main.engine.graphics.vulkan;
 
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.util.vma.VmaAllocationCreateInfo;
 import org.lwjgl.vulkan.*;
 
 import java.nio.LongBuffer;
 
+import static org.lwjgl.util.vma.Vma.*;
 import static org.lwjgl.vulkan.VK11.*;
 
 public class Image {
@@ -38,34 +41,21 @@ public class Image {
                     .tiling(VK_IMAGE_TILING_OPTIMAL)
                     .usage(imageData.usage);
 
+            VmaAllocationCreateInfo allocInfo = VmaAllocationCreateInfo.calloc(stack)
+                    .requiredFlags(imageData.requireFlags)
+                    .usage(imageData.memoryUsage);
+
+            PointerBuffer pAllocation = stack.callocPointer(1);
             LongBuffer lp = stack.mallocLong(1);
-            VulkanUtils.vkCheck(vkCreateImage(device.getVkDevice(), imageCreateInfo, null, lp), "Failed to create image");
+            VulkanUtils.vkCheck(vmaCreateImage(device.getMemoryAllocator().getVmaAllocator(), imageCreateInfo,
+                            allocInfo, lp, pAllocation, null), "Failed to create image");
             vkImage = lp.get(0);
-
-            // Get memory requirements for this object
-            VkMemoryRequirements memReqs = VkMemoryRequirements.calloc(stack);
-            vkGetImageMemoryRequirements(device.getVkDevice(), vkImage, memReqs);
-
-            // Select memory size and type
-            VkMemoryAllocateInfo memAlloc = VkMemoryAllocateInfo.calloc(stack)
-                    .sType(VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO)
-                    .allocationSize(memReqs.size())
-                    .memoryTypeIndex(VulkanUtils.memoryTypeFromProperties(device.getPhysicalDevice(),
-                            memReqs.memoryTypeBits(), 0));
-
-            // Allocate memory
-            VulkanUtils.vkCheck(vkAllocateMemory(device.getVkDevice(), memAlloc, null, lp), "Failed to allocate memory");
-            vkMemory = lp.get(0);
-
-            // Bind memory
-            VulkanUtils.vkCheck(vkBindImageMemory(device.getVkDevice(), vkImage, vkMemory, 0),
-                    "Failed to bind image memory");
+            vkMemory = pAllocation.get(0);
         }
     }
 
     public void cleanup() {
-        vkDestroyImage(device.getVkDevice(), vkImage, null);
-        vkFreeMemory(device.getVkDevice(), vkMemory, null);
+        vmaDestroyImage(device.getMemoryAllocator().getVmaAllocator(), vkImage, vkMemory);
     }
 
     public int getFormat() {
@@ -92,12 +82,15 @@ public class Image {
         private int sampleCount;
         private int usage;
         private int width;
+        private int memoryUsage;
+        private int requireFlags;
 
         public ImageData() {
             this.format = VK_FORMAT_R8G8B8A8_SRGB;
             this.mipLevels = 1;
             this.sampleCount = 1;
             this.arrayLayers = 1;
+            this.memoryUsage = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         }
 
         public ImageData arrayLayers(int arrayLayers) {
@@ -132,6 +125,16 @@ public class Image {
 
         public ImageData width(int width) {
             this.width = width;
+            return this;
+        }
+
+        public ImageData memoryUsage(int memoryUsage) {
+            this.memoryUsage = memoryUsage;
+            return this;
+        }
+
+        public ImageData requiredFlags(int requireFlags) {
+            this.requireFlags = requireFlags;
             return this;
         }
     }

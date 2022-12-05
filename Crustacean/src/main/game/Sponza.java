@@ -6,6 +6,7 @@ import java.util.List;
 import crab.newton.NewtonWorld;
 import java.lang.foreign.*;
 import main.engine.graphics.ModelData;
+import main.engine.graphics.camera.Camera;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.items.GameItem;
 import main.engine.items.GameItemAnimation;
@@ -63,6 +64,11 @@ public class Sponza implements Level {
         scene.addGameItem(sponza);
         scene.addGameItem(bob);
         scene.addGameItem(monster);
+
+        Camera camera = scene.getCamera();
+        camera.setPosition(-6.0f, 2.0f, 0.0f);
+        camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
+        camera.updateQuat();
         
         renderer.loadModels(modelDataList, scene);
 	}
@@ -70,6 +76,13 @@ public class Sponza implements Level {
     @Override
     public void reset(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, MemorySession session) throws Exception {
         bob.getAnimation().setCurrentFrame(0);
+        bob.getAnimation().setLoaded(false);
         monster.getAnimation().setCurrentFrame(0);
+        monster.getAnimation().setLoaded(false);
+
+        Camera camera = scene.getCamera();
+        camera.setPosition(-6.0f, 2.0f, 0.0f);
+        camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
+        camera.updateQuat();
     }
 }

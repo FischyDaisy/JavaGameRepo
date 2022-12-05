@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import main.engine.graphics.camera.Camera;
 import org.joml.Matrix4f;
 import org.tinylog.Logger;
 
@@ -80,6 +81,11 @@ public class NewtonDemo implements Level {
             scene.addGameItem(item);
         }
         scene.addGameItem(heightField);
+        Camera camera = scene.getCamera();
+        camera.setPosition(-6.0f, 2.0f, 0.0f);
+        camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
+        camera.updateQuat();
+
         renderer.loadModels(modelDataList, scene);
 	}
 
@@ -95,5 +101,10 @@ public class NewtonDemo implements Level {
             matrix.get(matArr);
             item.getBody().setMatrix(matArr);
         }
+
+        Camera camera = scene.getCamera();
+        camera.setPosition(-6.0f, 2.0f, 0.0f);
+        camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
+        camera.updateQuat();
     }
 }
