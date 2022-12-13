@@ -66,29 +66,53 @@ public class PhysicalDevice {
 
             // Populate available devices
             List<PhysicalDevice> devices = new ArrayList<>();
+            List<PhysicalDevice> discreteDevices = new ArrayList<>();
             for (int i = 0; i < numDevices; i++) {
                 VkPhysicalDevice vkPhysicalDevice = new VkPhysicalDevice(pPhysicalDevices.get(i), instance.getVkInstance());
                 PhysicalDevice physicalDevice = new PhysicalDevice(vkPhysicalDevice);
+                VkPhysicalDeviceProperties physicalDeviceProperties = physicalDevice.getVkPhysicalDeviceProperties();
 
                 String deviceName = physicalDevice.getDeviceName();
                 if (physicalDevice.hasGraphicsQueueFamily() && physicalDevice.hasKHRSwapChainExtension()) {
-                	Logger.debug("Device [{}] supports required extensions", deviceName);
-                    if (prefferredDeviceName != null && prefferredDeviceName.equals(deviceName)) {
-                        selectedPhysicalDevice = physicalDevice;
-                        break;
+                    switch (physicalDeviceProperties.deviceType()) {
+                        case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU -> {
+                            Logger.debug("Discrete Device [{}] supports required extensions", deviceName);
+                            if (prefferredDeviceName != null && prefferredDeviceName.equals(deviceName)) {
+                                selectedPhysicalDevice = physicalDevice;
+                            } else {
+                                discreteDevices.add(physicalDevice);
+                            }
+                        }
+                        case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU -> {
+                            Logger.debug("Integrated Device [{}] supports required extensions", deviceName);
+                            if (prefferredDeviceName != null && prefferredDeviceName.equals(deviceName)) {
+                                selectedPhysicalDevice = physicalDevice;
+                            } else {
+                                devices.add(physicalDevice);
+                            }
+                        }
+                        default -> {
+                            Logger.debug("Device [{}] supports required extensions but is unrecognized type", deviceName);
+                            if (prefferredDeviceName != null && prefferredDeviceName.equals(deviceName)) {
+                                selectedPhysicalDevice = physicalDevice;
+                            }
+                        }
                     }
-                    devices.add(physicalDevice);
                 } else {
                 	Logger.debug("Device [{}] does not support required extensions", deviceName);
                     physicalDevice.cleanup();
                 }
             }
 
+            selectedPhysicalDevice = selectedPhysicalDevice == null && !discreteDevices.isEmpty() ? discreteDevices.remove(0) : selectedPhysicalDevice;
             // No preferred device or it does not meet requirements, just pick the first one
             selectedPhysicalDevice = selectedPhysicalDevice == null && !devices.isEmpty() ? devices.remove(0) : selectedPhysicalDevice;
 
             // Clean up non-selected devices
             for (PhysicalDevice physicalDevice : devices) {
+                physicalDevice.cleanup();
+            }
+            for (PhysicalDevice physicalDevice : discreteDevices) {
                 physicalDevice.cleanup();
             }
 

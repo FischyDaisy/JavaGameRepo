@@ -2,8 +2,7 @@ package main.game;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import main.engine.*;
 import main.engine.items.GameItemAnimation;
@@ -36,6 +35,8 @@ import main.engine.utility.ResourcePaths;
 
 import crab.newton.*;
 import org.tinylog.Logger;
+import org.tinylog.configuration.Configuration;
+
 import java.lang.foreign.*;
 
 public class Game implements IGameLogic {
@@ -111,6 +112,11 @@ public class Game implements IGameLogic {
     
     public static void main(String[] args) {
         try {
+            Map<String, String> fuck = new HashMap<>();
+            fuck.put("writer1", "console");
+            fuck.put("writer2", "file");
+            fuck.put("writer2.file", "log.txt");
+            Configuration.replace(fuck);
             Logger.debug("Application Directory: {}", System.getProperty("user.dir"));
             IGameLogic gameLogic = new Game();
             Window.WindowOptions opts = new Window.WindowOptions();

@@ -1,0 +1,622 @@
+2022-12-08 09:28:26 [main] main.game.Game.main()
+DEBUG: Application Directory: C:\Users\Christopher\Documents\Workspace\Crustacean
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.<init>()
+DEBUG: Creating Vulkan instance
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Instance supports [16] layers
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_AMD_switchable_graphics]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_RENDERDOC_Capture]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_OW_OVERLAY]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_OW_OBS_HOOK]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_VALVE_steam_overlay]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_VALVE_steam_fossilize]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_OBS_HOOK]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_EOS_Overlay]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_EOS_Overlay]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_LUNARG_api_dump]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_LUNARG_gfxreconstruct]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_KHRONOS_synchronization2]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_KHRONOS_validation]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_LUNARG_monitor]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_LUNARG_screenshot]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.getSupportedValidationLayers()
+DEBUG: Supported layer [VK_LAYER_KHRONOS_profiles]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.<init>()
+DEBUG: Validation: true
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Instance.<init>()
+DEBUG: Using validation layer [VK_LAYER_KHRONOS_validation]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.PhysicalDevice.createPhysicalDevice()
+DEBUG: Selecting physical devices
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.PhysicalDevice.getPhysicalDevices()
+DEBUG: Detected 1 physical device(s)
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.PhysicalDevice.calSupportedSampleCount()
+DEBUG: Color max samples: 15
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.PhysicalDevice.calSupportedSampleCount()
+DEBUG: Depth max samples: 15
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.PhysicalDevice.calSupportedSampleCount()
+DEBUG: Max samples: 15
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.PhysicalDevice.createPhysicalDevice()
+DEBUG: Discrete Device [Radeon RX 570 Series] supports required extensions
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.PhysicalDevice.createPhysicalDevice()
+DEBUG: Selected device: [Radeon RX 570 Series]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Device.<init>()
+DEBUG: Creating device
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Surface.<init>()
+DEBUG: Creating Vulkan surface
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Queue.<init>()
+DEBUG: Creating queue
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Queue.<init>()
+DEBUG: Creating queue
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.SwapChain.<init>()
+DEBUG: Creating Vulkan SwapChain
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.SwapChain.calcNumImages()
+DEBUG: Requested [3] images, got [3] images. Surface capabilities, maxImages: [16], minImages [1]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.CommandPool.<init>()
+DEBUG: Creating Vulkan CommandPool
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.PipelineCache.<init>()
+DEBUG: Creating pipeline cache
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.GlobalBuffers.<init>()
+DEBUG: Creating global buffers
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.geometry.GeometryFrameBuffer.<init>()
+DEBUG: Creating GeometryFrameBuffer
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ShaderCompiler.compileShaderIfChanged()
+DEBUG: Shader [resources\shaders\vulkan\geometry_vertex.glsl] already compiled. Loading compiled version: [resources\shaders\vulkan\geometry_vertex.glsl.spv]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ShaderCompiler.compileShaderIfChanged()
+DEBUG: Shader [resources\shaders\vulkan\geometry_fragment.glsl] already compiled. Loading compiled version: [resources\shaders\vulkan\geometry_fragment.glsl.spv]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.DescriptorPool.<init>()
+DEBUG: Creating descriptor pool
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Pipeline.<init>()
+DEBUG: Creating pipeline
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.shadows.ShadowsFrameBuffer.<init>()
+DEBUG: Creating ShadowsFrameBuffer
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ShaderCompiler.compileShaderIfChanged()
+DEBUG: Shader [resources\shaders\vulkan\shadow_vertex.glsl] already compiled. Loading compiled version: [resources\shaders\vulkan\shadow_vertex.glsl.spv]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ShaderCompiler.compileShaderIfChanged()
+DEBUG: Shader [resources\shaders\vulkan\shadow_geometry.glsl] already compiled. Loading compiled version: [resources\shaders\vulkan\shadow_geometry.glsl.spv]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.DescriptorPool.<init>()
+DEBUG: Creating descriptor pool
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Pipeline.<init>()
+DEBUG: Creating pipeline
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ShaderCompiler.compileShaderIfChanged()
+DEBUG: Shader [resources\shaders\vulkan\skybox_vertex.glsl] already compiled. Loading compiled version: [resources\shaders\vulkan\skybox_vertex.glsl.spv]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ShaderCompiler.compileShaderIfChanged()
+DEBUG: Shader [resources\shaders\vulkan\skybox_fragment.glsl] already compiled. Loading compiled version: [resources\shaders\vulkan\skybox_fragment.glsl.spv]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.DescriptorPool.<init>()
+DEBUG: Creating descriptor pool
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Pipeline.<init>()
+DEBUG: Creating pipeline
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.lighting.LightingFrameBuffer.<init>()
+DEBUG: Creating Lighting FrameBuffer
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ShaderCompiler.compileShaderIfChanged()
+DEBUG: Shader [resources\shaders\vulkan\lighting_vertex.glsl] already compiled. Loading compiled version: [resources\shaders\vulkan\lighting_vertex.glsl.spv]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ShaderCompiler.compileShaderIfChanged()
+DEBUG: Shader [resources\shaders\vulkan\lighting_fragment.glsl] already compiled. Loading compiled version: [resources\shaders\vulkan\lighting_fragment.glsl.spv]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.DescriptorPool.<init>()
+DEBUG: Creating descriptor pool
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.lighting.AttachmentsLayout.<init>()
+DEBUG: Creating Attachments Layout
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Pipeline.<init>()
+DEBUG: Creating pipeline
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Queue.<init>()
+DEBUG: Creating queue
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.DescriptorPool.<init>()
+DEBUG: Creating descriptor pool
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ShaderCompiler.compileShaderIfChanged()
+DEBUG: Shader [resources\shaders\vulkan\animations_comp.glsl] already compiled. Loading compiled version: [resources\shaders\vulkan\animations_comp.glsl.spv]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ComputePipeline.<init>()
+DEBUG: Creating compute pipeline
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ShaderCompiler.compileShaderIfChanged()
+DEBUG: Shader [resources\shaders\vulkan\nuklear_vertex.glsl] already compiled. Loading compiled version: [resources\shaders\vulkan\nuklear_vertex.glsl.spv]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.ShaderCompiler.compileShaderIfChanged()
+DEBUG: Shader [resources\shaders\vulkan\nuklear_fragment.glsl] already compiled. Loading compiled version: [resources\shaders\vulkan\nuklear_fragment.glsl.spv]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [null]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [null]
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.DescriptorPool.<init>()
+DEBUG: Creating descriptor pool
+2022-12-08 09:28:26 [main] main.engine.graphics.vulkan.Pipeline.<init>()
+DEBUG: Creating pipeline
+2022-12-08 09:28:27 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:27 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:27 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:27 [main] main.engine.loaders.assimp.ModelLoader.loadModel()
+DEBUG: Loading model data [resources\models\sponza\Sponza.gltf]
+2022-12-08 09:28:27 [main] main.engine.loaders.assimp.ModelLoader.loadModel()
+DEBUG: Loaded model [resources\models\sponza\Sponza.gltf]
+2022-12-08 09:28:27 [main] main.engine.loaders.assimp.ModelLoader.loadModel()
+DEBUG: Loading model data [resources\models\bob\boblamp.md5mesh]
+2022-12-08 09:28:27 [main] main.engine.loaders.assimp.ModelLoader.loadModel()
+DEBUG: Processing animations
+2022-12-08 09:28:27 [main] main.engine.loaders.assimp.ModelLoader.loadModel()
+DEBUG: Loaded model [resources\models\bob\boblamp.md5mesh]
+2022-12-08 09:28:27 [main] main.engine.loaders.assimp.ModelLoader.loadModel()
+DEBUG: Loading model data [resources\models\monster\monster.md5mesh]
+2022-12-08 09:28:27 [main] main.engine.loaders.assimp.ModelLoader.loadModel()
+DEBUG: Processing animations
+2022-12-08 09:28:27 [main] main.engine.loaders.assimp.ModelLoader.loadModel()
+DEBUG: Loaded model [resources\models\monster\monster.md5mesh]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKRenderer.loadModels()
+DEBUG: Loading 3 model(s)
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\5061699253647017043.png]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\8773302468495022225.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\11872827283454512094.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\8006627369776289000.png]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\12501374198249454378.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\715093869573992647.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\7268504077753552595.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\4477655471536070370.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\8503262930880235456.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\8750083169368950601.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\13982482287905699490.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\16885566240357350108.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\5792855332885324923.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\16299174074766089871.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\11968150294050148237.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\14650633544276105767.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\2051777328469649772.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\4871783166746854860.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\15295713303328085182.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\10388182081421875623.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\9916269861720640319.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\6047387724914829168.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\15722799267630235092.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\8051790464816141987.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\5823059166183034438.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\14267839433702832875.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\13824894030729245199.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\7441062115984513793.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\6667038893015345571.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\8114461559286000061.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\11490520546946913238.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\3628158980083700836.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\3455394979645218238.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\6151467286084645207.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\7645212358685992005.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\8783994986360286082.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\white.png]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\4975155472559461469.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\2299742237651021498.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\3371964815757888145.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\4675343432951571524.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\7056944414013900257.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\7815564343179553343.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\2775690330959970771.jpg]
+2022-12-08 09:28:28 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\2374361008830720677.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\2185409758123873465.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\332936164838540657.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\17876391417123941155.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\6593109234861095314.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\466164707995436622.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\11474523244911310074.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\4601176305987539675.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\9288698199695299068.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\4910669866631290573.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\16275776544635328252.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\14170708867020035030.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\1219024358953944284.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\755318871556304029.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\3827035219084910048.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\2411100444841994089.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\8481240838833932244.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\10381718147657362067.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\17556969131407844942.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\6772804448157695701.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\759203620573749278.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\13196865903111448057.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\2969916736137545357.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\14118779221266351425.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\sponza\8747919177698443163.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\bob\guard1_body.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\bob\guard1_face.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\bob\guard1_helmet.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\bob\iron_grill.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\bob\round_grill.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\monster\hellknight.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\monster\gob2.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\monster\gob.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\models\monster\tongue.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\5061699253647017043.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\8773302468495022225.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\11872827283454512094.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\8006627369776289000.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\12501374198249454378.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\715093869573992647.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\7268504077753552595.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\4477655471536070370.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\8503262930880235456.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\8750083169368950601.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\13982482287905699490.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\16885566240357350108.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\5792855332885324923.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\16299174074766089871.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\11968150294050148237.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\14650633544276105767.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\2051777328469649772.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\4871783166746854860.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\15295713303328085182.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\10388182081421875623.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\9916269861720640319.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\6047387724914829168.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\15722799267630235092.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\8051790464816141987.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\5823059166183034438.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\14267839433702832875.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\13824894030729245199.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\7441062115984513793.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\6667038893015345571.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\8114461559286000061.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\11490520546946913238.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\3628158980083700836.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\3455394979645218238.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\6151467286084645207.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\7645212358685992005.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\8783994986360286082.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\white.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\4975155472559461469.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\2299742237651021498.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\3371964815757888145.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\4675343432951571524.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\7056944414013900257.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\7815564343179553343.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\2775690330959970771.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\2374361008830720677.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Texture [resources\models\sponza\7815564343179553343.jpg] has already been transitioned
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\2185409758123873465.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\332936164838540657.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Texture [resources\models\sponza\7815564343179553343.jpg] has already been transitioned
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\17876391417123941155.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\6593109234861095314.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\466164707995436622.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\11474523244911310074.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\4601176305987539675.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Texture [resources\models\sponza\466164707995436622.jpg] has already been transitioned
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\9288698199695299068.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\4910669866631290573.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Texture [resources\models\sponza\466164707995436622.jpg] has already been transitioned
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\16275776544635328252.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\14170708867020035030.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\1219024358953944284.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\755318871556304029.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\3827035219084910048.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\2411100444841994089.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\8481240838833932244.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\10381718147657362067.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\17556969131407844942.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\6772804448157695701.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\759203620573749278.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\13196865903111448057.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\2969916736137545357.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\14118779221266351425.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\sponza\8747919177698443163.jpg]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\bob\guard1_body.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\bob\guard1_face.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\bob\guard1_helmet.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\bob\iron_grill.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\bob\round_grill.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Texture [resources\models\bob\guard1_body.png] has already been transitioned
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\monster\hellknight.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\monster\gob2.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\monster\gob.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\models\monster\tongue.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKRenderer.loadModels()
+DEBUG: Loaded 3 model(s)
+2022-12-08 09:28:29 [main] main.engine.loaders.assimp.ModelLoader.loadModel()
+DEBUG: Loading model data [resources\models\skybox.obj]
+2022-12-08 09:28:29 [main] main.engine.loaders.assimp.ModelLoader.loadModel()
+DEBUG: Loaded model [resources\models\skybox.obj]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKRenderer.loadSkyBox()
+DEBUG: Loading Skybox model
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.<init>()
+DEBUG: Creating texture [resources\textures\skybox.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKTexture.recordTextureTransition()
+DEBUG: Recording transition for texture [resources\textures\skybox.png]
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.VKRenderer.loadSkyBox()
+DEBUG: Loaded Skybox model
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.CommandBuffer.<init>()
+TRACE: Creating command buffer
+2022-12-08 09:28:29 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.PipelineCache.cleanup()
+DEBUG: Destroying pipeline cache
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.nuklear.NuklearRenderActivity.cleanup()
+TRACE: Cleaning up NuklearRenderActivity
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorSetLayout.cleanup()
+DEBUG: Destroying descriptor set layout
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorPool.cleanup()
+DEBUG: Destroying descriptor pool
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.Pipeline.cleanup()
+DEBUG: Destroying pipeline
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.lighting.LightingRenderActivity.cleanup()
+TRACE: Cleaning up LightingRenderActivity
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorSetLayout.cleanup()
+DEBUG: Destroying descriptor set layout
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorSetLayout.cleanup()
+DEBUG: Destroying descriptor set layout
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorPool.cleanup()
+DEBUG: Destroying descriptor pool
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.Pipeline.cleanup()
+DEBUG: Destroying pipeline
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.lighting.LightingFrameBuffer.cleanup()
+DEBUG: Destroying Lighting FrameBuffer
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.animation.AnimationComputeActivity.cleanup()
+TRACE: Cleaning up AnimationComputeActivity
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.ComputePipeline.cleanup()
+DEBUG: Destroying compute pipeline
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorPool.cleanup()
+DEBUG: Destroying descriptor pool
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorSetLayout.cleanup()
+DEBUG: Destroying descriptor set layout
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.shadows.ShadowRenderActivity.cleanup()
+TRACE: Cleaning up ShadowRenderActivity
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.Pipeline.cleanup()
+DEBUG: Destroying pipeline
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorSetLayout.cleanup()
+DEBUG: Destroying descriptor set layout
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorPool.cleanup()
+DEBUG: Destroying descriptor pool
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.shadows.ShadowsFrameBuffer.cleanup()
+DEBUG: Destroying ShadowsFrameBuffer
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.skybox.SkyboxRenderActivity.cleanup()
+TRACE: Cleaning up SkyboxRenderActivity
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.Pipeline.cleanup()
+DEBUG: Destroying pipeline
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorSetLayout.cleanup()
+DEBUG: Destroying descriptor set layout
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorSetLayout.cleanup()
+DEBUG: Destroying descriptor set layout
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorSetLayout.cleanup()
+DEBUG: Destroying descriptor set layout
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorPool.cleanup()
+DEBUG: Destroying descriptor pool
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.geometry.GeometryRenderActivity.cleanup()
+TRACE: Cleaning up GeometryRenderActivity
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.Pipeline.cleanup()
+DEBUG: Destroying pipeline
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorSetLayout.cleanup()
+DEBUG: Destroying descriptor set layout
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorSetLayout.cleanup()
+DEBUG: Destroying descriptor set layout
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorSetLayout.cleanup()
+DEBUG: Destroying descriptor set layout
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.DescriptorPool.cleanup()
+DEBUG: Destroying descriptor pool
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.geometry.GeometryFrameBuffer.cleanup()
+DEBUG: Destroying Geometry FrameBuffer
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.CommandBuffer.cleanup()
+TRACE: Destroying command buffer
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.GlobalBuffers.cleanup()
+DEBUG: Destroying global buffers
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.SwapChain.cleanup()
+DEBUG: Destroying Vulkan SwapChain
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.Surface.cleanup()
+DEBUG: Destroying Vulkan surface
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.Device.cleanup()
+DEBUG: Destroying Vulkan device
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.PhysicalDevice.cleanup()
+DEBUG: Destroying physical device [Radeon RX 570 Series]
+2022-12-08 09:28:43 [main] main.engine.graphics.vulkan.Instance.cleanup()
+DEBUG: Destroying Vulkan instance

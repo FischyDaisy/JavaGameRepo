@@ -1,0 +1,3 @@
+module CrustaceanLauncher {
+    exports main;
+}

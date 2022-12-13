@@ -1,5 +1,6 @@
 package main.game.hud;
 
+import main.engine.Window;
 import main.engine.graphics.hud.NKHudElement;
 import org.lwjgl.nuklear.*;
 import org.lwjgl.system.MemoryStack;
@@ -10,46 +11,38 @@ import org.tinylog.writers.Writer;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.util.Collection;
 import java.util.Map;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 
-public class DebugWindow implements NKHudElement, Writer {
+public class DebugWindow implements NKHudElement {
 
     private final int width;
     private final int height;
+    private final Window window;
+    private final NkPluginFilterI filter;
 
-    public DebugWindow(Map<String, String> properties) {
+    public DebugWindow(Window window) {
         width = 50;
         height = 50;
-    }
-
-    @Override
-    public Collection<LogEntryValue> getRequiredLogEntryValues() {
-        return null;
-    }
-
-    @Override
-    public void write(LogEntry logEntry) throws Exception {
-        System.out.println();
-    }
-
-    @Override
-    public void flush() throws IOException {
-        System.out.flush();
-    }
-
-    @Override
-    public void close() throws IOException {
-
+        this.window = window;
+        filter = NkPluginFilter.create(Nuklear::nnk_filter_default);
     }
 
     @Override
     public void layout(NkContext ctx) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             NkRect rect = NkRect.malloc(stack);
-            //if (nk_begin(ctx, "debug", nk_rect()))
+            int w = window.getWidth(), h = window.getHeight();
+            if (nk_begin(ctx, "debug", nk_rect(w - width, h - height, width, height, rect),
+                    NK_WINDOW_MOVABLE | NK_WINDOW_MINIMIZABLE)) {
+                FloatBuffer buffer = stack.floats(120, 150);
+                nk_layout_row(ctx, NK_STATIC, 25, buffer);
+                nk_label(ctx, "fps:", NK_TEXT_LEFT);
+                //nk_edit_string(ctx, NK_EDIT_SIMPLE, "", 20, 64, filter);
+            }
         }
     }
 }
