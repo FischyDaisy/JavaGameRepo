@@ -65,56 +65,58 @@ public class GameMenu implements NKHudElement {
 	public void layout(NkContext ctx) {
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			NkRect rect = NkRect.malloc(stack);
-			if (nk_begin(ctx, "Menu", nk_rect(width, height, window.getWidth() - (2 * width), window.getHeight() - (2 * height), rect),
-					NK_WINDOW_TITLE)) { // | NK_WINDOW_HIDDEN
-				nk_window_show_if(ctx, "Menu", NK_HIDDEN, shouldHide);
+			if (!shouldHide) {
+				if (nk_begin(ctx, "Menu", nk_rect(width, height, window.getWidth() - (2 * width), window.getHeight() - (2 * height), rect),
+						NK_WINDOW_TITLE)) { // | NK_WINDOW_HIDDEN
+					//nk_window_show_if(ctx, "Menu", NK_HIDDEN, shouldHide);
 
-				nk_menubar_begin(ctx);
-				nk_layout_row_begin(ctx, NK_STATIC, 25, 3);
-				nk_layout_row_push(ctx, 40);
-				NkVec2 vec2 = NkVec2.malloc(stack);
-				vec2.x(120);
-				vec2.y(200);
-				if (nk_menu_begin_label(ctx, "Levels", NK_TEXT_LEFT, vec2)) {
-					nk_layout_row_dynamic(ctx, 25, 1);
-					if (nk_menu_item_label(ctx, "Sponza", NK_TEXT_LEFT)) {
-						currentLevel = 0;
-						shouldHide = true;
-						Logger.debug("Current Level: {}", currentLevel);
-					}
-					if (nk_menu_item_label(ctx, "Newton Demo", NK_TEXT_LEFT)) {
-						currentLevel = 1;
-						shouldHide = true;
-						Logger.debug("Current Level: {}", currentLevel);
+					nk_menubar_begin(ctx);
+					nk_layout_row_begin(ctx, NK_STATIC, 25, 3);
+					nk_layout_row_push(ctx, 40);
+					NkVec2 vec2 = NkVec2.malloc(stack);
+					vec2.x(120);
+					vec2.y(200);
+					if (nk_menu_begin_label(ctx, "Levels", NK_TEXT_LEFT, vec2)) {
+						nk_layout_row_dynamic(ctx, 25, 1);
+						if (nk_menu_item_label(ctx, "Sponza", NK_TEXT_LEFT)) {
+							currentLevel = 0;
+							shouldHide = true;
+							Logger.debug("Current Level: {}", currentLevel);
+						}
+						if (nk_menu_item_label(ctx, "Newton Demo", NK_TEXT_LEFT)) {
+							currentLevel = 1;
+							shouldHide = true;
+							Logger.debug("Current Level: {}", currentLevel);
+						}
 					}
 					nk_menu_end(ctx);
-				}
-				nk_layout_row_push(ctx, 70);
-				if (nk_button_label(ctx, "Reset")) {
-					Logger.debug("Reset Level");
-					levels[currentLevel].reset(scene, renderer, world, physics, session);
-				}
-				if (nk_button_label(ctx, "Exit")) {
-					Logger.debug("End Game");
-					glfwSetWindowShouldClose(window.getWindowHandle(), true);
-				}
-				nk_menubar_end(ctx);
+					nk_layout_row_push(ctx, 70);
+					if (nk_button_label(ctx, "Reset")) {
+						Logger.debug("Reset Level");
+						levels[currentLevel].reset(scene, renderer, world, physics, session);
+					}
+					if (nk_button_label(ctx, "Exit")) {
+						Logger.debug("End Game");
+						glfwSetWindowShouldClose(window.getWindowHandle(), true);
+					}
+					nk_menubar_end(ctx);
 
-				nk_layout_row_dynamic(ctx, 25, 1);
-				nk_label(ctx, "Controls:", NK_TEXT_CENTERED);
-				nk_label(ctx, "W - Forwards | A - Left | S - Backwards | D - Right", NK_TEXT_LEFT);
-				nk_label(ctx, "X - Up | Z - Down", NK_TEXT_LEFT);
-				nk_label(ctx, "Left and Right arrows adjust light angle", NK_TEXT_LEFT);
-				switch (currentLevel) {
-					case 0 -> {
-						nk_label(ctx, "Press SPACE to toggle animations", NK_TEXT_LEFT);
-					}
-					case 1 -> {
-						nk_label(ctx, "Press F to toggle Physics", NK_TEXT_LEFT);
+					nk_layout_row_dynamic(ctx, 25, 1);
+					nk_label(ctx, "Controls:", NK_TEXT_CENTERED);
+					nk_label(ctx, "W - Forwards | A - Left | S - Backwards | D - Right", NK_TEXT_LEFT);
+					nk_label(ctx, "X - Up | Z - Down", NK_TEXT_LEFT);
+					nk_label(ctx, "Left and Right arrows adjust light angle", NK_TEXT_LEFT);
+					switch (currentLevel) {
+						case 0 -> {
+							nk_label(ctx, "Press SPACE to toggle animations", NK_TEXT_LEFT);
+						}
+						case 1 -> {
+							nk_label(ctx, "Press F to toggle Physics", NK_TEXT_LEFT);
+						}
 					}
 				}
+				nk_end(ctx);
 			}
-			nk_end(ctx);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

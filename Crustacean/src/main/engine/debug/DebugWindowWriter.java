@@ -23,16 +23,14 @@ public class DebugWindowWriter extends AbstractFormatPatternWriter {
 
     @Override
     public void write(LogEntry logEntry) throws Exception {
-
+        Debug.log(render(logEntry));
     }
 
     @Override
     public void flush() throws Exception {
-
     }
 
     @Override
     public void close() throws Exception {
-
     }
 }

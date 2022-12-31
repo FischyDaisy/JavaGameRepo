@@ -36,7 +36,7 @@ public class TextItem {
         int numChars = characters.length;
 
         float startx = 0;
-        for(int i=0; i<numChars; i++) {
+        for(int i = 0; i < numChars; i++) {
             FontTexture.CharInfo charInfo = fontTexture.getCharInfo(characters[i]);
             
             // Build a character tile composed by two triangles

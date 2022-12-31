@@ -5,7 +5,10 @@ import static org.lwjgl.glfw.GLFW.*;
 import java.util.*;
 
 import main.engine.*;
+import main.engine.graphics.hud.Calculator;
 import main.engine.items.GameItemAnimation;
+import main.game.hud.DebugWindow;
+import main.game.hud.TransparentWindow;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -159,7 +162,7 @@ public class Game implements IGameLogic {
         menu = new GameMenu(window, scene, renderer, world, gamePhysics, gameSession);
         currentLevel = menu.getLevel();
         levelSelection = menu.getCurrentLevel();
-        vkRenderer.setNulkearElements(new NKHudElement[] {menu});
+        vkRenderer.setNulkearElements(new NKHudElement[] {menu, new TransparentWindow(window)});
         menu.hideWindow(true);
         currentLevel.load(scene, renderer, world, gamePhysics, gameSession);
         
