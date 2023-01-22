@@ -319,7 +319,7 @@ public class Game implements IGameLogic {
     	MouseInput mouseInput = window.getMouseInput();
         Camera camera = scene.getCamera();
     	// Update camera based on mouse            
-        if (mouseInput.isRightButtonPressed()) {
+        if (menu.isHidden()) {
             Vector2f rotVec = mouseInput.getDisplVec();
             camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
             sceneChanged = true;

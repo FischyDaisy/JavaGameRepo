@@ -81,11 +81,13 @@ public class GameMenu implements NKHudElement {
 						if (nk_menu_item_label(ctx, "Sponza", NK_TEXT_LEFT)) {
 							currentLevel = 0;
 							shouldHide = true;
+							glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 							Logger.debug("Current Level: {}", currentLevel);
 						}
 						if (nk_menu_item_label(ctx, "Newton Demo", NK_TEXT_LEFT)) {
 							currentLevel = 1;
 							shouldHide = true;
+							glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 							Logger.debug("Current Level: {}", currentLevel);
 						}
 					}
@@ -124,6 +126,11 @@ public class GameMenu implements NKHudElement {
 	
 	public void hideWindow(boolean shouldHide) {
 		this.shouldHide = shouldHide;
+		if (shouldHide) {
+			glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		} else {
+			glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
 	}
 
 	public boolean isHidden() {

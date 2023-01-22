@@ -25,10 +25,15 @@ public class GlobalBuffers {
     private static final int MATERIAL_SIZE = GraphConstants.VECTOR4F_SIZE_BYTES + GraphConstants.INT_SIZE_BYTES * 3 +
             GraphConstants.FLOAT_SIZE_BYTES * 2 + MATERIAL_PADDING;
     private final VulkanBuffer animJointMatricesBuffer;
+    private final long jointMatricesBufferSize;
     private final VulkanBuffer animWeightsBuffer;
+    private final long weightsBufferSize;
     private final VulkanBuffer indicesBuffer;
+    private final long indicesBufferSize;
     private final VulkanBuffer materialsBuffer;
+    private final long materialsBufferSize;
     private final VulkanBuffer verticesBuffer;
+    private final long verticesBufferSize;
     private final VulkanBuffer skyboxIndicesBuffer;
     private final VulkanBuffer skyboxJointMatricesBuffer;
     private final VulkanBuffer skyboxMaterialsBuffer;
@@ -49,16 +54,21 @@ public class GlobalBuffers {
     public GlobalBuffers(Device device) {
         Logger.debug("Creating global buffers");
         EngineProperties engProps = EngineProperties.INSTANCE;
-        verticesBuffer = new VulkanBuffer(device, engProps.getMaxVerticesBuffer(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
+        verticesBufferSize = engProps.getMaxVerticesBuffer();
+        verticesBuffer = new VulkanBuffer(device, verticesBufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
                 VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
-        indicesBuffer = new VulkanBuffer(device, engProps.getMaxIndicesBuffer(), VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+        indicesBufferSize = engProps.getMaxIndicesBuffer();
+        indicesBuffer = new VulkanBuffer(device, indicesBufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
         int maxMaterials = engProps.getMaxMaterials();
-        materialsBuffer = new VulkanBuffer(device, (long) maxMaterials * GraphConstants.VECTOR4F_SIZE_BYTES * 9, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+        materialsBufferSize = (long) maxMaterials * GraphConstants.VECTOR4F_SIZE_BYTES * 9;
+        materialsBuffer = new VulkanBuffer(device, materialsBufferSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
-        animJointMatricesBuffer = new VulkanBuffer(device, engProps.getMaxJointMatricesBuffer(), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+        jointMatricesBufferSize = engProps.getMaxJointMatricesBuffer();
+        animJointMatricesBuffer = new VulkanBuffer(device, jointMatricesBufferSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
-        animWeightsBuffer = new VulkanBuffer(device, engProps.getMaxAnimWeightsBuffer(), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
+        weightsBufferSize = engProps.getMaxAnimWeightsBuffer();
+        animWeightsBuffer = new VulkanBuffer(device, weightsBufferSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
         animVerticesBuffer = new VulkanBuffer(device, engProps.getMaxAnimVerticesBuffer(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
                 VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
@@ -727,12 +737,16 @@ public class GlobalBuffers {
             return dataBuffer;
         }
 
-        private void recordTransferCommand(CommandBuffer cmd, VulkanBuffer dstBuffer) {
+        private void recordTransferCommand(CommandBuffer cmd, VulkanBuffer dstBuffer, long dstOffset) {
             try (MemoryStack stack = MemoryStack.stackPush()) {
                 VkBufferCopy.Buffer copyRegion = VkBufferCopy.calloc(1, stack)
-                        .srcOffset(0).dstOffset(0).size(stgVulkanBuffer.getRequestedSize());
+                        .srcOffset(0).dstOffset(dstOffset).size(stgVulkanBuffer.getRequestedSize());
                 vkCmdCopyBuffer(cmd.getVkCommandBuffer(), stgVulkanBuffer.getBuffer(), dstBuffer.getBuffer(), copyRegion);
             }
+        }
+
+        private void recordTransferCommand(CommandBuffer cmd, VulkanBuffer dstBuffer) {
+            recordTransferCommand(cmd, dstBuffer, 0);
         }
     }
 }

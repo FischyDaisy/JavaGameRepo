@@ -170,7 +170,7 @@ public class VKRenderer {
 		return nuklearRenderActivity.getContext();
 	}
 	
-	private void recordCommands() { //this causes errors
+	private void recordCommands() {
         int idx = 0;
         for (CommandBuffer commandBuffer : commandBuffers) {
             commandBuffer.reset();
