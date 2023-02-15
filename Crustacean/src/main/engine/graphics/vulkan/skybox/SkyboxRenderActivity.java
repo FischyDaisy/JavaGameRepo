@@ -14,23 +14,18 @@ import static org.lwjgl.vulkan.VK10.vkCmdBindDescriptorSets;
 import static org.lwjgl.vulkan.VK10.vkCmdBindIndexBuffer;
 import static org.lwjgl.vulkan.VK10.vkCmdBindPipeline;
 import static org.lwjgl.vulkan.VK10.vkCmdBindVertexBuffers;
-import static org.lwjgl.vulkan.VK10.vkCmdDrawIndexed;
 import static org.lwjgl.vulkan.VK10.vkCmdDrawIndexedIndirect;
 import static org.lwjgl.vulkan.VK10.vkCmdSetScissor;
 import static org.lwjgl.vulkan.VK10.vkCmdSetViewport;
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import main.engine.graphics.camera.Camera;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.VkCommandBuffer;
 import org.lwjgl.vulkan.VkExtent2D;
@@ -41,18 +36,13 @@ import org.tinylog.Logger;
 import main.engine.*;
 import main.engine.graphics.GraphConstants;
 import main.engine.graphics.vulkan.*;
-import main.engine.graphics.vulkan.animation.AnimationComputeActivity;
 import main.engine.graphics.vulkan.geometry.*;
-import main.engine.items.GameItem;
-import main.engine.items.SkyBox;
-import main.engine.scene.Scene;
 import main.engine.utility.ResourcePaths.Shaders;
 
 public class SkyboxRenderActivity {
 	
 	private final Device device;
 	private final SkyboxSpecConstants skyboxSpecConstants;
-    private final Scene scene;
     private final Window window;
     
     private DescriptorPool descriptorPool;
@@ -71,8 +61,7 @@ public class SkyboxRenderActivity {
     private VulkanBuffer[] viewMatricesBuffer;
     private DescriptorSet.UniformDescriptorSet[] viewMatricesDescriptorSets;
 	
-	public SkyboxRenderActivity(SwapChain swapChain, PipelineCache pipelineCache, Scene scene, Window window, long vkRenderPass, GlobalBuffers globalBuffers) {
-		this.scene = scene;
+	public SkyboxRenderActivity(SwapChain swapChain, PipelineCache pipelineCache, Window window, long vkRenderPass, GlobalBuffers globalBuffers) {
 		this.window = window;
 		device = swapChain.getDevice();
 		this.swapChain = swapChain;
@@ -233,9 +222,9 @@ public class SkyboxRenderActivity {
 		}
 	}
 	
-	public void render() {
+	public void render(Camera camera) {
         int idx = swapChain.getCurrentFrame();
-        Matrix4f viewMatrix = scene.getCamera().getViewMatrix();
+        Matrix4f viewMatrix = camera.getViewMatrix();
         float m30 = viewMatrix.m30();
         viewMatrix.m30(0);
         float m31 = viewMatrix.m31();

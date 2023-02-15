@@ -1,10 +1,11 @@
 package main.engine.graphics.shadows;
 
+import main.engine.graphics.camera.Camera;
+import main.engine.graphics.lights.Light;
 import org.joml.*;
 
 import main.engine.Window;
 import main.engine.graphics.GraphConstants;
-import main.engine.scene.Scene;
 
 import java.util.List;
 
@@ -20,10 +21,10 @@ public class CascadeShadow {
     // Function are derived from Vulkan examples from Sascha Willems, and licensed under the MIT License:
     // https://github.com/SaschaWillems/Vulkan/tree/master/examples/shadowmappingcascade, which are based on
     // https://johanmedestrom.wordpress.com/2016/03/18/opengl-cascaded-shadow-maps/
-    public static void updateCascadeShadows(List<CascadeShadow> cascadeShadows, Scene scene, Window window) {
-        Matrix4f viewMatrix = scene.getCamera().getViewMatrix();
+    public static void updateCascadeShadows(List<CascadeShadow> cascadeShadows, Camera camera, Light directionalLight, Window window) {
+        Matrix4f viewMatrix = camera.getViewMatrix();
         Matrix4f projMatrix = window.getProjectionMatrix();
-        Vector4f lightPos = scene.getSceneLight().getDirectionalLight().getPosition();
+        Vector4f lightPos = directionalLight.getPosition();
 
         float cascadeSplitLambda = 0.95f;
 

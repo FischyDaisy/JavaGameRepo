@@ -6,7 +6,6 @@ import static org.lwjgl.stb.STBTruetype.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.vulkan.VK11.*;
-import static org.lwjgl.vulkan.VK12.*;
 
 import static main.engine.utility.ResourcePaths.Shaders;
 
@@ -18,9 +17,7 @@ import java.nio.LongBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import main.engine.KeyboardInput;
 import org.joml.Matrix4f;
@@ -42,7 +39,6 @@ import main.engine.graphics.GraphConstants;
 import main.engine.graphics.Transformation;
 import main.engine.graphics.hud.NKHudElement;
 import main.engine.graphics.vulkan.*;
-import main.engine.scene.Scene;
 import main.engine.utility.ResourcePaths;
 import main.engine.utility.Utils;
 

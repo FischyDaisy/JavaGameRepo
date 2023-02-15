@@ -1,5 +1,9 @@
 package main.engine.graphics.vulkan.lighting;
 
+import dev.dominion.ecs.api.Dominion;
+import dev.dominion.ecs.api.Results;
+import main.engine.graphics.camera.Camera;
+import main.engine.graphics.lights.AmbientLight;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
@@ -15,7 +19,6 @@ import main.engine.graphics.lights.Light;
 import main.engine.graphics.shadows.CascadeShadow;
 import main.engine.graphics.vulkan.*;
 import main.engine.graphics.vulkan.Queue;
-import main.engine.scene.Scene;
 import main.engine.utility.ResourcePaths.Shaders;
 
 import java.nio.ByteBuffer;
@@ -30,7 +33,6 @@ public class LightingRenderActivity {
     private final Device device;
     private final LightSpecConstants lightSpecConstants;
     private final LightingFrameBuffer lightingFrameBuffer;
-    private final Scene scene;
     private final Window window;
 
     private AttachmentsDescriptorSet attachmentsDescriptorSet;
@@ -51,9 +53,8 @@ public class LightingRenderActivity {
     private DescriptorSetLayout.UniformDescriptorSetLayout uniformDescriptorSetLayout;
 
     public LightingRenderActivity(SwapChain swapChain, CommandPool commandPool, PipelineCache pipelineCache,
-                                  List<Attachment> attachments, Scene scene, Window window) {
+                                  List<Attachment> attachments, Window window) {
         this.swapChain = swapChain;
-        this.scene = scene;
         this.window = window;
         device = swapChain.getDevice();
         auxVec = new Vector4f();
@@ -69,7 +70,7 @@ public class LightingRenderActivity {
         createCommandBuffers(commandPool, numImages);
     }
     
-    public CommandBuffer beginRecording(List<CascadeShadow> cascadeShadows) {
+    public CommandBuffer beginRecording(List<CascadeShadow> cascadeShadows, Dominion dominion, Camera camera) {
         int idx = swapChain.getCurrentFrame();
 
         Fence fence = fences[idx];
@@ -78,8 +79,10 @@ public class LightingRenderActivity {
         fence.fenceWait();
         fence.reset();
 
-        updateLights(scene.getSceneLight().getAmbientLight(), scene.getSceneLight().getLights(), scene.getCamera().getViewMatrix(), lightsBuffers[idx]);
-        updateInvMatrices(invMatricesBuffers[idx]);
+        Results<Results.With1<AmbientLight>> ambientLights = dominion.findEntitiesWith(AmbientLight.class);
+        Results<Results.With1<Light>> lightResults = dominion.findEntitiesWith(Light.class);
+        updateLights(ambientLights.iterator().next().comp(), lightResults, camera.getViewMatrix(), lightsBuffers[idx]);
+        updateInvMatrices(camera, invMatricesBuffers[idx]);
         updateCascadeShadowMatrices(cascadeShadows, shadowsMatricesBuffers[idx]);
 
         commandBuffer.reset();
@@ -292,25 +295,26 @@ public class LightingRenderActivity {
         shadowsUniformBuffer.unMap();
     }
 
-    private void updateInvMatrices(VulkanBuffer invMatricesBuffer) {
+    private void updateInvMatrices(Camera camera, VulkanBuffer invMatricesBuffer) {
         Matrix4f invProj = new Matrix4f(window.getProjectionMatrix()).invert();
-        Matrix4f invView = new Matrix4f(scene.getCamera().getViewMatrix()).invert();
+        Matrix4f invView = new Matrix4f(camera.getViewMatrix()).invert();
         VulkanUtils.copyMatrixToBuffer(invMatricesBuffer, invProj, 0);
         VulkanUtils.copyMatrixToBuffer(invMatricesBuffer, invView, GraphConstants.MAT4X4_SIZE_BYTES);
     }
 
-    private void updateLights(Vector4f ambientLight, Light[] lights, Matrix4f viewMatrix,
+    private void updateLights(AmbientLight ambientLight, Results<Results.With1<Light>> results, Matrix4f viewMatrix,
                               VulkanBuffer lightsBuffer) {
         long mappedMemory = lightsBuffer.map();
         ByteBuffer uniformBuffer = MemoryUtil.memByteBuffer(mappedMemory, (int) lightsBuffer.getRequestedSize());
 
-        ambientLight.get(0, uniformBuffer);
+        ambientLight.ambientLight().get(0, uniformBuffer);
         int offset = GraphConstants.VECTOR4F_SIZE_BYTES;
-        int numLights = lights != null ? lights.length : 0;
+        List<Results.With1<Light>> lights = results.stream().toList();
+        int numLights = lights.size();
         uniformBuffer.putInt(offset, numLights);
         offset += GraphConstants.VECTOR4F_SIZE_BYTES;
         for (int i = 0; i < numLights; i++) {
-            Light light = lights[i];
+            Light light = lights.get(i).comp();
             auxVec.set(light.getPosition());
             auxVec.mul(viewMatrix);
             auxVec.w = light.getPosition().w;

@@ -1,6 +1,7 @@
 package main.engine.scene;
 
 import crab.newton.NewtonWorld;
+import dev.dominion.ecs.api.Dominion;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.physics.Physics;
 import java.lang.foreign.*;
@@ -17,13 +18,13 @@ import java.lang.foreign.*;
 public interface Level {
 	/**
 	 * Loads the level into the engine
-	 * @param scene
+	 * @param dominion
 	 * @param renderer
 	 * @param world
 	 * @param physics
 	 * @param session
 	 */
-	void load(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, MemorySession session) throws Exception;
+	void load(Dominion dominion, VKRenderer renderer, Physics physics, MemorySession session) throws Exception;
 
-	void reset(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, MemorySession session) throws Exception;
+	void reset(Dominion dominion, VKRenderer renderer, Physics physics, MemorySession session) throws Exception;
 }

@@ -1,13 +1,20 @@
 package main.engine;
 
+import dev.dominion.ecs.api.Dominion;
+import dev.dominion.ecs.api.Results;
+import main.engine.graphics.camera.Camera;
 import main.engine.graphics.vulkan.VKRenderer;
-import main.engine.scene.Scene;
+import main.engine.graphics.weather.Fog;
+import main.engine.scene.SceneLight;
+
+import java.util.Iterator;
 
 public class GameEngine {
-    
+
+    public static final String DEFAULT_CAMERA_NAME = "main-cam";
     private boolean running;
-    
-    private Scene scene;
+
+    private Dominion dom;
     
     private static final EngineProperties engineProperties = EngineProperties.INSTANCE;
 
@@ -39,13 +46,21 @@ public class GameEngine {
     	window = new Window(windowTitle, width, height, vSync, opts);
     	window.init(null);
         this.gameLogic = gameLogic;
-        scene = new Scene();
-        this.renderer = new VKRenderer(window, scene);
-        gameLogic.init(window, scene, renderer);
+        dom = Dominion.create("dom");
+        initDominion();
+        this.renderer = new VKRenderer(window, dom);
+        gameLogic.init(window, dom, renderer);
         lastFps = System.nanoTime();
         fps = 0;
     }
 
+    public void initDominion() {
+        dom.createEntity(Fog.NOFOG);
+        dom.createEntity(true);
+        dom.createEntity(new SceneLight());
+        dom.createEntity(new Camera());
+        dom.createEntity(new ItemLoadTimestamp());
+    }
 
     public void run() throws Exception {
         initialTime = System.nanoTime();
@@ -55,7 +70,10 @@ public class GameEngine {
         long updateTime = initialTime;
         while (running && !window.windowShouldClose()) {
 
-        	scene.getCamera().setHasMoved(false);
+            for (Iterator<Results.With1<Camera>> itr = dom.findEntitiesWith(Camera.class).iterator(); itr.hasNext();) {
+                Camera cam = itr.next().comp();
+                cam.setHasMoved(false);
+            }
             window.pollEvents();
             renderer.inputNuklear(window);
 
@@ -65,7 +83,7 @@ public class GameEngine {
 
             if (deltaU >= 1) {
             	long diffTimeNanos = currentTime - updateTime;
-                gameLogic.inputAndUpdate(window, scene, diffTimeNanos);
+                gameLogic.inputAndUpdate(window, dom, renderer, diffTimeNanos);
                 updateTime = currentTime;
                 deltaU--;
             }
@@ -76,7 +94,7 @@ public class GameEngine {
                 fps = 0;
             }
             fps++;
-            renderer.render(window, scene);
+            renderer.render(window);
             
             if ( !window.isvSync() ) {
                 sync();

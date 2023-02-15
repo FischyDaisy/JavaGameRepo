@@ -1,7 +1,6 @@
 package main.engine.items;
 
 import main.engine.graphics.ModelData;
-import main.engine.graphics.particles.Particle;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -9,38 +8,20 @@ import org.joml.Vector3f;
 import crab.newton.NewtonBody;
 import main.engine.graphics.Transformation;
 
-public sealed class GameItem permits Particle {
-	
-	private String id;
+public final class GameItem {
 	
 	private final String modelId;
-	
-	private boolean selected;
-    
     private final Vector3f scale;
-    
     private final Vector3f position;
-
     private final Quaternionf rotation;
-    
     private final Matrix4f modelMatrix;
-
-    private GameItemAnimation animation;
-
-    private NewtonBody body;
     
     public GameItem(String modelId) {
         this.modelId = modelId;
-    	selected = false;
         scale = new Vector3f(1.0f, 1.0f, 1.0f);
         modelMatrix = new Matrix4f();
         position = new Vector3f();
         rotation = new Quaternionf();
-    }
-    
-    public GameItem(String id, String modelId) {
-    	this(modelId);
-    	this.id = id;
     }
 
     public Vector3f getPosition() {
@@ -52,25 +33,9 @@ public sealed class GameItem permits Particle {
         this.position.y = y;
         this.position.z = z;
     }
-    
-    public String getId() {
-    	return id;
-    }
-    
-    public void setId(String id) {
-    	this.id = id;
-    }
 
     public String getModelId() {
         return modelId;
-    }
-    
-    public boolean isSelected() {
-        return selected;
-    }
-    
-    public void setSelected(boolean selected) {
-        this.selected = selected;
     }
 
     public Vector3f getScale() {
@@ -130,32 +95,14 @@ public sealed class GameItem permits Particle {
     public Matrix4f buildModelMatrix() {
     	return Transformation.buildModelMatrix(this, modelMatrix);
     }
-    
-    public Matrix4f setMatrix(Matrix4f m) {
-    	return modelMatrix.set(m);
-    }
 
-    public GameItemAnimation getAnimation() {
-        return animation;
-    }
-
-    public void setAnimation(GameItemAnimation animation) {
-        this.animation = animation;
-    }
-
-    public boolean hasAnimation() {
-        return animation != null;
-    }
-
-    public NewtonBody getBody() {
-        return body;
-    }
-
-    public void setBody(NewtonBody body) {
-        this.body = body;
-    }
-
-    public boolean hasPhysicsBody() {
-        return body != null;
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof GameItem item &&
+                this.modelId.equals(item.modelId) &&
+                this.scale.equals(item.scale) &&
+                this.position.equals(item.position) &&
+                this.rotation.equals(item.rotation) &&
+                this.modelMatrix.equals(item.modelMatrix);
     }
 }

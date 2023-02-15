@@ -11,7 +11,6 @@ import org.lwjgl.system.MemoryStack;
 
 import crab.newton.NewtonBody;
 import crab.newton.NewtonCollision;
-import crab.newton.NewtonHeightField;
 import crab.newton.NewtonMesh;
 import crab.newton.NewtonWorld;
 import main.engine.graphics.ModelData;
@@ -85,8 +84,8 @@ public class HeightMap {
         float[] normalsArr = calcNormals(posArr, width, height);
         float[] tangentArr = new float[posArr.length];
         float[] biTangnetArr = new float[posArr.length];
-        
-        NewtonCollision collision = NewtonHeightField.create(world, width, height, 1, 0, elevationMap, attributeMap, 1.0f, cellSize, cellSize, 0, allocator);
+
+        NewtonCollision collision = world.createHeightField(width, height, 1, elevationMap, attributeMap, 1.0f, cellSize, cellSize, 0);
         
         for (int i = 0; i < indicesArr.length; i += 3) {
 			int p0 = indicesArr[i], p1 = indicesArr[i + 1], p2 = indicesArr[i + 2];

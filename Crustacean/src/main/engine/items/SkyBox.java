@@ -1,15 +1,10 @@
 package main.engine.items;
 
-import java.util.Arrays;
-
 import org.joml.*;
 
 import main.engine.EngineProperties;
-import main.engine.Window;
 import main.engine.graphics.ModelData;
-import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.graphics.vulkan.VKTexture;
-import main.engine.scene.Scene;
 
 public class SkyBox  {
 	
@@ -20,7 +15,7 @@ public class SkyBox  {
 	private final Vector3f scale;
 	private final Matrix4f modelMatrix;
 	
-    public SkyBox(ModelData modelData, Window window, Scene scene, VKRenderer renderer) throws Exception {
+    public SkyBox(ModelData modelData) throws Exception {
     	EngineProperties engProps = EngineProperties.INSTANCE;
     	skyboxTexturePaths = new String[engProps.getMaxSkyboxTextures()];
     	int offset = 0;

@@ -50,6 +50,13 @@ public class ModelData {
     public void setAnimationsList(List<Animation> animationsList) {
         this.animationsList = animationsList;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof ModelData modelData &&
+                this.modelId.equals(modelData.modelId);
+    }
+
     public record AnimMeshData(float[] weights, int[] boneIds) {}
 
     public record AnimatedFrame(Matrix4f[] jointMatrices) {}

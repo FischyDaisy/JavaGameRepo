@@ -1,6 +1,7 @@
 package main.engine.graphics.vulkan.shadows;
 
-import org.joml.Matrix4f;
+import main.engine.graphics.camera.Camera;
+import main.engine.graphics.lights.Light;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.*;
@@ -11,10 +12,7 @@ import main.engine.Window;
 import main.engine.graphics.GraphConstants;
 import main.engine.graphics.shadows.CascadeShadow;
 import main.engine.graphics.vulkan.*;
-import main.engine.graphics.vulkan.animation.AnimationComputeActivity;
 import main.engine.graphics.vulkan.geometry.GeometryAttachments;
-import main.engine.items.GameItem;
-import main.engine.scene.Scene;
 import main.engine.utility.ResourcePaths.Shaders;
 
 import java.nio.*;
@@ -25,7 +23,6 @@ import static org.lwjgl.vulkan.VK11.*;
 public class ShadowRenderActivity {
 
     private final Device device;
-    private final Scene scene;
     private final Window window;
     private final ShadowsFrameBuffer shadowsFrameBuffer;
 
@@ -39,9 +36,8 @@ public class ShadowRenderActivity {
     private SwapChain swapChain;
     private DescriptorSetLayout.UniformDescriptorSetLayout uniformDescriptorSetLayout;
 
-    public ShadowRenderActivity(SwapChain swapChain, PipelineCache pipelineCache, Scene scene, Window window) {
+    public ShadowRenderActivity(SwapChain swapChain, PipelineCache pipelineCache, Window window) {
         this.swapChain = swapChain;
-        this.scene = scene;
         this.window = window;
         device = swapChain.getDevice();
         int numImages = swapChain.getNumImages();
@@ -207,9 +203,9 @@ public class ShadowRenderActivity {
         }
     }
     
-    public void render() {
-        if (scene.getSceneLight().isLightChanged() || scene.getCamera().hasMoved()) {
-            CascadeShadow.updateCascadeShadows(cascadeShadows, scene, window);
+    public void render(Camera camera, Light directionalLight) {
+        if (directionalLight.isChanged() || camera.hasMoved()) {
+            CascadeShadow.updateCascadeShadows(cascadeShadows, camera, directionalLight, window);
         }
 
         int idx = swapChain.getCurrentFrame();
@@ -220,8 +216,8 @@ public class ShadowRenderActivity {
         }
     }
 
-    public void resize(SwapChain swapChain) {
+    public void resize(SwapChain swapChain, Camera camera, Light directionalLight) {
         this.swapChain = swapChain;
-        CascadeShadow.updateCascadeShadows(cascadeShadows, scene, window);
+        CascadeShadow.updateCascadeShadows(cascadeShadows, camera, directionalLight, window);
     }
 }

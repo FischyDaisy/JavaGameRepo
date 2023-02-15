@@ -33,6 +33,7 @@ public class CameraBoxSelectionDetector {
     	GameItem selectedGameItem = null;
         float closestDistance = Float.POSITIVE_INFINITY;
 
+        /*
         for (GameItem gameItem : gameItems) {
             gameItem.setSelected(false);
             min.set(gameItem.getPosition());
@@ -48,7 +49,7 @@ public class CameraBoxSelectionDetector {
         if (selectedGameItem != null) {
             selectedGameItem.setSelected(true);
             selected = true;
-        }
+        }*/
         return selected;
     }
 }

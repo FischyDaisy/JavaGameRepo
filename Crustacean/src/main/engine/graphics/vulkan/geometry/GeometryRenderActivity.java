@@ -1,5 +1,6 @@
 package main.engine.graphics.vulkan.geometry;
 
+import main.engine.graphics.camera.Camera;
 import org.lwjgl.system.*;
 import org.lwjgl.util.shaderc.Shaderc;
 import org.lwjgl.vulkan.*;
@@ -9,15 +10,10 @@ import main.engine.EngineProperties;
 import main.engine.Window;
 import main.engine.graphics.GraphConstants;
 import main.engine.graphics.vulkan.*;
-import main.engine.graphics.vulkan.Queue;
-import main.engine.graphics.vulkan.animation.AnimationComputeActivity;
-import main.engine.items.GameItem;
-import main.engine.scene.Scene;
 import main.engine.utility.ResourcePaths.Shaders;
 
 import java.nio.*;
 import java.util.*;
-import java.util.HashMap;
 
 import static org.lwjgl.vulkan.VK11.*;
 
@@ -28,7 +24,6 @@ public class GeometryRenderActivity {
     private final GeometryFrameBuffer geometryFrameBuffer;
     private final GeometrySpecConstants geometrySpecConstants;
     private final PipelineCache pipelineCache;
-    private final Scene scene;
     private final Window window;
 
     private DescriptorPool descriptorPool;
@@ -47,10 +42,9 @@ public class GeometryRenderActivity {
     private VulkanBuffer[] viewMatricesBuffer;
     private DescriptorSet.UniformDescriptorSet[] viewMatricesDescriptorSets;
 
-    public GeometryRenderActivity(SwapChain swapChain, PipelineCache pipelineCache, Scene scene, Window window, GlobalBuffers globalBuffers) {
+    public GeometryRenderActivity(SwapChain swapChain, PipelineCache pipelineCache, Window window, GlobalBuffers globalBuffers) {
         this.swapChain = swapChain;
         this.pipelineCache = pipelineCache;
-        this.scene = scene;
         this.window = window;
         device = swapChain.getDevice();
         geometrySpecConstants = new GeometrySpecConstants();
@@ -267,9 +261,9 @@ public class GeometryRenderActivity {
         }
     }
     
-    public void render() {
+    public void render(Camera camera) {
         int idx = swapChain.getCurrentFrame();
-        VulkanUtils.copyMatrixToBuffer(viewMatricesBuffer[idx], scene.getCamera().getViewMatrix());
+        VulkanUtils.copyMatrixToBuffer(viewMatricesBuffer[idx], camera.getViewMatrix());
     }
 
     public void resize(SwapChain swapChain) {

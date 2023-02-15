@@ -1,5 +1,7 @@
 package main.engine.graphics.vulkan.animation;
 
+import dev.dominion.ecs.api.Dominion;
+import dev.dominion.ecs.api.Results;
 import main.engine.items.GameItemAnimation;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.shaderc.Shaderc;
@@ -11,12 +13,9 @@ import main.engine.utility.ResourcePaths.Shaders;
 import main.engine.graphics.GraphConstants;
 import main.engine.graphics.vulkan.*;
 import main.engine.graphics.vulkan.Queue;
-import main.engine.items.GameItem;
-import main.engine.scene.Scene;
 
 import java.nio.*;
 import java.util.*;
-import java.util.HashMap;
 
 import static org.lwjgl.vulkan.VK11.*;
 
@@ -28,7 +27,6 @@ public class AnimationComputeActivity {
     private final Device device;
     private final MemoryBarrier memoryBarrier;
     private final Queue.ComputeQueue computeQueue;
-    private final Scene scene;
 
     private CommandBuffer commandBuffer;
     private ComputePipeline computePipeline;
@@ -42,8 +40,7 @@ public class AnimationComputeActivity {
     private DescriptorSetLayout.StorageDescriptorSetLayout storageDescriptorSetLayout;
     private DescriptorSet.StorageDescriptorSet weightsDescriptorSet;
 
-    public AnimationComputeActivity(CommandPool commandPool, PipelineCache pipelineCache, Scene scene) {
-        this.scene = scene;
+    public AnimationComputeActivity(CommandPool commandPool, PipelineCache pipelineCache) {
         device = pipelineCache.getDevice();
         computeQueue = new Queue.ComputeQueue(device, 0);
         createDescriptorPool();
@@ -122,7 +119,7 @@ public class AnimationComputeActivity {
         }
     }
 
-    public void recordCommandBuffer(GlobalBuffers globalBuffers) {
+    public void recordCommandBuffer(GlobalBuffers globalBuffers, Dominion dominion) {
         fence.fenceWait();
         fence.reset();
 
@@ -148,17 +145,18 @@ public class AnimationComputeActivity {
                     computePipeline.getVkPipelineLayout(), 0, descriptorSets, null);
             
             List<VulkanAnimModel> vulkanAnimModelList = globalBuffers.getVulkanAnimModelList();
-            for (VulkanAnimModel vulkanAnimModel : vulkanAnimModelList) {
-                GameItem item = vulkanAnimModel.getGameItem();
-                GameItemAnimation gameItemAnimation = item.getAnimation();
+            Results<Results.With1<GameItemAnimation>> results = dominion.findEntitiesWith(GameItemAnimation.class);
+            for (Iterator<Results.With1<GameItemAnimation>> itr = results.iterator(); itr.hasNext();) {
+                Results.With1<GameItemAnimation> animGameItem = itr.next();
+                GameItemAnimation gameItemAnimation = animGameItem.comp();
+                VulkanAnimModel vulkanAnimModel = vulkanAnimModelList.get(gameItemAnimation.getAnimModelIdx());
                 if (!gameItemAnimation.isStarted() && gameItemAnimation.isLoaded()) {
                     continue;
                 }
                 gameItemAnimation.setLoaded(true);
-
                 VulkanModel vulkanModel = vulkanAnimModel.getVulkanModel();
-                int animationIdx = item.getAnimation().getAnimationIdx();
-                int currentFrame = item.getAnimation().getCurrentFrame();
+                int animationIdx = gameItemAnimation.getAnimationIdx();
+                int currentFrame = gameItemAnimation.getCurrentFrame();
                 int jointMatricesOffset = vulkanModel.getVulkanAnimationDataList().get(animationIdx).getVulkanAnimationFrameList().get(currentFrame).jointMatricesOffset();
 
                 for (VulkanAnimModel.VulkanAnimMesh vulkanAnimMesh : vulkanAnimModel.getVulkanAnimMeshList()) {

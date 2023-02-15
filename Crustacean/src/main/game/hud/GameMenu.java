@@ -4,11 +4,11 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nuklear.Nuklear.*;
 
 import crab.newton.NewtonWorld;
+import dev.dominion.ecs.api.Dominion;
 import main.engine.graphics.hud.NKHudElement;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.physics.Physics;
 import main.engine.scene.Level;
-import main.engine.scene.Scene;
 import main.game.NewtonDemo;
 import main.game.Sponza;
 import org.lwjgl.nuklear.*;
@@ -22,9 +22,8 @@ import java.lang.foreign.MemorySession;
 public class GameMenu implements NKHudElement {
 	
 	private final Window window;
-	private final Scene scene;
+	private final Dominion dominion;
 	private final VKRenderer renderer;
-	private final NewtonWorld world;
 	private final Physics physics;
 	private final MemorySession session;
 
@@ -36,15 +35,14 @@ public class GameMenu implements NKHudElement {
 	private final Level[] levels;
 	private int currentLevel;
 	
-	public GameMenu(Window window, Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, MemorySession session) throws Exception {
+	public GameMenu(Window window, Dominion dominion, VKRenderer renderer, Physics physics, MemorySession session) throws Exception {
 		this.window = window;
-		this.scene = scene;
+		this.dominion = dominion;
 		this.renderer = renderer;
-		this.world = world;
 		this.physics = physics;
 		this.session = session;
 		this.shouldHide = true;
-		levels = new Level[] {new Sponza(), new NewtonDemo(world, physics, session)};
+		levels = new Level[] {new Sponza(), new NewtonDemo(physics, session)};
 		currentLevel = 0;
 		width = 300;
 		height = 150;
@@ -95,7 +93,7 @@ public class GameMenu implements NKHudElement {
 					nk_layout_row_push(ctx, 70);
 					if (nk_button_label(ctx, "Reset")) {
 						Logger.debug("Reset Level");
-						levels[currentLevel].reset(scene, renderer, world, physics, session);
+						levels[currentLevel].reset(dominion, renderer, physics, session);
 					}
 					if (nk_button_label(ctx, "Exit")) {
 						Logger.debug("End Game");

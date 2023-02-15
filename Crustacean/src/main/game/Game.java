@@ -4,31 +4,29 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.*;
 
+import dev.dominion.ecs.api.Dominion;
+import dev.dominion.ecs.api.Results;
 import main.engine.*;
-import main.engine.graphics.hud.Calculator;
+import main.engine.graphics.lights.AmbientLight;
 import main.engine.items.GameItemAnimation;
-import main.game.hud.DebugWindow;
 import main.game.hud.TransparentWindow;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import main.engine.graphics.ModelData;
-import main.engine.graphics.animation.AnimGameItem;
 import main.engine.graphics.camera.Camera;
 import main.engine.graphics.camera.MouseBoxSelectionDetector;
 import main.game.hud.GameMenu;
 import main.engine.graphics.hud.NKHudElement;
 import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.lights.Light;
-import main.engine.graphics.particles.FlowParticleEmitter;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.items.GameItem;
 import main.engine.items.SkyBox;
 import main.engine.loaders.assimp.ModelLoader;
 import main.engine.physics.Physics;
 import main.engine.scene.Level;
-import main.engine.scene.Scene;
 import main.engine.scene.SceneLight;
 import main.engine.sound.SoundBuffer;
 import main.engine.sound.SoundListener;
@@ -49,8 +47,6 @@ public class Game implements IGameLogic {
 	private static final float MOUSE_SENSITIVITY = 0.2f;
 
     private final Vector3f cameraInc;
-
-    private Scene scene;
     
     //private GameHud gHud;
 
@@ -64,37 +60,23 @@ public class Game implements IGameLogic {
     
     private final SoundManager soundMgr;
     
-    private FlowParticleEmitter particleEmitter;
+    //private FlowParticleEmitter particleEmitter;
     
     private MouseBoxSelectionDetector selectDetector;
-    
-    private boolean leftButtonPressed;
-    
-    private boolean firstTime;
-
-    private boolean sceneChanged;
     
     private boolean updatePhysics;
     
     private enum Sounds { FIRE };
     
-    private GameItem[] gameItems;
-    
-    private GameItem bob, monster;
+    private GameItemAnimation bob, monster;
     
     private SkyBox skybox;
-    
-    private NewtonBody cubeBody;
-    
-    private AnimGameItem momster;
     
     private Vector3f rotatingAngle = new Vector3f(1, 1, 1);
     
     private VKRenderer vkRenderer;
 
     private MemorySession gameSession;
-    
-    private NewtonWorld world;
     
     private Physics gamePhysics;
     
@@ -109,7 +91,6 @@ public class Game implements IGameLogic {
         cameraInc = new Vector3f(0.0f, 0.0f, 0.0f);
         angleInc = 0;
         lightAngle = 45;
-        firstTime = true;
         updatePhysics = false;
     }
     
@@ -135,10 +116,8 @@ public class Game implements IGameLogic {
     }
     
     @Override
-    public void init(Window window, Scene scene, VKRenderer renderer) throws Exception {
+    public void init(Window window, Dominion dominion, VKRenderer renderer) throws Exception {
         soundMgr.init();
-        
-        leftButtonPressed = false;
 
         gameSession = MemorySession.openShared();
         Newton.loadNewton(ResourcePaths.Newton.NEWTON_DLL, gameSession);
@@ -151,56 +130,55 @@ public class Game implements IGameLogic {
             Logger.debug("Loaded Newton Absolutely");
         }
         */
-        world = NewtonWorld.create();
-        
-        this.scene = scene;
         
         vkRenderer = renderer;
         
         gamePhysics = new Physics();
 
-        menu = new GameMenu(window, scene, renderer, world, gamePhysics, gameSession);
+        //renderer.selectCamera(GameEngine.DEFAULT_CAMERA_NAME);
+        menu = new GameMenu(window, dominion, renderer, gamePhysics, gameSession);
         currentLevel = menu.getLevel();
         levelSelection = menu.getCurrentLevel();
         vkRenderer.setNulkearElements(new NKHudElement[] {menu, new TransparentWindow(window)});
         menu.hideWindow(true);
-        currentLevel.load(scene, renderer, world, gamePhysics, gameSession);
+        currentLevel.load(dominion, renderer, gamePhysics, gameSession);
         
-        if (levelSelection == 0) {
-            bob = scene.getGameItemsByModelId("bob-model").get(0);
-            monster = scene.getGameItemsByModelId("monster-model").get(0);
+        if (currentLevel instanceof Sponza zaza) {
+            bob = zaza.bobAnimation;
+            monster = zaza.monsterAnimation;
         }
         
         String skyboxId = "skyboxModel";
         ModelData skyboxModel = ModelLoader.loadModel(skyboxId, ResourcePaths.Models.SKYBOX_OBJ, 
         		ResourcePaths.Textures.TEXTURE_DIR, false);
         skyboxModel.getMaterialList().set(0, new ModelData.Material(ResourcePaths.Textures.SKYBOX_TEXTURE));
-        skybox = new SkyBox(skyboxModel, window, scene, vkRenderer);
+        skybox = new SkyBox(skyboxModel);
         skybox.setScale(200f);
         skybox.buildModelMatrix();
-        scene.setSkyBox(skybox);
-        renderer.loadSkyBox(skyboxModel, scene);
+        dominion.createEntity("skybox", skybox);
+        renderer.loadSkyBox(skyboxModel);
         
 
-        
-        scene.getSceneLight().getAmbientLight().set(0.2f, 0.2f, 0.2f, 1.0f);
+        AmbientLight ambientLight = new AmbientLight();
+        ambientLight.ambientLight().set(0.2f, 0.2f, 0.2f, 1.0f);
+        dominion.createEntity(ambientLight);
         List<Light> lights = new ArrayList<>();
         directionalLight = new Light();
         directionalLight.getPosition().set(0.0f, 1.0f, 0.0f, 0.0f);
         directionalLight.getColor().set(1.0f, 1.0f, 1.0f, 1.0f);
         lights.add(directionalLight);
         updateDirectionalLight();
-        
-        Light[] lightArr = new Light[lights.size()];
-        lightArr = lights.toArray(lightArr);
-        scene.getSceneLight().setLights(lightArr);
+        renderer.setDirectionalLight(directionalLight);
+        for (Light light : lights) {
+            dominion.createEntity(light);
+        }
     }
     
     private void setupSounds() throws Exception {
         SoundBuffer buffFire = new SoundBuffer(ResourcePaths.Sounds.FIRE_OGG);
         soundMgr.addSoundBuffer(buffFire);
         SoundSource sourceFire = new SoundSource(true, false);
-        Vector3f pos = particleEmitter.getBaseParticle().getPosition();
+        Vector3f pos = new Vector3f(); //particleEmitter.getBaseParticle().getPosition();
         sourceFire.setPosition(pos);
         sourceFire.setBuffer(buffFire.getBufferId());
         soundMgr.addSoundSource(Sounds.FIRE.toString(), sourceFire);
@@ -211,7 +189,7 @@ public class Game implements IGameLogic {
     
     private void setupLights() {
         SceneLight sceneLight = new SceneLight();
-        scene.setSceneLight(sceneLight);
+        //scene.setSceneLight(sceneLight);
 
         // Ambient Light
         //sceneLight.setAmbientLight(new Vector3f(0.3f, 0.3f, 0.3f));
@@ -227,19 +205,22 @@ public class Game implements IGameLogic {
     }
 
     @Override
-    public void inputAndUpdate(Window window, Scene scene, long diffTimeNanos) throws Exception {
+    public void inputAndUpdate(Window window, Dominion dominion, VKRenderer renderer, long diffTimeNanos) throws Exception {
         if (!currentLevel.equals(menu.getLevel())) {
             currentLevel = menu.getLevel();
             levelSelection = menu.getCurrentLevel();
             vkRenderer.unloadModels();
-            scene.removeAllGameItems();
-            currentLevel.load(scene, vkRenderer, world, gamePhysics, gameSession);
-            if (levelSelection == 0) {
-                bob = scene.getGameItemsByModelId("bob-model").get(0);
-                monster = scene.getGameItemsByModelId("monster-model").get(0);
+            Results<Results.With1<GameItem>> results = dominion.findEntitiesWith(GameItem.class);
+            for (Iterator<Results.With1<GameItem>> itr = results.iterator(); itr.hasNext();) {
+                Results.With1<GameItem> result = itr.next();
+                dominion.deleteEntity(result.entity());
+            }
+            currentLevel.load(dominion, vkRenderer, gamePhysics, gameSession);
+            if (currentLevel instanceof Sponza zaza) {
+                bob = zaza.bobAnimation;
+                monster = zaza.monsterAnimation;
             }
         }
-    	sceneChanged = false;
     	cameraInc.set(0, 0, 0);
         KeyboardInput keyboard = window.getKeyboardInput();
     	if (keyboard.isKeyPressedOnce(GLFW_KEY_ESCAPE)) {
@@ -249,43 +230,37 @@ public class Game implements IGameLogic {
     	}
         if (keyboard.isKeyPressed(GLFW_KEY_W)) {
             cameraInc.z = -1;
-            sceneChanged = true;
         } else if (keyboard.isKeyPressed(GLFW_KEY_S)) {
             cameraInc.z = 1;
-            sceneChanged = true;
         }
         if (keyboard.isKeyPressed(GLFW_KEY_A)) {
             cameraInc.x = -1;
-            sceneChanged = true;
         } else if (keyboard.isKeyPressed(GLFW_KEY_D)) {
             cameraInc.x = 1;
-            sceneChanged = true;
         }
         if (keyboard.isKeyPressed(GLFW_KEY_Z)) {
             cameraInc.y = -1;
-            sceneChanged = true;
         } else if (keyboard.isKeyPressed(GLFW_KEY_X)) {
             cameraInc.y = 1;
-            sceneChanged = true;
         }
         
         if (keyboard.isKeyPressed(GLFW_KEY_LEFT)) {
             angleInc -= 0.05f;
-            scene.getSceneLight().setLightChanged(true);
+            directionalLight.setChanged(true);
         } else if (keyboard.isKeyPressed(GLFW_KEY_RIGHT)) {
             angleInc += 0.05f;
-            scene.getSceneLight().setLightChanged(true);
+            directionalLight.setChanged(true);
         } else {
             angleInc = 0;
-            scene.getSceneLight().setLightChanged(false);
+            directionalLight.setChanged(false);
         }
         
-        if (keyboard.isKeyPressedOnce(GLFW_KEY_SPACE) && levelSelection == 0) {
-            bob.getAnimation().setStarted(!bob.getAnimation().isStarted());
-            monster.getAnimation().setStarted(!monster.getAnimation().isStarted());
+        if (keyboard.isKeyPressedOnce(GLFW_KEY_SPACE) && currentLevel instanceof Sponza) {
+            bob.setStarted(!bob.isStarted());
+            monster.setStarted(!monster.isStarted());
         }
         
-        if (keyboard.isKeyPressedOnce(GLFW_KEY_F) && levelSelection != 0) {
+        if (keyboard.isKeyPressedOnce(GLFW_KEY_F) && currentLevel instanceof NewtonDemo) {
         	updatePhysics = !updatePhysics;
         }
         
@@ -297,32 +272,28 @@ public class Game implements IGameLogic {
         }
         updateDirectionalLight();
         /**/
-        if (levelSelection == 0) {
-            GameItemAnimation itemAnimation = bob.getAnimation();
-            if (itemAnimation.isStarted()) {
-                int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, itemAnimation.maxFrames);
-                itemAnimation.setCurrentFrame(currentFrame);
+        if (currentLevel instanceof Sponza) {
+            if (bob.isStarted()) {
+                int currentFrame = Math.floorMod(bob.getCurrentFrame() + 1, bob.maxFrames);
+                bob.setCurrentFrame(currentFrame);
             }
 
-            itemAnimation = monster.getAnimation();
-            if (itemAnimation.isStarted()) {
-                int currentFrame = Math.floorMod(itemAnimation.getCurrentFrame() + 1, itemAnimation.maxFrames);
-                itemAnimation.setCurrentFrame(currentFrame);
+            if (monster.isStarted()) {
+                int currentFrame = Math.floorMod(monster.getCurrentFrame() + 1, monster.maxFrames);
+                monster.setCurrentFrame(currentFrame);
             }
         }
         
-        if (updatePhysics) {
+        if (updatePhysics && currentLevel instanceof NewtonDemo newtonDemo) {
         	float diffTimeSeconds = (float) (diffTimeNanos / 1000000000f); //1000000000f
-    		world.update(diffTimeSeconds);
-        	gamePhysics.update(diffTimeSeconds);
+        	gamePhysics.update(diffTimeSeconds, dominion);
     	}
     	MouseInput mouseInput = window.getMouseInput();
-        Camera camera = scene.getCamera();
+        Camera camera = renderer.getCamera();
     	// Update camera based on mouse            
         if (menu.isHidden()) {
             Vector2f rotVec = mouseInput.getDisplVec();
             camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
-            sceneChanged = true;
         }
         
         // Update camera position
@@ -344,14 +315,10 @@ public class Game implements IGameLogic {
     		vkRenderer.cleanup();
     	}
     	soundMgr.cleanup();
-        scene.cleanup();
         /*
         if ( gHud != null ) {
             gHud.cleanup();
         }*/
-        if (world != null) {
-            world.destroy();
-        }
         if (gameSession.isAlive()) {
             gameSession.close();
         }

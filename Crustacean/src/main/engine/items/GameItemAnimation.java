@@ -6,16 +6,19 @@ public final class GameItemAnimation {
     private boolean started;
     private boolean loaded;
 
+    private int animModelIdx;
+
     public final int maxFrames;
 
     public GameItemAnimation(boolean started, int animationIdx, int currentFrame, int maxFrames) {
-        this(started, false, animationIdx, currentFrame, maxFrames);
+        this(started, false, animationIdx, 0, currentFrame, maxFrames);
     }
 
-    public GameItemAnimation(boolean started, boolean loaded, int animationIdx, int currentFrame, int maxFrames) {
+    public GameItemAnimation(boolean started, boolean loaded, int animationIdx, int animModelIdx, int currentFrame, int maxFrames) {
         this.started = started;
         this.loaded = loaded;
         this.animationIdx = animationIdx;
+        this.animModelIdx = animModelIdx;
         this.currentFrame = currentFrame;
         this.maxFrames = maxFrames;
     }
@@ -26,6 +29,14 @@ public final class GameItemAnimation {
 
     public void setAnimationIdx(int animationIdx) {
         this.animationIdx = animationIdx;
+    }
+
+    public int getAnimModelIdx() {
+        return animModelIdx;
+    }
+
+    public void setAnimModelIdx(int animModelIdx) {
+        this.animModelIdx = animModelIdx;
     }
 
     public int getCurrentFrame() {

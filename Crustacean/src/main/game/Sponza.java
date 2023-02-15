@@ -5,6 +5,9 @@ import java.util.List;
 
 import crab.newton.NewtonWorld;
 import java.lang.foreign.*;
+
+import dev.dominion.ecs.api.Dominion;
+import main.engine.ItemLoadTimestamp;
 import main.engine.graphics.ModelData;
 import main.engine.graphics.camera.Camera;
 import main.engine.graphics.vulkan.VKRenderer;
@@ -13,16 +16,17 @@ import main.engine.items.GameItemAnimation;
 import main.engine.loaders.assimp.ModelLoader;
 import main.engine.physics.Physics;
 import main.engine.scene.Level;
-import main.engine.scene.Scene;
 import main.engine.utility.AxisRotation;
 import main.engine.utility.ResourcePaths;
 
 public class Sponza implements Level {
 
     private final List<ModelData> modelDataList;
-    private final GameItem sponza;
-    private final GameItem bob;
-    private final GameItem monster;
+    public final GameItem sponza;
+    public final GameItem bob;
+    public final GameItemAnimation bobAnimation;
+    public final GameItem monster;
+    public final GameItemAnimation monsterAnimation;
 
     public Sponza() {
         modelDataList = new ArrayList<>();
@@ -31,56 +35,59 @@ public class Sponza implements Level {
         ModelData sponzaModelData = ModelLoader.loadModel(sponzaModelId, ResourcePaths.Models.SPONZA_GLTF,
                 ResourcePaths.Models.SPONZA_DIR, false);
         modelDataList.add(sponzaModelData);
-        sponza = new GameItem("SponzaObject", sponzaModelId);
+        sponza = new GameItem(sponzaModelId);
 
         String bobModelId = "bob-model";
         ModelData bobModelData = ModelLoader.loadModel(bobModelId, ResourcePaths.Models.BOBLAMP_MD5MESH,
                 ResourcePaths.Models.BOBLAMP_DIR, true);
         int maxFrames = bobModelData.getAnimationsList().get(0).frames().size();
         modelDataList.add(bobModelData);
-        bob = new GameItem("BobObject", bobModelId);
+        bob = new GameItem(bobModelId);
         bob.setScale(0.04f);
         AxisRotation rot = AxisRotation.UP;
         rot.setRotation((float) Math.toRadians(-90.0f));
         bob.setRotation(rot.getQuatRotation());
         bob.buildModelMatrix();
-        bob.setAnimation(new GameItemAnimation(false, 0, 0, maxFrames));
+        bobAnimation = new GameItemAnimation(false, 0, 0, maxFrames);
 
         String monsterModelId = "monster-model";
         ModelData monsterModelData = ModelLoader.loadModel(monsterModelId, ResourcePaths.Models.MONSTER_MD5MESH,
                 ResourcePaths.Models.MONSTER_DIR, true);
         int monsterMax = monsterModelData.getAnimationsList().get(0).frames().size();
         modelDataList.add(monsterModelData);
-        monster = new GameItem("MonsterObject", monsterModelId);
+        monster = new GameItem(monsterModelId);
         monster.setScale(0.02f);
         //rot.setRotation((float) Math.toRadians(-90.0f));
         //monster.setRotation(rot.getQuatRotation());
         monster.setPosition(-5f, 0f, 0f);
         monster.buildModelMatrix();
-        monster.setAnimation(new GameItemAnimation(false, 0, 0, monsterMax));
+        monsterAnimation = new GameItemAnimation(false, 0, 0, monsterMax);
     }
 	@Override
-	public void load(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, MemorySession session) throws Exception {
-        scene.addGameItem(sponza);
-        scene.addGameItem(bob);
-        scene.addGameItem(monster);
+	public void load(Dominion dominion, VKRenderer renderer, Physics physics, MemorySession session) throws Exception {
+        dominion.createEntity(sponza);
+        dominion.createEntity(bob, bobAnimation);
+        dominion.createEntity(monster, monsterAnimation);
 
-        Camera camera = scene.getCamera();
+        ItemLoadTimestamp stamp = ItemLoadTimestamp.getTimeStamp(dominion);
+        stamp.gameItemLoadedTimestamp = System.currentTimeMillis();
+
+        Camera camera = renderer.getCamera();
         camera.setPosition(-6.0f, 2.0f, 0.0f);
         camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
         camera.updateQuat();
         
-        renderer.loadModels(modelDataList, scene);
+        renderer.loadModels(modelDataList);
 	}
 
     @Override
-    public void reset(Scene scene, VKRenderer renderer, NewtonWorld world, Physics physics, MemorySession session) throws Exception {
-        bob.getAnimation().setCurrentFrame(0);
-        bob.getAnimation().setLoaded(false);
-        monster.getAnimation().setCurrentFrame(0);
-        monster.getAnimation().setLoaded(false);
+    public void reset(Dominion dominion, VKRenderer renderer, Physics physics, MemorySession session) throws Exception {
+        bobAnimation.setCurrentFrame(0);
+        bobAnimation.setLoaded(false);
+        monsterAnimation.setCurrentFrame(0);
+        monsterAnimation.setLoaded(false);
 
-        Camera camera = scene.getCamera();
+        Camera camera = renderer.getCamera();
         camera.setPosition(-6.0f, 2.0f, 0.0f);
         camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
         camera.updateQuat();
