@@ -79,7 +79,7 @@ public class Physics {
 		return switch (primitive) {
 			case BOX -> {
 				NewtonCollision collision = world.createBox(params[0], params[1], params[2], 0, offsetMatrix);
-				NewtonMesh mesh = NewtonMesh.createFromCollision(collision);
+				NewtonMesh mesh = collision.createMesh();
 				NewtonBody body = world.createDynamicBody(collision, matArr);
 				float[] inertiaOrigin = collision.calculateInertiaMatrix();
 		    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
@@ -95,7 +95,7 @@ public class Physics {
 			}
 			case CAPSULE -> {
 				NewtonCollision collision = world.createCapsule(params[0], params[1], params[2], 0, offsetMatrix);
-				NewtonMesh mesh = NewtonMesh.createFromCollision(collision);
+				NewtonMesh mesh = collision.createMesh();
 				NewtonBody body = world.createDynamicBody(collision, matArr);
 				float[] inertiaOrigin = collision.calculateInertiaMatrix();
 		    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
@@ -111,7 +111,7 @@ public class Physics {
 			}
 			case CHAMFERCYLINDER -> {
 				NewtonCollision collision = world.createChamferCylinder(params[0], params[1], 0, offsetMatrix);
-				NewtonMesh mesh = NewtonMesh.createFromCollision(collision);
+				NewtonMesh mesh = collision.createMesh();
 				NewtonBody body = world.createDynamicBody(collision, matArr);
 				float[] inertiaOrigin = collision.calculateInertiaMatrix();
 		    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
@@ -127,7 +127,7 @@ public class Physics {
 			}
 			case CONE -> {
 				NewtonCollision collision = world.createCone(params[0], params[1], 0, offsetMatrix);
-				NewtonMesh mesh = NewtonMesh.createFromCollision(collision);
+				NewtonMesh mesh = collision.createMesh();
 				NewtonBody body = world.createDynamicBody(collision, matArr);
 				float[] inertiaOrigin = collision.calculateInertiaMatrix();
 		    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
@@ -143,7 +143,7 @@ public class Physics {
 			}
 			case CYLINDER -> {
 				NewtonCollision collision = world.createCylinder(params[0], params[1], params[2], 0, offsetMatrix);
-				NewtonMesh mesh = NewtonMesh.createFromCollision(collision);
+				NewtonMesh mesh = collision.createMesh();
 				NewtonBody body = world.createDynamicBody(collision, matArr);
 				float[] inertiaOrigin = collision.calculateInertiaMatrix();
 		    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
@@ -159,7 +159,7 @@ public class Physics {
 			}
 			case SPHERE -> {
 				NewtonCollision collision = world.createSphere(params[0], 0, offsetMatrix);
-				NewtonMesh mesh = NewtonMesh.createFromCollision(collision);
+				NewtonMesh mesh = collision.createMesh();
 				NewtonBody body = world.createDynamicBody(collision, matArr);
 				float[] inertiaOrigin = collision.calculateInertiaMatrix();
 		    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};

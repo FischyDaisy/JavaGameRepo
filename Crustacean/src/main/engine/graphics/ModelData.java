@@ -57,7 +57,7 @@ public class ModelData {
                 this.modelId.equals(modelData.modelId);
     }
 
-    public record AnimMeshData(float[] weights, int[] boneIds) {}
+    public record AnimMeshData(float[] weights, float[] boneIds) {}
 
     public record AnimatedFrame(Matrix4f[] jointMatrices) {}
 

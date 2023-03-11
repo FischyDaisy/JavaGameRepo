@@ -6,6 +6,7 @@ import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Results;
 import main.engine.ItemLoadTimestamp;
 import main.engine.graphics.lights.Light;
+import main.engine.graphics.vulkan.skybox.SkyboxBuffers;
 import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.system.MemoryStack;
 import org.tinylog.Logger;
@@ -33,6 +34,7 @@ public class VKRenderer {
     private final Device device;
     private final Dominion dominion;
     private final GlobalBuffers globalBuffers;
+    private final SkyboxBuffers skyboxBuffers;
     private final GeometryRenderActivity geometryRenderActivity;
     private final LightingRenderActivity lightingRenderActivity;
     private final ShadowRenderActivity shadowRenderActivity;
@@ -70,10 +72,11 @@ public class VKRenderer {
         commandPool = new CommandPool(device, graphQueue.getQueueFamilyIndex());
         pipelineCache = new PipelineCache(device);
         globalBuffers = new GlobalBuffers(device);
+        skyboxBuffers = new SkyboxBuffers(device);
         geometryRenderActivity = new GeometryRenderActivity(swapChain, pipelineCache, window, globalBuffers);
         shadowRenderActivity = new ShadowRenderActivity(swapChain, pipelineCache, window);
         skyboxRenderActivity = new SkyboxRenderActivity(swapChain, pipelineCache, window,
-				geometryRenderActivity.getFrameBuffer().getRenderPass().getVkRenderPass(), globalBuffers);
+				geometryRenderActivity.getFrameBuffer().getRenderPass().getVkRenderPass(), skyboxBuffers);
         List<Attachment> attachments = new ArrayList<>(geometryRenderActivity.getAttachments());
         attachments.add(shadowRenderActivity.getDepthAttachment());
         lightingRenderActivity = new LightingRenderActivity(swapChain, commandPool, pipelineCache, attachments, window);
@@ -99,22 +102,6 @@ public class VKRenderer {
         return commandBuffer;
     }
 
-    public void addModel(ModelData modelData) {
-        Logger.debug("Adding {} model(s)", 1);
-        vulkanModels.addAll(globalBuffers.addModel(modelData, modelTextureCache, commandPool, graphQueue));
-        Logger.debug("Added {} model(s)", 1);
-
-        geometryRenderActivity.loadModels(modelTextureCache);
-    }
-
-    public void addModels(List<ModelData> modelDataList) {
-        Logger.debug("Adding {} model(s)", modelDataList.size());
-        vulkanModels.addAll(globalBuffers.addModels(modelDataList, modelTextureCache, commandPool, graphQueue));
-        Logger.debug("Added {} model(s)", modelDataList.size());
-
-        geometryRenderActivity.loadModels(modelTextureCache);
-    }
-
 	public void cleanup() {
 		presentQueue.waitIdle();
         graphQueue.waitIdle();
@@ -131,6 +118,7 @@ public class VKRenderer {
         Arrays.stream(commandBuffers).forEach(CommandBuffer::cleanup);
         Arrays.stream(fences).forEach(Fence::cleanup);
         globalBuffers.cleanup();
+        skyboxBuffers.cleanup();
         commandPool.cleanup();
         swapChain.cleanup();
         surface.cleanup();
@@ -156,7 +144,7 @@ public class VKRenderer {
 	
 	public void loadSkyBox(ModelData skyboxModelData) throws Exception {
 		Logger.debug("Loading Skybox model");
-		skybox = globalBuffers.loadSkyboxModel(skyboxModelData, skyboxTextureCache, commandPool, graphQueue);
+		skybox = skyboxBuffers.loadSkyboxModel(skyboxModelData, skyboxTextureCache, commandPool, graphQueue);
 		Logger.debug("Loaded Skybox model");
 		
 		skyboxRenderActivity.loadModel(skyboxTextureCache);
@@ -214,7 +202,7 @@ public class VKRenderer {
             commandBuffer.reset();
             commandBuffer.beginRecording();
             geometryRenderActivity.recordCommandBuffer(commandBuffer, globalBuffers, idx);
-            skyboxRenderActivity.recordCommandBuffer(commandBuffer, globalBuffers, idx);
+            skyboxRenderActivity.recordCommandBuffer(commandBuffer, skyboxBuffers, idx);
             geometryRenderActivity.endRenderPass(commandBuffer);
             shadowRenderActivity.recordCommandBuffer(commandBuffer, globalBuffers, idx);
             commandBuffer.endRecording();
@@ -228,7 +216,7 @@ public class VKRenderer {
             gameItemsLoadedTimeStamp = timestamp.gameItemLoadedTimestamp;
             device.waitIdle();
             globalBuffers.loadGameItems(vulkanModels, dominion, commandPool, graphQueue, swapChain.getNumImages());
-            globalBuffers.loadSkybox(skybox, commandPool, graphQueue, swapChain.getNumImages());
+            skyboxBuffers.loadSkybox(skybox, commandPool, graphQueue, swapChain.getNumImages());
             animationComputeActivity.onAnimatedGameItemsLoaded(globalBuffers);
             recordCommands();
         }
@@ -243,7 +231,7 @@ public class VKRenderer {
         }
 
         globalBuffers.loadInstanceData(dominion, vulkanModels, swapChain.getCurrentFrame());
-        globalBuffers.loadSkyboxInstanceData(dominion, skybox, swapChain.getCurrentFrame());
+        skyboxBuffers.loadSkyboxInstanceData(dominion, skybox, swapChain.getCurrentFrame());
 
         animationComputeActivity.recordCommandBuffer(globalBuffers, dominion);
         animationComputeActivity.submit();

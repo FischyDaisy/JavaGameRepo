@@ -2,6 +2,7 @@ package main.engine.graphics.vulkan;
 
 import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Results;
+import main.engine.utility.BufferUtils;
 import org.joml.Matrix4f;
 import org.lwjgl.system.*;
 import org.lwjgl.vulkan.*;
@@ -13,6 +14,10 @@ import main.engine.graphics.ModelData;
 import main.engine.graphics.vulkan.animation.VulkanAnimModel;
 import main.engine.items.*;
 
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -20,10 +25,6 @@ import static org.lwjgl.vulkan.VK11.*;
 
 public class GlobalBuffers {
 	public static final int IND_COMMAND_STRIDE = VkDrawIndexedIndirectCommand.SIZEOF;
-    // Handle std430 alignment
-    private static final int MATERIAL_PADDING = GraphConstants.FLOAT_SIZE_BYTES * 3;
-    private static final int MATERIAL_SIZE = GraphConstants.VECTOR4F_SIZE_BYTES + GraphConstants.INT_SIZE_BYTES * 3 +
-            GraphConstants.FLOAT_SIZE_BYTES * 2 + MATERIAL_PADDING;
     private final VulkanBuffer animJointMatricesBuffer;
     private final long jointMatricesBufferSize;
     private final VulkanBuffer animWeightsBuffer;
@@ -34,20 +35,12 @@ public class GlobalBuffers {
     private final long materialBufferSize;
     private final VulkanBuffer verticesBuffer;
     private final long vertexBufferSize;
-    private final VulkanBuffer skyboxIndicesBuffer;
-    private final VulkanBuffer skyboxJointMatricesBuffer;
-    private final VulkanBuffer skyboxMaterialsBuffer;
-    private final VulkanBuffer skyboxVerticesBuffer;
-    private final VulkanBuffer skyboxWeightsBuffer;
     private VulkanBuffer animIndirectBuffer;
     private VulkanBuffer[] animInstanceDataBuffers;
     private VulkanBuffer animVerticesBuffer;
-    private VulkanBuffer skyboxIndirectBuffer;
-    private VulkanBuffer[] skyboxInstanceDataBuffers;
     private VulkanBuffer indirectBuffer;
     private VulkanBuffer[] instanceDataBuffers;
     private int numAnimIndirectCommands;
-    private int numSkyboxIndirectCommands;
     private int numIndirectCommands;
     private long jointMatricesBufferOffset;
     private long weightsBufferOffset;
@@ -82,19 +75,7 @@ public class GlobalBuffers {
                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
         animVerticesBuffer = new VulkanBuffer(device, engProps.getMaxAnimVerticesBuffer(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
                 VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
-        skyboxVerticesBuffer = new VulkanBuffer(device, engProps.getMaxSkyboxVerticesBuffer(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
-                VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
-        skyboxIndicesBuffer = new VulkanBuffer(device, engProps.getMaxSkyboxIndicesBuffer(), VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
-        int maxSkyboxMaterials = engProps.getMaxSkyboxMaterials();
-        skyboxMaterialsBuffer = new VulkanBuffer(device, (long) maxSkyboxMaterials * GraphConstants.VECTOR4F_SIZE_BYTES * 9, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
-        skyboxJointMatricesBuffer = new VulkanBuffer(device, engProps.getMaxJointMatricesBuffer(), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
-        skyboxWeightsBuffer = new VulkanBuffer(device, engProps.getMaxAnimWeightsBuffer(), VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-                VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
         numIndirectCommands = 0;
-        numSkyboxIndirectCommands = 0;
     }
 
     public void cleanup() {
@@ -110,14 +91,6 @@ public class GlobalBuffers {
         if (animIndirectBuffer != null) {
             animIndirectBuffer.cleanup();
         }
-        if (skyboxIndirectBuffer != null) {
-        	skyboxIndirectBuffer.cleanup();
-        }
-        skyboxIndicesBuffer.cleanup();
-        skyboxJointMatricesBuffer.cleanup();
-        skyboxMaterialsBuffer.cleanup();
-        skyboxVerticesBuffer.cleanup();
-        skyboxWeightsBuffer.cleanup();
         materialsBuffer.cleanup();
         animJointMatricesBuffer.cleanup();
         animWeightsBuffer.cleanup();
@@ -126,9 +99,6 @@ public class GlobalBuffers {
         }
         if (animInstanceDataBuffers != null) {
             Arrays.stream(animInstanceDataBuffers).forEach(VulkanBuffer::cleanup);
-        }
-        if (skyboxInstanceDataBuffers != null) {
-        	Arrays.stream(skyboxInstanceDataBuffers).forEach(VulkanBuffer::cleanup);
         }
     }
 
@@ -151,34 +121,6 @@ public class GlobalBuffers {
     public VulkanBuffer getAnimWeightsBuffer() {
         return animWeightsBuffer;
     }
-    
-    public VulkanBuffer getSkyboxIndicesBuffer() {
-    	return skyboxIndicesBuffer;
-    }
-    
-    public VulkanBuffer getSkyboxIndirectBuffer() {
-    	return skyboxIndirectBuffer;
-    }
-    
-    public VulkanBuffer[] getSkyboxInstanceDataBuffers() {
-    	return skyboxInstanceDataBuffers;
-    }
-    
-    public VulkanBuffer getSkyboxJointMatricesBuffer() {
-    	return skyboxJointMatricesBuffer;
-    }
-    
-    public VulkanBuffer getSkyboxMaterialsBuffer() {
-    	return skyboxMaterialsBuffer;
-    }
-    
-    public VulkanBuffer getSkyboxVerticesBuffer() {
-    	return skyboxVerticesBuffer;
-    }
-    
-    public VulkanBuffer getSkyboxWeightsBuffer() {
-    	return skyboxWeightsBuffer;
-    }
 
     public VulkanBuffer getIndicesBuffer() {
         return indicesBuffer;
@@ -198,10 +140,6 @@ public class GlobalBuffers {
 
     public int getNumAnimIndirectCommands() {
         return numAnimIndirectCommands;
-    }
-    
-    public int getNumSkyboxIndirectCommands() {
-    	return numSkyboxIndirectCommands;
     }
 
     public int getNumIndirectCommands() {
@@ -231,7 +169,7 @@ public class GlobalBuffers {
             Results<Results.With2<GameItem, GameItemAnimation>> gameItems = dominion.findEntitiesWith(GameItem.class, GameItemAnimation.class);
             for (VulkanModel vulkanModel : vulkanModelList) {
                 List<Results.With2<GameItem, GameItemAnimation>> results = gameItems.stream()
-                        .filter(r -> r.comp1().getModelId().equals(vulkanModel.getModelId()))
+                        .filter(r -> r.comp1().getModelId().equals(vulkanModel.modelId))
                         .toList();
                 if (results.isEmpty()) {
                     continue;
@@ -241,8 +179,8 @@ public class GlobalBuffers {
                     vulkanAnimModelList.add(vulkanAnimModel);
                     result.comp2().setAnimModelIdx(animModelListOffset);
                     animModelListOffset++;
-                    List<VulkanAnimModel.VulkanAnimMesh> vulkanAnimMeshList = vulkanAnimModel.getVulkanAnimMeshList();
-                    for (VulkanModel.VulkanMesh vulkanMesh : vulkanModel.getVulkanMeshList()) {
+                    List<VulkanAnimModel.VulkanAnimMesh> vulkanAnimMeshList = vulkanAnimModel.vulkanAnimMeshList;
+                    for (VulkanModel.VulkanMesh vulkanMesh : vulkanModel.vulkanMeshList) {
                         VkDrawIndexedIndirectCommand indexedIndirectCommand = VkDrawIndexedIndirectCommand.calloc(stack);
                         indexedIndirectCommand.indexCount(vulkanMesh.numIndices());
                         indexedIndirectCommand.firstIndex(vulkanMesh.indicesOffset() / GraphConstants.INT_SIZE_BYTES);
@@ -261,11 +199,11 @@ public class GlobalBuffers {
             if (numAnimIndirectCommands > 0) {
                 cmd.beginRecording();
 
-                StgBuffer indirectStgBuffer = new StgBuffer(device, (long) IND_COMMAND_STRIDE * numAnimIndirectCommands);
+                StagingBuffer indirectStgBuffer = new StagingBuffer(device, (long) IND_COMMAND_STRIDE * numAnimIndirectCommands);
                 if (animIndirectBuffer != null) {
                     animIndirectBuffer.cleanup();
                 }
-                animIndirectBuffer = new VulkanBuffer(device, indirectStgBuffer.stgVulkanBuffer.getRequestedSize(),
+                animIndirectBuffer = new VulkanBuffer(device, indirectStgBuffer.getRequestedSize(),
                         VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
                 ByteBuffer dataBuffer = indirectStgBuffer.getDataBuffer();
@@ -293,168 +231,6 @@ public class GlobalBuffers {
         }
     }
 
-    private void loadAnimationData(ModelData modelData, VulkanModel vulkanModel, StgBuffer animJointMatricesStgBuffer) {
-        List<ModelData.Animation> animationsList = modelData.getAnimationsList();
-        if (!modelData.hasAnimations()) {
-            return;
-        }
-        ByteBuffer dataBuffer = animJointMatricesStgBuffer.getDataBuffer();
-        for (ModelData.Animation animation : animationsList) {
-            VulkanModel.VulkanAnimationData vulkanAnimationData = new VulkanModel.VulkanAnimationData();
-            vulkanModel.addVulkanAnimationData(vulkanAnimationData);
-            List<ModelData.AnimatedFrame> frameList = animation.frames();
-            for (ModelData.AnimatedFrame frame : frameList) {
-                vulkanAnimationData.addVulkanAnimationFrame(new VulkanModel.VulkanAnimationFrame(dataBuffer.position()));
-                Matrix4f[] matrices = frame.jointMatrices();
-                for (Matrix4f matrix : matrices) {
-                    matrix.get(dataBuffer);
-                    dataBuffer.position(dataBuffer.position() + GraphConstants.MAT4X4_SIZE_BYTES);
-                }
-            }
-        }
-        jointMatricesBufferOffset += dataBuffer.position();
-    }
-
-    public List<VulkanModel> addModel(ModelData modelData, VKTextureCache textureCache, CommandPool
-            commandPool, Queue queue) {
-        List<VulkanModel> vulkanModelList = new ArrayList<>();
-        List<VKTexture> textureList = new ArrayList<>();
-
-        Device device = commandPool.getDevice();
-        CommandBuffer cmd = new CommandBuffer(commandPool, true, true);
-
-        StgBuffer verticesStgBuffer = new StgBuffer(device, verticesBuffer.getRequestedSize());
-        StgBuffer indicesStgBuffer = new StgBuffer(device, indicesBuffer.getRequestedSize());
-        StgBuffer materialsStgBuffer = new StgBuffer(device, materialsBuffer.getRequestedSize());
-        StgBuffer animJointMatricesStgBuffer = new StgBuffer(device, animJointMatricesBuffer.getRequestedSize());
-        StgBuffer animWeightsStgBuffer = new StgBuffer(device, animWeightsBuffer.getRequestedSize());
-
-        long curVertexOffset = vertexBufferOffset;
-        long curIndexOffset = indexBufferOffset;
-        long curMaterialOffset = materialBufferOffset;
-        long curJointOffset = jointMatricesBufferOffset;
-        long curWeightOffset = weightsBufferOffset;
-
-        cmd.beginRecording();
-
-        // Load a default material
-        List<ModelData.Material> defaultMaterialList = Collections.singletonList(new ModelData.Material());
-        loadMaterials(device, textureCache, materialsStgBuffer, defaultMaterialList, textureList);
-
-        VulkanModel vulkanModel = new VulkanModel(modelData.getModelId());
-        vulkanModelList.add(vulkanModel);
-
-        List<VulkanModel.VulkanMaterial> vulkanMaterialList = loadMaterials(device, textureCache, materialsStgBuffer,
-                modelData.getMaterialList(), textureList);
-        loadMeshes(verticesStgBuffer, indicesStgBuffer, animWeightsStgBuffer, modelData, vulkanModel, vulkanMaterialList);
-        loadAnimationData(modelData, vulkanModel, animJointMatricesStgBuffer);
-
-        // We need to ensure that at least we have one texture
-        if (textureList.isEmpty()) {
-            EngineProperties engineProperties = EngineProperties.INSTANCE;
-            VKTexture defaultTexture = textureCache.get(device, engineProperties.getDefaultTexturePath(),
-                    VK_FORMAT_R8G8B8A8_SRGB);
-            textureList.add(defaultTexture);
-        }
-
-        long vertexCopySize = vertexBufferOffset - curVertexOffset;
-        long indexCopySize = indexBufferOffset - curIndexOffset;
-        long materialCopySize = materialBufferOffset - curMaterialOffset;
-        long jointCopySize = jointMatricesBufferOffset - curJointOffset;
-        long weightCopySize = weightsBufferOffset - curWeightOffset;
-
-        materialsStgBuffer.recordTransferCommand(cmd, materialsBuffer, curMaterialOffset, materialCopySize);
-        verticesStgBuffer.recordTransferCommand(cmd, verticesBuffer, curVertexOffset, vertexCopySize);
-        indicesStgBuffer.recordTransferCommand(cmd, indicesBuffer, curIndexOffset, indexCopySize);
-        animJointMatricesStgBuffer.recordTransferCommand(cmd, animJointMatricesBuffer, curJointOffset, jointCopySize);
-        animWeightsStgBuffer.recordTransferCommand(cmd, animWeightsBuffer, curWeightOffset, weightCopySize);
-        textureList.forEach(t -> t.recordTextureTransition(cmd));
-        cmd.endRecording();
-
-        cmd.submitAndWait(device, queue);
-        cmd.cleanup();
-
-        verticesStgBuffer.cleanup();
-        indicesStgBuffer.cleanup();
-        materialsStgBuffer.cleanup();
-        animJointMatricesStgBuffer.cleanup();
-        animWeightsStgBuffer.cleanup();
-        textureList.forEach(VKTexture::cleanupStgBuffer);
-
-        return vulkanModelList;
-    }
-
-    public List<VulkanModel> addModels(List<ModelData> modelDataList, VKTextureCache textureCache, CommandPool
-            commandPool, Queue queue) {
-        List<VulkanModel> vulkanModelList = new ArrayList<>();
-        List<VKTexture> textureList = new ArrayList<>();
-
-        Device device = commandPool.getDevice();
-        CommandBuffer cmd = new CommandBuffer(commandPool, true, true);
-
-        StgBuffer verticesStgBuffer = new StgBuffer(device, verticesBuffer.getRequestedSize());
-        StgBuffer indicesStgBuffer = new StgBuffer(device, indicesBuffer.getRequestedSize());
-        StgBuffer materialsStgBuffer = new StgBuffer(device, materialsBuffer.getRequestedSize());
-        StgBuffer animJointMatricesStgBuffer = new StgBuffer(device, animJointMatricesBuffer.getRequestedSize());
-        StgBuffer animWeightsStgBuffer = new StgBuffer(device, animWeightsBuffer.getRequestedSize());
-
-        long curVertexOffset = vertexBufferOffset;
-        long curIndexOffset = indexBufferOffset;
-        long curMaterialOffset = materialBufferOffset;
-        long curJointOffset = jointMatricesBufferOffset;
-        long curWeightOffset = weightsBufferOffset;
-
-        cmd.beginRecording();
-
-        // Load a default material
-        List<ModelData.Material> defaultMaterialList = Collections.singletonList(new ModelData.Material());
-        loadMaterials(device, textureCache, materialsStgBuffer, defaultMaterialList, textureList);
-
-        for (ModelData modelData : modelDataList) {
-            VulkanModel vulkanModel = new VulkanModel(modelData.getModelId());
-            vulkanModelList.add(vulkanModel);
-
-            List<VulkanModel.VulkanMaterial> vulkanMaterialList = loadMaterials(device, textureCache, materialsStgBuffer,
-                    modelData.getMaterialList(), textureList);
-            loadMeshes(verticesStgBuffer, indicesStgBuffer, animWeightsStgBuffer, modelData, vulkanModel, vulkanMaterialList);
-            loadAnimationData(modelData, vulkanModel, animJointMatricesStgBuffer);
-        }
-
-        // We need to ensure that at least we have one texture
-        if (textureList.isEmpty()) {
-            EngineProperties engineProperties = EngineProperties.INSTANCE;
-            VKTexture defaultTexture = textureCache.get(device, engineProperties.getDefaultTexturePath(),
-                    VK_FORMAT_R8G8B8A8_SRGB);
-            textureList.add(defaultTexture);
-        }
-
-        long vertexCopySize = vertexBufferOffset - curVertexOffset;
-        long indexCopySize = indexBufferOffset - curIndexOffset;
-        long materialCopySize = materialBufferOffset - curMaterialOffset;
-        long jointCopySize = jointMatricesBufferOffset - curJointOffset;
-        long weightCopySize = weightsBufferOffset - curWeightOffset;
-
-        materialsStgBuffer.recordTransferCommand(cmd, materialsBuffer, curMaterialOffset, materialCopySize);
-        verticesStgBuffer.recordTransferCommand(cmd, verticesBuffer, curVertexOffset, vertexCopySize);
-        indicesStgBuffer.recordTransferCommand(cmd, indicesBuffer, curIndexOffset, indexCopySize);
-        animJointMatricesStgBuffer.recordTransferCommand(cmd, animJointMatricesBuffer, curJointOffset, jointCopySize);
-        animWeightsStgBuffer.recordTransferCommand(cmd, animWeightsBuffer, curWeightOffset, weightCopySize);
-        textureList.forEach(t -> t.recordTextureTransition(cmd));
-        cmd.endRecording();
-
-        cmd.submitAndWait(device, queue);
-        cmd.cleanup();
-
-        verticesStgBuffer.cleanup();
-        indicesStgBuffer.cleanup();
-        materialsStgBuffer.cleanup();
-        animJointMatricesStgBuffer.cleanup();
-        animWeightsStgBuffer.cleanup();
-        textureList.forEach(VKTexture::cleanupStgBuffer);
-
-        return vulkanModelList;
-    }
-
     public void loadGameItems(List<VulkanModel> vulkanModelList, Dominion dominion, CommandPool commandPool,
                              Queue queue, int numSwapChainImages) {
         loadStaticGameItems(vulkanModelList, dominion, commandPool, queue, numSwapChainImages);
@@ -479,12 +255,12 @@ public class GlobalBuffers {
         for (VulkanModel vulkanModel : vulkanModels) {
             //List<GameItem> items = scene.getGameItemsByModelId(vulkanModel.getModelId());
             List<Results.With1<GameItem>> items = gameItems.stream()
-                    .filter(r -> r.comp().getModelId().equals(vulkanModel.getModelId()))
+                    .filter(r -> r.comp().getModelId().equals(vulkanModel.modelId))
                     .toList();
             if (items.isEmpty()) {
                 continue;
             }
-            for (VulkanModel.VulkanMesh vulkanMesh : vulkanModel.getVulkanMeshList()) {
+            for (VulkanModel.VulkanMesh vulkanMesh : vulkanModel.vulkanMeshList) {
                 for (Results.With1<GameItem> item : items) {
                     item.comp().getModelMatrix().get(pos, dataBuffer);
                     pos += GraphConstants.MAT4X4_SIZE_BYTES;
@@ -496,105 +272,6 @@ public class GlobalBuffers {
         instanceBuffer.unMap();
     }
 
-    private List<VulkanModel.VulkanMaterial> loadMaterials(Device device, VKTextureCache textureCache, StgBuffer
-            materialsStgBuffer, List<ModelData.Material> materialList, List<VKTexture> textureList) {
-        List<VulkanModel.VulkanMaterial> vulkanMaterialList = new ArrayList<>();
-        ByteBuffer dataBuffer = materialsStgBuffer.getDataBuffer();
-        for (ModelData.Material material : materialList) {
-
-            VKTexture texture = textureCache.get(device, material.texturePath(), VK_FORMAT_R8G8B8A8_SRGB);
-            if (texture != null) {
-                textureList.add(texture);
-            }
-            int textureIdx = textureCache.getPosition(material.texturePath());
-
-            texture = textureCache.get(device, material.normalMapPath(), VK_FORMAT_R8G8B8A8_UNORM);
-            if (texture != null) {
-                textureList.add(texture);
-            }
-            int normalMapIdx = textureCache.getPosition(material.normalMapPath());
-
-            texture = textureCache.get(device, material.metalRoughMap(), VK_FORMAT_R8G8B8A8_UNORM);
-            if (texture != null) {
-                textureList.add(texture);
-            }
-            int metalRoughMapIdx = textureCache.getPosition(material.metalRoughMap());
-
-            vulkanMaterialList.add(new VulkanModel.VulkanMaterial(dataBuffer.position() / MATERIAL_SIZE));
-            material.diffuseColor().get(dataBuffer);
-            dataBuffer.position(dataBuffer.position() + GraphConstants.VECTOR4F_SIZE_BYTES);
-            dataBuffer.putInt(textureIdx);
-            dataBuffer.putInt(normalMapIdx);
-            dataBuffer.putInt(metalRoughMapIdx);
-            dataBuffer.putFloat(material.roughnessFactor());
-            dataBuffer.putFloat(material.metallicFactor());
-            // Padding due to std430 alignment
-            dataBuffer.putFloat(0.0f);
-            dataBuffer.putFloat(0.0f);
-            dataBuffer.putFloat(0.0f);
-        }
-        materialBufferOffset += dataBuffer.position();
-
-        return vulkanMaterialList;
-    }
-
-    private void loadMeshes(StgBuffer verticesStgBuffer, StgBuffer indicesStgBuffer, StgBuffer animWeightsStgBuffer,
-                            ModelData modelData, VulkanModel vulkanModel, List<VulkanModel.VulkanMaterial> vulkanMaterialList) {
-        ByteBuffer verticesData = verticesStgBuffer.getDataBuffer();
-        ByteBuffer indicesData = indicesStgBuffer.getDataBuffer();
-        List<ModelData.MeshData> meshDataList = modelData.getMeshDataList();
-        int meshCount = 0;
-        for (ModelData.MeshData meshData : meshDataList) {
-            float[] positions = meshData.positions();
-            float[] normals = meshData.normals();
-            float[] tangents = meshData.tangents();
-            float[] biTangents = meshData.biTangents();
-            float[] textCoords = meshData.textCoords();
-            if (textCoords == null || textCoords.length == 0) {
-                textCoords = new float[(positions.length / 3) * 2];
-            }
-            int[] indices = meshData.indices();
-
-            int numElements = positions.length + normals.length + tangents.length + biTangents.length + textCoords.length;
-            int verticesSize = numElements * GraphConstants.FLOAT_SIZE_BYTES;
-            vertexBufferOffset += verticesSize;
-
-            int localMaterialIdx = meshData.materialIdx();
-            int globalMaterialIdx = 0;
-            if (localMaterialIdx >= 0 && localMaterialIdx < vulkanMaterialList.size()) {
-                globalMaterialIdx = vulkanMaterialList.get(localMaterialIdx).globalMaterialIdx();
-            }
-            vulkanModel.addVulkanMesh(new VulkanModel.VulkanMesh(verticesSize, indices.length,
-                    verticesData.position(), indicesData.position(), globalMaterialIdx, animWeightsStgBuffer.getDataBuffer().position()));
-
-            int rows = positions.length / 3;
-            for (int row = 0; row < rows; row++) {
-                int startPos = row * 3;
-                int startTextCoord = row * 2;
-                verticesData.putFloat(positions[startPos]);
-                verticesData.putFloat(positions[startPos + 1]);
-                verticesData.putFloat(positions[startPos + 2]);
-                verticesData.putFloat(normals[startPos]);
-                verticesData.putFloat(normals[startPos + 1]);
-                verticesData.putFloat(normals[startPos + 2]);
-                verticesData.putFloat(tangents[startPos]);
-                verticesData.putFloat(tangents[startPos + 1]);
-                verticesData.putFloat(tangents[startPos + 2]);
-                verticesData.putFloat(biTangents[startPos]);
-                verticesData.putFloat(biTangents[startPos + 1]);
-                verticesData.putFloat(biTangents[startPos + 2]);
-                verticesData.putFloat(textCoords[startTextCoord]);
-                verticesData.putFloat(textCoords[startTextCoord + 1]);
-            }
-
-            Arrays.stream(indices).forEach(indicesData::putInt);
-            indexBufferOffset += indicesData.position();
-
-            loadWeightsBuffer(modelData, animWeightsStgBuffer, meshCount);
-            meshCount++;
-        }
-    }
-
     public List<VulkanModel> loadModels(List<ModelData> modelDataList, VKTextureCache textureCache, CommandPool
             commandPool, Queue queue) {
         resetModelBuffers();
@@ -604,26 +281,30 @@ public class GlobalBuffers {
         Device device = commandPool.getDevice();
         CommandBuffer cmd = new CommandBuffer(commandPool, true, true);
 
-        StgBuffer verticesStgBuffer = new StgBuffer(device, verticesBuffer.getRequestedSize());
-        StgBuffer indicesStgBuffer = new StgBuffer(device, indicesBuffer.getRequestedSize());
-        StgBuffer materialsStgBuffer = new StgBuffer(device, materialsBuffer.getRequestedSize());
-        StgBuffer animJointMatricesStgBuffer = new StgBuffer(device, animJointMatricesBuffer.getRequestedSize());
-        StgBuffer animWeightsStgBuffer = new StgBuffer(device, animWeightsBuffer.getRequestedSize());
+        StagingBuffer verticesStgBuffer = new StagingBuffer(device, verticesBuffer.getRequestedSize());
+        StagingBuffer indicesStgBuffer = new StagingBuffer(device, indicesBuffer.getRequestedSize());
+        StagingBuffer materialsStgBuffer = new StagingBuffer(device, materialsBuffer.getRequestedSize());
+        StagingBuffer animJointMatricesStgBuffer = new StagingBuffer(device, animJointMatricesBuffer.getRequestedSize());
+        StagingBuffer animWeightsStgBuffer = new StagingBuffer(device, animWeightsBuffer.getRequestedSize());
 
         cmd.beginRecording();
 
         // Load a default material
+        long materialsOffset;
         List<ModelData.Material> defaultMaterialList = Collections.singletonList(new ModelData.Material());
-        loadMaterials(device, textureCache, materialsStgBuffer, defaultMaterialList, textureList);
+        materialsOffset = BufferUtils.loadMaterials(device, textureCache, materialsStgBuffer, defaultMaterialList, new ArrayList<>(), textureList, 0);
 
+        long jointsOffset = 0;
+        BufferUtils.BufferOffsets offsets = new BufferUtils.BufferOffsets(0L, 0L, 0L);
         for (ModelData modelData : modelDataList) {
             VulkanModel vulkanModel = new VulkanModel(modelData.getModelId());
             vulkanModelList.add(vulkanModel);
 
-            List<VulkanModel.VulkanMaterial> vulkanMaterialList = loadMaterials(device, textureCache, materialsStgBuffer,
-                    modelData.getMaterialList(), textureList);
-            loadMeshes(verticesStgBuffer, indicesStgBuffer, animWeightsStgBuffer, modelData, vulkanModel, vulkanMaterialList);
-            loadAnimationData(modelData, vulkanModel, animJointMatricesStgBuffer);
+            List<VulkanModel.VulkanMaterial> vulkanMaterialList = new ArrayList<>();
+            materialsOffset = BufferUtils.loadMaterials(device, textureCache, materialsStgBuffer,
+                    modelData.getMaterialList(), vulkanMaterialList, textureList, materialsOffset);
+            offsets = BufferUtils.loadMeshes(verticesStgBuffer, indicesStgBuffer, animWeightsStgBuffer, modelData, vulkanModel, vulkanMaterialList, offsets);
+            jointsOffset = BufferUtils.loadAnimationData(modelData, vulkanModel, animJointMatricesStgBuffer, jointsOffset);
         }
 
         // We need to ensure that at least we have one texture
@@ -654,142 +335,6 @@ public class GlobalBuffers {
 
         return vulkanModelList;
     }
-    
-    public void loadSkybox(VulkanModel skyboxModel, CommandPool commandPool,
-    		Queue queue, int numSwapChainImages) {
-    	numSkyboxIndirectCommands = 0;
-    	try (MemoryStack stack = MemoryStack.stackPush()) {
-    		Device device = commandPool.getDevice();
-            CommandBuffer cmd = new CommandBuffer(commandPool, true, true);
-
-            List<VkDrawIndexedIndirectCommand> indexedIndirectCommandList = new ArrayList<>();
-            int firstInstance = 0;
-            for (VulkanModel.VulkanMesh vulkanMesh : skyboxModel.getVulkanMeshList()) {
-                VkDrawIndexedIndirectCommand indexedIndirectCommand = VkDrawIndexedIndirectCommand.calloc(stack);
-                indexedIndirectCommand.indexCount(vulkanMesh.numIndices());
-                indexedIndirectCommand.firstIndex(vulkanMesh.indicesOffset() / GraphConstants.INT_SIZE_BYTES);
-                indexedIndirectCommand.instanceCount(1);
-                indexedIndirectCommand.vertexOffset(vulkanMesh.verticesOffset() / VertexBufferStructure.SIZE_IN_BYTES);
-                indexedIndirectCommand.firstInstance(firstInstance);
-                indexedIndirectCommandList.add(indexedIndirectCommand);
-
-                numSkyboxIndirectCommands++;
-                firstInstance++;
-            }
-            if (numSkyboxIndirectCommands > 0) {
-                cmd.beginRecording();
-
-                StgBuffer indirectStgBuffer = new StgBuffer(device, (long) IND_COMMAND_STRIDE * numSkyboxIndirectCommands);
-                if (skyboxIndirectBuffer != null) {
-                	skyboxIndirectBuffer.cleanup();
-                }
-                skyboxIndirectBuffer = new VulkanBuffer(device, indirectStgBuffer.stgVulkanBuffer.getRequestedSize(),
-                        VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
-                        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
-                ByteBuffer dataBuffer = indirectStgBuffer.getDataBuffer();
-                VkDrawIndexedIndirectCommand.Buffer indCommandBuffer = new VkDrawIndexedIndirectCommand.Buffer(dataBuffer);
-
-                indexedIndirectCommandList.forEach(indCommandBuffer::put);
-
-                if (skyboxInstanceDataBuffers != null) {
-                    Arrays.stream(skyboxInstanceDataBuffers).forEach(VulkanBuffer::cleanup);
-                }
-                skyboxInstanceDataBuffers = new VulkanBuffer[numSwapChainImages];
-                for (int i = 0; i < numSwapChainImages; i++) {
-                	skyboxInstanceDataBuffers[i] = new VulkanBuffer(device, (long) numSkyboxIndirectCommands * (GraphConstants.MAT4X4_SIZE_BYTES + GraphConstants.INT_SIZE_BYTES),
-                            VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0);
-                }
-
-                indirectStgBuffer.recordTransferCommand(cmd, skyboxIndirectBuffer);
-
-                cmd.endRecording();
-                cmd.submitAndWait(device, queue);
-                cmd.cleanup();
-                indirectStgBuffer.cleanup();
-            }
-    	}
-    }
-    
-    public void loadSkyboxInstanceData(Dominion dominion, VulkanModel skyboxModel, int currentSwapChainIdx) {
-        if (skyboxInstanceDataBuffers == null) {
-            return;
-        }
-    	VulkanBuffer instanceBuffer = skyboxInstanceDataBuffers[currentSwapChainIdx];
-    	if (instanceBuffer == null) {
-            return;
-        }
-        long mappedMemory = instanceBuffer.map();
-        ByteBuffer dataBuffer = MemoryUtil.memByteBuffer(mappedMemory, (int) instanceBuffer.getRequestedSize());
-        instanceBuffer.map();
-        int pos = 0;
-        Results<Results.With1<SkyBox>> results = dominion.findEntitiesWith(SkyBox.class);
-        Iterator<Results.With1<SkyBox>> itr = results.iterator();
-        if (!itr.hasNext()) {
-            return;
-        }
-        SkyBox skybox = itr.next().comp();
-        for (VulkanModel.VulkanMesh vulkanMesh : skyboxModel.getVulkanMeshList()) {
-        	skybox.getModelMatrix().get(pos, dataBuffer);
-            pos += GraphConstants.MAT4X4_SIZE_BYTES;
-            dataBuffer.putInt(pos, vulkanMesh.globalMaterialIdx());
-            pos += GraphConstants.INT_SIZE_BYTES;
-        }
-        instanceBuffer.unMap();
-    }
-    
-    public VulkanModel loadSkyboxModel(ModelData skyboxModel, VKTextureCache textureCache, CommandPool
-            commandPool, Queue queue) {
-    	List<VKTexture> textureList = new ArrayList<>();
-    	Device device = commandPool.getDevice();
-        CommandBuffer cmd = new CommandBuffer(commandPool, true, true);
-        
-        StgBuffer verticesStgBuffer = new StgBuffer(device, skyboxVerticesBuffer.getRequestedSize());
-        StgBuffer indicesStgBuffer = new StgBuffer(device, skyboxIndicesBuffer.getRequestedSize());
-        StgBuffer materialsStgBuffer = new StgBuffer(device, skyboxMaterialsBuffer.getRequestedSize());
-        StgBuffer animJointMatricesStgBuffer = new StgBuffer(device, skyboxJointMatricesBuffer.getRequestedSize());
-        StgBuffer animWeightsStgBuffer = new StgBuffer(device, skyboxWeightsBuffer.getRequestedSize());
-        
-        cmd.beginRecording();
-        
-        // Load a default material
-        List<ModelData.Material> defaultMaterialList = Collections.singletonList(new ModelData.Material());
-        loadMaterials(device, textureCache, materialsStgBuffer, defaultMaterialList, textureList);
-        
-        VulkanModel vulkanModel = new VulkanModel(skyboxModel.getModelId());
-
-        List<VulkanModel.VulkanMaterial> vulkanMaterialList = loadMaterials(device, textureCache, materialsStgBuffer,
-        		skyboxModel.getMaterialList(), textureList);
-        loadMeshes(verticesStgBuffer, indicesStgBuffer, animWeightsStgBuffer, skyboxModel, vulkanModel, vulkanMaterialList);
-        loadAnimationData(skyboxModel, vulkanModel, animJointMatricesStgBuffer);
-        
-        // We need to ensure that at least we have one texture
-        if (textureList.isEmpty()) {
-            EngineProperties engineProperties = EngineProperties.INSTANCE;
-            VKTexture defaultTexture = textureCache.get(device, engineProperties.getDefaultTexturePath(),
-                    VK_FORMAT_R8G8B8A8_SRGB);
-            textureList.add(defaultTexture);
-        }
-        
-        materialsStgBuffer.recordTransferCommand(cmd, skyboxMaterialsBuffer);
-        verticesStgBuffer.recordTransferCommand(cmd, skyboxVerticesBuffer);
-        indicesStgBuffer.recordTransferCommand(cmd, skyboxIndicesBuffer);
-        animJointMatricesStgBuffer.recordTransferCommand(cmd, skyboxJointMatricesBuffer);
-        animWeightsStgBuffer.recordTransferCommand(cmd, skyboxWeightsBuffer);
-        textureList.forEach(t -> t.recordTextureTransition(cmd));
-        cmd.endRecording();
-        
-        cmd.submitAndWait(device, queue);
-        cmd.cleanup();
-
-        verticesStgBuffer.cleanup();
-        indicesStgBuffer.cleanup();
-        materialsStgBuffer.cleanup();
-        animJointMatricesStgBuffer.cleanup();
-        animWeightsStgBuffer.cleanup();
-        textureList.forEach(VKTexture::cleanupStgBuffer);
-        
-        return vulkanModel;
-    }
 
     private void loadStaticGameItems(List<VulkanModel> vulkanModelList, Dominion dominion, CommandPool commandPool,
                                     Queue queue, int numSwapChainImages) {
@@ -804,12 +349,12 @@ public class GlobalBuffers {
             Results<Results.With1<GameItem>> gameItems = dominion.findEntitiesWith(GameItem.class).without(GameItemAnimation.class);
             for (VulkanModel vulkanModel : vulkanModelList) {
                 List<Results.With1<GameItem>> results = gameItems.stream()
-                        .filter(r -> r.comp().getModelId().equals(vulkanModel.getModelId()))
+                        .filter(r -> r.comp().getModelId().equals(vulkanModel.modelId))
                         .toList();
                 if (results.isEmpty() || vulkanModel.hasAnimations()) {
                     continue;
                 }
-                for (VulkanModel.VulkanMesh vulkanMesh : vulkanModel.getVulkanMeshList()) {
+                for (VulkanModel.VulkanMesh vulkanMesh : vulkanModel.vulkanMeshList) {
                     VkDrawIndexedIndirectCommand indexedIndirectCommand = VkDrawIndexedIndirectCommand.calloc(stack);
                     indexedIndirectCommand.indexCount(vulkanMesh.numIndices());
                     indexedIndirectCommand.firstIndex(vulkanMesh.indicesOffset() / GraphConstants.INT_SIZE_BYTES);
@@ -826,11 +371,11 @@ public class GlobalBuffers {
             if (numIndirectCommands > 0) {
                 cmd.beginRecording();
 
-                StgBuffer indirectStgBuffer = new StgBuffer(device, (long) IND_COMMAND_STRIDE * numIndirectCommands);
+                StagingBuffer indirectStgBuffer = new StagingBuffer(device, (long) IND_COMMAND_STRIDE * numIndirectCommands);
                 if (indirectBuffer != null) {
                     indirectBuffer.cleanup();
                 }
-                indirectBuffer = new VulkanBuffer(device, indirectStgBuffer.stgVulkanBuffer.getRequestedSize(),
+                indirectBuffer = new VulkanBuffer(device, indirectStgBuffer.getRequestedSize(),
                         VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
                         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
                 ByteBuffer dataBuffer = indirectStgBuffer.getDataBuffer();
@@ -857,70 +402,11 @@ public class GlobalBuffers {
         }
     }
 
-    private void loadWeightsBuffer(ModelData modelData, StgBuffer animWeightsBuffer, int meshCount) {
-        List<ModelData.AnimMeshData> animMeshDataList = modelData.getAnimMeshDataList();
-        if (animMeshDataList == null || animMeshDataList.isEmpty()) {
-            return;
-        }
-
-        ModelData.AnimMeshData animMeshData = animMeshDataList.get(meshCount);
-        float[] weights = animMeshData.weights();
-        int[] boneIds = animMeshData.boneIds();
-
-        ByteBuffer dataBuffer = animWeightsBuffer.getDataBuffer();
-
-        int rows = weights.length / 4;
-        for (int row = 0; row < rows; row++) {
-            int startPos = row * 4;
-            dataBuffer.putFloat(weights[startPos]);
-            dataBuffer.putFloat(weights[startPos + 1]);
-            dataBuffer.putFloat(weights[startPos + 2]);
-            dataBuffer.putFloat(weights[startPos + 3]);
-            dataBuffer.putFloat(boneIds[startPos]);
-            dataBuffer.putFloat(boneIds[startPos + 1]);
-            dataBuffer.putFloat(boneIds[startPos + 2]);
-            dataBuffer.putFloat(boneIds[startPos + 3]);
-        }
-        weightsBufferOffset += rows * 32;
-    }
-
     public void resetModelBuffers() {
         jointMatricesBufferOffset = 0;
         weightsBufferOffset = 0;
         materialBufferOffset = 0;
         indexBufferOffset = 0;
         vertexBufferOffset = 0;
-    }
-
-    private static class StgBuffer {
-        private final ByteBuffer dataBuffer;
-        private final VulkanBuffer stgVulkanBuffer;
-
-        public StgBuffer(Device device, long size) {
-            stgVulkanBuffer = new VulkanBuffer(device, size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-            long mappedMemory = stgVulkanBuffer.map();
-            dataBuffer = MemoryUtil.memByteBuffer(mappedMemory, (int) stgVulkanBuffer.getRequestedSize());
-        }
-
-        public void cleanup() {
-            stgVulkanBuffer.unMap();
-            stgVulkanBuffer.cleanup();
-        }
-
-        public ByteBuffer getDataBuffer() {
-            return dataBuffer;
-        }
-
-        private void recordTransferCommand(CommandBuffer cmd, VulkanBuffer dstBuffer, long dstOffset, long size) {
-            try (MemoryStack stack = MemoryStack.stackPush()) {
-                VkBufferCopy.Buffer copyRegion = VkBufferCopy.calloc(1, stack)
-                        .srcOffset(0).dstOffset(dstOffset).size(size);
-                vkCmdCopyBuffer(cmd.getVkCommandBuffer(), stgVulkanBuffer.getBuffer(), dstBuffer.getBuffer(), copyRegion);
-            }
-        }
-
-        private void recordTransferCommand(CommandBuffer cmd, VulkanBuffer dstBuffer) {
-            recordTransferCommand(cmd, dstBuffer, 0, stgVulkanBuffer.getRequestedSize());
-        }
     }
 }

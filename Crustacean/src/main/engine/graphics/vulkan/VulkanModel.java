@@ -15,9 +15,9 @@ import static org.lwjgl.vulkan.VK11.*;
 
 public class VulkanModel {
 
-	private final String modelId;
-    private final List<VulkanAnimationData> vulkanAnimationDataList;
-    private final List<VulkanMesh> vulkanMeshList;
+	public final String modelId;
+    public final List<VulkanAnimationData> vulkanAnimationDataList;
+    public final List<VulkanMesh> vulkanMeshList;
 
     public VulkanModel(String modelId) {
         this.modelId = modelId;
@@ -31,18 +31,6 @@ public class VulkanModel {
 
     public void addVulkanMesh(VulkanMesh vulkanMesh) {
         vulkanMeshList.add(vulkanMesh);
-    }
-
-    public String getModelId() {
-        return modelId;
-    }
-
-    public List<VulkanAnimationData> getVulkanAnimationDataList() {
-        return vulkanAnimationDataList;
-    }
-
-    public List<VulkanMesh> getVulkanMeshList() {
-        return vulkanMeshList;
     }
 
     public boolean hasAnimations() {

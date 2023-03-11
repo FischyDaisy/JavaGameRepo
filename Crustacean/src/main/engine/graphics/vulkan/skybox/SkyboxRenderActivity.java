@@ -61,7 +61,7 @@ public class SkyboxRenderActivity {
     private VulkanBuffer[] viewMatricesBuffer;
     private DescriptorSet.UniformDescriptorSet[] viewMatricesDescriptorSets;
 	
-	public SkyboxRenderActivity(SwapChain swapChain, PipelineCache pipelineCache, Window window, long vkRenderPass, GlobalBuffers globalBuffers) {
+	public SkyboxRenderActivity(SwapChain swapChain, PipelineCache pipelineCache, Window window, long vkRenderPass, SkyboxBuffers skyboxBuffers) {
 		this.window = window;
 		device = swapChain.getDevice();
 		this.swapChain = swapChain;
@@ -71,7 +71,7 @@ public class SkyboxRenderActivity {
 		
 		createShaders();
 		createDescriptorPool();
-		createDescriptorSets(numImages, globalBuffers);
+		createDescriptorSets(numImages, skyboxBuffers);
 		createPipeline(pipelineCache, vkRenderPass);
 		VulkanUtils.copyMatrixToBuffer(projMatrixUniform, window.getProjectionMatrix());
 	}
@@ -99,7 +99,7 @@ public class SkyboxRenderActivity {
         descriptorPool = new DescriptorPool(device, descriptorTypeCounts);
 	}
 	
-	public void createDescriptorSets(int numImages, GlobalBuffers globalBuffers) {
+	public void createDescriptorSets(int numImages, SkyboxBuffers skyboxBuffers) {
 		EngineProperties engineProps = EngineProperties.INSTANCE;
 		uniformDescriptorSetLayout = new DescriptorSetLayout.UniformDescriptorSetLayout(device, 0, VK_SHADER_STAGE_VERTEX_BIT, 0);
         textureDescriptorSetLayout = new DescriptorSetLayout.SamplerDescriptorSetLayout(device, engineProps.getMaxSkyboxTextures(), 0, VK_SHADER_STAGE_FRAGMENT_BIT, 0);
@@ -116,7 +116,7 @@ public class SkyboxRenderActivity {
                 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, 0);
         projMatrixDescriptorSet = new DescriptorSet.UniformDescriptorSet(descriptorPool, uniformDescriptorSetLayout, projMatrixUniform, 0);
         materialsDescriptorSet = new DescriptorSet.StorageDescriptorSet(descriptorPool, storageDescriptorSetLayout,
-                globalBuffers.getSkyboxMaterialsBuffer(), 0);
+                skyboxBuffers.getMaterialsBuffer(), 0);
 
         viewMatricesDescriptorSets = new DescriptorSet.UniformDescriptorSet[numImages];
         viewMatricesBuffer = new VulkanBuffer[numImages];
@@ -167,7 +167,7 @@ public class SkyboxRenderActivity {
                 textureSampler, 0);
     }
 	
-	public void recordCommandBuffer(CommandBuffer commandBuffer, GlobalBuffers globalBuffers, int idx) {
+	public void recordCommandBuffer(CommandBuffer commandBuffer, SkyboxBuffers skyboxBuffers, int idx) {
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			VkExtent2D swapChainExtent = swapChain.getSwapChainExtent();
             int width = swapChainExtent.width();
@@ -208,15 +208,15 @@ public class SkyboxRenderActivity {
             LongBuffer instanceBuffer = stack.mallocLong(1);
             LongBuffer offsets = stack.mallocLong(1).put(0, 0L);
             
-            if (globalBuffers.getNumSkyboxIndirectCommands() > 0) {
-            	vertexBuffer.put(0, globalBuffers.getSkyboxVerticesBuffer().getBuffer());
-            	instanceBuffer.put(0, globalBuffers.getSkyboxInstanceDataBuffers()[idx].getBuffer());
+            if (skyboxBuffers.getNumIndirectCommands() > 0) {
+            	vertexBuffer.put(0, skyboxBuffers.getVerticesBuffer().getBuffer());
+            	instanceBuffer.put(0, skyboxBuffers.getInstanceDataBuffers()[idx].getBuffer());
             	
             	vkCmdBindVertexBuffers(cmdHandle, 0, vertexBuffer, offsets);
                 vkCmdBindVertexBuffers(cmdHandle, 1, instanceBuffer, offsets);
-                vkCmdBindIndexBuffer(cmdHandle, globalBuffers.getSkyboxIndicesBuffer().getBuffer(), 0, VK_INDEX_TYPE_UINT32);
-                VulkanBuffer skyboxIndirectBuffer = globalBuffers.getSkyboxIndirectBuffer();
-                vkCmdDrawIndexedIndirect(cmdHandle, skyboxIndirectBuffer.getBuffer(), 0, globalBuffers.getNumSkyboxIndirectCommands(),
+                vkCmdBindIndexBuffer(cmdHandle, skyboxBuffers.getIndicesBuffer().getBuffer(), 0, VK_INDEX_TYPE_UINT32);
+                VulkanBuffer skyboxIndirectBuffer = skyboxBuffers.getIndirectBuffer();
+                vkCmdDrawIndexedIndirect(cmdHandle, skyboxIndirectBuffer.getBuffer(), 0, skyboxBuffers.getNumIndirectCommands(),
                         GlobalBuffers.IND_COMMAND_STRIDE);
             }
 		}

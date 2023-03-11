@@ -4,6 +4,9 @@ import org.lwjgl.vulkan.*;
 
 import main.engine.graphics.GraphConstants;
 
+import java.lang.foreign.*;
+
+import static java.lang.foreign.ValueLayout.JAVA_FLOAT;
 import static org.lwjgl.vulkan.VK11.*;
 
 public class VertexBufferStructure extends VertexInputStateInfo {
@@ -13,7 +16,13 @@ public class VertexBufferStructure extends VertexInputStateInfo {
     private static final int NUMBER_OF_ATTRIBUTES = 5;
     private static final int POSITION_COMPONENTS = 3;
     public static final int SIZE_IN_BYTES = (POSITION_COMPONENTS + NORMAL_COMPONENTS * 3 + TEXT_COORD_COMPONENTS) * GraphConstants.FLOAT_SIZE_BYTES;
-
+    public static final GroupLayout VertexLayout = MemoryLayout.structLayout(
+            JAVA_FLOAT.withName("PositionX"), JAVA_FLOAT.withName("PositionY"), JAVA_FLOAT.withName("PositionZ"),
+            JAVA_FLOAT.withName("NormalX"), JAVA_FLOAT.withName("NormalY"), JAVA_FLOAT.withName("NormalZ"),
+            JAVA_FLOAT.withName("TangentX"), JAVA_FLOAT.withName("TangentY"), JAVA_FLOAT.withName("TangentZ"),
+            JAVA_FLOAT.withName("BiTangentX"), JAVA_FLOAT.withName("BiTangentX"), JAVA_FLOAT.withName("BiTangentX"),
+            JAVA_FLOAT.withName("TextCoordX"), JAVA_FLOAT.withName("TextCoordY")
+    );
     private final VkVertexInputAttributeDescription.Buffer viAttrs;
     private final VkVertexInputBindingDescription.Buffer viBindings;
 

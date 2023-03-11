@@ -154,12 +154,12 @@ public class AnimationComputeActivity {
                     continue;
                 }
                 gameItemAnimation.setLoaded(true);
-                VulkanModel vulkanModel = vulkanAnimModel.getVulkanModel();
+                VulkanModel vulkanModel = vulkanAnimModel.vulkanModel;
                 int animationIdx = gameItemAnimation.getAnimationIdx();
                 int currentFrame = gameItemAnimation.getCurrentFrame();
-                int jointMatricesOffset = vulkanModel.getVulkanAnimationDataList().get(animationIdx).getVulkanAnimationFrameList().get(currentFrame).jointMatricesOffset();
+                int jointMatricesOffset = vulkanModel.vulkanAnimationDataList.get(animationIdx).getVulkanAnimationFrameList().get(currentFrame).jointMatricesOffset();
 
-                for (VulkanAnimModel.VulkanAnimMesh vulkanAnimMesh : vulkanAnimModel.getVulkanAnimMeshList()) {
+                for (VulkanAnimModel.VulkanAnimMesh vulkanAnimMesh : vulkanAnimModel.vulkanAnimMeshList) {
                     VulkanModel.VulkanMesh mesh = vulkanAnimMesh.vulkanMesh();
 
                     int groupSize = (int) Math.ceil((mesh.verticesSize() / (float) InstancedVertexBufferStructure.SIZE_IN_BYTES) / LOCAL_SIZE_X);

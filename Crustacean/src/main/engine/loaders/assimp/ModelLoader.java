@@ -239,7 +239,7 @@ public class ModelLoader {
     }
     
     private static ModelData.AnimMeshData processBones(AIMesh aiMesh, List<Bone> boneList) {
-        List<Integer> boneIds = new ArrayList<>();
+        List<Float> boneIds = new ArrayList<>();
         List<Float> weights = new ArrayList<>();
 
         Map<Integer, List<VertexWeight>> weightSet = new HashMap<>();
@@ -273,15 +273,15 @@ public class ModelLoader {
                 if (j < size) {
                     VertexWeight vw = vertexWeightList.get(j);
                     weights.add(vw.weight());
-                    boneIds.add(vw.boneId());
+                    boneIds.add((float) vw.boneId());
                 } else {
                     weights.add(0.0f);
-                    boneIds.add(0);
+                    boneIds.add(0.0f);
                 }
             }
         }
 
-        return new ModelData.AnimMeshData(Utils.listFloatToArray(weights), Utils.listIntToArray(boneIds));
+        return new ModelData.AnimMeshData(Utils.listFloatToArray(weights), Utils.listFloatToArray(boneIds));
     }
 
     protected static List<Integer> processIndices(AIMesh aiMesh) {
