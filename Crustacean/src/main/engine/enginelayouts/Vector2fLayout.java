@@ -1,17 +1,19 @@
 package main.engine.enginelayouts;
 
-import org.joml.Vector3f;
+import org.joml.Vector2f;
 
-import java.lang.foreign.*;
+import java.lang.foreign.MemoryLayout;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.SequenceLayout;
+import java.lang.foreign.ValueLayout;
 import java.lang.invoke.VarHandle;
 
-public final class Vector3fLayout {
-    public static final SequenceLayout LAYOUT = MemoryLayout.sequenceLayout(3, ValueLayout.JAVA_FLOAT);
+public final class Vector2fLayout {
+    public static final SequenceLayout LAYOUT = MemoryLayout.sequenceLayout(2, ValueLayout.JAVA_FLOAT);
     public static final VarHandle X_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(0));
     public static final VarHandle Y_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(1));
-    public static final VarHandle Z_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(2));
 
-    private Vector3fLayout() {}
+    private Vector2fLayout() {}
 
     public static float getX(MemorySegment segment, long offset) {
         return (float) X_HANDLE.get(segment.asSlice(offset));
@@ -27,14 +29,6 @@ public final class Vector3fLayout {
 
     public static float getY(MemorySegment segment) {
         return getY(segment, 0);
-    }
-
-    public static float getZ(MemorySegment segment, long offset) {
-        return (float) Z_HANDLE.get(segment.asSlice(offset));
-    }
-
-    public static float getZ(MemorySegment segment) {
-        return getZ(segment, 0);
     }
 
     public static void setX(MemorySegment segment, long offset, float x) {
@@ -53,36 +47,26 @@ public final class Vector3fLayout {
         setY(segment, 0, y);
     }
 
-    public static void setZ(MemorySegment segment, long offset, float z) {
-        Z_HANDLE.set(segment.asSlice(offset), z);
-    }
-
-    public static void setZ(MemorySegment segment, float z) {
-        setZ(segment, 0, z);
-    }
-
-    public static Vector3f getVector3f(MemorySegment segment, long offset) {
+    public static Vector2f getVector2f(MemorySegment segment, long offset) {
         MemorySegment vecSegment = segment.asSlice(offset);
-        Vector3f vector = new Vector3f(
+        Vector2f vector = new Vector2f(
                 (float) X_HANDLE.get(vecSegment),
-                (float) Y_HANDLE.get(vecSegment),
-                (float) Z_HANDLE.get(vecSegment)
+                (float) Y_HANDLE.get(vecSegment)
         );
         return vector;
     }
 
-    public static Vector3f getVector3f(MemorySegment segment) {
-        return getVector3f(segment, 0);
+    public static Vector2f getVector2f(MemorySegment segment) {
+        return getVector2f(segment, 0);
     }
 
-    public static void setVector3f(MemorySegment segment, long offset, Vector3f value) {
+    public static void setVector2f(MemorySegment segment, long offset, Vector2f value) {
         MemorySegment vecSegment = segment.asSlice(offset);
         X_HANDLE.set(vecSegment, value.x);
         Y_HANDLE.set(vecSegment, value.y);
-        Z_HANDLE.set(vecSegment, value.z);
     }
 
-    public static void setVector3f(MemorySegment segment, Vector3f value) {
-        setVector3f(segment, 0, value);
+    public static void setVector2f(MemorySegment segment, Vector2f value) {
+        setVector2f(segment, 0, value);
     }
 }

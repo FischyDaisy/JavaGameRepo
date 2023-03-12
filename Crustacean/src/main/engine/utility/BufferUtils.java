@@ -66,14 +66,18 @@ public final class BufferUtils {
             }
             int metalRoughMapIdx = textureCache.getPosition(material.metalRoughMap());
 
-            vulkanMaterialList.add(new VulkanModel.VulkanMaterial((int) (materialOffset / MaterialLayout.LAYOUT.byteSize())));
-            MaterialLayout.setDiffuseColor(dataBuffer, materialOffset, material.diffuseColor());
-            MaterialLayout.setTextureIdx(dataBuffer, materialOffset, textureIdx);
-            MaterialLayout.setNormalMapIdx(dataBuffer, materialOffset, normalMapIdx);
-            MaterialLayout.setMetalRoughMapIdx(dataBuffer, materialOffset, metalRoughMapIdx);
-            MaterialLayout.setRoughnessFactor(dataBuffer, materialOffset, material.roughnessFactor());
-            MaterialLayout.setMetallicFactor(dataBuffer, materialOffset, material.metallicFactor());
-            materialOffset += MaterialLayout.LAYOUT.byteSize();
+            try {
+                vulkanMaterialList.add(new VulkanModel.VulkanMaterial((int) (materialOffset / MaterialLayout.LAYOUT.byteSize())));
+                MaterialLayout.setDiffuseColor(dataBuffer, materialOffset, material.diffuseColor());
+                MaterialLayout.setTextureIdx(dataBuffer, materialOffset, textureIdx);
+                MaterialLayout.setNormalMapIdx(dataBuffer, materialOffset, normalMapIdx);
+                MaterialLayout.setMetalRoughMapIdx(dataBuffer, materialOffset, metalRoughMapIdx);
+                MaterialLayout.setRoughnessFactor(dataBuffer, materialOffset, material.roughnessFactor());
+                MaterialLayout.setMetallicFactor(dataBuffer, materialOffset, material.metallicFactor());
+                materialOffset += MaterialLayout.LAYOUT.byteSize();
+            } catch (Throwable t) {
+                throw new RuntimeException(t);
+            }
         }
 
         return materialOffset;

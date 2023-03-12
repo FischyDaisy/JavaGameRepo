@@ -3,6 +3,7 @@ package main.engine.enginelayouts;
 import org.joml.Vector4f;
 
 import java.lang.foreign.*;
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 
 public final class MaterialLayout {
@@ -15,22 +16,25 @@ public final class MaterialLayout {
             ValueLayout.JAVA_FLOAT.withName("metallicFactor"),
             MemoryLayout.paddingLayout(96)
     );
+    public static final MethodHandle DIFFUSE_COLOR = LAYOUT.sliceHandle(MemoryLayout.PathElement.groupElement("diffuseColor"));
+    public static final VarHandle TEXTURE_IDX = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("textureIdx"));
+    public static final VarHandle NORMAL_MAP_IDX = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("normalMapIdx"));
+    public static final VarHandle METAL_ROUGH_MAP_IDX = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("metalRoughMapIdx"));
+    public static final VarHandle ROUGHNESS_FACTOR = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("roughnessFactor"));
+    public static final VarHandle METALLIC_FACTOR = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("metallicFactor"));
 
     private MaterialLayout() {}
 
-    public static Vector4f getDiffuseColor(MemorySegment segment, long offset) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        return Vector4fLayout.getVector4f(material);
+    public static Vector4f getDiffuseColor(MemorySegment segment, long offset) throws Throwable {
+        return Vector4fLayout.getVector4f((MemorySegment) DIFFUSE_COLOR.invokeExact(segment.asSlice(offset)));
     }
 
-    public static Vector4f getDiffuseColor(MemorySegment segment) {
+    public static Vector4f getDiffuseColor(MemorySegment segment) throws Throwable {
         return getDiffuseColor(segment, 0);
     }
 
     public static int getTextureIdx(MemorySegment segment, long offset) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        long textureIdxOffset = LAYOUT.byteOffset(MemoryLayout.PathElement.groupElement("textureIdx"));
-        return material.get(ValueLayout.JAVA_INT, textureIdxOffset);
+        return (int) TEXTURE_IDX.get(segment.asSlice(offset));
     }
 
     public static int getTextureIdx(MemorySegment segment) {
@@ -38,9 +42,7 @@ public final class MaterialLayout {
     }
 
     public static int getNormalMapIdx(MemorySegment segment, long offset) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        long normalMapIdxOffset = LAYOUT.byteOffset(MemoryLayout.PathElement.groupElement("normalMapIdx"));
-        return material.get(ValueLayout.JAVA_INT, normalMapIdxOffset);
+        return (int) NORMAL_MAP_IDX.get(segment.asSlice(offset));
     }
 
     public static int getNormalMapIdx(MemorySegment segment) {
@@ -48,9 +50,7 @@ public final class MaterialLayout {
     }
 
     public static int getMetalRoughMapIdx(MemorySegment segment, long offset) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        long metalRoughMapIdxOffset = LAYOUT.byteOffset(MemoryLayout.PathElement.groupElement("metalRoughMapIdx"));
-        return material.get(ValueLayout.JAVA_INT, metalRoughMapIdxOffset);
+        return (int) METAL_ROUGH_MAP_IDX.get(segment.asSlice(offset));
     }
 
     public static int getMetalRoughMapIdx(MemorySegment segment) {
@@ -58,9 +58,7 @@ public final class MaterialLayout {
     }
 
     public static float getRoughnessFactor(MemorySegment segment, long offset) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        long roughnessOffset = LAYOUT.byteOffset(MemoryLayout.PathElement.groupElement("roughnessFactor"));
-        return material.get(ValueLayout.JAVA_FLOAT, roughnessOffset);
+        return (float) ROUGHNESS_FACTOR.get(segment.asSlice(offset));
     }
 
     public static float getRoughnessFactor(MemorySegment segment) {
@@ -68,28 +66,23 @@ public final class MaterialLayout {
     }
 
     public static float getMetallicFactor(MemorySegment segment, long offset) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        long metallicOffset = LAYOUT.byteOffset(MemoryLayout.PathElement.groupElement("metallicFactor"));
-        return material.get(ValueLayout.JAVA_FLOAT, metallicOffset);
+        return (float) METALLIC_FACTOR.get(segment.asSlice(offset));
     }
 
     public static float getMetallicFactor(MemorySegment segment) {
         return getMetallicFactor(segment, 0);
     }
 
-    public static void setDiffuseColor(MemorySegment segment, long offset, Vector4f value) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        Vector4fLayout.setVector4f(material, value);
+    public static void setDiffuseColor(MemorySegment segment, long offset, Vector4f value) throws Throwable {
+        Vector4fLayout.setVector4f((MemorySegment) DIFFUSE_COLOR.invokeExact(segment.asSlice(offset)), value);
     }
 
-    public static void setDiffuseColor(MemorySegment segment, Vector4f value) {
+    public static void setDiffuseColor(MemorySegment segment, Vector4f value) throws Throwable {
         setDiffuseColor(segment, 0, value);
     }
 
     public static void setTextureIdx(MemorySegment segment, long offset, int value) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        long textureIdxOffset = LAYOUT.byteOffset(MemoryLayout.PathElement.groupElement("textureIdx"));
-        material.set(ValueLayout.JAVA_INT, textureIdxOffset, value);
+        TEXTURE_IDX.set(segment.asSlice(offset), value);
     }
 
     public static void setTextureIdx(MemorySegment segment, int value) {
@@ -97,9 +90,7 @@ public final class MaterialLayout {
     }
 
     public static void setNormalMapIdx(MemorySegment segment, long offset, int value) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        long normalMapIdxOffset = LAYOUT.byteOffset(MemoryLayout.PathElement.groupElement("normalMapIdx"));
-        material.set(ValueLayout.JAVA_INT, normalMapIdxOffset, value);
+        NORMAL_MAP_IDX.set(segment.asSlice(offset), value);
     }
 
     public static void setNormalMapIdx(MemorySegment segment, int value) {
@@ -107,9 +98,7 @@ public final class MaterialLayout {
     }
 
     public static void setMetalRoughMapIdx(MemorySegment segment, long offset, int value) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        long metalRoughMapIdxOffset = LAYOUT.byteOffset(MemoryLayout.PathElement.groupElement("metalRoughMapIdx"));
-        material.set(ValueLayout.JAVA_INT, metalRoughMapIdxOffset, value);
+        METAL_ROUGH_MAP_IDX.set(segment.asSlice(offset), value);
     }
 
     public static void setMetalRoughMapIdx(MemorySegment segment, int value) {
@@ -117,9 +106,7 @@ public final class MaterialLayout {
     }
 
     public static void setRoughnessFactor(MemorySegment segment, long offset, float value) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        long roughnessOffset = LAYOUT.byteOffset(MemoryLayout.PathElement.groupElement("roughnessFactor"));
-        material.set(ValueLayout.JAVA_FLOAT, roughnessOffset, value);
+        ROUGHNESS_FACTOR.set(segment.asSlice(offset), value);;
     }
 
     public static void setRoughnessFactor(MemorySegment segment, float value) {
@@ -127,9 +114,7 @@ public final class MaterialLayout {
     }
 
     public static void setMetallicFactor(MemorySegment segment, long offset, float value) {
-        MemorySegment material = segment.asSlice(offset, LAYOUT.byteSize());
-        long metallicOffset = LAYOUT.byteOffset(MemoryLayout.PathElement.groupElement("metallicFactor"));
-        material.set(ValueLayout.JAVA_FLOAT, metallicOffset, value);
+        METALLIC_FACTOR.set(segment.asSlice(offset), value);
     }
 
     public static void setMetallicFactor(MemorySegment segment, float value) {

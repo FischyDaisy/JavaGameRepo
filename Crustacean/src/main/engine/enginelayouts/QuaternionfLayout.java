@@ -15,7 +15,7 @@ public final class QuaternionfLayout {
     private QuaternionfLayout() {}
 
     public static float getX(MemorySegment segment, long offset) {
-        return (float) X_HANDLE.get(segment, offset);
+        return (float) X_HANDLE.get(segment.asSlice(offset));
     }
 
     public static float getX(MemorySegment segment) {
@@ -23,7 +23,7 @@ public final class QuaternionfLayout {
     }
 
     public static float getY(MemorySegment segment, long offset) {
-        return (float) Y_HANDLE.get(segment, offset);
+        return (float) Y_HANDLE.get(segment.asSlice(offset));
     }
 
     public static float getY(MemorySegment segment) {
@@ -31,7 +31,7 @@ public final class QuaternionfLayout {
     }
 
     public static float getZ(MemorySegment segment, long offset) {
-        return (float) Z_HANDLE.get(segment, offset);
+        return (float) Z_HANDLE.get(segment.asSlice(offset));
     }
 
     public static float getZ(MemorySegment segment) {
@@ -39,7 +39,7 @@ public final class QuaternionfLayout {
     }
 
     public static float getW(MemorySegment segment, long offset) {
-        return (float) W_HANDLE.get(segment, offset);
+        return (float) W_HANDLE.get(segment.asSlice(offset));
     }
 
     public static float getW(MemorySegment segment) {
@@ -47,7 +47,7 @@ public final class QuaternionfLayout {
     }
 
     public static void setX(MemorySegment segment, long offset, float x) {
-        X_HANDLE.set(segment, offset, x);
+        X_HANDLE.set(segment.asSlice(offset), x);
     }
 
     public static void setX(MemorySegment segment, float x) {
@@ -55,7 +55,7 @@ public final class QuaternionfLayout {
     }
 
     public static void setY(MemorySegment segment, long offset, float y) {
-        Y_HANDLE.set(segment, offset, y);
+        Y_HANDLE.set(segment.asSlice(offset), y);
     }
 
     public static void setY(MemorySegment segment, float y) {
@@ -63,7 +63,7 @@ public final class QuaternionfLayout {
     }
 
     public static void setZ(MemorySegment segment, long offset, float z) {
-        Z_HANDLE.set(segment, offset, z);
+        Z_HANDLE.set(segment.asSlice(offset), z);
     }
 
     public static void setZ(MemorySegment segment, float z) {
@@ -71,7 +71,7 @@ public final class QuaternionfLayout {
     }
 
     public static void setW(MemorySegment segment, long offset, float w) {
-        W_HANDLE.set(segment, offset, w);
+        W_HANDLE.set(segment.asSlice(offset), w);
     }
 
     public static void setW(MemorySegment segment, float w) {
@@ -79,12 +79,12 @@ public final class QuaternionfLayout {
     }
 
     public static Quaternionf getQuaternion(MemorySegment segment, long offset) {
-        MemorySegment quatSegment = segment.asSlice(offset, LAYOUT.byteSize());
+        MemorySegment quatSegment = segment.asSlice(offset);
         Quaternionf quat = new Quaternionf(
-                quatSegment.getAtIndex(ValueLayout.JAVA_FLOAT, 0),
-                quatSegment.getAtIndex(ValueLayout.JAVA_FLOAT, 1),
-                quatSegment.getAtIndex(ValueLayout.JAVA_FLOAT, 2),
-                quatSegment.getAtIndex(ValueLayout.JAVA_FLOAT, 3)
+                (float) X_HANDLE.get(quatSegment),
+                (float) Y_HANDLE.get(quatSegment),
+                (float) Z_HANDLE.get(quatSegment),
+                (float) W_HANDLE.get(quatSegment)
         );
         return quat;
     }
@@ -94,11 +94,11 @@ public final class QuaternionfLayout {
     }
 
     public static void setQuaternion(MemorySegment segment, long offset, Quaternionf value) {
-        MemorySegment quatSegment = segment.asSlice(offset, LAYOUT.byteSize());
-        quatSegment.setAtIndex(ValueLayout.JAVA_FLOAT, 0, value.x);
-        quatSegment.setAtIndex(ValueLayout.JAVA_FLOAT, 1, value.y);
-        quatSegment.setAtIndex(ValueLayout.JAVA_FLOAT, 2, value.z);
-        quatSegment.setAtIndex(ValueLayout.JAVA_FLOAT, 3, value.w);
+        MemorySegment quatSegment = segment.asSlice(offset);
+        X_HANDLE.set(quatSegment, value.x);
+        Y_HANDLE.set(quatSegment, value.y);
+        Z_HANDLE.set(quatSegment, value.z);
+        W_HANDLE.set(quatSegment, value.w);
     }
 
     public static void setQuaternion(MemorySegment segment, Quaternionf value) {

@@ -15,7 +15,7 @@ public final class Vector4fLayout {
     private Vector4fLayout() {}
 
     public static float getX(MemorySegment segment, long offset) {
-        return (float) X_HANDLE.get(segment, offset);
+        return (float) X_HANDLE.get(segment.asSlice(offset));
     }
 
     public static float getX(MemorySegment segment) {
@@ -23,7 +23,7 @@ public final class Vector4fLayout {
     }
 
     public static float getY(MemorySegment segment, long offset) {
-        return (float) Y_HANDLE.get(segment, offset);
+        return (float) Y_HANDLE.get(segment.asSlice(offset));
     }
 
     public static float getY(MemorySegment segment) {
@@ -31,7 +31,7 @@ public final class Vector4fLayout {
     }
 
     public static float getZ(MemorySegment segment, long offset) {
-        return (float) Z_HANDLE.get(segment, offset);
+        return (float) Z_HANDLE.get(segment.asSlice(offset));
     }
 
     public static float getZ(MemorySegment segment) {
@@ -39,7 +39,7 @@ public final class Vector4fLayout {
     }
 
     public static float getW(MemorySegment segment, long offset) {
-        return (float) W_HANDLE.get(segment, offset);
+        return (float) W_HANDLE.get(segment.asSlice(offset));
     }
 
     public static float getW(MemorySegment segment) {
@@ -47,7 +47,7 @@ public final class Vector4fLayout {
     }
 
     public static void setX(MemorySegment segment, long offset, float x) {
-        X_HANDLE.set(segment, offset, x);
+        X_HANDLE.set(segment.asSlice(offset), x);
     }
 
     public static void setX(MemorySegment segment, float x) {
@@ -55,7 +55,7 @@ public final class Vector4fLayout {
     }
 
     public static void setY(MemorySegment segment, long offset, float y) {
-        Y_HANDLE.set(segment, offset, y);
+        Y_HANDLE.set(segment.asSlice(offset), y);
     }
 
     public static void setY(MemorySegment segment, float y) {
@@ -63,7 +63,7 @@ public final class Vector4fLayout {
     }
 
     public static void setZ(MemorySegment segment, long offset, float z) {
-        Z_HANDLE.set(segment, offset, z);
+        Z_HANDLE.set(segment.asSlice(offset), z);
     }
 
     public static void setZ(MemorySegment segment, float z) {
@@ -71,7 +71,7 @@ public final class Vector4fLayout {
     }
 
     public static void setW(MemorySegment segment, long offset, float w) {
-        W_HANDLE.set(segment, offset, w);
+        W_HANDLE.set(segment.asSlice(offset), w);
     }
 
     public static void setW(MemorySegment segment, float w) {
@@ -79,12 +79,12 @@ public final class Vector4fLayout {
     }
 
     public static Vector4f getVector4f(MemorySegment segment, long offset) {
-        MemorySegment vecSegment = segment.asSlice(offset, LAYOUT.byteSize());
+        MemorySegment vecSegment = segment.asSlice(offset);
         Vector4f vector = new Vector4f(
-                vecSegment.getAtIndex(ValueLayout.JAVA_FLOAT, 0),
-                vecSegment.getAtIndex(ValueLayout.JAVA_FLOAT, 1),
-                vecSegment.getAtIndex(ValueLayout.JAVA_FLOAT, 2),
-                vecSegment.getAtIndex(ValueLayout.JAVA_FLOAT, 3)
+                (float) X_HANDLE.get(vecSegment),
+                (float) Y_HANDLE.get(vecSegment),
+                (float) Z_HANDLE.get(vecSegment),
+                (float) W_HANDLE.get(vecSegment)
         );
         return vector;
     }
@@ -94,11 +94,11 @@ public final class Vector4fLayout {
     }
 
     public static void setVector4f(MemorySegment segment, long offset, Vector4f value) {
-        MemorySegment vecSegment = segment.asSlice(offset, LAYOUT.byteSize());
-        vecSegment.setAtIndex(ValueLayout.JAVA_FLOAT, 0, value.x);
-        vecSegment.setAtIndex(ValueLayout.JAVA_FLOAT, 1, value.y);
-        vecSegment.setAtIndex(ValueLayout.JAVA_FLOAT, 2, value.z);
-        vecSegment.setAtIndex(ValueLayout.JAVA_FLOAT, 3, value.w);
+        MemorySegment vecSegment = segment.asSlice(offset);
+        X_HANDLE.set(vecSegment, value.x);
+        Y_HANDLE.set(vecSegment, value.y);
+        Z_HANDLE.set(vecSegment, value.z);
+        W_HANDLE.set(vecSegment, value.w);
     }
 
     public static void setVector4f(MemorySegment segment, Vector4f value) {
