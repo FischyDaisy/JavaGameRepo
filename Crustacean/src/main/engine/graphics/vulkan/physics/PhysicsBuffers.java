@@ -5,14 +5,17 @@ import crab.newton.NewtonMesh;
 import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Results;
 import main.engine.EngineProperties;
+import main.engine.enginelayouts.Vector3fLayout;
 import main.engine.graphics.vulkan.*;
 import org.tinylog.Logger;
 
-import java.nio.ByteBuffer;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
 import java.util.Arrays;
 import java.util.Iterator;
 
 import static org.lwjgl.vulkan.VK10.*;
+import static crab.newton.Newton.*;
 
 public class PhysicsBuffers {
     private final VulkanBuffer indicesBuffer;
@@ -71,15 +74,32 @@ public class PhysicsBuffers {
 
         StagingBuffer verticesStgBuffer = new StagingBuffer(device, verticesBuffer.getRequestedSize());
         StagingBuffer indicesStgBuffer = new StagingBuffer(device, indicesBuffer.getRequestedSize());
+        MemorySegment vertexData = verticesStgBuffer.getDataSegment();
+        MemorySegment indicesData = indicesStgBuffer.getDataSegment();
 
         cmd.beginRecording();
 
+        long vertexOffset = 0, indexOffset = 0;
         Results<Results.With1<NewtonMesh>> results = dominion.findEntitiesWith(NewtonMesh.class);
         for (Iterator<Results.With1<NewtonMesh>> itr = results.iterator(); itr.hasNext();) {
             Results.With1<NewtonMesh> result = itr.next();
             NewtonMesh mesh = result.comp();
             PhysicsModel physicsModel = new PhysicsModel(mesh);
-            loadNewtonMeshes(verticesStgBuffer, indicesStgBuffer, physicsModel);
+            long vertexSize = VEC3F.byteSize() * mesh.getPointCount();
+            mesh.getVertexChannel((int) VEC3F.byteSize(), vertexData.asSlice(vertexOffset));
+            MemorySegment geometryHandle = mesh.beginHandle();
+            int totalIndexCount = 0;
+            long offset = indexOffset;
+            for (int handle = mesh.firstMaterial(geometryHandle); handle != -1; handle = mesh.nextMaterial(geometryHandle, handle)) {
+                mesh.materialGetIndexStream(geometryHandle, handle, indicesData.asSlice(offset));
+                int indexCount = mesh.materialGetIndexCount(geometryHandle, handle);
+                totalIndexCount += indexCount;
+                offset += ValueLayout.JAVA_INT.byteSize() * indexCount;
+            }
+            physicsModel.addPhysicsMesh(new PhysicsModel.PhysicsMesh((int) vertexSize, totalIndexCount, (int) vertexOffset, (int) indexOffset));
+            vertexOffset += vertexSize;
+            indexOffset = offset;
+            result.entity().add(physicsModel);
         }
 
         verticesStgBuffer.recordTransferCommand(cmd, verticesBuffer);
@@ -91,12 +111,5 @@ public class PhysicsBuffers {
 
         verticesStgBuffer.cleanup();
         indicesStgBuffer.cleanup();
-    }
-
-    private void loadNewtonMeshes(StagingBuffer verticesStgBuffer, StagingBuffer indicesStgBuffer, PhysicsModel physicsModel) {
-        ByteBuffer verticesData = verticesStgBuffer.getDataBuffer();
-        ByteBuffer indicesData = indicesStgBuffer.getDataBuffer();
-        NewtonMesh mesh = physicsModel.mesh;
-
     }
 }

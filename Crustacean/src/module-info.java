@@ -21,7 +21,6 @@ module Crustacean {
     requires org.lwjgl.vulkan;
     requires org.tinylog.api;
     requires crab.jnewton;
-    requires crab.jnewton.windows_x64;
     requires dev.dominion.ecs.api;
     requires dev.dominion.ecs.engine;
     requires org.tinylog.impl;

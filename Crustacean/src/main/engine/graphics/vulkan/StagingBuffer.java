@@ -13,21 +13,20 @@ import java.lang.foreign.*;
 
 public class StagingBuffer {
     private final MemorySegment dataSegment;
-    private final MemorySession dataSession;
+    private final Arena dataArena;
     private final VulkanBuffer stgVulkanBuffer;
 
     public StagingBuffer(Device device, long size) {
         stgVulkanBuffer = new VulkanBuffer(device, size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-        dataSession = MemorySession.openConfined();
+        dataArena = Arena.openConfined();
         long mappedMemory = stgVulkanBuffer.map();
-        MemoryAddress dataPtr = MemoryAddress.ofLong(mappedMemory);
-        dataSegment = MemorySegment.ofAddress(dataPtr, stgVulkanBuffer.getRequestedSize(), dataSession);
+        dataSegment = MemorySegment.ofAddress(mappedMemory, stgVulkanBuffer.getRequestedSize(), dataArena.scope());
     }
 
     public void cleanup() {
         stgVulkanBuffer.unMap();
         stgVulkanBuffer.cleanup();
-        dataSession.close();
+        dataArena.close();
     }
 
     public ByteBuffer getDataBuffer() {

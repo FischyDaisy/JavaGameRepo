@@ -20,7 +20,7 @@ public class GameEngine {
 
     private final Window window;
 
-    private final IGameLogic gameLogic;
+    private final GameLogic gameLogic;
     
     private final VKRenderer renderer;
     
@@ -32,24 +32,23 @@ public class GameEngine {
     
     private String windowTitle;
 
-    public GameEngine(String windowTitle, boolean vSync, Window.WindowOptions opts, IGameLogic gameLogic) throws Exception {
-        this(windowTitle, 0, 0, vSync, opts, gameLogic);
+    public GameEngine(String windowTitle, boolean vSync, GameLogic gameLogic) throws Throwable {
+        this(windowTitle, 0, 0, vSync, gameLogic);
     }
     
-    public GameEngine(String windowTitle, Window.WindowOptions opts, IGameLogic gameLogic) throws Exception {
-        this(windowTitle, 0, 0, engineProperties.isvSync(), opts, gameLogic);
+    public GameEngine(String windowTitle, GameLogic gameLogic) throws Throwable {
+        this(windowTitle, 0, 0, engineProperties.isvSync(), gameLogic);
     }
     
-    public GameEngine(String windowTitle, int width, int height, boolean vSync, Window.WindowOptions opts, IGameLogic gameLogic) throws Exception {
+    public GameEngine(String windowTitle, int width, int height, boolean vSync, GameLogic gameLogic) throws Throwable {
     	this.windowTitle = windowTitle;
-    	opts.useVulkan = engineProperties.useVulkan();
-    	window = new Window(windowTitle, width, height, vSync, opts);
+    	window = new Window(windowTitle, width, height, vSync);
     	window.init(null);
         this.gameLogic = gameLogic;
         dom = Dominion.create("dom");
         initDominion();
         this.renderer = new VKRenderer(window, dom);
-        gameLogic.init(window, dom, renderer);
+        gameLogic.initialize(window, dom, renderer);
         lastFps = System.nanoTime();
         fps = 0;
     }
@@ -62,13 +61,13 @@ public class GameEngine {
         dom.createEntity(new ItemLoadTimestamp());
     }
 
-    public void run() throws Exception {
+    public void run() throws Throwable {
         initialTime = System.nanoTime();
         double timeU = 1000000000d / engineProperties.getUps();
         double deltaU = 0;
 
         long updateTime = initialTime;
-        while (running && !window.windowShouldClose()) {
+        while (running && !window.shouldClose()) {
 
             for (Iterator<Results.With1<Camera>> itr = dom.findEntitiesWith(Camera.class).iterator(); itr.hasNext();) {
                 Camera cam = itr.next().comp();
@@ -88,7 +87,7 @@ public class GameEngine {
                 deltaU--;
             }
 
-            if ( window.getOptions().showFps && updateTime - lastFps > 1000000000 ) {
+            if ( updateTime - lastFps > 1000000000 ) {
                 lastFps = updateTime;
                 window.setWindowTitle(windowTitle + " - " + fps + " FPS");
                 fps = 0;
@@ -121,7 +120,7 @@ public class GameEngine {
         }
     }
     
-    public void start() throws Exception {
+    public void start() throws Throwable {
         running = true;
         run();
     }

@@ -1,5 +1,6 @@
 package main.engine.physics;
 
+import java.lang.foreign.MemorySegment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +8,6 @@ import java.util.List;
 import org.joml.Vector3f;
 
 import crab.newton.NewtonMesh;
-import java.lang.foreign.MemoryAddress;
 import main.engine.graphics.ModelData;
 
 public final class PhysUtils {
@@ -29,7 +29,7 @@ public final class PhysUtils {
 			
 			List<ModelData.MeshData> meshDataList = new ArrayList<ModelData.MeshData>();
 			
-			MemoryAddress geometryHandle = mesh.beginHandle();
+			MemorySegment geometryHandle = mesh.beginHandle();
 			for (int handle = mesh.firstMaterial(geometryHandle); handle != -1; handle = mesh.nextMaterial(geometryHandle, handle)) {
 				int materialIdx = mesh.materialGetMaterial(geometryHandle, handle);
 				int indexCount = mesh.materialGetIndexCount(geometryHandle, handle);

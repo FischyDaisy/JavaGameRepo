@@ -29,17 +29,14 @@ public class Window {
 
     private KeyboardInput keyboardInput;
     
-    private WindowOptions opts;
-    
     private Matrix4f projectionMatrix;
 
-    public Window(String title, int width, int height, boolean vSync, WindowOptions opts) {
+    public Window(String title, int width, int height, boolean vSync) {
         this.title = title;
         this.width = width;
         this.height = height;
         this.vSync = vSync;
         this.resized = false;
-        this.opts = opts;
         projectionMatrix = new Matrix4f();
     }
 
@@ -86,8 +83,12 @@ public class Window {
         return keyboardInput;
     }
 
-    public boolean windowShouldClose() {
+    public boolean shouldClose() {
         return glfwWindowShouldClose(windowHandle);
+    }
+
+    public boolean isOpen() {
+        return !glfwWindowShouldClose(windowHandle);
     }
     
     public Matrix4f getProjectionMatrix() {
@@ -151,26 +152,5 @@ public class Window {
         glfwFreeCallbacks(windowHandle);
         glfwDestroyWindow(windowHandle);
         glfwTerminate();
-    }
-    
-    public WindowOptions getOptions() {
-        return opts;
-    }
-    
-    public static class WindowOptions {
-
-        public boolean cullFace;
-
-        public boolean showTriangles;
-        
-        public boolean showFps;
-
-        public boolean useVulkan;
-        
-        public boolean compatibleProfile;
-        
-        public boolean antialiasing;
-
-        public boolean frustumCulling;    
     }
 }

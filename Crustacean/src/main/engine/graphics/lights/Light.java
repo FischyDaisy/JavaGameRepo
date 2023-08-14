@@ -1,37 +1,80 @@
 package main.engine.graphics.lights;
 
+import main.engine.enginelayouts.Vector4fLayout;
 import org.joml.Vector4f;
+
+import java.lang.foreign.MemoryLayout;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.VarHandle;
 
 public class Light {
 
-    private final Vector4f color;
-    /**
-     * For directional lights, the "w" coordinate will be 0. For point lights it will be "1". For directional lights
-     * this attribute should be read as a direction.
-     */
-    private final Vector4f position;
+    public static final MemoryLayout LAYOUT = MemoryLayout.structLayout(
+            Vector4fLayout.LAYOUT.withName("color"),
+            Vector4fLayout.LAYOUT.withName("position"),
+            ValueLayout.JAVA_BOOLEAN.withName("changed")
+    );
+    public static final MethodHandle COLOR_HANDLE = LAYOUT.sliceHandle(MemoryLayout.PathElement.groupElement("color"));
+    public static final MethodHandle POSITION_HANDLE = LAYOUT.sliceHandle(MemoryLayout.PathElement.groupElement("position"));
+    public static final VarHandle CHANGED_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("changed"));
 
-    private boolean changed;
-
-    public Light() {
-        color = new Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
-        position = new Vector4f(0.0f, 0.0f, 0.0f, 0.0f);
-        changed = true;
+    public final MemorySegment data;
+    public Light(MemorySegment segment) {
+        data = segment;
+        try {
+            MemorySegment color = (MemorySegment) COLOR_HANDLE.invokeExact(segment);
+            Vector4fLayout.setVector4f(color, 0.0f, 0.0f, 0.0f, 0.0f);
+            MemorySegment position = (MemorySegment) POSITION_HANDLE.invokeExact(segment);
+            Vector4fLayout.setVector4f(position, 0.0f, 0.0f, 0.0f, 0.0f);
+            CHANGED_HANDLE.set(segment, true);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Vector4f getColor() {
-        return color;
+        try {
+            MemorySegment color = (MemorySegment) COLOR_HANDLE.invokeExact(data);
+            return Vector4fLayout.getVector4f(color);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setColor(Vector4f value) {
+        try {
+            MemorySegment color = (MemorySegment) COLOR_HANDLE.invokeExact(data);
+            Vector4fLayout.setVector4f(color, value);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Vector4f getPosition() {
-        return position;
+        try {
+            MemorySegment position = (MemorySegment) POSITION_HANDLE.invokeExact(data);
+            return Vector4fLayout.getVector4f(position);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setPosition(Vector4f value) {
+        try {
+            MemorySegment position = (MemorySegment) POSITION_HANDLE.invokeExact(data);
+            Vector4fLayout.setVector4f(position, value);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean isChanged() {
-        return changed;
+        return (boolean) CHANGED_HANDLE.get(data);
     }
 
     public void setChanged(boolean changed) {
-        this.changed = changed;
+        CHANGED_HANDLE.set(data, changed);
     }
 }

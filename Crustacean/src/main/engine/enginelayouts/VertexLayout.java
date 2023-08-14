@@ -22,43 +22,63 @@ public final class VertexLayout {
 
     private VertexLayout() {}
 
-    public static Vector3f getPosition(MemorySegment segment, long offset) throws Throwable {
-        return Vector3fLayout.getVector3f((MemorySegment) POSITION.invokeExact(segment.asSlice(offset)));
+    public static Vector3f getPosition(MemorySegment segment, long offset) {
+        try {
+            return Vector3fLayout.getVector3f((MemorySegment) POSITION.invokeExact(segment.asSlice(offset)));
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Vector3f getPosition(MemorySegment segment) throws Throwable {
+    public static Vector3f getPosition(MemorySegment segment) {
         return getPosition(segment, 0);
     }
 
-    public static Vector3f getNormals(MemorySegment segment, long offset) throws Throwable {
-        return Vector3fLayout.getVector3f((MemorySegment) NORMALS.invokeExact(segment.asSlice(offset)));
+    public static Vector3f getNormals(MemorySegment segment, long offset) {
+        try {
+            return Vector3fLayout.getVector3f((MemorySegment) NORMALS.invokeExact(segment.asSlice(offset)));
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Vector3f getNormals(MemorySegment segment) throws Throwable {
+    public static Vector3f getNormals(MemorySegment segment) {
         return getNormals(segment, 0);
     }
 
-    public static Vector3f getTangents(MemorySegment segment, long offset) throws Throwable {
-        return Vector3fLayout.getVector3f((MemorySegment) TANGENTS.invokeExact(segment.asSlice(offset)));
+    public static Vector3f getTangents(MemorySegment segment, long offset) {
+        try {
+            return Vector3fLayout.getVector3f((MemorySegment) TANGENTS.invokeExact(segment.asSlice(offset)));
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Vector3f getTangents(MemorySegment segment) throws Throwable {
+    public static Vector3f getTangents(MemorySegment segment) {
         return getTangents(segment, 0);
     }
 
-    public static Vector3f getBiTangents(MemorySegment segment, long offset) throws Throwable {
-        return Vector3fLayout.getVector3f((MemorySegment) BITANGENTS.invokeExact(segment.asSlice(offset)));
+    public static Vector3f getBiTangents(MemorySegment segment, long offset) {
+        try {
+            return Vector3fLayout.getVector3f((MemorySegment) BITANGENTS.invokeExact(segment.asSlice(offset)));
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Vector3f getBiTangents(MemorySegment segment) throws Throwable {
+    public static Vector3f getBiTangents(MemorySegment segment) {
         return getBiTangents(segment, 0);
     }
 
-    public static Vector2f getTextCoords(MemorySegment segment, long offset) throws Throwable {
-        return Vector2fLayout.getVector2f((MemorySegment) TEXT_COORDS.invokeExact(segment.asSlice(offset)));
+    public static Vector2f getTextCoords(MemorySegment segment, long offset) {
+        try {
+            return Vector2fLayout.getVector2f((MemorySegment) TEXT_COORDS.invokeExact(segment.asSlice(offset)));
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Vector2f getTextCoords(MemorySegment segment) throws Throwable {
+    public static Vector2f getTextCoords(MemorySegment segment) {
         return getTextCoords(segment, 0);
     }
 }

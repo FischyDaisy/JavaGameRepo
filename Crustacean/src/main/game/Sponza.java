@@ -13,6 +13,7 @@ import main.engine.graphics.camera.Camera;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.items.GameItem;
 import main.engine.items.GameItemAnimation;
+import main.engine.items.GameItemManager;
 import main.engine.loaders.assimp.ModelLoader;
 import main.engine.physics.Physics;
 import main.engine.scene.Level;
@@ -21,28 +22,31 @@ import main.engine.utility.ResourcePaths;
 
 public class Sponza implements Level {
 
-    private final List<ModelData> modelDataList;
-    public final GameItem sponza;
-    public final GameItem bob;
-    public final GameItemAnimation bobAnimation;
-    public final GameItem monster;
-    public final GameItemAnimation monsterAnimation;
+    //private final List<ModelData> modelDataList;
+    //public final GameItem sponza;
+    //public final GameItem bob;
+    //public final GameItemAnimation bobAnimation;
+    //public final GameItem monster;
+    //public final GameItemAnimation monsterAnimation;
+    //public final GameItemManager manager;
 
     public Sponza() {
+        /*
         modelDataList = new ArrayList<>();
+        manager = new GameItemManager();
 
         String sponzaModelId = "sponza-model";
         ModelData sponzaModelData = ModelLoader.loadModel(sponzaModelId, ResourcePaths.Models.SPONZA_GLTF,
                 ResourcePaths.Models.SPONZA_DIR, false);
         modelDataList.add(sponzaModelData);
-        sponza = new GameItem(sponzaModelId);
+        sponza = manager.createGameItem(sponzaModelId);
 
         String bobModelId = "bob-model";
         ModelData bobModelData = ModelLoader.loadModel(bobModelId, ResourcePaths.Models.BOBLAMP_MD5MESH,
                 ResourcePaths.Models.BOBLAMP_DIR, true);
         int maxFrames = bobModelData.getAnimationsList().get(0).frames().size();
         modelDataList.add(bobModelData);
-        bob = new GameItem(bobModelId);
+        bob = manager.createGameItem(bobModelId);
         bob.setScale(0.04f);
         AxisRotation rot = AxisRotation.UP;
         rot.setRotation((float) Math.toRadians(-90.0f));
@@ -55,16 +59,17 @@ public class Sponza implements Level {
                 ResourcePaths.Models.MONSTER_DIR, true);
         int monsterMax = monsterModelData.getAnimationsList().get(0).frames().size();
         modelDataList.add(monsterModelData);
-        monster = new GameItem(monsterModelId);
+        monster = manager.createGameItem(monsterModelId);
         monster.setScale(0.02f);
         //rot.setRotation((float) Math.toRadians(-90.0f));
         //monster.setRotation(rot.getQuatRotation());
         monster.setPosition(-5f, 0f, 0f);
         monster.buildModelMatrix();
         monsterAnimation = new GameItemAnimation(false, 0, 0, monsterMax);
+        */
     }
 	@Override
-	public void load(Dominion dominion, VKRenderer renderer, Physics physics, MemorySession session) throws Exception {
+	public void load(Dominion dominion, VKRenderer renderer, Physics physics, Arena arena) throws Exception {
         dominion.createEntity(sponza);
         dominion.createEntity(bob, bobAnimation);
         dominion.createEntity(monster, monsterAnimation);
@@ -76,12 +81,16 @@ public class Sponza implements Level {
         camera.setPosition(-6.0f, 2.0f, 0.0f);
         camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
         camera.updateQuat();
+
+        for (ModelData modelData : modelDataList) {
+            dominion.createEntity(modelData);
+        }
         
-        renderer.loadModels(modelDataList);
+        renderer.loadModels();
 	}
 
     @Override
-    public void reset(Dominion dominion, VKRenderer renderer, Physics physics, MemorySession session) throws Exception {
+    public void reset(Dominion dominion, VKRenderer renderer, Physics physics, Arena arena) throws Exception {
         bobAnimation.setCurrentFrame(0);
         bobAnimation.setLoaded(false);
         monsterAnimation.setCurrentFrame(0);

@@ -2,17 +2,18 @@ package main.engine.enginelayouts;
 
 import org.joml.Vector2f;
 
-import java.lang.foreign.MemoryLayout;
-import java.lang.foreign.MemorySegment;
-import java.lang.foreign.SequenceLayout;
-import java.lang.foreign.ValueLayout;
+import java.lang.foreign.*;
 import java.lang.invoke.VarHandle;
 
-public final class Vector2fLayout {
-    public static final SequenceLayout LAYOUT = MemoryLayout.sequenceLayout(2, ValueLayout.JAVA_FLOAT);
-    public static final VarHandle X_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(0));
-    public static final VarHandle Y_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(1));
+import static crab.newton.Newton.*;
 
+public final class Vector2fLayout {
+    public static final GroupLayout LAYOUT = MemoryLayout.structLayout(
+            ValueLayout.JAVA_FLOAT.withName("x"),
+            ValueLayout.JAVA_FLOAT.withName("y")
+    );
+    public static final VarHandle X_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("x"));
+    public static final VarHandle Y_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("y"));
     private Vector2fLayout() {}
 
     public static float getX(MemorySegment segment, long offset) {
@@ -68,5 +69,15 @@ public final class Vector2fLayout {
 
     public static void setVector2f(MemorySegment segment, Vector2f value) {
         setVector2f(segment, 0, value);
+    }
+
+    public static void setVector2f(MemorySegment segment, long offset, float x, float y) {
+        MemorySegment vecSegment = segment.asSlice(offset);
+        X_HANDLE.set(vecSegment, x);
+        Y_HANDLE.set(vecSegment, y);
+    }
+
+    public static void setVector2f(MemorySegment segment, float x, float y) {
+        setVector2f(segment, 0, x, y);
     }
 }

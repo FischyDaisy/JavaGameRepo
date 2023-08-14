@@ -27,7 +27,7 @@ public class NewtonDemo implements Level {
     private final GameItem heightField;
     private final NewtonBody heightFieldBody;
 
-    public NewtonDemo(Physics physics, MemorySession session) throws Exception {
+    public NewtonDemo(Physics physics, Arena arena) throws Throwable {
         modelDataList = new ArrayList<>();
         gameItems = new ArrayList<>();
         bodies = new ArrayList<>();
@@ -41,7 +41,7 @@ public class NewtonDemo implements Level {
         for (Physics.CollisionPrimitive primitive : Physics.CollisionPrimitive.values()) {
             String newtonModelId = "newton-" + primitive.getName();
             GameItem primitiveItem = new GameItem(newtonModelId);
-            NewtonBody body = physics.createPrimitiveCollision(modelDataList, newtonModelId, primitive, params, offsetMatrix, 10f, session);
+            NewtonBody body = physics.createPrimitiveCollision(modelDataList, newtonModelId, primitive, params, offsetMatrix, 10f, arena);
             primitiveItem.setPosition(-2.5f, 2.5f, z);
             z += 5;
             primitiveItem.buildModelMatrix().get(matArr);
@@ -53,7 +53,7 @@ public class NewtonDemo implements Level {
         String heightModelId = "height-field";
         heightField = new GameItem(heightModelId);
         heightField.setPosition(-100f, 100f, -100f);
-        HeightMap.HeightMapData heightMapData = HeightMap.createHeightMap(physics.getWorld(), heightModelId, 8, -50f, 200f, session);
+        HeightMap.HeightMapData heightMapData = HeightMap.createHeightMap(physics.getWorld(), heightModelId, 8, -50f, 200f, arena);
         Matrix4f heightFieldMat = heightField.buildModelMatrix();
         heightFieldMat.get(matArr);
         heightFieldBody = physics.getWorld().createDynamicBody(heightMapData.collision(), matArr);
@@ -71,7 +71,7 @@ public class NewtonDemo implements Level {
     }
 
 	@Override
-	public void load(Dominion dominion, VKRenderer renderer, Physics physics, MemorySession session) throws Exception {
+	public void load(Dominion dominion, VKRenderer renderer, Physics physics, Arena arena) throws Exception {
         int size = gameItems.size();
         for (int i = 0; i < size; i++) {
             dominion.createEntity(gameItems.get(i), bodies.get(i));
@@ -84,11 +84,16 @@ public class NewtonDemo implements Level {
         camera.setRotationEuler((float) Math.toRadians(20.0f), (float) Math.toRadians(90.f), 0.0f);
         camera.updateQuat();
 
-        renderer.loadModels(modelDataList);
+        for (ModelData modelData : modelDataList) {
+            System.out.println(modelData.toString());
+            dominion.createEntity(modelData);
+        }
+
+        renderer.loadModels();
 	}
 
     @Override
-    public void reset(Dominion dominion, VKRenderer renderer, Physics physics, MemorySession session) throws Exception {
+    public void reset(Dominion dominion, VKRenderer renderer, Physics physics, Arena arena) throws Exception {
         float z = 0f;
         float[] matArr = new float[16];
         Results<Results.With2<GameItem, NewtonBody>> results = dominion.findEntitiesWith(GameItem.class, NewtonBody.class);
@@ -96,7 +101,7 @@ public class NewtonDemo implements Level {
             Results.With2<GameItem, NewtonBody> result = itr.next();
             GameItem item = result.comp1();
             NewtonBody body = result.comp2();
-            if (item.getModelId().equals("height-field")) {
+            if (item.modelId().equals("height-field")) {
                 continue;
             }
             item.setPosition(-2.5f, 2.5f, z);

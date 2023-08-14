@@ -5,12 +5,19 @@ import org.joml.Quaternionf;
 import java.lang.foreign.*;
 import java.lang.invoke.VarHandle;
 
+import static crab.newton.Newton.*;
+
 public final class QuaternionfLayout {
-    public static final SequenceLayout LAYOUT = MemoryLayout.sequenceLayout(4, ValueLayout.JAVA_FLOAT);
-    public static final VarHandle X_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(0));
-    public static final VarHandle Y_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(1));
-    public static final VarHandle Z_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(2));
-    public static final VarHandle W_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(3));
+    public static final GroupLayout LAYOUT = MemoryLayout.structLayout(
+            ValueLayout.JAVA_FLOAT.withName("x"),
+            ValueLayout.JAVA_FLOAT.withName("y"),
+            ValueLayout.JAVA_FLOAT.withName("z"),
+            ValueLayout.JAVA_FLOAT.withName("w")
+    );
+    public static final VarHandle X_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("x"));
+    public static final VarHandle Y_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("y"));
+    public static final VarHandle Z_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("z"));
+    public static final VarHandle W_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("w"));
 
     private QuaternionfLayout() {}
 
@@ -103,5 +110,17 @@ public final class QuaternionfLayout {
 
     public static void setQuaternion(MemorySegment segment, Quaternionf value) {
         setQuaternion(segment, 0, value);
+    }
+
+    public static void setQuaternion(MemorySegment segment, long offset, float x, float y, float z, float w) {
+        MemorySegment vecSegment = segment.asSlice(offset);
+        X_HANDLE.set(vecSegment, x);
+        Y_HANDLE.set(vecSegment, y);
+        Z_HANDLE.set(vecSegment, z);
+        W_HANDLE.set(vecSegment, w);
+    }
+
+    public static void setQuaternion(MemorySegment segment, float x, float y, float z, float w) {
+        setQuaternion(segment, 0, x, y, z, w);
     }
 }

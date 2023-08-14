@@ -22,6 +22,8 @@ public class EngineProperties {
 	private static final int DEFAULT_MAX_SKYBOX_INDICES_BUF = 1000;
     private static final int DEFAULT_MAX_PHYSICS_VERTICES_BUF = 200000;
     private static final int DEFAULT_MAX_PHYSICS_INDICES_BUF = 100000;
+    private static final long DEFAULT_MAX_GAMEITEM_BUF = 2000000;
+    private static final long DEFAULT_MAX_LIGHT_BUF = 2000;
 	private static final int DEFAULT_REQUESTED_IMAGES = 3;
 	private static final float DEFAULT_SHADOW_BIAS = 0.00005f;
     private static final int DEFAULT_SHADOW_MAP_SIZE = 2048;
@@ -46,6 +48,8 @@ public class EngineProperties {
     private int maxSkyboxIndicesBuffer;
     private int maxPhysicsVerticesBuffer;
     private int maxPhysicsIndicesBuffer;
+    private long maxGameItemBuffer;
+    private long maxLightBuffer;
     private String physDeviceName;
     private int requestedImages;
     private boolean shaderRecompilation;
@@ -100,6 +104,8 @@ public class EngineProperties {
             maxJointMatricesBuffer = Integer.parseInt(props.getOrDefault("maxJointMatricesBuffer", DEFAULT_JOINT_MATRICES_BUF).toString());
             maxPhysicsVerticesBuffer = Integer.parseInt(props.getOrDefault("maxPhysicsVerticesBuffer", DEFAULT_MAX_PHYSICS_VERTICES_BUF).toString());
             maxPhysicsIndicesBuffer = Integer.parseInt(props.getOrDefault("maxPhysicsIndicesBuffer", DEFAULT_MAX_PHYSICS_INDICES_BUF).toString());
+            maxGameItemBuffer = Long.parseLong(props.getOrDefault("maxGameItemsBuffer", DEFAULT_MAX_GAMEITEM_BUF).toString());
+            maxLightBuffer = Long.parseLong(props.getOrDefault("maxLightBuffer", DEFAULT_MAX_LIGHT_BUF).toString());
         } catch (IOException excp) {
             Logger.error("Could not read [{}] properties file", PROP_FILE.toPath());
             //System.out.println(excp);
@@ -196,6 +202,14 @@ public class EngineProperties {
 
     public int getMaxPhysicsVerticesBuffer() {
         return maxPhysicsVerticesBuffer;
+    }
+
+    public long getMaxGameItemBuffer() {
+        return maxGameItemBuffer;
+    }
+
+    public long getMaxLightBuffer() {
+        return maxLightBuffer;
     }
     
     public boolean isShaderRecompilation() {

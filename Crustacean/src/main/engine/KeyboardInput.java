@@ -63,7 +63,6 @@ public class KeyboardInput {
 
     /**
      * Checks if the specified key is pressed down regardless of when it was pressed.
-     * @param key
      * @return true if key is down. false otherwise
      */
     public boolean isKeyPressed(int key) {
@@ -71,7 +70,7 @@ public class KeyboardInput {
     }
 
     public boolean isKeyPressedOnce(int key) {
-        if (keyState[key] == GLFW_PRESS && initPress[key] == true) {
+        if (keyState[key] == GLFW_PRESS && initPress[key]) {
             initPress[key] = false;
             return true;
         }

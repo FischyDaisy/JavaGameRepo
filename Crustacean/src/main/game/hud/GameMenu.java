@@ -17,7 +17,7 @@ import org.lwjgl.system.MemoryStack;
 import main.engine.Window;
 import org.tinylog.Logger;
 
-import java.lang.foreign.MemorySession;
+import java.lang.foreign.Arena;
 
 public class GameMenu implements NKHudElement {
 	
@@ -25,7 +25,7 @@ public class GameMenu implements NKHudElement {
 	private final Dominion dominion;
 	private final VKRenderer renderer;
 	private final Physics physics;
-	private final MemorySession session;
+	private final Arena arena;
 
 	private final int width;
 	private final int height;
@@ -35,14 +35,14 @@ public class GameMenu implements NKHudElement {
 	private final Level[] levels;
 	private int currentLevel;
 	
-	public GameMenu(Window window, Dominion dominion, VKRenderer renderer, Physics physics, MemorySession session) throws Exception {
+	public GameMenu(Window window, Dominion dominion, VKRenderer renderer, Physics physics, Arena arena) throws Throwable {
 		this.window = window;
 		this.dominion = dominion;
 		this.renderer = renderer;
 		this.physics = physics;
-		this.session = session;
+		this.arena = arena;
 		this.shouldHide = true;
-		levels = new Level[] {new Sponza(), new NewtonDemo(physics, session)};
+		levels = new Level[] {new Sponza(), new NewtonDemo(physics, arena)};
 		currentLevel = 0;
 		width = 300;
 		height = 150;
@@ -93,7 +93,7 @@ public class GameMenu implements NKHudElement {
 					nk_layout_row_push(ctx, 70);
 					if (nk_button_label(ctx, "Reset")) {
 						Logger.debug("Reset Level");
-						levels[currentLevel].reset(dominion, renderer, physics, session);
+						levels[currentLevel].reset(dominion, renderer, physics, arena);
 					}
 					if (nk_button_label(ctx, "Exit")) {
 						Logger.debug("End Game");

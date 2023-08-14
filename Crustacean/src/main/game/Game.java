@@ -9,6 +9,7 @@ import dev.dominion.ecs.api.Results;
 import main.engine.*;
 import main.engine.graphics.lights.AmbientLight;
 import main.engine.items.GameItemAnimation;
+import main.engine.scene.Scene;
 import main.game.hud.TransparentWindow;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -19,7 +20,6 @@ import main.engine.graphics.camera.Camera;
 import main.engine.graphics.camera.MouseBoxSelectionDetector;
 import main.game.hud.GameMenu;
 import main.engine.graphics.hud.NKHudElement;
-import main.engine.graphics.lights.DirectionalLight;
 import main.engine.graphics.lights.Light;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.items.GameItem;
@@ -27,7 +27,6 @@ import main.engine.items.SkyBox;
 import main.engine.loaders.assimp.ModelLoader;
 import main.engine.physics.Physics;
 import main.engine.scene.Level;
-import main.engine.scene.SceneLight;
 import main.engine.sound.SoundBuffer;
 import main.engine.sound.SoundListener;
 import main.engine.sound.SoundManager;
@@ -40,7 +39,7 @@ import org.tinylog.configuration.Configuration;
 
 import java.lang.foreign.*;
 
-public class Game implements IGameLogic {
+public class Game implements GameLogic {
 	
 	private static final EngineProperties engineProperties = EngineProperties.INSTANCE;
 	
@@ -76,7 +75,7 @@ public class Game implements IGameLogic {
     
     private VKRenderer vkRenderer;
 
-    private MemorySession gameSession;
+    private Arena gameSession;
     
     private Physics gamePhysics;
     
@@ -102,25 +101,25 @@ public class Game implements IGameLogic {
             fuck.put("writer2.file", "log.txt");
             Configuration.replace(fuck);
             Logger.debug("Application Directory: {}", System.getProperty("user.dir"));
-            IGameLogic gameLogic = new Game();
+            GameLogic gameLogic = new Game();
             Window.WindowOptions opts = new Window.WindowOptions();
             opts.showFps = true;
             opts.compatibleProfile = true;
             opts.frustumCulling = true;
             GameEngine gameEng = new GameEngine("GAME", opts, gameLogic);
             gameEng.start();
-        } catch (Exception excp) {
+        } catch (Throwable excp) {
             Logger.error(excp);
             System.exit(-1);
         }
     }
     
     @Override
-    public void init(Window window, Dominion dominion, VKRenderer renderer) throws Exception {
+    public void initialize(Window window, Scene scene, VKRenderer renderer, Physics physics) throws Throwable {
         soundMgr.init();
 
-        gameSession = MemorySession.openShared();
-        Newton.loadNewton(ResourcePaths.Newton.NEWTON_DLL, gameSession);
+        gameSession = Arena.openShared();
+        Newton.loadNewton(ResourcePaths.Newton.NEWTON_DLL);
         /*
         try {
             Newton.loadNewton();
@@ -188,24 +187,24 @@ public class Game implements IGameLogic {
     }
     
     private void setupLights() {
-        SceneLight sceneLight = new SceneLight();
+        //SceneLight sceneLight = new SceneLight();
         //scene.setSceneLight(sceneLight);
 
         // Ambient Light
         //sceneLight.setAmbientLight(new Vector3f(0.3f, 0.3f, 0.3f));
-        sceneLight.getSkyBoxLight().set(new Vector3f(1.0f, 1.0f, 1.0f));
+        //sceneLight.getSkyBoxLight().set(new Vector3f(1.0f, 1.0f, 1.0f));
 
         // Directional Light
-        float lightIntensity = 1.0f;
-        Vector3f lightDirection = new Vector3f(0, 1, 1);
-        DirectionalLight directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), lightDirection, lightIntensity);
-        directionalLight.setShadowPosMult(5);
-        directionalLight.setOrthoCords(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 20.0f);
+        //float lightIntensity = 1.0f;
+        //Vector3f lightDirection = new Vector3f(0, 1, 1);
+        //DirectionalLight directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), lightDirection, lightIntensity);
+        //directionalLight.setShadowPosMult(5);
+        //directionalLight.setOrthoCords(-10.0f, 10.0f, -10.0f, 10.0f, -1.0f, 20.0f);
         //sceneLight.setDirectionalLight(directionalLight);
     }
 
     @Override
-    public void inputAndUpdate(Window window, Dominion dominion, VKRenderer renderer, long diffTimeNanos) throws Exception {
+    public void inputAndUpdate(Window window, Scene scene, VKRenderer renderer, Physics physics, long diffTimeNanos) throws Exception {
         if (!currentLevel.equals(menu.getLevel())) {
             currentLevel = menu.getLevel();
             levelSelection = menu.getCurrentLevel();
@@ -319,7 +318,7 @@ public class Game implements IGameLogic {
         if ( gHud != null ) {
             gHud.cleanup();
         }*/
-        if (gameSession.isAlive()) {
+        if (gameSession.isCloseableBy(Thread.currentThread())) {
             gameSession.close();
         }
         Newton.unloadNewton();

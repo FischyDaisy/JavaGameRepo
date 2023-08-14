@@ -15,7 +15,7 @@ public enum AxisRotation {
 	
 	private AxisAngle4f rotation;
 	
-	private AxisRotation(Vector3f direction) {
+	AxisRotation(Vector3f direction) {
 		this.direction = direction;
 		setRotation(0.0f);
 	}

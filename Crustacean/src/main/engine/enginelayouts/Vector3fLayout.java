@@ -5,11 +5,17 @@ import org.joml.Vector3f;
 import java.lang.foreign.*;
 import java.lang.invoke.VarHandle;
 
+import static crab.newton.Newton.*;
+
 public final class Vector3fLayout {
-    public static final SequenceLayout LAYOUT = MemoryLayout.sequenceLayout(3, ValueLayout.JAVA_FLOAT);
-    public static final VarHandle X_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(0));
-    public static final VarHandle Y_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(1));
-    public static final VarHandle Z_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(2));
+    public static final GroupLayout LAYOUT = MemoryLayout.structLayout(
+            ValueLayout.JAVA_FLOAT.withName("x"),
+            ValueLayout.JAVA_FLOAT.withName("y"),
+            ValueLayout.JAVA_FLOAT.withName("z")
+    );
+    public static final VarHandle X_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("x"));
+    public static final VarHandle Y_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("y"));
+    public static final VarHandle Z_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("z"));
 
     private Vector3fLayout() {}
 
@@ -63,12 +69,11 @@ public final class Vector3fLayout {
 
     public static Vector3f getVector3f(MemorySegment segment, long offset) {
         MemorySegment vecSegment = segment.asSlice(offset);
-        Vector3f vector = new Vector3f(
+        return new Vector3f(
                 (float) X_HANDLE.get(vecSegment),
                 (float) Y_HANDLE.get(vecSegment),
                 (float) Z_HANDLE.get(vecSegment)
         );
-        return vector;
     }
 
     public static Vector3f getVector3f(MemorySegment segment) {
@@ -84,5 +89,16 @@ public final class Vector3fLayout {
 
     public static void setVector3f(MemorySegment segment, Vector3f value) {
         setVector3f(segment, 0, value);
+    }
+
+    public static void setVector3f(MemorySegment segment, long offset, float x, float y, float z) {
+        MemorySegment vecSegment = segment.asSlice(offset);
+        X_HANDLE.set(vecSegment, x);
+        Y_HANDLE.set(vecSegment, y);
+        Z_HANDLE.set(vecSegment, z);
+    }
+
+    public static void setVector3f(MemorySegment segment, float x, float y, float z) {
+        setVector3f(segment, 0, x, y, z);
     }
 }

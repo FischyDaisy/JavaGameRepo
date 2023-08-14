@@ -23,7 +23,6 @@ public final class BufferUtils {
         if (!modelData.hasAnimations()) {
             return offset;
         }
-        ByteBuffer dataBuffer = animJointMatricesStgBuffer.getDataBuffer();
         MemorySegment jointData = animJointMatricesStgBuffer.getDataSegment();
         float[] matArr = new float[16];
         for (ModelData.Animation animation : animationsList) {

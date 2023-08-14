@@ -25,11 +25,15 @@ public final class MaterialLayout {
 
     private MaterialLayout() {}
 
-    public static Vector4f getDiffuseColor(MemorySegment segment, long offset) throws Throwable {
-        return Vector4fLayout.getVector4f((MemorySegment) DIFFUSE_COLOR.invokeExact(segment.asSlice(offset)));
+    public static Vector4f getDiffuseColor(MemorySegment segment, long offset) {
+        try {
+            return Vector4fLayout.getVector4f((MemorySegment) DIFFUSE_COLOR.invokeExact(segment.asSlice(offset)));
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static Vector4f getDiffuseColor(MemorySegment segment) throws Throwable {
+    public static Vector4f getDiffuseColor(MemorySegment segment) {
         return getDiffuseColor(segment, 0);
     }
 
@@ -73,11 +77,15 @@ public final class MaterialLayout {
         return getMetallicFactor(segment, 0);
     }
 
-    public static void setDiffuseColor(MemorySegment segment, long offset, Vector4f value) throws Throwable {
-        Vector4fLayout.setVector4f((MemorySegment) DIFFUSE_COLOR.invokeExact(segment.asSlice(offset)), value);
+    public static void setDiffuseColor(MemorySegment segment, long offset, Vector4f value) {
+        try {
+            Vector4fLayout.setVector4f((MemorySegment) DIFFUSE_COLOR.invokeExact(segment.asSlice(offset)), value);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static void setDiffuseColor(MemorySegment segment, Vector4f value) throws Throwable {
+    public static void setDiffuseColor(MemorySegment segment, Vector4f value) {
         setDiffuseColor(segment, 0, value);
     }
 

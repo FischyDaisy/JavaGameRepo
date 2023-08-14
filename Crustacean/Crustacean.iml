@@ -11,24 +11,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../JNewton/out/artifacts/JNewton_jar/JNewton.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../JNewton/out/artifacts/JNewton_Windows_x64_jar/JNewton-Windows_x64.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="file://$MODULE_DIR$/../Libs/lwjgl-release-3.3.1" />
         </CLASSES>
         <JAVADOC />
@@ -50,6 +32,16 @@
         </SOURCES>
         <jarDirectory url="file://$MODULE_DIR$/../Libs/Dominion" recursive="false" />
         <jarDirectory url="file://$MODULE_DIR$/../Libs/Dominion" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../JNewton/jars" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/../JNewton/jars" recursive="false" />
       </library>
     </orderEntry>
   </component>

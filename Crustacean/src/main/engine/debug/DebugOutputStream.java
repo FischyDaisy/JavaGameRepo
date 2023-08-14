@@ -11,13 +11,13 @@ import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 public class DebugOutputStream extends OutputStream {
 
     private static final long chunkSize = 420;
-    private MemorySession session;
+    private Arena arena;
     private MemorySegment segment;
     private long end;
 
     public DebugOutputStream() {
-        session = MemorySession.openConfined();
-        segment = session.allocate(chunkSize);
+        arena = Arena.openConfined();
+        segment = arena.allocate(chunkSize);
         end = 0;
     }
 
@@ -26,12 +26,12 @@ public class DebugOutputStream extends OutputStream {
         long remainder = segment.byteSize() - end;
         if (remainder <= 1) {
             long size = segment.byteSize() + chunkSize;
-            MemorySession session = MemorySession.openConfined();
-            MemorySegment segment = session.allocate(size);
+            Arena arena = Arena.openConfined();
+            MemorySegment segment = arena.allocate(size);
             MemorySegment.copy(this.segment, 0, segment, 0, this.segment.byteSize());
             this.segment = segment;
-            this.session.close();
-            this.session = session;
+            this.arena.close();
+            this.arena = arena;
         }
         segment.set(JAVA_BYTE, end, (byte)b);
     }
@@ -42,12 +42,12 @@ public class DebugOutputStream extends OutputStream {
         long remainder = segment.byteSize() - end;
         if (remainder < strBytes.length + 1) {
             long size = segment.byteSize() + strBytes.length + 1 + chunkSize;
-            MemorySession session = MemorySession.openConfined();
-            MemorySegment segment = session.allocate(size);
+            Arena arena = Arena.openConfined();
+            MemorySegment segment = arena.allocate(size);
             MemorySegment.copy(this.segment, 0, segment, 0, this.segment.byteSize());
             this.segment = segment;
-            this.session.close();
-            this.session = session;
+            this.arena.close();
+            this.arena = arena;
         }
         MemorySegment strSegment = MemorySegment.ofArray(strBytes);
         MemorySegment.copy(strSegment, 0, segment, end, strSegment.byteSize());

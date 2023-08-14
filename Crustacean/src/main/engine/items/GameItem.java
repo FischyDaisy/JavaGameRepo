@@ -1,108 +1,165 @@
 package main.engine.items;
 
-import main.engine.graphics.ModelData;
+import main.engine.enginelayouts.Matrix4fLayout;
+import main.engine.enginelayouts.QuaternionfLayout;
+import main.engine.enginelayouts.Vector3fLayout;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import crab.newton.NewtonBody;
-import main.engine.graphics.Transformation;
+import java.lang.foreign.GroupLayout;
+import java.lang.foreign.MemoryLayout;
+import java.lang.foreign.MemorySegment;
+import java.lang.invoke.MethodHandle;
 
-public final class GameItem {
-	
-	private final String modelId;
-    private final Vector3f scale;
-    private final Vector3f position;
-    private final Quaternionf rotation;
-    private final Matrix4f modelMatrix;
-    
-    public GameItem(String modelId) {
-        this.modelId = modelId;
-        scale = new Vector3f(1.0f, 1.0f, 1.0f);
-        modelMatrix = new Matrix4f();
-        position = new Vector3f();
-        rotation = new Quaternionf();
-    }
+public record GameItem(String modelId, MemorySegment data) {
+
+    public static final GroupLayout LAYOUT = MemoryLayout.structLayout(
+            Vector3fLayout.LAYOUT.withName("position"),
+            Vector3fLayout.LAYOUT.withName("scale"),
+            QuaternionfLayout.LAYOUT.withName("rotation"),
+            Matrix4fLayout.LAYOUT.withName("modelMatrix")
+    );
+    public static final MethodHandle POSITION_HANDLE = LAYOUT.sliceHandle(MemoryLayout.PathElement.groupElement("position"));
+    public static final MethodHandle SCALE_HANDLE = LAYOUT.sliceHandle(MemoryLayout.PathElement.groupElement("scale"));
+    public static final MethodHandle ROTATION_HANDLE = LAYOUT.sliceHandle(MemoryLayout.PathElement.groupElement("rotation"));
+    public static final MethodHandle MODEL_MATRIX_HANDLE = LAYOUT.sliceHandle(MemoryLayout.PathElement.groupElement("modelMatrix"));
 
     public Vector3f getPosition() {
-        return position;
+        try {
+            MemorySegment position = (MemorySegment) POSITION_HANDLE.invokeExact(data);
+            return Vector3fLayout.getVector3f(position);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setPosition(Vector3f value) {
+        try {
+            MemorySegment position = (MemorySegment) POSITION_HANDLE.invokeExact(data);
+            Vector3fLayout.setVector3f(position, value);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void setPosition(float x, float y, float z) {
-        this.position.x = x;
-        this.position.y = y;
-        this.position.z = z;
-    }
-
-    public String getModelId() {
-        return modelId;
+        try {
+            MemorySegment position = (MemorySegment) POSITION_HANDLE.invokeExact(data);
+            Vector3fLayout.setX(position, x);
+            Vector3fLayout.setY(position, y);
+            Vector3fLayout.setZ(position, z);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Vector3f getScale() {
-        return scale;
-    }
-    
-    public float getUniformScale() throws Exception {
-    	if ((scale.x == scale.y) && (scale.y == scale.z) && (scale.z == scale.x)) {
-    		return scale.x;
-    	} else {
-    		throw new RuntimeException("Scale is not uniform");
-    	}
-    }
-    
-    public float getLargestScale() {
-    	if ((scale.x >= scale.y) && (scale.x >= scale.z)) {
-    		return scale.x;
-    	} else if ((scale.y >= scale.x) && (scale.y >= scale.z)) {
-    		return scale.y;
-    	} else {
-    		return scale.z;
-    	}
+        try {
+            MemorySegment scale = (MemorySegment) SCALE_HANDLE.invokeExact(data);
+            return Vector3fLayout.getVector3f(scale);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public final void setScale(float scale) {
-        this.scale.set(scale);
+    public void setScale(float scale) {
+        try {
+            MemorySegment scaleSegment = (MemorySegment) SCALE_HANDLE.invokeExact(data);
+            Vector3fLayout.setX(scaleSegment, scale);
+            Vector3fLayout.setY(scaleSegment, scale);
+            Vector3fLayout.setZ(scaleSegment, scale);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
-    
-    public final void setScale(Vector3f v) {
-    	this.scale.set(v);
+
+    public void setScale(Vector3f v) {
+        try {
+            MemorySegment scale = (MemorySegment) SCALE_HANDLE.invokeExact(data);
+            Vector3fLayout.setVector3f(scale, v);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
-    
-    public final void setScaleX(float scale) {
-        this.scale.x = scale;
+
+    public void setScaleX(float scale) {
+        try {
+            MemorySegment scaleSegment = (MemorySegment) SCALE_HANDLE.invokeExact(data);
+            Vector3fLayout.setX(scaleSegment, scale);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
-    
-    public final void setScaleY(float scale) {
-        this.scale.y = scale;
+
+    public void setScaleY(float scale) {
+        try {
+            MemorySegment scaleSegment = (MemorySegment) SCALE_HANDLE.invokeExact(data);
+            Vector3fLayout.setY(scaleSegment, scale);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
-    
-    public final void setScaleZ(float scale) {
-        this.scale.z = scale;
+
+    public void setScaleZ(float scale) {
+        try {
+            MemorySegment scaleSegment = (MemorySegment) SCALE_HANDLE.invokeExact(data);
+            Vector3fLayout.setZ(scaleSegment, scale);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Quaternionf getRotation() {
-        return rotation;
+        try {
+            MemorySegment quaternion = (MemorySegment) ROTATION_HANDLE.invokeExact(data);
+            return QuaternionfLayout.getQuaternion(quaternion);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public final void setRotation(Quaternionf q) {
-        this.rotation.set(q);
+    public void setRotation(Quaternionf q) {
+        try {
+            MemorySegment quaternion = (MemorySegment) ROTATION_HANDLE.invokeExact(data);
+            QuaternionfLayout.setQuaternion(quaternion, q);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
-    
+
     public Matrix4f getModelMatrix() {
-    	return modelMatrix;
+        try {
+            MemorySegment matrix = (MemorySegment) MODEL_MATRIX_HANDLE.invokeExact(data);
+            return Matrix4fLayout.getMatrix(matrix);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
-    
+
     public Matrix4f buildModelMatrix() {
-    	return Transformation.buildModelMatrix(this, modelMatrix);
+        try {
+            Matrix4f matrix = getModelMatrix();
+            Vector3f position = getPosition();
+            Vector3f scale = getScale();
+            Quaternionf rotation = getRotation();
+            matrix.translationRotateScale(
+                    position.x, position.y, position.z,
+                    rotation.x, rotation.y, rotation.z, rotation.w,
+                    scale.x, scale.y, scale.z
+            );
+            MemorySegment matrixSegment = (MemorySegment) MODEL_MATRIX_HANDLE.invokeExact(data);
+            Matrix4fLayout.setMatrix(matrixSegment, matrix);
+            return matrix;
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public boolean equals(Object object) {
         return object instanceof GameItem item &&
                 this.modelId.equals(item.modelId) &&
-                this.scale.equals(item.scale) &&
-                this.position.equals(item.position) &&
-                this.rotation.equals(item.rotation) &&
-                this.modelMatrix.equals(item.modelMatrix);
+                this.data.mismatch(item.data) == -1;
     }
 }

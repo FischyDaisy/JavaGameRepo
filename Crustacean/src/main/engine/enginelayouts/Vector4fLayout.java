@@ -6,11 +6,17 @@ import java.lang.foreign.*;
 import java.lang.invoke.VarHandle;
 
 public final class Vector4fLayout {
-    public static final SequenceLayout LAYOUT = MemoryLayout.sequenceLayout(4, ValueLayout.JAVA_FLOAT);
-    public static final VarHandle X_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(0));
-    public static final VarHandle Y_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(1));
-    public static final VarHandle Z_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(2));
-    public static final VarHandle W_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.sequenceElement(3));
+
+    public static final GroupLayout LAYOUT = MemoryLayout.structLayout(
+            ValueLayout.JAVA_FLOAT.withName("x"),
+            ValueLayout.JAVA_FLOAT.withName("y"),
+            ValueLayout.JAVA_FLOAT.withName("z"),
+            ValueLayout.JAVA_FLOAT.withName("w")
+    );
+    public static final VarHandle X_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("x"));
+    public static final VarHandle Y_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("y"));
+    public static final VarHandle Z_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("z"));
+    public static final VarHandle W_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("w"));
 
     private Vector4fLayout() {}
 
@@ -80,13 +86,12 @@ public final class Vector4fLayout {
 
     public static Vector4f getVector4f(MemorySegment segment, long offset) {
         MemorySegment vecSegment = segment.asSlice(offset);
-        Vector4f vector = new Vector4f(
+        return new Vector4f(
                 (float) X_HANDLE.get(vecSegment),
                 (float) Y_HANDLE.get(vecSegment),
                 (float) Z_HANDLE.get(vecSegment),
                 (float) W_HANDLE.get(vecSegment)
         );
-        return vector;
     }
 
     public static Vector4f getVector4f(MemorySegment segment) {
@@ -103,5 +108,17 @@ public final class Vector4fLayout {
 
     public static void setVector4f(MemorySegment segment, Vector4f value) {
         setVector4f(segment, 0, value);
+    }
+
+    public static void setVector4f(MemorySegment segment, long offset, float x, float y, float z, float w) {
+        MemorySegment vecSegment = segment.asSlice(offset);
+        X_HANDLE.set(vecSegment, x);
+        Y_HANDLE.set(vecSegment, y);
+        Z_HANDLE.set(vecSegment, z);
+        W_HANDLE.set(vecSegment, w);
+    }
+
+    public static void setVector4f(MemorySegment segment, float x, float y, float z, float w) {
+        setVector4f(segment, 0, x, y, z, w);
     }
 }

@@ -48,7 +48,6 @@ public class VKRenderer {
     private final Surface surface;
     private final VKTextureCache modelTextureCache;
     private final VKTextureCache skyboxTextureCache;
-    private final List<VulkanModel> vulkanModels;
     
     private CommandBuffer[] commandBuffers;
     private long gameItemsLoadedTimeStamp;
@@ -83,7 +82,6 @@ public class VKRenderer {
         animationComputeActivity = new AnimationComputeActivity(commandPool, pipelineCache);
         nuklearRenderActivity = new NuklearRenderActivity(swapChain, commandPool, graphQueue, pipelineCache,
                 lightingRenderActivity.getLightingFrameBuffer().getLightingRenderPass().getVkRenderPass(), window);
-        vulkanModels = new ArrayList<>();
         modelTextureCache = new VKTextureCache();
         skyboxTextureCache = new VKTextureCache();
         gameItemsLoadedTimeStamp = 0;
@@ -153,10 +151,10 @@ public class VKRenderer {
 	public void loadParticles(List<ModelData> modelDataList, int maxParticles) throws Exception {
 	}
 	
-	public void loadModels(List<ModelData> modelDataList) throws Exception {
-		Logger.debug("Loading {} model(s)", modelDataList.size());
-		vulkanModels.addAll(globalBuffers.loadModels(modelDataList, modelTextureCache, commandPool, graphQueue));
-		Logger.debug("Loaded {} model(s)", modelDataList.size());
+	public void loadModels() throws Exception {
+		Logger.debug("Loading models");
+        globalBuffers.loadModels(dominion, modelTextureCache, commandPool, graphQueue);
+		Logger.debug("Loaded models");
 		
 		geometryRenderActivity.loadModels(modelTextureCache);
     }
@@ -210,12 +208,12 @@ public class VKRenderer {
         }
     }
 	
-	public void render(Window window) {
+	public void render(Window window) throws Throwable {
         ItemLoadTimestamp timestamp = dominion.findEntitiesWith(ItemLoadTimestamp.class).iterator().next().comp();
 		if (gameItemsLoadedTimeStamp < timestamp.gameItemLoadedTimestamp) {
             gameItemsLoadedTimeStamp = timestamp.gameItemLoadedTimestamp;
             device.waitIdle();
-            globalBuffers.loadGameItems(vulkanModels, dominion, commandPool, graphQueue, swapChain.getNumImages());
+            globalBuffers.loadGameItems(dominion, commandPool, graphQueue, swapChain.getNumImages());
             skyboxBuffers.loadSkybox(skybox, commandPool, graphQueue, swapChain.getNumImages());
             animationComputeActivity.onAnimatedGameItemsLoaded(globalBuffers);
             recordCommands();
@@ -230,7 +228,7 @@ public class VKRenderer {
             swapChain.acquireNextImage();
         }
 
-        globalBuffers.loadInstanceData(dominion, vulkanModels, swapChain.getCurrentFrame());
+        globalBuffers.loadInstanceData(dominion, swapChain.getCurrentFrame());
         skyboxBuffers.loadSkyboxInstanceData(dominion, skybox, swapChain.getCurrentFrame());
 
         animationComputeActivity.recordCommandBuffer(globalBuffers, dominion);
@@ -286,9 +284,14 @@ public class VKRenderer {
     }
 
     public void unloadModels() {
-        Logger.debug("Unloading {} Model(s)", vulkanModels.size());
+        Logger.debug("Unloading  Models");
         device.waitIdle();
-        vulkanModels.clear();
+        Results<Results.With1<VulkanModel>> vulkanModels = dominion.findEntitiesWith(VulkanModel.class);
+        Iterator<Results.With1<VulkanModel>> itr = vulkanModels.iterator();
+        while (itr.hasNext()) {
+            Results.With1<VulkanModel> vulkanModel = itr.next();
+            dominion.deleteEntity(vulkanModel.entity());
+        }
         globalBuffers.resetModelBuffers();
         modelTextureCache.cleanup();
         Logger.debug("Unloaded Model(s)");
