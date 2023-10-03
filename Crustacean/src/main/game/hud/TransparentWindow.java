@@ -1,7 +1,7 @@
 package main.game.hud;
 
 import main.engine.Window;
-import main.engine.graphics.hud.NKHudElement;
+import main.engine.graphics.ui.NKHudElement;
 import org.lwjgl.nuklear.*;
 import org.lwjgl.system.MemoryStack;
 

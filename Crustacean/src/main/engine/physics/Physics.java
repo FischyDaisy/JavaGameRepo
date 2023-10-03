@@ -87,20 +87,20 @@ public class Physics {
 	}
 	
 	public NewtonBody createPrimitiveCollision(List<ModelData> modelDataList, String modelId,
-			CollisionPrimitive primitive, float[] params, float[] offsetMatrix, float mass, Arena arena) throws Throwable {
+			CollisionPrimitive primitive, float[] params, float[] offsetMatrix, float mass) throws Throwable {
 		ModelData.Material newtonMaterial = new ModelData.Material(ResourcePaths.Textures.THIS_PIC_GOES_HARD);
 		List<ModelData.Material> newtonMaterials = new ArrayList<ModelData.Material>();
         newtonMaterials.add(newtonMaterial);
-        MemorySegment matArr = Matrix4fLayout.identity(arena);
-		MemorySegment offMat = arena.allocateArray(C_FLOAT, offsetMatrix);
-		return switch (primitive) {
-			case BOX -> {
-				try (Arena pArena = Arena.openConfined()) {
+        try (Arena arena = Arena.openConfined()) {
+			MemorySegment matArr = Matrix4fLayout.identity(arena);
+			MemorySegment offMat = arena.allocateArray(C_FLOAT, offsetMatrix);
+			return switch (primitive) {
+				case BOX -> {
 					NewtonCollision collision = world.createBox(params[0], params[1], params[2], 0, offMat);
 					NewtonMesh mesh = collision.createMesh();
 					NewtonBody body = world.createDynamicBody(collision, matArr);
 					Logger.error("Box Body Scope: {}", body.address().scope());
-					MemorySegment inertiaOrigin = pArena.allocateArray(VEC3F, 2);
+					MemorySegment inertiaOrigin = arena.allocateArray(VEC3F, 2);
 					collision.calculateInertiaMatrix(inertiaOrigin);
 					body.setMassMatrix(mass,
 							mass * inertiaOrigin.getAtIndex(C_FLOAT, 0),
@@ -115,92 +115,92 @@ public class Physics {
 					mesh.destroy();
 					yield body;
 				}
-			}
-			case CAPSULE -> {
-				NewtonCollision collision = world.createCapsule(params[0], params[1], params[2], 0, offsetMatrix);
-				NewtonMesh mesh = collision.createMesh();
-				NewtonBody body = world.createDynamicBody(collision, matArr);
-				Logger.error("Capsule Body Scope: {}", body.address().scope());
-				float[] inertiaOrigin = collision.calculateInertiaMatrix();
-		    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
-		    	body.setMassMatrix(mass, mass * inertiaOrigin[0], mass * inertiaOrigin[1], mass * inertiaOrigin[2]);
-		    	body.setCenterOfMass(origin);
-		    	body.setForceAndTorqueCallback(Physics::applyGravity, SegmentScope.global());
-		    	mesh.applyCylindricalMapping(0, 0, matArr);
-		    	ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
-		    	modelDataList.add(model);
-		    	collision.destroy();
-		    	mesh.destroy();
-				yield body;
-			}
-			case CHAMFERCYLINDER -> {
-				NewtonCollision collision = world.createChamferCylinder(params[0], params[1], 0, offsetMatrix);
-				NewtonMesh mesh = collision.createMesh();
-				NewtonBody body = world.createDynamicBody(collision, matArr);
-				Logger.error("ChamferCylinder Body Scope: {}", body.address().scope());
-				float[] inertiaOrigin = collision.calculateInertiaMatrix();
-		    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
-		    	body.setMassMatrix(mass, mass * inertiaOrigin[0], mass * inertiaOrigin[1], mass * inertiaOrigin[2]);
-		    	body.setCenterOfMass(origin);
-		    	body.setForceAndTorqueCallback(Physics::applyGravity, SegmentScope.global());
-		    	mesh.applyCylindricalMapping(0, 0, matArr);
-		    	ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
-		    	modelDataList.add(model);
-		    	collision.destroy();
-		    	mesh.destroy();
-				yield body;
-			}
-			case CONE -> {
-				NewtonCollision collision = world.createCone(params[0], params[1], 0, offsetMatrix);
-				NewtonMesh mesh = collision.createMesh();
-				NewtonBody body = world.createDynamicBody(collision, matArr);
-				Logger.error("Cone Body Scope: {}", body.address().scope());
-				float[] inertiaOrigin = collision.calculateInertiaMatrix();
-		    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
-		    	body.setMassMatrix(mass, mass * inertiaOrigin[0], mass * inertiaOrigin[1], mass * inertiaOrigin[2]);
-		    	body.setCenterOfMass(origin);
-		    	body.setForceAndTorqueCallback(Physics::applyGravity, SegmentScope.global());
-		    	mesh.applyBoxMapping(0, 0, 0, matArr);
-		    	ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
-		    	modelDataList.add(model);
-		    	collision.destroy();
-		    	mesh.destroy();
-				yield body;
-			}
-			case CYLINDER -> {
-				NewtonCollision collision = world.createCylinder(params[0], params[1], params[2], 0, offsetMatrix);
-				NewtonMesh mesh = collision.createMesh();
-				NewtonBody body = world.createDynamicBody(collision, matArr);
-				Logger.error("Cylinder Body Scope: {}", body.address().scope());
-				float[] inertiaOrigin = collision.calculateInertiaMatrix();
-		    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
-		    	body.setMassMatrix(mass, mass * inertiaOrigin[0], mass * inertiaOrigin[1], mass * inertiaOrigin[2]);
-		    	body.setCenterOfMass(origin);
-		    	body.setForceAndTorqueCallback(Physics::applyGravity, SegmentScope.global());
-		    	mesh.applyCylindricalMapping(0, 0, matArr);
-		    	ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
-		    	modelDataList.add(model);
-		    	collision.destroy();
-		    	mesh.destroy();
-				yield body;
-			}
-			case SPHERE -> {
-				NewtonCollision collision = world.createSphere(params[0], 0, offsetMatrix);
-				NewtonMesh mesh = collision.createMesh();
-				NewtonBody body = world.createDynamicBody(collision, matArr);
-				Logger.error("Sphere Body Scope: {}", body.address().scope());
-				float[] inertiaOrigin = collision.calculateInertiaMatrix();
-		    	float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
-		    	body.setMassMatrix(mass, mass * inertiaOrigin[0], mass * inertiaOrigin[1], mass * inertiaOrigin[2]);
-		    	body.setCenterOfMass(origin);
-		    	body.setForceAndTorqueCallback(Physics::applyGravity, SegmentScope.global());
-		    	mesh.applySphericalMapping(0, matArr);
-		    	ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
-		    	modelDataList.add(model);
-		    	collision.destroy();
-		    	mesh.destroy();
-				yield body;
-			}
-		};
+				case CAPSULE -> {
+					NewtonCollision collision = world.createCapsule(params[0], params[1], params[2], 0, offsetMatrix);
+					NewtonMesh mesh = collision.createMesh();
+					NewtonBody body = world.createDynamicBody(collision, matArr);
+					Logger.error("Capsule Body Scope: {}", body.address().scope());
+					float[] inertiaOrigin = collision.calculateInertiaMatrix();
+					float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
+					body.setMassMatrix(mass, mass * inertiaOrigin[0], mass * inertiaOrigin[1], mass * inertiaOrigin[2]);
+					body.setCenterOfMass(origin);
+					body.setForceAndTorqueCallback(Physics::applyGravity, SegmentScope.global());
+					mesh.applyCylindricalMapping(0, 0, matArr);
+					ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
+					modelDataList.add(model);
+					collision.destroy();
+					mesh.destroy();
+					yield body;
+				}
+				case CHAMFERCYLINDER -> {
+					NewtonCollision collision = world.createChamferCylinder(params[0], params[1], 0, offsetMatrix);
+					NewtonMesh mesh = collision.createMesh();
+					NewtonBody body = world.createDynamicBody(collision, matArr);
+					Logger.error("ChamferCylinder Body Scope: {}", body.address().scope());
+					float[] inertiaOrigin = collision.calculateInertiaMatrix();
+					float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
+					body.setMassMatrix(mass, mass * inertiaOrigin[0], mass * inertiaOrigin[1], mass * inertiaOrigin[2]);
+					body.setCenterOfMass(origin);
+					body.setForceAndTorqueCallback(Physics::applyGravity, SegmentScope.global());
+					mesh.applyCylindricalMapping(0, 0, matArr);
+					ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
+					modelDataList.add(model);
+					collision.destroy();
+					mesh.destroy();
+					yield body;
+				}
+				case CONE -> {
+					NewtonCollision collision = world.createCone(params[0], params[1], 0, offsetMatrix);
+					NewtonMesh mesh = collision.createMesh();
+					NewtonBody body = world.createDynamicBody(collision, matArr);
+					Logger.error("Cone Body Scope: {}", body.address().scope());
+					float[] inertiaOrigin = collision.calculateInertiaMatrix();
+					float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
+					body.setMassMatrix(mass, mass * inertiaOrigin[0], mass * inertiaOrigin[1], mass * inertiaOrigin[2]);
+					body.setCenterOfMass(origin);
+					body.setForceAndTorqueCallback(Physics::applyGravity, SegmentScope.global());
+					mesh.applyBoxMapping(0, 0, 0, matArr);
+					ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
+					modelDataList.add(model);
+					collision.destroy();
+					mesh.destroy();
+					yield body;
+				}
+				case CYLINDER -> {
+					NewtonCollision collision = world.createCylinder(params[0], params[1], params[2], 0, offsetMatrix);
+					NewtonMesh mesh = collision.createMesh();
+					NewtonBody body = world.createDynamicBody(collision, matArr);
+					Logger.error("Cylinder Body Scope: {}", body.address().scope());
+					float[] inertiaOrigin = collision.calculateInertiaMatrix();
+					float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
+					body.setMassMatrix(mass, mass * inertiaOrigin[0], mass * inertiaOrigin[1], mass * inertiaOrigin[2]);
+					body.setCenterOfMass(origin);
+					body.setForceAndTorqueCallback(Physics::applyGravity, SegmentScope.global());
+					mesh.applyCylindricalMapping(0, 0, matArr);
+					ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
+					modelDataList.add(model);
+					collision.destroy();
+					mesh.destroy();
+					yield body;
+				}
+				case SPHERE -> {
+					NewtonCollision collision = world.createSphere(params[0], 0, offsetMatrix);
+					NewtonMesh mesh = collision.createMesh();
+					NewtonBody body = world.createDynamicBody(collision, matArr);
+					Logger.error("Sphere Body Scope: {}", body.address().scope());
+					float[] inertiaOrigin = collision.calculateInertiaMatrix();
+					float[] origin = new float[] {inertiaOrigin[3], inertiaOrigin[4], inertiaOrigin[5]};
+					body.setMassMatrix(mass, mass * inertiaOrigin[0], mass * inertiaOrigin[1], mass * inertiaOrigin[2]);
+					body.setCenterOfMass(origin);
+					body.setForceAndTorqueCallback(Physics::applyGravity, SegmentScope.global());
+					mesh.applySphericalMapping(0, matArr);
+					ModelData model = PhysUtils.convertToModelData(mesh, modelId, newtonMaterials);
+					modelDataList.add(model);
+					collision.destroy();
+					mesh.destroy();
+					yield body;
+				}
+			};
+		}
 	}
 }

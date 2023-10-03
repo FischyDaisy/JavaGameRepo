@@ -37,10 +37,7 @@ public class SoundManager {
         soundBufferList = new ArrayList<SoundBuffer>();
         soundSourceMap = new HashMap<>();
         cameraMatrix = new Matrix4f();
-    }
-
-    public void init() throws Exception {
-        this.device = alcOpenDevice((ByteBuffer) null);
+        device = alcOpenDevice((ByteBuffer) null);
         if (device == NULL) {
             throw new IllegalStateException("Failed to open the default OpenAL device.");
         }

@@ -4,10 +4,11 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.*;
 
-import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Results;
 import main.engine.*;
 import main.engine.graphics.lights.AmbientLight;
+import main.engine.input.KeyboardInput;
+import main.engine.input.MouseInput;
 import main.engine.items.GameItemAnimation;
 import main.engine.scene.Scene;
 import main.game.hud.TransparentWindow;
@@ -19,7 +20,7 @@ import main.engine.graphics.ModelData;
 import main.engine.graphics.camera.Camera;
 import main.engine.graphics.camera.MouseBoxSelectionDetector;
 import main.game.hud.GameMenu;
-import main.engine.graphics.hud.NKHudElement;
+import main.engine.graphics.ui.NKHudElement;
 import main.engine.graphics.lights.Light;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.items.GameItem;
@@ -57,8 +58,6 @@ public class Game implements GameLogic {
     
     private Light directionalLight;
     
-    private final SoundManager soundMgr;
-    
     //private FlowParticleEmitter particleEmitter;
     
     private MouseBoxSelectionDetector selectDetector;
@@ -72,8 +71,6 @@ public class Game implements GameLogic {
     private SkyBox skybox;
     
     private Vector3f rotatingAngle = new Vector3f(1, 1, 1);
-    
-    private VKRenderer vkRenderer;
 
     private Arena gameSession;
     
@@ -86,7 +83,6 @@ public class Game implements GameLogic {
     private int levelSelection;
     
     public Game() {
-        soundMgr = new SoundManager();
         cameraInc = new Vector3f(0.0f, 0.0f, 0.0f);
         angleInc = 0;
         lightAngle = 45;
@@ -101,13 +97,10 @@ public class Game implements GameLogic {
             fuck.put("writer2.file", "log.txt");
             Configuration.replace(fuck);
             Logger.debug("Application Directory: {}", System.getProperty("user.dir"));
-            GameLogic gameLogic = new Game();
-            Window.WindowOptions opts = new Window.WindowOptions();
-            opts.showFps = true;
-            opts.compatibleProfile = true;
-            opts.frustumCulling = true;
-            GameEngine gameEng = new GameEngine("GAME", opts, gameLogic);
-            gameEng.start();
+            GameLogic game = new Game();
+            Engine engine = new Engine("Game");
+            engine.loadGame(game);
+            engine.run();
         } catch (Throwable excp) {
             Logger.error(excp);
             System.exit(-1);
@@ -116,7 +109,7 @@ public class Game implements GameLogic {
     
     @Override
     public void initialize(Window window, Scene scene, VKRenderer renderer, Physics physics) throws Throwable {
-        soundMgr.init();
+
 
         gameSession = Arena.openShared();
         Newton.loadNewton(ResourcePaths.Newton.NEWTON_DLL);
@@ -204,7 +197,7 @@ public class Game implements GameLogic {
     }
 
     @Override
-    public void inputAndUpdate(Window window, Scene scene, VKRenderer renderer, Physics physics, long diffTimeNanos) throws Exception {
+    public void inputAndUpdate(Window window, Scene scene, VKRenderer renderer, Physics physics, SoundManager soundManager) throws Exception {
         if (!currentLevel.equals(menu.getLevel())) {
             currentLevel = menu.getLevel();
             levelSelection = menu.getCurrentLevel();

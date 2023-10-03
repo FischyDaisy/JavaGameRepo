@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import main.engine.KeyboardInput;
+import main.engine.input.KeyboardInput;
 import org.joml.Matrix4f;
 import org.lwjgl.nuklear.*;
 import org.lwjgl.stb.STBTTAlignedQuad;
@@ -33,11 +33,11 @@ import org.lwjgl.vulkan.*;
 import org.tinylog.Logger;
 
 import main.engine.EngineProperties;
-import main.engine.MouseInput;
+import main.engine.input.MouseInput;
 import main.engine.Window;
 import main.engine.graphics.GraphConstants;
 import main.engine.graphics.Transformation;
-import main.engine.graphics.hud.NKHudElement;
+import main.engine.graphics.ui.NKHudElement;
 import main.engine.graphics.vulkan.*;
 import main.engine.utility.ResourcePaths;
 import main.engine.utility.Utils;

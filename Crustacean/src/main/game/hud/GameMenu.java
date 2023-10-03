@@ -3,9 +3,8 @@ package main.game.hud;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nuklear.Nuklear.*;
 
-import crab.newton.NewtonWorld;
 import dev.dominion.ecs.api.Dominion;
-import main.engine.graphics.hud.NKHudElement;
+import main.engine.graphics.ui.NKHudElement;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.physics.Physics;
 import main.engine.scene.Level;

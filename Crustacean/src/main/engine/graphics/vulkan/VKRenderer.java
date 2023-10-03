@@ -15,7 +15,7 @@ import main.engine.EngineProperties;
 import main.engine.Window;
 import main.engine.graphics.ModelData;
 import main.engine.graphics.camera.Camera;
-import main.engine.graphics.hud.NKHudElement;
+import main.engine.graphics.ui.NKHudElement;
 import main.engine.graphics.vulkan.animation.AnimationComputeActivity;
 import main.engine.graphics.vulkan.geometry.GeometryRenderActivity;
 import main.engine.graphics.vulkan.lighting.LightingRenderActivity;
@@ -86,6 +86,7 @@ public class VKRenderer {
         skyboxTextureCache = new VKTextureCache();
         gameItemsLoadedTimeStamp = 0;
         createCommandBuffers();
+        window.setUiInput(() -> nuklearRenderActivity.input(window));
 	}
 	
 	private CommandBuffer acquireCurrentCommandBuffer() {
@@ -135,10 +136,6 @@ public class VKRenderer {
             fences[i] = new Fence(device, true);
         }
     }
-	
-	public void inputNuklear(Window window) {
-		nuklearRenderActivity.input(window);
-	}
 	
 	public void loadSkyBox(ModelData skyboxModelData) throws Exception {
 		Logger.debug("Loading Skybox model");

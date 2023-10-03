@@ -43,7 +43,7 @@ public class GameEngine {
     public GameEngine(String windowTitle, int width, int height, boolean vSync, GameLogic gameLogic) throws Throwable {
     	this.windowTitle = windowTitle;
     	window = new Window(windowTitle, width, height, vSync);
-    	window.init(null);
+    	window.init();
         this.gameLogic = gameLogic;
         dom = Dominion.create("dom");
         initDominion();
@@ -82,7 +82,7 @@ public class GameEngine {
 
             if (deltaU >= 1) {
             	long diffTimeNanos = currentTime - updateTime;
-                gameLogic.inputAndUpdate(window, dom, renderer, diffTimeNanos);
+                gameLogic.inputAndUpdate(window, dom, renderer);
                 updateTime = currentTime;
                 deltaU--;
             }

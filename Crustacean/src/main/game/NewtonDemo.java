@@ -8,6 +8,7 @@ import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Results;
 import main.engine.ItemLoadTimestamp;
 import main.engine.graphics.camera.Camera;
+import main.engine.scene.Scene;
 import org.joml.Matrix4f;
 
 import crab.newton.NewtonBody;
@@ -21,13 +22,14 @@ import main.engine.scene.Level;
 
 public class NewtonDemo implements Level {
 
-    private final List<ModelData> modelDataList;
-    public final List<GameItem> gameItems;
-    public final List<NewtonBody> bodies;
-    private final GameItem heightField;
-    private final NewtonBody heightFieldBody;
+    //private final List<ModelData> modelDataList;
+    //public final List<GameItem> gameItems;
+    //public final List<NewtonBody> bodies;
+    //private final GameItem heightField;
+    //private final NewtonBody heightFieldBody;
 
     public NewtonDemo(Physics physics, Arena arena) throws Throwable {
+        /*
         modelDataList = new ArrayList<>();
         gameItems = new ArrayList<>();
         bodies = new ArrayList<>();
@@ -60,18 +62,15 @@ public class NewtonDemo implements Level {
         ModelData heightFieldModel = heightMapData.modeldata();
         modelDataList.add(heightFieldModel);
         heightMapData.collision().destroy();
+        */
     }
 
     public void cleanup() {
 
     }
 
-    public List<GameItem> getGameItems() {
-        return gameItems;
-    }
-
 	@Override
-	public void load(Dominion dominion, VKRenderer renderer, Physics physics, Arena arena) throws Exception {
+	public void load(Scene scene, VKRenderer renderer, Physics physics) throws Exception {
         int size = gameItems.size();
         for (int i = 0; i < size; i++) {
             dominion.createEntity(gameItems.get(i), bodies.get(i));
@@ -93,7 +92,7 @@ public class NewtonDemo implements Level {
 	}
 
     @Override
-    public void reset(Dominion dominion, VKRenderer renderer, Physics physics, Arena arena) throws Exception {
+    public void reset(Scene scene, VKRenderer renderer, Physics physics) throws Exception {
         float z = 0f;
         float[] matArr = new float[16];
         Results<Results.With2<GameItem, NewtonBody>> results = dominion.findEntitiesWith(GameItem.class, NewtonBody.class);

@@ -24,7 +24,9 @@ public interface Level {
 	 * @param physics
 	 * @param session
 	 */
-	void load(Dominion dominion, VKRenderer renderer, Physics physics, Arena arena) throws Exception;
+	void load(Scene scene, VKRenderer renderer, Physics physics) throws Exception;
 
-	void reset(Dominion dominion, VKRenderer renderer, Physics physics, Arena arena) throws Exception;
+	void reset(Scene scene, VKRenderer renderer, Physics physics) throws Exception;
+
+	void unload(Scene scene, VKR)
 }

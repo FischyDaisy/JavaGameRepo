@@ -1,11 +1,15 @@
 package main.engine;
 
 import dev.dominion.ecs.api.*;
+import main.engine.graphics.camera.Camera;
 import main.engine.graphics.vulkan.VKRenderer;
 import main.engine.physics.Physics;
 import main.engine.scene.Scene;
+import main.engine.sound.SoundManager;
 import org.tinylog.Logger;
 
+import java.lang.foreign.Arena;
+import java.util.Iterator;
 import java.util.concurrent.locks.StampedLock;
 
 public final class Engine {
@@ -16,9 +20,12 @@ public final class Engine {
     private final Scene scene;
     private final Window window;
     private final VKRenderer renderer;
+    private final SoundManager soundManager;
     private final StampedLock lock;
     private GameLogic game;
+    private Arena itemArena, lightArena;
     private boolean running;
+    private int deltaU;
 
     public Engine(String windowTitle, int width, int height) throws Exception {
         EngineProperties props = EngineProperties.INSTANCE;
@@ -28,27 +35,59 @@ public final class Engine {
         physics = new Physics();
         window = new Window(windowTitle, width, height, props.isvSync());
         renderer = new VKRenderer(window, dominion);
+        soundManager = new SoundManager();
         lock = new StampedLock();
-        createSchedule();
+        deltaU = 0;
+        scheduleEngine();
     }
 
-    private void createSchedule() {
-        //cameras
-        scheduler.schedule(() -> {});
-        //input
-        scheduler.schedule(() -> {});
+    public Engine(String windowTitle) throws Exception {
+        this(windowTitle, 0, 0);
+    }
+
+    private void scheduleEngine() {
+        //cameras & input
+        scheduler.parallelSchedule(() -> {
+            for (Iterator<Results.With1<Camera>> itr = dominion.findEntitiesWith(Camera.class).iterator(); itr.hasNext();) {
+                Camera cam = itr.next().comp();
+                cam.setHasMoved(false);
+            }
+        }, window::pollEvents);
         //game & physics
-        scheduler.schedule(() -> {});
+        scheduler.schedule(() -> {
+            EngineProperties props = EngineProperties.INSTANCE;
+            double deltaTime = scheduler.deltaTime();
+            deltaU += deltaTime / props.getUps();
+            if (deltaU >= 1) {
+                try {
+                    game.inputAndUpdate(window, scene, renderer, physics, soundManager);
+                    physics.update((float) deltaTime, dominion);
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
         //Render
-        scheduler.schedule(() -> {});
+        scheduler.schedule(() -> {
+            try {
+                renderer.render(window);
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public GameLogic getGame() {
         return game;
     }
 
-    public void setGame(GameLogic game) {
+    public void loadGame(GameLogic game) {
         this.game = game;
+        try {
+            game.initialize(window, scene, renderer, physics, soundManager);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean isRunning() {

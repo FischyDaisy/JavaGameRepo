@@ -11,7 +11,7 @@ public interface GameLogic {
                     Physics physics, SoundManager soundManager) throws Throwable;
     
     void inputAndUpdate(Window window, Scene scene, VKRenderer renderer,
-                        Physics physics, SoundManager soundManager, long diffTimeNanos) throws Throwable;
+                        Physics physics, SoundManager soundManager) throws Throwable;
     
     void cleanup();
 }

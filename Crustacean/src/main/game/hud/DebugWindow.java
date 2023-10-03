@@ -2,20 +2,12 @@ package main.game.hud;
 
 import main.engine.Window;
 import main.engine.debug.Debug;
-import main.engine.graphics.hud.NKHudElement;
+import main.engine.graphics.ui.NKHudElement;
 import org.lwjgl.nuklear.*;
 import org.lwjgl.system.MemoryStack;
-import org.tinylog.Logger;
-import org.tinylog.core.LogEntry;
-import org.tinylog.core.LogEntryValue;
-import org.tinylog.writers.Writer;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Collection;
-import java.util.Map;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 

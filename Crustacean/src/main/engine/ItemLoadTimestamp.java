@@ -12,5 +12,4 @@ public class ItemLoadTimestamp {
     public static ItemLoadTimestamp getTimeStamp(Dominion dominion) {
         return dominion.findEntitiesWith(ItemLoadTimestamp.class).iterator().next().comp();
     }
-
 }

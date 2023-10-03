@@ -2,6 +2,9 @@ package main.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+
+import main.engine.input.KeyboardInput;
+import main.engine.input.MouseInput;
 import org.lwjgl.glfw.*;
 import org.lwjgl.system.MemoryUtil;
 
@@ -30,6 +33,7 @@ public class Window {
     private KeyboardInput keyboardInput;
     
     private Matrix4f projectionMatrix;
+    private Runnable uiInput;
 
     public Window(String title, int width, int height, boolean vSync) {
         this.title = title;
@@ -38,9 +42,11 @@ public class Window {
         this.vSync = vSync;
         this.resized = false;
         projectionMatrix = new Matrix4f();
+        uiInput = () -> {};
+        init();
     }
 
-    public void init(GLFWKeyCallbackI keyCallback) {
+    private void init() {
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
@@ -119,12 +125,19 @@ public class Window {
     public MouseInput getMouseInput() {
         return mouseInput;
     }
+
+    public void setUiInput(Runnable uiInput) {
+        this.uiInput = uiInput;
+    }
     
     public void pollEvents() {
         glfwPollEvents();
         mouseInput.input();
         keyboardInput.input();
+        uiInput.run();
     }
+
+
 
     public boolean isResized() {
         return resized;
