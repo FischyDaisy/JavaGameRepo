@@ -15,6 +15,12 @@ import java.lang.foreign.*;
 import java.util.Objects;
 
 public record Scene(MemorySegment gameItems, MemorySegment lights, Arena itemArena, Arena lightArena, long itemPos, long lightPos, long gameItemsLoadedTimestamp) {
+
+    public static final MemoryLayout SINGLETON_LIGHTS = MemoryLayout.structLayout(
+            Vector4fLayout.LAYOUT.withName("ambientLight"),
+            Vector3fLayout.LAYOUT.withName("skyBoxLight")
+    );
+
     public Scene {
         Objects.requireNonNull(gameItems);
         Objects.requireNonNull(lights);
@@ -23,6 +29,6 @@ public record Scene(MemorySegment gameItems, MemorySegment lights, Arena itemAre
     }
 
     public Scene(MemorySegment gameItems, MemorySegment lights, long itemPos, long lightPos, long gameItemsLoadedTimestamp) {
-        this(gameItems, lights, Arena.openShared(), Arena.openShared(), itemPos, lightPos, gameItemsLoadedTimestamp);
+        this(gameItems, lights, Arena.ofShared(), Arena.ofShared(), itemPos, lightPos, gameItemsLoadedTimestamp);
     }
 }
