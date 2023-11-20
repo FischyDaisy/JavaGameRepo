@@ -11,32 +11,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../Libs/lwjgl-release-3.3.1" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/../Libs/lwjgl-release-3.3.1" />
-        </SOURCES>
-        <jarDirectory url="file://$MODULE_DIR$/../Libs/lwjgl-release-3.3.1" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../Libs/lwjgl-release-3.3.1" recursive="false" type="SOURCES" />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/../Libs/Dominion" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/../Libs/Dominion" />
-        </SOURCES>
-        <jarDirectory url="file://$MODULE_DIR$/../Libs/Dominion" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../Libs/Dominion" recursive="false" type="SOURCES" />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="file://$MODULE_DIR$/../JNewton/jars" />
         </CLASSES>
         <JAVADOC />
@@ -44,5 +18,7 @@
         <jarDirectory url="file://$MODULE_DIR$/../JNewton/jars" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Dominion" level="project" />
+    <orderEntry type="library" name="lwjgl-release-3.3" level="project" />
   </component>
 </module>

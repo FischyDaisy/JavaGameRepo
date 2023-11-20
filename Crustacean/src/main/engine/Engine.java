@@ -25,7 +25,7 @@ public final class Engine {
     private GameLogic game;
     private Arena itemArena, lightArena;
     private boolean running;
-    private int deltaU;
+    private double deltaU;
 
     public Engine(String windowTitle, int width, int height) throws Exception {
         EngineProperties props = EngineProperties.INSTANCE;
@@ -58,9 +58,9 @@ public final class Engine {
             EngineProperties props = EngineProperties.INSTANCE;
             double deltaTime = scheduler.deltaTime();
             deltaU += deltaTime / props.getUps();
-            if (deltaU >= 1) {
+            if (deltaU >= 1.0) {
                 try {
-                    game.inputAndUpdate(window, scene, renderer, physics, soundManager);
+                    game.inputAndUpdate(window, dominion, renderer, physics, soundManager);
                     physics.update((float) deltaTime, dominion);
                 } catch (Throwable e) {
                     throw new RuntimeException(e);

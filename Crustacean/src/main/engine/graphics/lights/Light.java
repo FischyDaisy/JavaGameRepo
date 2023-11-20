@@ -9,7 +9,7 @@ import java.lang.foreign.ValueLayout;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 
-public class Light {
+public record Light(MemorySegment data) {
 
     public static final MemoryLayout LAYOUT = MemoryLayout.structLayout(
             Vector4fLayout.LAYOUT.withName("color"),
@@ -20,15 +20,9 @@ public class Light {
     public static final MethodHandle POSITION_HANDLE = LAYOUT.sliceHandle(MemoryLayout.PathElement.groupElement("position"));
     public static final VarHandle CHANGED_HANDLE = LAYOUT.varHandle(MemoryLayout.PathElement.groupElement("changed"));
 
-    public final MemorySegment data;
-    public Light(MemorySegment segment) {
-        data = segment;
+    public Light {
         try {
-            MemorySegment color = (MemorySegment) COLOR_HANDLE.invokeExact(segment);
-            Vector4fLayout.setVector4f(color, 0.0f, 0.0f, 0.0f, 0.0f);
-            MemorySegment position = (MemorySegment) POSITION_HANDLE.invokeExact(segment);
-            Vector4fLayout.setVector4f(position, 0.0f, 0.0f, 0.0f, 0.0f);
-            CHANGED_HANDLE.set(segment, true);
+            CHANGED_HANDLE.set(data, true);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }

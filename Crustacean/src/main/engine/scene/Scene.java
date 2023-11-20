@@ -6,6 +6,7 @@ import main.engine.EngineProperties;
 import main.engine.enginelayouts.Vector3fLayout;
 import main.engine.enginelayouts.Vector4fLayout;
 import main.engine.graphics.lights.Light;
+import main.engine.graphics.lights.SingletonLights;
 import main.engine.items.GameItem;
 import main.engine.items.GameItemAnimation;
 import org.joml.Vector3f;
@@ -16,19 +17,24 @@ import java.util.Objects;
 
 public record Scene(MemorySegment gameItems, MemorySegment lights, Arena itemArena, Arena lightArena, long itemPos, long lightPos, long gameItemsLoadedTimestamp) {
 
-    public static final MemoryLayout SINGLETON_LIGHTS = MemoryLayout.structLayout(
-            Vector4fLayout.LAYOUT.withName("ambientLight"),
-            Vector3fLayout.LAYOUT.withName("skyBoxLight")
-    );
-
     public Scene {
         Objects.requireNonNull(gameItems);
         Objects.requireNonNull(lights);
         Objects.requireNonNull(itemArena);
         Objects.requireNonNull(lightArena);
+        if (lightPos < SingletonLights.LAYOUT.byteSize()) {
+            throw new RuntimeException("Incorrect Light Buffer Position");
+        }
     }
 
-    public Scene(MemorySegment gameItems, MemorySegment lights, long itemPos, long lightPos, long gameItemsLoadedTimestamp) {
-        this(gameItems, lights, Arena.ofShared(), Arena.ofShared(), itemPos, lightPos, gameItemsLoadedTimestamp);
+    public Scene(Arena itemArena, Arena lightArena) {
+        this(itemArena.allocate(EngineProperties.INSTANCE.getMaxGameItemBuffer()),
+                lightArena.allocate(EngineProperties.INSTANCE.getMaxLightBuffer()),
+                itemArena, lightArena, 0L, SingletonLights.LAYOUT.byteSize(), 0L);
+    }
+
+    public void cleanup() {
+        itemArena.close();
+        lightArena.close();
     }
 }
