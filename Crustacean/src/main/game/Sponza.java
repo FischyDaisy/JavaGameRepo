@@ -17,10 +17,11 @@ import main.engine.items.GameItemManager;
 import main.engine.loaders.assimp.ModelLoader;
 import main.engine.physics.Physics;
 import main.engine.scene.Level;
+import main.engine.scene.Scene;
 import main.engine.utility.AxisRotation;
 import main.engine.utility.ResourcePaths;
 
-public class Sponza implements Level {
+public class Sponza extends Scene.Tag implements Level {
 
     //private final List<ModelData> modelDataList;
     //public final GameItem sponza;
@@ -69,7 +70,7 @@ public class Sponza implements Level {
         */
     }
 	@Override
-	public void load(Dominion dominion, VKRenderer renderer, Physics physics, Arena arena) throws Exception {
+	public void load(Scene scene, VKRenderer renderer, Physics physics) throws Exception {
         dominion.createEntity(sponza);
         dominion.createEntity(bob, bobAnimation);
         dominion.createEntity(monster, monsterAnimation);
@@ -90,7 +91,7 @@ public class Sponza implements Level {
 	}
 
     @Override
-    public void reset(Dominion dominion, VKRenderer renderer, Physics physics, Arena arena) throws Exception {
+    public void reset(Scene scene, VKRenderer renderer, Physics physics) throws Exception {
         bobAnimation.setCurrentFrame(0);
         bobAnimation.setLoaded(false);
         monsterAnimation.setCurrentFrame(0);

@@ -284,9 +284,7 @@ public class VKRenderer {
         Logger.debug("Unloading  Models");
         device.waitIdle();
         Results<Results.With1<VulkanModel>> vulkanModels = dominion.findEntitiesWith(VulkanModel.class);
-        Iterator<Results.With1<VulkanModel>> itr = vulkanModels.iterator();
-        while (itr.hasNext()) {
-            Results.With1<VulkanModel> vulkanModel = itr.next();
+        for (Results.With1<VulkanModel> vulkanModel : vulkanModels) {
             dominion.deleteEntity(vulkanModel.entity());
         }
         globalBuffers.resetModelBuffers();

@@ -27,6 +27,4 @@ public interface Level {
 	void load(Scene scene, VKRenderer renderer, Physics physics) throws Exception;
 
 	void reset(Scene scene, VKRenderer renderer, Physics physics) throws Exception;
-
-	void unload(Scene scene, VKR)
 }

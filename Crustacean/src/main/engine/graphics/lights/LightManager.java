@@ -17,7 +17,7 @@ public class LightManager implements AutoCloseable {
     private static final long LIGHT_LAYOUT_SIZE = Light.LAYOUT.byteSize();
 
     private static final MemoryLayout SINGLETON_LIGHTS = MemoryLayout.structLayout(
-            Vector4fLayout.LAYOUT.withName("ambientLight"),
+            Vector4fLayout.LAYOUT.withName("light"),
             Vector3fLayout.LAYOUT.withName("skyBoxLight")
     );
 

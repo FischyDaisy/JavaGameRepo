@@ -307,7 +307,7 @@ public class LightingRenderActivity {
         long mappedMemory = lightsBuffer.map();
         ByteBuffer uniformBuffer = MemoryUtil.memByteBuffer(mappedMemory, (int) lightsBuffer.getRequestedSize());
 
-        ambientLight.ambientLight().get(0, uniformBuffer);
+        ambientLight.light().get(0, uniformBuffer);
         int offset = GraphConstants.VECTOR4F_SIZE_BYTES;
         List<Results.With1<Light>> lights = results.stream().toList();
         int numLights = lights.size();

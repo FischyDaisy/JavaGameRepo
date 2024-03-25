@@ -17,7 +17,6 @@ public final class Engine {
     private final Dominion dominion;
     private final Physics physics;
     private final Scheduler scheduler;
-    private final Scene scene;
     private final Window window;
     private final VKRenderer renderer;
     private final SoundManager soundManager;
@@ -31,7 +30,6 @@ public final class Engine {
         EngineProperties props = EngineProperties.INSTANCE;
         dominion = Dominion.create("Engine-Dominion");
         scheduler = dominion.createScheduler();
-        scene = new Scene(dominion);
         physics = new Physics();
         window = new Window(windowTitle, width, height, props.isvSync());
         renderer = new VKRenderer(window, dominion);
@@ -84,7 +82,7 @@ public final class Engine {
     public void loadGame(GameLogic game) {
         this.game = game;
         try {
-            game.initialize(window, scene, renderer, physics, soundManager);
+            game.initialize(window, dominion, renderer, physics, soundManager);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -133,7 +131,6 @@ public final class Engine {
         boolean shutdown = scheduler.shutDown();
         Logger.debug("Successfully Shutdown Scheduler?: {}", shutdown);
         game.cleanup();
-        scene.cleanup();
         renderer.cleanup();
         physics.cleanup();
         dominion.close();

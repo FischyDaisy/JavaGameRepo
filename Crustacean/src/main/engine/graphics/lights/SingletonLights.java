@@ -12,10 +12,10 @@ import java.lang.invoke.MethodHandle;
 
 public record SingletonLights(MemorySegment data) {
     public static final MemoryLayout LAYOUT = MemoryLayout.structLayout(
-            Vector4fLayout.LAYOUT.withName("ambientLight"),
+            Vector4fLayout.LAYOUT.withName("light"),
             Vector3fLayout.LAYOUT.withName("skyBoxLight")
     );
-    public static final MethodHandle AMBIENT_HANDLE = LAYOUT.sliceHandle(MemoryLayout.PathElement.groupElement("ambientLight"));
+    public static final MethodHandle AMBIENT_HANDLE = LAYOUT.sliceHandle(MemoryLayout.PathElement.groupElement("light"));
     public static final MethodHandle SKYBOX_HANDLE = LAYOUT.sliceHandle(MemoryLayout.PathElement.groupElement("skyBoxLight"));
 
     public static SingletonLights fromDominion(Dominion dominion) {

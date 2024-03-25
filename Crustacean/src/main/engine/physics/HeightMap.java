@@ -136,14 +136,14 @@ public class HeightMap {
 				boolean invalid_bitangent = !localBitan.isFinite();
 				if (invalid_tangent != invalid_bitangent) {
 					if (invalid_tangent) {
-						localTan.x = Float.intBitsToFloat(Float.floatToIntBits(normal.x) ^ Float.floatToIntBits(localBitan.x));
-						localTan.y = Float.intBitsToFloat(Float.floatToIntBits(normal.y) ^ Float.floatToIntBits(localBitan.y));
-						localTan.z = Float.intBitsToFloat(Float.floatToIntBits(normal.z) ^ Float.floatToIntBits(localBitan.z));
+						localTan.x = Float.intBitsToFloat(Float.floatToRawIntBits(normal.x) ^ Float.floatToRawIntBits(localBitan.x));
+						localTan.y = Float.intBitsToFloat(Float.floatToRawIntBits(normal.y) ^ Float.floatToRawIntBits(localBitan.y));
+						localTan.z = Float.intBitsToFloat(Float.floatToRawIntBits(normal.z) ^ Float.floatToRawIntBits(localBitan.z));
 						localTan.normalize();
 					} else {
-						localBitan.x = Float.intBitsToFloat(Float.floatToIntBits(normal.x) ^ Float.floatToIntBits(localTan.x));
-						localBitan.y = Float.intBitsToFloat(Float.floatToIntBits(normal.y) ^ Float.floatToIntBits(localTan.y));
-						localBitan.z = Float.intBitsToFloat(Float.floatToIntBits(normal.z) ^ Float.floatToIntBits(localTan.z));
+						localBitan.x = Float.intBitsToFloat(Float.floatToRawIntBits(normal.x) ^ Float.floatToRawIntBits(localTan.x));
+						localBitan.y = Float.intBitsToFloat(Float.floatToRawIntBits(normal.y) ^ Float.floatToRawIntBits(localTan.y));
+						localBitan.z = Float.intBitsToFloat(Float.floatToRawIntBits(normal.z) ^ Float.floatToRawIntBits(localTan.z));
 						localTan.normalize();
 					}
 				}

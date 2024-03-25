@@ -77,7 +77,7 @@ public class GlobalBuffers {
         animVerticesBuffer = new VulkanBuffer(device, engProps.getMaxAnimVerticesBuffer(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT |
                 VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 0);
         numIndirectCommands = 0;
-        instanceDataBufferArena = Arena.openConfined();
+        instanceDataBufferArena = Arena.ofConfined();
     }
 
     public void cleanup() {
@@ -173,13 +173,9 @@ public class GlobalBuffers {
             List<VkDrawIndexedIndirectCommand> indexedIndirectCommandList = new ArrayList<>();
             Results<Results.With2<GameItem, GameItemAnimation>> gameItems = dominion.findEntitiesWith(GameItem.class, GameItemAnimation.class);
             Results<Results.With1<VulkanModel>> modelResults = dominion.findEntitiesWith(VulkanModel.class);
-            Iterator<Results.With1<VulkanModel>> modelItr = modelResults.iterator();
-            while(modelItr.hasNext()) {
-                Results.With1<VulkanModel> modelComp = modelItr.next();
+            for (Results.With1<VulkanModel> modelComp : modelResults) {
                 VulkanModel vulkanModel = modelComp.comp();
-                Iterator<Results.With2<GameItem, GameItemAnimation>> itemItr = gameItems.iterator();
-                while(itemItr.hasNext()) {
-                    Results.With2<GameItem, GameItemAnimation> itemComp = itemItr.next();
+                for (Results.With2<GameItem, GameItemAnimation> itemComp : gameItems) {
                     if (!itemComp.comp1().modelId().equals(vulkanModel.modelId)) {
                         continue;
                     }
@@ -258,17 +254,13 @@ public class GlobalBuffers {
             return;
         }
         long mappedMemory = instanceBuffer.map();
-        MemorySegment dataBuffer = MemorySegment.ofAddress(mappedMemory, instanceBuffer.getRequestedSize());
+        MemorySegment dataBuffer = MemorySegment.ofAddress(mappedMemory).reinterpret(instanceBuffer.getRequestedSize());
         instanceBuffer.map();
         int pos = 0;
-        Iterator<Results.With1<VulkanModel>> modelItr = vulkanModels.iterator();
-        while (modelItr.hasNext()) {
-            Results.With1<VulkanModel> modelComp = modelItr.next();
+        for (Results.With1<VulkanModel> modelComp : vulkanModels) {
             VulkanModel vulkanModel = modelComp.comp();
             for (VulkanModel.VulkanMesh vulkanMesh : vulkanModel.vulkanMeshList) {
-                Iterator<Results.With1<GameItem>> itemItr = gameItems.iterator();
-                while (itemItr.hasNext()) {
-                    Results.With1<GameItem> itemComp = itemItr.next();
+                for (Results.With1<GameItem> itemComp : gameItems) {
                     GameItem gameItem = itemComp.comp();
                     if (!gameItem.modelId().equals(vulkanModel.modelId)) {
                         continue;
@@ -361,9 +353,7 @@ public class GlobalBuffers {
             int firstInstance = 0;
             Results<Results.With1<GameItem>> gameItems = dominion.findEntitiesWith(GameItem.class).without(GameItemAnimation.class);
             Results<Results.With1<VulkanModel>> modelResults = dominion.findEntitiesWith(VulkanModel.class);
-            Iterator<Results.With1<VulkanModel>> modelItr = modelResults.iterator();
-            while(modelItr.hasNext()) {
-                Results.With1<VulkanModel> modelComp = modelItr.next();
+            for (Results.With1<VulkanModel> modelComp : modelResults) {
                 VulkanModel vulkanModel = modelComp.comp();
                 List<Results.With1<GameItem>> results = gameItems.stream()
                         .filter(r -> r.comp().modelId().equals(vulkanModel.modelId))

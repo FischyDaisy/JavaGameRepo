@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.*;
 
+import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Results;
 import main.engine.*;
 import main.engine.graphics.lights.AmbientLight;
@@ -108,10 +109,10 @@ public class Game implements GameLogic {
     }
     
     @Override
-    public void initialize(Window window, Scene scene, VKRenderer renderer, Physics physics) throws Throwable {
+    public void initialize(Window window, Dominion dominion, VKRenderer renderer, Physics physics, SoundManager soundManager) throws Throwable {
 
 
-        gameSession = Arena.openShared();
+        gameSession = Arena.ofShared();
         Newton.loadNewton(ResourcePaths.Newton.NEWTON_DLL);
         /*
         try {
@@ -122,8 +123,7 @@ public class Game implements GameLogic {
             Logger.debug("Loaded Newton Absolutely");
         }
         */
-        
-        vkRenderer = renderer;
+
         
         gamePhysics = new Physics();
 
@@ -131,9 +131,9 @@ public class Game implements GameLogic {
         menu = new GameMenu(window, dominion, renderer, gamePhysics, gameSession);
         currentLevel = menu.getLevel();
         levelSelection = menu.getCurrentLevel();
-        vkRenderer.setNulkearElements(new NKHudElement[] {menu, new TransparentWindow(window)});
+        renderer.setNulkearElements(new NKHudElement[] {menu, new TransparentWindow(window)});
         menu.hideWindow(true);
-        currentLevel.load(dominion, renderer, gamePhysics, gameSession);
+        currentLevel.load(dominion, renderer, gamePhysics);
         
         if (currentLevel instanceof Sponza zaza) {
             bob = zaza.bobAnimation;
@@ -152,7 +152,7 @@ public class Game implements GameLogic {
         
 
         AmbientLight ambientLight = new AmbientLight();
-        ambientLight.ambientLight().set(0.2f, 0.2f, 0.2f, 1.0f);
+        ambientLight.light().set(0.2f, 0.2f, 0.2f, 1.0f);
         dominion.createEntity(ambientLight);
         List<Light> lights = new ArrayList<>();
         directionalLight = new Light();
@@ -197,7 +197,7 @@ public class Game implements GameLogic {
     }
 
     @Override
-    public void inputAndUpdate(Window window, Scene scene, VKRenderer renderer, Physics physics, SoundManager soundManager) throws Exception {
+    public void inputAndUpdate(Window window, Dominion dominion, VKRenderer renderer, Physics physics, SoundManager soundManager) throws Exception {
         if (!currentLevel.equals(menu.getLevel())) {
             currentLevel = menu.getLevel();
             levelSelection = menu.getCurrentLevel();
