@@ -3,13 +3,16 @@ package main.engine;
 import dev.dominion.ecs.api.*;
 import main.engine.graphics.camera.Camera;
 import main.engine.graphics.vulkan.VKRenderer;
+import main.engine.input.EngineInput;
 import main.engine.physics.Physics;
 import main.engine.scene.Scene;
+import main.engine.scripts.SceneAssetCloser;
+import main.engine.scripts.SceneAssetLoader;
+import main.engine.scripts.EntityUpdater;
 import main.engine.sound.SoundManager;
 import org.tinylog.Logger;
 
 import java.lang.foreign.Arena;
-import java.util.Iterator;
 import java.util.concurrent.locks.StampedLock;
 
 public final class Engine {
@@ -20,6 +23,7 @@ public final class Engine {
     private final Window window;
     private final VKRenderer renderer;
     private final SoundManager soundManager;
+    private final EngineInput engineInput;
     private final StampedLock lock;
     private GameLogic game;
     private Arena itemArena, lightArena;
@@ -32,6 +36,7 @@ public final class Engine {
         scheduler = dominion.createScheduler();
         physics = new Physics();
         window = new Window(windowTitle, width, height, props.isvSync());
+        engineInput = new EngineInput(window.getWindowHandle());
         renderer = new VKRenderer(window, dominion);
         soundManager = new SoundManager();
         lock = new StampedLock();
@@ -46,8 +51,8 @@ public final class Engine {
     private void scheduleEngine() {
         //cameras & input
         scheduler.parallelSchedule(() -> {
-            for (Iterator<Results.With1<Camera>> itr = dominion.findEntitiesWith(Camera.class).iterator(); itr.hasNext();) {
-                Camera cam = itr.next().comp();
+            for (var result : dominion.findEntitiesWith(Camera.class)) {
+                Camera cam = result.comp();
                 cam.setHasMoved(false);
             }
         }, window::pollEvents);
@@ -58,7 +63,9 @@ public final class Engine {
             deltaU += deltaTime / props.getUps();
             if (deltaU >= 1.0) {
                 try {
-                    game.inputAndUpdate(window, dominion, renderer, physics, soundManager);
+                    for (var result : dominion.findEntitiesWith(EntityUpdater.class).withAlso(Loaded.class)) {
+                        result.comp().lambda().execute(result.entity(), engineInput);
+                    }
                     physics.update((float) deltaTime, dominion);
                 } catch (Throwable e) {
                     throw new RuntimeException(e);
@@ -79,6 +86,10 @@ public final class Engine {
         return game;
     }
 
+    public Dominion getDominion() {
+        return dominion;
+    }
+
     public void loadGame(GameLogic game) {
         this.game = game;
         try {
@@ -86,6 +97,62 @@ public final class Engine {
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void loadAllResources() {
+        var scenes = dominion.findEntitiesWith(Scene.class);
+
+
+        for (var scene : scenes) {
+            var results = scene.comp().findSceneEntities().withAlso(SceneAssetLoader.class)
+                    .without(Loaded.class);
+            for (var result : results) {
+                result.entity().get(SceneAssetLoader.class).lambda().execute(scene.comp(), renderer, physics);
+                result.entity().add(new Loaded());
+            }
+        }
+        try {
+            renderer.loadModels();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadSceneResources(Scene scene) {
+        var results = dominion.findEntitiesWith(SceneAssetLoader.class)
+                .withAlso(scene.getTag().getClass())
+                .without(Loaded.class);
+
+        for (var result : results) {
+            result.comp().lambda().execute(scene, renderer, physics);
+            result.entity().add(new Loaded());
+        }
+        try {
+            renderer.loadModels();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void unloadAllResources() {
+        var results = dominion.findEntitiesWith(SceneAssetCloser.class).withAlso(Loaded.class);
+
+        for (var result : results) {
+            result.comp().lambda().execute(dominion, renderer, physics);
+            result.entity().removeType(Loaded.class);
+        }
+        renderer.unloadModels();
+    }
+
+    public void unloadSceneResources(Scene scene) {
+        var results = dominion.findEntitiesWith(SceneAssetCloser.class)
+                .withAlso(scene.getTag().getClass(), Loaded.class);
+
+        for (var result : results) {
+            result.comp().lambda().execute(dominion, renderer, physics);
+            result.entity().removeType(Loaded.class);
+        }
+        renderer.unloadModels();
     }
 
     public boolean isRunning() {

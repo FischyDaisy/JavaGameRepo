@@ -246,7 +246,7 @@ public class HeightMap {
         byte b = buffer.get(x * 4 + 2 + z * 4 * width);
         byte a = buffer.get(x * 4 + 3 + z * 4 * width);
         int argb = ((0xFF & a) << 24) | ((0xFF & r) << 16)
-            | ((0xFF & g) << 8) | (0xFF & b);
+                | ((0xFF & g) << 8) | (0xFF & b);
         return minY + Math.abs(maxY - minY) * ((float) argb / (float) MAX_COLOR);
     }
 	

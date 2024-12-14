@@ -29,7 +29,7 @@ public class GameMenu implements NKHudElement {
 	private final int width;
 	private final int height;
 
-	private boolean shouldHide;
+	private boolean isHidden;
 
 	private final Level[] levels;
 	private int currentLevel;
@@ -40,7 +40,7 @@ public class GameMenu implements NKHudElement {
 		this.renderer = renderer;
 		this.physics = physics;
 		this.arena = arena;
-		this.shouldHide = true;
+		this.isHidden = true;
 		levels = new Level[] {new Sponza(), new NewtonDemo(physics, arena)};
 		currentLevel = 0;
 		width = 300;
@@ -62,7 +62,7 @@ public class GameMenu implements NKHudElement {
 	public void layout(NkContext ctx) {
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			NkRect rect = NkRect.malloc(stack);
-			if (!shouldHide) {
+			if (!isHidden) {
 				if (nk_begin(ctx, "Menu", nk_rect(width, height, window.getWidth() - (2 * width), window.getHeight() - (2 * height), rect),
 						NK_WINDOW_TITLE)) { // | NK_WINDOW_HIDDEN
 					//nk_window_show_if(ctx, "Menu", NK_HIDDEN, shouldHide);
@@ -77,13 +77,13 @@ public class GameMenu implements NKHudElement {
 						nk_layout_row_dynamic(ctx, 25, 1);
 						if (nk_menu_item_label(ctx, "Sponza", NK_TEXT_LEFT)) {
 							currentLevel = 0;
-							shouldHide = true;
+							isHidden = true;
 							glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 							Logger.debug("Current Level: {}", currentLevel);
 						}
 						if (nk_menu_item_label(ctx, "Newton Demo", NK_TEXT_LEFT)) {
 							currentLevel = 1;
-							shouldHide = true;
+							isHidden = true;
 							glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 							Logger.debug("Current Level: {}", currentLevel);
 						}
@@ -122,7 +122,7 @@ public class GameMenu implements NKHudElement {
 	}
 	
 	public void hideWindow(boolean shouldHide) {
-		this.shouldHide = shouldHide;
+		this.isHidden = shouldHide;
 		if (shouldHide) {
 			glfwSetInputMode(window.getWindowHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		} else {
@@ -131,6 +131,6 @@ public class GameMenu implements NKHudElement {
 	}
 
 	public boolean isHidden() {
-		return shouldHide;
+		return isHidden;
 	}
 }

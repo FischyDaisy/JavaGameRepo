@@ -62,4 +62,8 @@ public final class GameItemAnimation {
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
     }
+
+    public void toggle() {
+        started = !started;
+    }
 }

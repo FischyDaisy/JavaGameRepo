@@ -9,7 +9,7 @@ public enum AxisRotation {
 	LEFT(new Vector3f(1.0f, 0.0f, 0.0f)),
 	FORWARD(new Vector3f(0.0f, 0.0f, 1.0f));
 	
-	private Vector3f direction;
+	private final Vector3f direction;
 	
 	private float angle;
 	

@@ -66,7 +66,6 @@ public class NewtonDemo implements Level {
     }
 
     public void cleanup() {
-
     }
 
 	@Override

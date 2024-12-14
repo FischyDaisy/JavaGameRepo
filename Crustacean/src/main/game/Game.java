@@ -45,7 +45,7 @@ public class Game implements GameLogic {
 	
 	private static final EngineProperties engineProperties = EngineProperties.INSTANCE;
 	
-	private static final float MOUSE_SENSITIVITY = 0.2f;
+	public static final float MOUSE_SENSITIVITY = 0.2f;
 
     private final Vector3f cameraInc;
     
@@ -53,7 +53,7 @@ public class Game implements GameLogic {
 
     private float lightAngle;
     
-    private static final float CAMERA_POS_STEP = 0.05f;
+    public static final float CAMERA_POS_STEP = 0.05f;
     
     private float angleInc;
     
