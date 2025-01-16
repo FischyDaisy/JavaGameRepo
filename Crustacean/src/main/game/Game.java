@@ -92,11 +92,11 @@ public class Game implements GameLogic {
     
     public static void main(String[] args) {
         try {
-            Map<String, String> fuck = new HashMap<>();
-            fuck.put("writer1", "console");
-            fuck.put("writer2", "file");
-            fuck.put("writer2.file", "log.txt");
-            Configuration.replace(fuck);
+            Map<String, String> loggerConfig = new HashMap<>();
+            loggerConfig.put("writer1", "console");
+            loggerConfig.put("writer2", "file");
+            loggerConfig.put("writer2.file", "log.txt");
+            Configuration.replace(loggerConfig);
             Logger.debug("Application Directory: {}", System.getProperty("user.dir"));
             GameLogic game = new Game();
             Engine engine = new Engine("Game");

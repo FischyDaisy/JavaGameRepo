@@ -54,12 +54,10 @@ public class VKRenderer {
     private Fence[] fences;
     private SwapChain swapChain;
     private VulkanModel skybox;
-    private Camera camera;
     private Light directionalLight;
 	
 	public VKRenderer(Window window, Dominion dominion) throws Exception {
         this.dominion = dominion;
-        camera = dominion.findEntitiesWith(Camera.class).iterator().next().comp();
 		instance = new Instance(engProps.isValidate());
         physicalDevice = PhysicalDevice.createPhysicalDevice(instance, engProps.getPhysDeviceName());
         device = new Device(instance, physicalDevice);
@@ -175,21 +173,6 @@ public class VKRenderer {
     public void setDirectionalLight(Light directionalLight) {
         this.directionalLight = directionalLight;
     }
-
-    public void selectCamera(String cameraName) {
-        Results<Results.With1<Camera>> results = dominion.findEntitiesWith(Camera.class);
-        for (Iterator<Results.With1<Camera>> itr = results.iterator(); itr.hasNext();) {
-            Results.With1<Camera> result = itr.next();
-            if (result.entity().getName().equals(cameraName)) {
-                this.camera = result.comp();
-                return;
-            }
-        }
-    }
-
-    public Camera getCamera() {
-        return camera;
-    }
 	
 	private void recordCommands() {
         int idx = 0;
@@ -205,7 +188,7 @@ public class VKRenderer {
         }
     }
 	
-	public void render(Window window) throws Throwable {
+	public void render(Window window, Camera camera) throws Throwable {
         ItemLoadTimestamp timestamp = dominion.findEntitiesWith(ItemLoadTimestamp.class).iterator().next().comp();
 		if (gameItemsLoadedTimeStamp < timestamp.gameItemLoadedTimestamp) {
             gameItemsLoadedTimeStamp = timestamp.gameItemLoadedTimestamp;
@@ -220,7 +203,7 @@ public class VKRenderer {
         }
         if (window.isResized() || swapChain.acquireNextImage()) {
             window.setResized(false);
-            resize(window);
+            resize(window, camera);
             window.updateProjectionMatrix();
             swapChain.acquireNextImage();
         }
@@ -250,7 +233,7 @@ public class VKRenderer {
 
     //public void renderPhysicMeshes()
 	
-	private void resize(Window window) {
+	private void resize(Window window, Camera camera) {
         device.waitIdle();
         graphQueue.waitIdle();
 

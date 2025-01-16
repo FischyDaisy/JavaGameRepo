@@ -93,7 +93,7 @@ public class GameEngine {
                 fps = 0;
             }
             fps++;
-            renderer.render(window);
+            //renderer.render(window);
             
             if ( !window.isvSync() ) {
                 sync();

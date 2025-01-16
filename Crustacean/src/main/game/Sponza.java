@@ -8,6 +8,7 @@ import java.lang.foreign.*;
 
 import dev.dominion.ecs.api.Dominion;
 import dev.dominion.ecs.api.Entity;
+import main.engine.Engine;
 import main.engine.ItemLoadTimestamp;
 import main.engine.graphics.ModelData;
 import main.engine.graphics.camera.Camera;
@@ -110,11 +111,11 @@ public class Sponza extends Scene.Tag implements Level {
         monsterAnimation.setLoaded(false);
     }
 
-    public static void createCamera(Scene scene, VKRenderer renderer, Physics physics) {
+    public static void initCamera(Scene scene, VKRenderer renderer, Physics physics) {
         Camera camera = new Camera();
     }
 
-    public static void loadBob(Scene scene, VKRenderer renderer, Physics physics) {
+    public static void loadBob(Scene scene, Engine engine) {
         String bobModelId = "bob-model";
         ModelData bobModelData = ModelLoader.loadModel(bobModelId, ResourcePaths.Models.BOBLAMP_MD5MESH,
                 ResourcePaths.Models.BOBLAMP_DIR, true);
@@ -125,7 +126,7 @@ public class Sponza extends Scene.Tag implements Level {
         entity.add(new EntityInitializer(Sponza::initBob));
     }
 
-    public static void loadMonster(Scene scene, VKRenderer renderer, Physics physics) {
+    public static void loadMonster(Scene scene, Engine engine) {
         String monsterModelId = "monster-model";
         ModelData monsterModelData = ModelLoader.loadModel(monsterModelId, ResourcePaths.Models.MONSTER_MD5MESH,
                 ResourcePaths.Models.MONSTER_DIR, true);
@@ -136,7 +137,7 @@ public class Sponza extends Scene.Tag implements Level {
         entity.add(new EntityInitializer(Sponza::initMonster));
     }
 
-    public static void loadSponza(Scene scene, VKRenderer renderer, Physics physics) {
+    public static void loadSponza(Scene scene, Engine engine) {
         String sponzaModelId = "sponza-model";
         ModelData sponzaModelData = ModelLoader.loadModel(sponzaModelId, ResourcePaths.Models.SPONZA_GLTF,
                 ResourcePaths.Models.SPONZA_DIR, false);

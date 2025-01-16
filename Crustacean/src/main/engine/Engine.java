@@ -25,8 +25,7 @@ public final class Engine {
     private final SoundManager soundManager;
     private final EngineInput engineInput;
     private final StampedLock lock;
-    private GameLogic game;
-    private Arena itemArena, lightArena;
+    private final Camera mainCam;
     private boolean running;
     private double deltaU;
 
@@ -40,6 +39,7 @@ public final class Engine {
         renderer = new VKRenderer(window, dominion);
         soundManager = new SoundManager();
         lock = new StampedLock();
+        mainCam = new Camera();
         deltaU = 0;
         scheduleEngine();
     }
@@ -75,28 +75,39 @@ public final class Engine {
         //Render
         scheduler.schedule(() -> {
             try {
-                renderer.render(window);
+                renderer.render(window, mainCam);
             } catch (Throwable e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    public GameLogic getGame() {
-        return game;
-    }
-
     public Dominion getDominion() {
         return dominion;
     }
 
-    public void loadGame(GameLogic game) {
-        this.game = game;
-        try {
-            game.initialize(window, dominion, renderer, physics, soundManager);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
+    public Camera getMainCam() {
+        return mainCam;
+    }
+
+    public VKRenderer getRenderer() {
+        return renderer;
+    }
+
+    public Physics getPhysics() {
+        return physics;
+    }
+
+    public EngineInput getEngineInput() {
+        return engineInput;
+    }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
+    }
+
+    public Window getWindow() {
+        return window;
     }
 
     public void loadAllResources() {
@@ -107,7 +118,7 @@ public final class Engine {
             var results = scene.comp().findSceneEntities().withAlso(SceneAssetLoader.class)
                     .without(Loaded.class);
             for (var result : results) {
-                result.entity().get(SceneAssetLoader.class).lambda().execute(scene.comp(), renderer, physics);
+                result.entity().get(SceneAssetLoader.class).lambda().execute(scene.comp(), this);
                 result.entity().add(new Loaded());
             }
         }
@@ -124,7 +135,7 @@ public final class Engine {
                 .without(Loaded.class);
 
         for (var result : results) {
-            result.comp().lambda().execute(scene, renderer, physics);
+            result.comp().lambda().execute(scene, this);
             result.entity().add(new Loaded());
         }
         try {
@@ -138,7 +149,7 @@ public final class Engine {
         var results = dominion.findEntitiesWith(SceneAssetCloser.class).withAlso(Loaded.class);
 
         for (var result : results) {
-            result.comp().lambda().execute(dominion, renderer, physics);
+            result.comp().lambda().execute(dominion, this);
             result.entity().removeType(Loaded.class);
         }
         renderer.unloadModels();
@@ -149,7 +160,7 @@ public final class Engine {
                 .withAlso(scene.getTag().getClass(), Loaded.class);
 
         for (var result : results) {
-            result.comp().lambda().execute(dominion, renderer, physics);
+            result.comp().lambda().execute(dominion, this);
             result.entity().removeType(Loaded.class);
         }
         renderer.unloadModels();
@@ -197,7 +208,6 @@ public final class Engine {
     private void cleanup() {
         boolean shutdown = scheduler.shutDown();
         Logger.debug("Successfully Shutdown Scheduler?: {}", shutdown);
-        game.cleanup();
         renderer.cleanup();
         physics.cleanup();
         dominion.close();
